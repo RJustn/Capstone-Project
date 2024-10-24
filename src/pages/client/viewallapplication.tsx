@@ -14,6 +14,7 @@ export interface WorkPermit {
     permitExpiryDate: string;
     permitFile: string;
     receipt: Receipt;
+    createdAt: string;
   }
 
   export interface Receipt {
@@ -21,7 +22,7 @@ export interface WorkPermit {
   }
 
 
-const ViewWorkPermitApplication: React.FC = () => {
+const ViewAllApplication: React.FC = () => {
     const navigate = useNavigate();
     const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
     const [, setError] = useState<string | null>(null);
@@ -50,8 +51,8 @@ const endIndex = startIndex + itemsPerPage;
 const sortedWorkPermits = workPermits
   .slice() // Make a copy of the array to avoid modifying the original
   .sort((a, b) => {
-    const dateA = new Date(a.applicationdateIssued);
-    const dateB = new Date(b.applicationdateIssued);
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
 
     // Check if both dates are valid
     if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
@@ -542,4 +543,4 @@ const handleLogout = () => {
     );
 };
 
-export default ViewWorkPermitApplication;
+export default ViewAllApplication;

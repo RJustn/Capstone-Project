@@ -534,7 +534,7 @@ app.post('/workpermitpage', upload.fields([
       permitDateIssued: null,
       permitExpiryDate: null,
       expiryDate: null,
-      applicationdateIssued: null,
+      applicationdateIssued: new Date(Date.now()).toISOString(),
       applicationComments: null,
       formData: {
         personalInformation: {
@@ -858,8 +858,6 @@ app.use('/uploads', express.static(path.join(__dirname)));
 
 
 
-//#endregion
-
 // API for superadmin login
 app.post('/superadmin/login', async (req, res) => {
   const { email, password } = req.body;
@@ -929,6 +927,7 @@ app.post('/adduser', async (req, res) => {
       password: hashedPassword,
       userrole: userRole, // Correct the variable name
       isVerified: true,
+      accountOpenedDate: new Date().toISOString() 
     });
 
     // Save the user to the database
@@ -973,23 +972,93 @@ const seedSuperadmin = async () => {
     }
 }; 
 
-// Middleware to check if the user is a superadmin
-function isSuperadmin(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract JWT from Authorization header
-  if (!token) {
-    return res.status(403).json({ error: 'No token provided' });
-  }
+app.get('/adminusers', async (req, res) => {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT
-    if (decoded.userrole !== 'superadmin') {
-      return res.status(403).json({ error: 'Unauthorized' });
-    }
-    req.user = decoded; // Attach decoded user info to request object
-    next();
+    const users = await User.find({ userrole: 'Admin' });
+    res.json(users);
   } catch (error) {
-    res.status(403).json({ error: 'Invalid token' });
+    res.status(500).json({ message: error.message });
   }
-};
+});
+
+app.get('/datacontrollers', async (req, res) => {
+  try {
+    const users = await User.find({ userrole: 'Data Controller' });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+app.get('/account/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// API endpoint to fetch user data by ID
+app.get('/accounts/:id', async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.params.id });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.send(user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// API endpoint to update user data by ID
+app.put('/accounts/:id', async (req, res) => {
+  try {
+    console.log('Request Body:', req.body); // Log the request body
+    const user = await User.findOneAndUpdate(
+      { userId: req.params.id },
+      req.body,
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    console.log('Updated User:', user); // Log the updated user
+    res.send(user);
+  } catch (error) {
+    console.error('Error updating user:', error); // Log the error
+    res.status(500).send(error);
+  }
+});
+
+
+// API endpoint to fetch online admins
+app.get('/api/onlineAdmins', async (req, res) => {
+  try {
+    const onlineAdmins = await User.find({ role: 'admin', status: 'online' });
+    res.json(onlineAdmins);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// API endpoint to fetch online data controllers
+app.get('/api/onlineDataControllers', async (req, res) => {
+  try {
+    const onlineDataControllers = await User.find({ role: 'dataController', status: 'online' });
+    res.json(onlineDataControllers);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 
 
@@ -998,6 +1067,7 @@ function isSuperadmin(req, res, next) {
 
 //Additional code for client @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // Get the latest work permit application ID for a user
+
 
 
 //End additional code for client @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1066,39 +1136,58 @@ app.get('/DCworkpermitdetails/:id', async (req, res) => {
   }
 });
 
-
+//Handle Update
 app.put('/work-permits/:id', async (req, res) => {
   console.log('Request body:', req.body); // Log incoming request body
   const { id } = req.params;
-  const { status } = req.body;
-
-
-
-
+  const { status } = req.body; // Get relevant fields from request body
+  const ContentData = {
+    id: id,
+  };
   try {
-    const updatedPermit = await WorkPermit.findByIdAndUpdate(
-      id,
-      { 
-        $set: {
-          workpermitstatus: status,
-          permitExpiryDate: new Date(Date.now() + 31536000000),
-          expiryDate: new Date(Date.now() + 31536000000), // Correct syntax
-        }
-      },
-      { new: true } // Option to return the updated document
-    );
+      let updateFields = {};
+      
+      // Check the status and set appropriate fields
+      if (status === 'Released') {
+        const workpermitFileName = await generateWorkPermitPDF(ContentData);
+          updateFields = {
+              permitFile: workpermitFileName,
+              transaction: 'First Time Job Seeker',
+              permitDateIssued: new Date().toISOString(),
+              workpermitstatus: status,
+              permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
+              expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
 
-    if (!updatedPermit) {
-      return res.status(404).json({ message: 'Work permit not found' });
-    }
+          };
+      } else if (status === 'Waiting for Payment') {
+          updateFields = {
+              workpermitstatus: status,
+              permitExpiryDate: null, // No expiry date for this status
+              expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
+          };
+      } else {
+          return res.status(400).json({ message: 'Invalid status' });
+      }
 
-    res.json(updatedPermit);
-    console.log(new Date(Date.now() + 31536000000)); // Correct syntax)
+      // Update the work permit
+      const updatedPermit = await WorkPermit.findByIdAndUpdate(
+          id,
+          { $set: updateFields },
+          { new: true } // Option to return the updated document
+      );
+
+      if (!updatedPermit) {
+          return res.status(404).json({ message: 'Work permit not found' });
+      }
+
+      res.json(updatedPermit);
+      console.log('Updated Permit:', updatedPermit); // Log updated permit for debugging
   } catch (error) {
-    console.error('Error updating work permit:', error); // Log error
-    res.status(500).json({ error: 'Error updating work permit' });
+      console.error('Error updating work permit:', error); // Log error
+      res.status(500).json({ error: 'Error updating work permit' });
   }
 });
+
 
 
 app.put('/work-permitsreject/:id', async (req, res) => {
@@ -1153,9 +1242,7 @@ app.put('/handlepayments/:id', async (req, res) => {
   };
 
 
-  const currentDate = new Date();
-  currentDate.setMonth(currentDate.getMonth() + 3);
-  const expirationDate = currentDate.toISOString();
+
 
 
 
@@ -1172,7 +1259,8 @@ app.put('/handlepayments/:id', async (req, res) => {
         transaction: paymentMethod,
         permitFile: workpermitFileName,
         permitDateIssued: new Date().toISOString(),
-        expiryDate: expirationDate,
+        permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
+        expiryDate: new Date(Date.now() + 31536000000).toISOString(),
 
 
         receipt: {
@@ -1267,10 +1355,9 @@ const generateWorkPermitPDF = async (ContentData) => {
       doc.moveDown();
       doc.fontSize(12).text(`Work Permit ID: ${workPermit._id}`);
       doc.text(`Issued To: ${workPermit.formData.personalInformation.firstName}`);
-      doc.text(`Mode of Payment: ${ContentData.paymentMethod}`);
-      doc.text(`Payment Type: ${ContentData.paymentType}`);
+      doc.text(`Classification: ${workPermit.classification}`);
       doc.text(`Permit Status: Released`);
-      doc.text(`Issue Date: ${new Date(workPermit.receipt.receiptDate).toLocaleString()}`);
+      doc.text(`Issue Date: ${new Date().toLocaleDateString()}`);
       doc.text(`Expiration Date: ${new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleString()}`);
 
       doc.end();
@@ -1304,24 +1391,28 @@ app.delete('/deletePermit/:permitId', async (req, res) => {
 });
 
 const checkExpired = async () => {
-  const currentDate = new Date(); // Get the current date
-  const currentYear = currentDate.getFullYear(); // Get the current year
-  const expiryDate = new Date(currentYear, 11, 31, 23, 59, 59); // December 31 at 11:59 PM
-  console.log('Checking Expiry Dates...');
-
-  // Check if the current date is past the expiry date set for this year
-  if (currentDate > expiryDate) {
-    // If current date is after December 31, set the expiry for the next year
-    expiryDate.setFullYear(currentYear + 1);
-  }
+  // Get current date in UTC
+  const currentDate = new Date(Date.now()).toISOString(); // Current date in UTC
+  console.log(`Current Date (UTC): ${currentDate}`);
 
   try {
+    // Find permits that should be marked as expired
+    const permits = await WorkPermit.find({
+      permitExpiryDate: { $lte: currentDate }, // Compare expiryDate with currentDate in UTC
+      workpermitstatus: { $ne: 'Expired' }     // Exclude already expired permits
+    });
+
+    permits.forEach(permit => {
+      console.log(`Checking Permit: ${permit._id}`);
+      console.log(`Permit Expiry Date (UTC): ${permit.permitExpiryDate}, Current Date (UTC): ${currentDate}`);
+    });
+
     const result = await WorkPermit.updateMany(
       {
-        expiryDate: { $lt: currentDate }, // Check for expired permits
-        workpermitstatus: { $ne: 'Expired' } // Exclude already expired permits
+        permitExpiryDate: { $lte: currentDate }, // Compare full date and time in UTC
+        workpermitstatus: { $ne: 'Expired' }     // Exclude already expired permits
       },
-      { $set: { workpermitstatus: 'Expired' } } // Only update the status to 'Expired'
+      { $set: { workpermitstatus: 'Expired' } } // Mark as expired
     );
 
     console.log(`${result.modifiedCount} work permits have been updated to expired.`);

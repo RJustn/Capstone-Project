@@ -195,23 +195,39 @@ const DataControllerViewApplicationDetails: React.FC = () => {
 
 
 
-      const handleUpdate = async () => {
-        console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
-      
-        try {
-          const response = await axios.put(`http://localhost:3000/work-permits/${workPermit?._id}`, {
-            status: 'Waiting for Payment',
-          });
-          console.log('Updated Permit:', response.data);
-      
-          // Update local state with the response data
-          setWorkPermit(response.data);
-          alert('Work Permit Application updated successfully!');
-          navigate(-1);
-        } catch (error) {
+    const handleUpdate = async () => {
+      console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
+  
+      try {
+          let newStatus;
+  
+          // Check the classification and set the new status accordingly
+          if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
+              newStatus = 'Released';
+          } else if (workPermit?.formData.personalInformation.workpermitclassification=== 'Renewal') {
+              newStatus = 'Waiting for Payment';
+          }
+  
+          // If newStatus is set, proceed with the update
+          if (newStatus) {
+              const response = await axios.put(`http://localhost:3000/work-permits/${workPermit?._id}`, {
+                  status: newStatus,
+              });
+  
+              console.log('Updated Permit:', response.data);
+  
+              // Update local state with the response data
+              setWorkPermit(response.data);
+              alert('Work Permit Application updated successfully!');
+              navigate(-1);
+          } else {
+              alert('No valid classification found to update the status.');
+          }
+      } catch (error) {
           console.error('Error updating work permit:', error);
-        }
-      };
+      }
+  };
+  
       
       
 

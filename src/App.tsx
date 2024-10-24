@@ -30,8 +30,11 @@ import SuperadminAddUser from './pages/superadmin/superadminAccountAdd';
 // DATA CONTROLLER PAGES
 import DataControllerDashboard from './pages/datacontroller/DAdashboard';
 import DataControllerForAssessment from './pages/datacontroller/DAforassessment';
+import DataControllerForAssessmentWP from './pages/datacontroller/DAforassessmentWP';
 import DataControllerForPayment from './pages/datacontroller/DAforpayment';
+import DataControllerForPaymentWP from './pages/datacontroller/DAforpaymentWP';
 import DataControllerReleasedPermit from './pages/datacontroller/DAreleasedpermits';
+import DataControllerReleasedPermitWP from './pages/datacontroller/DAreleasedpermitsWP';
 import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph';
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 
@@ -69,8 +72,11 @@ const App: React.FC = () => {
         {/* Routes for Data Controller */}
         <Route path="/DAdashboard" element={<DataControllerDashboard />} />
         <Route path="/DAforassessment" element={<DataControllerForAssessment />} />
+        <Route path="/DAforassessmentWP" element={<DataControllerForAssessmentWP />} />
         <Route path="/DAforpayment" element={<DataControllerForPayment />} />
+        <Route path="/DAforpaymentWP" element={<DataControllerForPaymentWP />} />
         <Route path="/DAreleasedpermits" element={<DataControllerReleasedPermit />} />
+        <Route path="/DAreleasedpermitsWP" element={<DataControllerReleasedPermitWP />} />
         <Route path="/DAreportsngraph" element={<DataControllerReportandGraph />} />
         <Route path="/DAviewapplicationdetails/" element={<DataControllerViewApplicationDetails />} />
         <Route path="/DAviewapplicationdetails/:id" element={<DataControllerViewApplicationDetails />} />

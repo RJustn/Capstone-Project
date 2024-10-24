@@ -1,87 +1,100 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { useAuth } from '../../AuthContext'; // Adjust the import path as necessary
 import '../Styles/SAdashboard.css';
 
 
-// interface DataController {
-//   _id: string;
-//   firstName: string;
-//   lastName: string;
-//   EmpID: string;
-// }
+interface DataController {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  userrole: string;
+  isOnline: boolean; // Added isOnline property
+}
 
-// interface Admin {
-//   _id: string;
-//   firstName: string;
-//   lastName: string;
-//   EmpID: string; 
-// }
+interface Admin {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  userrole: string; 
+  isOnline: boolean; // Added isOnline property
+}
+
+interface UserLog {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  accountOpenedDate: string;
+}
+
 
 const SuperAdminDashboard: React.FC = () => {
 
   const { isAuthenticated, user } = useAuth(); // Assuming `token` is available in `useAuth`
   const navigate = useNavigate();
-  // const [dataControllers, setDataControllers] = useState<DataController[]>([]);
-  // const [admins, setAdmins] = useState<Admin[]>([]); // State for Admin data
+  const [dataControllers, setDataControllers] = useState<DataController[]>([]);
+  const [admins, setAdmins] = useState<Admin[]>([]); 
+  const [onlineUsers, setOnlineUsers] = useState<(DataController | Admin)[]>([]);
+  const [userLogs, setUserLogs] = useState<UserLog[]>([]);
 
   useEffect(() => {
     if (!isAuthenticated || user?.role !== 'superadmin') {
-      // navigate('/superadmin/login')
-    }
+       navigate('/superadmin/login')
+     }
   }, [isAuthenticated, user, navigate]);
 
-  // useEffect(() => {
-  //   const fetchDataControllers = async () => {
-  //     try {
-  //       const response = await fetch('/dataController', {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming the token is stored in localStorage
-  //         }
-  //       });
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/adminusers');
+        setAdmins(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
+    const fetchDataControllers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/datacontrollers');
+        setDataControllers(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //       const data = await response.json();
-  //       setDataControllers(data);
-  //     } catch (error) {
-  //       setError(error as Error);
-  //     }
-  //  };
-
-  //   const fetchAdmins = async () => {
-  //     try {
-  //       const response = await fetch('/admin', {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming the token is stored in localStorage
-  //         }
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-
-  //       const data = await response.json();
-  //       setAdmins(data);
-  //     } catch (error) {
-  //       setError(error as Error);
-  //     }
-  //   };
-
-  //   fetchDataControllers();
-  //   fetchAdmins();
-  // }, []);
+    fetchDataControllers();
+  fetchAdmins();
+}, []);
 
 
-  //if (!user) {
-    //return <div>Loading...</div>;
-  //}
+// useEffect(() => {
+//   fetch('http://localhost:3000/online-users')
+//     .then(response => response.json())
+//     .then(data => setOnlineUsers(data)) 
+//     .catch(error => console.error('Error fetching online users:', error));
+// }, []);
 
-  // if (user.role !== 'superadmin') {
-    // return <div>Unauthorized access</div>;
-  // }
+useEffect(() => {
+  const fetchUserLogs = async () => {
+      try {
+        const adminResponse = await axios.get('http://localhost:3000/adminusers');
+        const datacontrollerResponse = await axios.get('http://localhost:3000/datacontrollers');
+        setUserLogs([...adminResponse.data, ...datacontrollerResponse.data]);
+      } catch (error) {
+        console.error('Error fetching user logs:', error);
+      }
+    };
+
+  fetchUserLogs();
+}, []);
+
+  
+useEffect(() => {
+  const onlineAdmins = admins.filter(admin => admin.isOnline);
+  const onlineDataControllers = dataControllers.filter(controller => controller.isOnline);
+  setOnlineUsers([...onlineAdmins, ...onlineDataControllers]);
+}, [admins, dataControllers]);
 
   return (
     <div>
@@ -113,7 +126,7 @@ const SuperAdminDashboard: React.FC = () => {
       </div>
       <div className="action-card">
         <div className="icon logbook"></div>
-        <a href="/superadmin/logbook">Logbook</a>
+        <a href="/superadmin/logbooks">Logbook</a>
       </div>
     </div>
 
@@ -137,7 +150,16 @@ const SuperAdminDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Admin Rows */}
+            {
+            admins.map(admin => {
+              return (
+                <tr key={admin.userId}>
+                   <td>{admin.userId}</td>
+                  <td>{admin.firstName} {admin.lastName}</td>
+                </tr>
+              );
+            })
+            }
             </tbody>
           </table>
         </div>
@@ -161,7 +183,16 @@ const SuperAdminDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Data Controller Rows */}
+              {
+            dataControllers.map(dataController => {
+              return (
+                <tr key={dataController.userId}>
+                  <td>{dataController.userId}</td>
+                  <td>{dataController.firstName} {dataController.lastName}</td>
+                </tr>
+              );
+              })
+            }
             </tbody>
           </table>
         </div>
@@ -182,24 +213,50 @@ const SuperAdminDashboard: React.FC = () => {
               <tr>
                 <th>Employee Name</th>
                 <th>Employee ID</th>
-                <th>Date & Time</th>
-                <th>Action</th>
+                <th>Time In</th>
+                <th>Time Out</th>
               </tr>
             </thead>
             <tbody>
-              {/* Logbook Rows */}
+              {
+            userLogs.map(log => {
+              return (
+            <tr key={log.userId}>
+              <td>{log.firstName} {log.lastName}</td>
+              <td>{log.userId}</td>
+              
+              
+            </tr>
+              );
+            }
+          )}
             </tbody>
           </table>
         </div>
       </div>
 
       {/* Online Accounts Panel */}
+
       <div className="panel online-accounts-panel">
-        <h3>Online Accounts</h3>
-        <ul>
-          {/* Online accounts rows */}
-        </ul>
-      </div>
+  <h3>Online Accounts</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {onlineUsers.map(user => (
+        <tr key={user.userId}>
+          <td>{user.firstName} {user.lastName}</td>
+          <td>{user.userrole}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/dashboard.css'; // Import your CSS file
+import axios from 'axios';
 
 // Define the WorkPermit interface
 interface WorkPermit {
@@ -10,6 +11,7 @@ interface WorkPermit {
   classification: string;
   createdAt: string;
   permitExpiryDate: string;
+  applicationdateIssued: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -94,6 +96,83 @@ const currentItems = sortedWorkPermits.slice(startIndex, endIndex);
   };
   
 //END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ //MODAL TESTING FOR PAYMENT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+ const [modalStep, setModalStep] = useState(0);
+ const [paymentMethod, setPaymentMethod] = useState<string | null>(null); // Explicit type declaration
+ const [paymentType, setPaymentType] = useState<string | null>(null);
+ const [accountNumber, setAccountNumber] = useState<string | null>(null);
+ const [amount, setAmount] = useState<string | null>(null);
+ const [paymentName, setPaymentName] = useState<string | null>(null);
+
+
+
+
+ const openPaymentMethod = () => {
+   setShowPaymentMethod(true);
+   setModalStep(0); // Reset to the first step when opening
+   setPaymentMethod(null); // Reset payment method
+ };
+
+ const closePaymentMethod = () => {
+   setShowPaymentMethod(false);
+   setModalStep(0); // Reset when closing
+   setPaymentMethod(null); // Reset payment method
+ };
+
+ // Close modal on overlay click
+ const handleOverlayClick = () => {
+   closePaymentMethod();
+ };
+
+ const handleNextStep = (method: string) => { // Explicit type for method
+   if (method) {
+     setPaymentMethod(method);
+   }
+   setModalStep((prevStep) => prevStep + 1);
+ };
+
+ const handlePreviousStep = (method: string | null) => {
+   if (method) {
+     setPaymentMethod(method); // Restore the previous method if applicable
+   }
+   setModalStep((prevStep) => Math.max(prevStep - 1, 0));
+ };
+
+ const handleSubmitPayment = async () => {
+  // Check if activePermit exists before proceeding
+  if (!activePermit) {
+      console.error('No active permit found.');
+      return; // Exit the function if there's no active permit
+  }
+
+  console.log('Account Number:', accountNumber);
+  console.log('Amount:', amount);
+  console.log('Updating permit with ID:', activePermit._id); // Log ID for debugging
+
+  try {
+      const response = await axios.put(`http://localhost:3000/handlepayments/${activePermit._id}`, {
+          accountNumber: accountNumber,
+          amount: amount,
+          paymentName: paymentName,
+          paymentMethod: paymentMethod,
+          paymentType: paymentType,
+      });
+      
+      console.log('Updated Permit:', response.data);
+      setModalStep(2); // Move to the next step of your modal or process
+
+  } catch (error) {
+      console.error('Error updating work permit:', error);
+  }
+
+  // Reset the state variables to null
+  setAccountNumber(null); // Clear account number
+  setAmount(null); // Clear amount
+};
+
+
+ //ENDMODAL TESTING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 //Fetch PErmits
     const [latestStatus, setLatestStatus] = useState<string | null>(null);
@@ -131,7 +210,7 @@ useEffect(() => {
 
   const fetchWorkPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/workpermits', {
+      const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -294,7 +373,7 @@ useEffect(() => {
           <td>{permit.id}</td>
           <td>{permit.workpermitstatus}</td>
           <td>{permit.classification}</td>
-          <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
+          <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
           <td>
             {permit.permitExpiryDate 
               ? new Date(permit.permitExpiryDate).toLocaleDateString() 
@@ -328,6 +407,99 @@ useEffect(() => {
                {activePermit.workpermitstatus === 'Pending' && (
               <button onClick={handleDelete}>Delete</button>
            )}
+
+            {activePermit.workpermitstatus === 'Waiting for Payment' && (
+              <button onClick={openPaymentMethod}>Pay</button>
+           )}
+
+
+      {/* Payment Modal */}
+      {showPaymentMethod && (
+        <div className="modal-overlay-pay" onClick={handleOverlayClick}>
+          <div className="modal-content-pay" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button-pay" onClick={closePaymentMethod}>✖</button>
+
+            {modalStep === 0 && (
+              <div>
+                <h2>Select Payment Method</h2>
+                <button onClick={() => handleNextStep('online')}>Online Payment</button>
+                <button onClick={() => handleNextStep('onsite')}>Onsite Payment</button>
+              </div>
+            )}
+
+            {modalStep === 1 && paymentMethod === 'online' && (
+              <div>
+                <h2>Select Online Payment Method</h2>
+                <div>
+                  <input
+                    type="radio"
+                    id="gcash"
+                    name="paymentMethod"
+                    value="gcash"
+                    checked={paymentType === 'gcash'}
+                    onChange={() => setPaymentType('gcash')}
+                  />
+                  <label htmlFor="gcash">GCash</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="onlineBanking"
+                    name="paymentMethod"
+                    value="onlineBanking"
+                    checked={paymentType === 'onlineBanking'}
+                    onChange={() => setPaymentType('onlineBanking')}
+                  />
+                  <label htmlFor="onlineBanking">Online Banking</label>
+                </div>
+                <div>
+                </div>
+
+                {paymentType === 'gcash' && (
+                  <div>
+                    <h2>Enter GCash Details</h2>
+                    <input type="text" placeholder="Full Name" onChange={(e) => setPaymentName(e.target.value)} required />
+                    <input type="text" placeholder="GCash Number" onChange={(e) => setAccountNumber(e.target.value)} />
+                    <input type="text" placeholder="Amount" onChange={(e) => setAmount(e.target.value)} />
+                  </div>
+                )}
+
+                {paymentType === 'onlineBanking' && (
+                  <div>
+                    <h2>Enter Online Banking Details</h2>
+                    <input type="text" placeholder="Card Number" onChange={(e) => setAccountNumber(e.target.value)} required />
+                    <h2>Billing Information</h2>
+                    <input type="text" placeholder="Full Name" onChange={(e) => setPaymentName(e.target.value)} required />
+                    <input type="text" placeholder="Amount" onChange={(e) => setAmount(e.target.value)} required />
+                  </div>
+                )}
+
+                <button onClick={handleSubmitPayment}>Submit Payment</button>
+                <button onClick={() => handlePreviousStep('online')}>Back</button>
+              </div>
+            )}
+
+            {modalStep === 1 && paymentMethod === 'onsite' && (
+              <div>
+                <h2>Enter Payment Details</h2>
+                <input type="text" placeholder="Your Name" />
+                <input type="text" placeholder="Payment Amount" />
+                <button onClick={handleSubmitPayment}>Submit Payment</button>
+                <button onClick={() => handlePreviousStep('onsite')}>Back</button>
+              </div>
+            )}
+
+
+            {modalStep === 2 && (
+              <div>
+                <h2>Receipt</h2>
+                <p>Your payment has been processed!</p>
+                <button onClick={closePaymentMethod}>Close</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
 <button onClick={closeModal}>Cancel</button>
               </div>
