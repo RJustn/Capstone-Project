@@ -48,8 +48,8 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
       try {
         const response = await fetch('http://localhost:3000/profile', {
           method: 'GET',
+          credentials: 'include',
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -88,8 +88,45 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
 
   }, [token, navigate, otpCountdown, userDetails]);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/check-auth-client', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
   
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+  
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        setError('Failed to load dashboard. Please try again.');
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+  
+    checkAuth();
+  }, [navigate]); // Only depend on navigate, which is necessary for the redirection
+  
+  const [loading, setLoading] = useState(true);
 
+    // Show loading or redirect until the loading state is false
+    if (loading) {
+      return <p>Loading...</p>; // Or a spinner/loading animation
+  }
 
 // For Forget Password @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

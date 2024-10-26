@@ -14,12 +14,16 @@ interface WorkPermit {
   applicationdateIssued: string;
 }
 
+
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<{ email: string; firstName: string; lastName: string; id: string} | null>(null);;
   const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
+
   const [error, setError] = useState<string | null>(null);
-  const token = localStorage.getItem('token');
+ 
+
   // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [activePermit, setActivePermit] = useState<WorkPermit | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -178,57 +182,104 @@ const currentItems = sortedWorkPermits.slice(startIndex, endIndex);
     const [latestStatus, setLatestStatus] = useState<string | null>(null);
 //ENd Fetch PEmtirs
 
-const handleLogout = () => {
-  localStorage.removeItem('token'); // Remove token from 
-  navigate('/'); // Redirect to home page
+
+const handleLogout = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/logout', {
+      method: 'POST',
+      credentials: 'include', // Include cookies in the request
+    });
+
+    if (response.ok) {
+      // Clear any local storage data (if applicable)
+      localStorage.removeItem('profile');
+      localStorage.removeItem('userId');
+
+      // Redirect to the login page
+      navigate('/');
+    } else {
+      // Handle any errors from the server
+      const errorData = await response.json();
+      console.error('Logout error:', errorData.message);
+    }
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};
+
+const fetchProfile = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/profile', {
+      method: 'GET',
+      credentials: 'include', // Ensure cookies (containing the token) are sent
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const userData = await response.json();
+    setUserDetails(userData.user);
+    localStorage.setItem('profile', JSON.stringify(userData.user));
+    localStorage.setItem('userId', userData.id);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    setError('Failed to fetch profile, please try again.');
+  }
+};
+
+const fetchWorkPermits = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
+      method: 'GET',
+      credentials: 'include', // Ensure cookies (containing the token) are sent
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    const workPermitData = await response.json();
+    setWorkPermits(workPermitData);
+  } catch (error) {
+    console.error('Error fetching work permits:', error);
+    setError('Failed to fetch work permits, please try again.');
+  }
 };
 
 useEffect(() => {
-  if (!token) {
-    navigate('/'); // Redirect to login if no token
-    return;
-  }
-
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/profile', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      const userData = await response.json();
-      setUserDetails(userData.user);
-      localStorage.setItem('profile', JSON.stringify(userData.user));
-      localStorage.setItem('userId', userData.id);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      setError('Failed to fetch profile, please try again.');
-    }
-  };
-
-  const fetchWorkPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const workPermitData = await response.json();
-      setWorkPermits(workPermitData);
-    } catch (error) {
-      console.error('Error fetching work permits:', error);
-      setError('Failed to fetch work permits, please try again.');
-    }
-  };
-
   fetchProfile();
   fetchWorkPermits();
-}, [navigate, token]); // Remove workPermits from dependencies
+}, []); // Remove workPermits from dependencies
+
+useEffect(() => {
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/check-auth-client', {
+        method: 'GET',
+        credentials: 'include', // This ensures cookies are sent with the request
+      });
+
+      if (response.status === 401) {
+        // If unauthorized, redirect to login
+        console.error('Access denied: No token');
+        navigate('/login');
+        return;
+      }
+
+      if (response.status === 204) {
+        console.log('Access Success');
+        return;
+      }
+
+      // Handle unexpected response
+      console.error('Unexpected response status:', response.status);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setError('Failed to load dashboard. Please try again.');
+    } 
+  };
+
+  checkAuth();
+}, [navigate]); // Only depend on navigate, which is necessary for the redirection
+
 
 useEffect(() => {
   if (workPermits.length > 0) {

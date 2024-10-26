@@ -1,5 +1,5 @@
 // src/App.tsx
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 
@@ -51,6 +51,7 @@ import AppTest2 from './pages/apptest2';
 const App: React.FC = () => {
   return (
     <Router>
+        <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<Home />} /> {/* Default route */}
         <Route path="/login" element={<Login />} />
@@ -91,6 +92,7 @@ const App: React.FC = () => {
           <Route path='/superadmin/accountadd' element={<SuperadminAddUser />} />
         </Route>
       </Routes>
+      </Suspense>
     </Router>
   );
 };

@@ -23,6 +23,7 @@ const Login: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password, }),
+        credentials: 'include', // Include credentials to send cookies
       });
       const data = await response.json();
       if (response.ok) {

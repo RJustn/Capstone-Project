@@ -26,7 +26,7 @@ const ViewAllApplication: React.FC = () => {
     const navigate = useNavigate();
     const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
     const [, setError] = useState<string | null>(null);
-    const token = localStorage.getItem('token');
+
     const [latestPermitID, setLatestPermitID] = useState<string | null>(null);
     const [latestPermitmainID, setLatestPermitmainID] = useState<string | null>(null);
     const [latestStatus, setLatestStatus] = useState<string | null>(null);
@@ -181,23 +181,39 @@ const handleDelete = () => {
     
 // Content CODE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from 
-    navigate('/'); // Redirect to home page
-  };
+const handleLogout = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/logout', {
+      method: 'POST',
+      credentials: 'include', // Include cookies in the request
+    });
+
+    if (response.ok) {
+      // Clear any local storage data (if applicable)
+      localStorage.removeItem('profile');
+      localStorage.removeItem('userId');
+
+      // Redirect to the login page
+      navigate('/');
+    } else {
+      // Handle any errors from the server
+      const errorData = await response.json();
+      console.error('Logout error:', errorData.message);
+    }
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};
 
   useEffect(() => {
-    if (!token) {
-      navigate('/'); // Redirect to login if no token
-      return;
-    }
-  
+
     const fetchWorkPermits = async () => {
       try {
         const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
           method: 'GET',
+          credentials: 'include',
           headers: {
-            Authorization: `Bearer ${token}`,
+ 
             'Content-Type': 'application/json',
           },
         });
@@ -211,8 +227,38 @@ const handleLogout = () => {
     };
   
     fetchWorkPermits();
-  }, [navigate, token]); // Only run when token changes
+  }, [navigate, ]); // Only run when token changes
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/check-auth-client', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
   
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+  
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } 
+    };
+  
+    checkAuth();
+  }, [navigate]); // Only depend on navigate, which is necessary for the redirection
+
   useEffect(() => {
     if (workPermits.length > 0) {
       // Logic for processing work permits

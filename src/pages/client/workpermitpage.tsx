@@ -73,7 +73,6 @@ export interface WorkPermits {
 
 const WorkPermit: React.FC = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
   const [step, setStep] = useState(1);
   const [isFormValid, setIsFormValid] = useState(true); 
 
@@ -117,14 +116,15 @@ const WorkPermit: React.FC = () => {
     document4: null,
   });
   const [latestWorkPermit, setLatestWorkPermit] = useState<WorkPermits | null>(null);
-  const fetchWorkPermits = async (token: string) => {
+  const fetchWorkPermits = async () => {
       try {
         const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
           method: 'GET',
+          credentials: 'include', 
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
+
         });
         
         const WorkPermitData = await response.json();
@@ -146,14 +146,11 @@ if (WorkPermitData.length > 0) {
       }
     };
   useEffect(() => {
-    if (!token) {
-      navigate('/'); // Redirect to login if no token
-      return;
-    }
+
  
   console.log('Repeating');
-    fetchWorkPermits(token);
-  }, [navigate, token]); 
+    fetchWorkPermits();
+  }, [navigate]); 
 
   useEffect(() => {
     if (latestWorkPermit) {
@@ -272,9 +269,9 @@ if (WorkPermitData.length > 0) {
     try {
       const response = await axios.post('http://localhost:3000/workpermitpage', formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
+        withCredentials: true, 
       });
         console.log(response.data);
         if (response.status === 200) {
@@ -291,10 +288,28 @@ if (WorkPermitData.length > 0) {
   
 
 
-  const handleLogout = (e: React.MouseEvent) => {
-    e.preventDefault();
-    localStorage.removeItem('token');
-    navigate('/'); // Redirect to the login page or home page
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        credentials: 'include', // Include cookies in the request
+      });
+  
+      if (response.ok) {
+        // Clear any local storage data (if applicable)
+        localStorage.removeItem('profile');
+        localStorage.removeItem('userId');
+  
+        // Redirect to the login page
+        navigate('/');
+      } else {
+        // Handle any errors from the server
+        const errorData = await response.json();
+        console.error('Logout error:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (

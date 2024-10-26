@@ -13,7 +13,7 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const PDFDocument = require('pdfkit'); 
 const cron = require('node-cron');
-
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
@@ -31,9 +31,13 @@ const transporter = nodemailer.createTransport({
 
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Update to your frontend URL
+  credentials: true // Allow credentials (cookies, authorization headers)
+}));
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(session({
   secret: 'your_session_secret', // Replace with a strong secret in production
@@ -263,49 +267,112 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// /login route
+// Login route
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  
+  const { email, password } = req.body; // Assuming you want to keep using email
+
   try {
     const user = await User.findOne({ email });
-    
     // Check if the email is verified
-    if (!user || !user.isVerified) {
+    if (!user.isVerified) {
       return res.status(400).json({ error: 'Email is not verified' });
     }
-    
-    if (user && await bcrypt.compare(password, user.password)) {
-      // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '3h' });
-      
-      // Return the role along with the token
-      res.status(200).json({ 
-        message: 'Login successful!', 
-        token, 
-        role: user.userrole // Assuming the field is named `userrole`
-      });
-    } else {
-      res.status(400).json({ error: 'Invalid credentials' });
+
+    // Check if password is valid
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
+
+    // Generate JWT
+    const token = jwt.sign({ userId: user._id, userrole: user.userrole }, JWT_SECRET, { expiresIn: '3h' });
+
+    // Set JWT in cookie
+    res.cookie('authToken', token, { 
+      httpOnly: true, 
+      secure: false, // Set to true in production
+      maxAge: 10800000 // 3 hours in milliseconds
+    });
+
+    res.status(200).json({ 
+      message: 'Login successful!', 
+      token, 
+      role: user.userrole // Assuming the field is named `userrole`
+    });
   } catch (error) {
-    console.error('Error logging in:', error); // Log the error for debugging
     res.status(500).json({ error: 'Error logging in' });
   }
+});
+
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    console.error('No token provided');
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    console.log('Token decoded:', req.user); // Check if the decoded token contains the expected data
+    next();
+  } catch (error) {
+    console.error('Token verification failed:', error.message);
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+
+app.get('/check-auth-client', authenticateToken, (req, res) => {
+  // Assuming the user role is stored in req.user after token verification
+  const userRole = req.user.userrole; // Adjust this if the role key is different
+  console.log(userRole);
+  if (userRole === 'Client') {
+    // If the user's role is 'client', respond with a 204 No Content status
+    return res.sendStatus(204);
+  } else {
+    console.log('Access denied: user is not a client');
+    // If the user's role is not 'client', respond with a 401 Unauthorized status
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+app.get('/check-auth-datacontroller', authenticateToken, (req, res) => {
+  // Assuming the user role is stored in req.user after token verification
+  const userRole = req.user.userrole; // Adjust this if the role key is different
+  console.log(userRole);
+  if (userRole === 'Data Controller') {
+    // If the user's role is 'client', respond with a 204 No Content status
+    return res.sendStatus(204);
+  } else {
+    console.log('Access denied: user is not a Data Controller');
+    // If the user's role is not 'client', respond with a 401 Unauthorized status
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: false, // Set to true in production with HTTPS
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 
 
 app.get('/profile', async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from 'Bearer <token>'
-  console.log('Received token:', token);
+  const token = req.cookies.authToken; // Extract token from 'Bearer <token>'
+  //console.log('Received token:', token);
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
-    console.log('Decoded token:', decoded);
+   // console.log('Decoded token:', decoded);
     const user = await User.findById(decoded.userId);
     if (user) {
       res.status(200).json({ user });
@@ -470,8 +537,8 @@ app.post('/workpermitpage', upload.fields([
   { name: 'document3', maxCount: 1 },
   { name: 'document4', maxCount: 1 }
 ]), async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from 'Bearer <token>'
-  console.log('Received token:', token);
+  const token = req.cookies.authToken; // Extract token from the cookie
+ // console.log('Received token:', token);
   
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
@@ -701,8 +768,8 @@ async function createUser(role) {
 
 
 app.get('/fetchuserworkpermits', async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from 'Bearer <token>'
-  console.log('Received token:', token);
+  const token = req.cookies.authToken; // Extract token from the cookie
+// console.log('Received token:', token);
   try {
     
     const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
@@ -726,7 +793,7 @@ app.get('/fetchuserworkpermits', async (req, res) => {
 
 app.get('/workpermitdetails/:id', async (req, res) => {
   const { id } = req.params;
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from 'Bearer <token>'
+  const token = req.cookies.authToken; // Extract token from the cookie
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get userId
@@ -811,11 +878,11 @@ app.post('/apptesting', upload.fields([
 
 app.get('/workpermits', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1]; // Extract token from 'Bearer <token>'
-  console.log('Received token:', token);
+  //console.log('Received token:', token);
   try {
     
     const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
-    console.log('Decoded token:', decoded);
+   // console.log('Decoded token:', decoded);
     const userId = decoded.userId;
 
     // Fetch user and populate work permits
@@ -1240,12 +1307,6 @@ app.put('/handlepayments/:id', async (req, res) => {
     receiptID: receiptID,
     id: id,
   };
-
-
-
-
-
-
 
   try {
     const receiptFileName = generateReceiptPDF(ContentData);
