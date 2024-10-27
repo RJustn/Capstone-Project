@@ -1,0 +1,355 @@
+  /* ===================================  Dashboard Styles =================================== */
+
+/* Navbar Styles */
+.SAnavbar {
+    background-color: #000000; /* Black background color */
+    color: #ffffff; /* White text color for contrast */
+    padding: 20px; /* Padding inside the navbar */
+    text-align: center; /* Center-align the logo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin-bottom: 20px; /* Space below the navbar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.SAmenu-toggle span {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.return-link {
+    color: white; /* Match the text color of other links */
+    margin-right: 20px; /* Add some spacing */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make it bold */
+}
+
+.logout {
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.notification {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+  /* Breadcrumb Styles */
+.SAbreadcrumb {
+    padding: 10px 20px;
+    font-size: 24px;
+    color: #555;
+    font-weight: bold;
+}
+
+  /* Dashboard Layout */
+.SAdashboard {
+    padding: 20px;
+}
+
+  /* Top Actions */
+.top-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 36px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 450px;
+    text-align: center;
+}
+
+.action-card a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 24px;;
+    color: #000000;
+}
+
+.action-card:hover{
+    background-color: #454545;
+}
+
+  /* Grid Panels */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+  /* Panel Styles */
+.panel {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.panel-header {
+    background-color: #000000; /* Black background color */
+    color: #ffffff; /* White text color */
+    padding: 10px 20px; /* Padding around the header */
+    border-radius: 10px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between elements inside the header */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.panel-header h3 {
+    margin: 0; /* Remove default margin from the heading */
+    font-size: 1.25rem; /* Adjust font size */
+}
+
+.panel-searchbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.search-box {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-left: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #6e6f6f86;
+}
+
+th {
+    background-color: #808080; /* Black background */
+    font-weight: bold; /* Bold text */
+    color: white; /* White text */
+}
+
+.panel-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.panel-content ul li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+  /* Hover Effects */
+.action-card:hover, .panel:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* LOGIN PAGE STYLES */
+/* Centering the container in the middle of the page */
+.SAloginbody {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #eaeaea;
+}
+
+  /* ===================================  Login Page Styles =================================== */
+.SAlogin-container {
+    width: 90%; /* Container will take 90% of the screen width */
+    max-width: 400px; /* But will not exceed 400px */
+    margin: 0 6rem; /* Adjusted margin for balanced look */
+    padding: 24px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+  /* Button container to align the button to the right */
+.SAbtn-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.SAlogin-btn {
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    background-color: #000000;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.SAlogin-btn:hover {
+    background-color: #4e4e4e;
+}
+
+  /* Responsive Adjustment */
+@media (max-width: 768px) {
+    .SAlogin-container {
+    margin-right: 2rem;
+    }
+}
+
+  /* ===================================  Account Add Styles =================================== */
+.SaAccountAddForm {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px; /* Increased width for better alignment */
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+  /* Heading */
+.SAaccountaddH1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+  /* Flexbox Layout */
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.flex-row label {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.flex-row label:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    color: #555;
+    font-size: 14px;
+}
+
+  /* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input:focus,
+select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .SAbackButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .SAcreateAccountButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.SAcreateAccountButton:hover {
+    background-color: #4e4e4e;
+}
+
+  /* Error and Success Messages */
+p {
+    text-align: center;
+    font-size: 14px;
+}
+
+  /* ===================================  Account Edit Styles =================================== */
+
+
+      /* ===================================  Account Add Styles =================================== */

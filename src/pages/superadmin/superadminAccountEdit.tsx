@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import '../Styles/SuperAdminStyles.css';
 
 const SuperadminAccountEdit = () => {
   const { id } = useParams<{ id: string }>();

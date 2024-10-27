@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Styles/SAlogin.css'; // Import your CSS file
+import '../Styles/SuperAdminStyles.css';
 
 const SuperAdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');

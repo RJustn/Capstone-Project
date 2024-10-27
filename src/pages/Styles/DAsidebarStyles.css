@@ -1,18 +1,5 @@
-/* DASHBOARD CONTAINER STYLE */
-.DAdreleasedpermits-container {
-    display: flex; /* Use flexbox to create a side-by-side layout */
-    height: 100vh; /* Full height of the viewport */
-    overflow: hidden; /* Prevents scrolling */
-}
-
-  /* SIDEBAR CONTAINER STYLE */
-.DAsidebar-container {
-    width: 225px; /* Fixed width for the sidebar */
-    z-index: 1000; /* Ensure it's above other content */
-}
-
-  /* SIDEBAR STYLE */
-.DAsidebar {
+ /* SIDEBAR STYLE */
+ .DAsidebar {
     width: 100%; /* Full width within its container */
     height: 100vh; /* Full height */
     background-color: #0047AB; /* Dark background color */
@@ -69,22 +56,4 @@
 
 .DAsidebar-link:hover {
     background-color: #0000FF; /* Darker background on hover */
-}
-
-/* CONTENT STYLE */
-.DAcontent {
-    flex-grow: 1; /* Allow content area to expand to fill available space */
-    padding: 20px; /* Add padding around the content */
-    overflow-y: auto; /* Enable vertical scrolling for content if necessary */
-}
-
-/* HEADER AND NAVIGATION */
-.DAheader {
-    margin-bottom: 20px; /* Space below the header */
-    background-color: #0047AB; /* Example background color */
-    color: #ffffff; /* White text color for contrast */
-    padding: 20px; /* Padding inside the header */
-    border-radius: 10px; /* Rounded corners */
-    text-align: center; /* Center-align the header text */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for depth */
 }

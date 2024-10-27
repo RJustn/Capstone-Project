@@ -1,4 +1,5 @@
-import '../Styles/DAforpaymentWP.css';
+import '../Styles/DataControllerStyles.css';
+import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 interface WorkPermit {
@@ -238,45 +239,9 @@ interface PersonalInformation {
     }, [workPermits]);
   
   return (
-      <section className="DAforassessment-container">
-          <div className="DAsidebar-container">
-              <div className="DAsidebar">
-                  <div className="DAsidebar-logo">
-                          <img src="/obpwlsDAlogo.svg" alt="Logo" className="logo-image" />
-                  </div>
-                  <ul className="DAsidebar-list">
-                          <li>
-                              <a href="/DAdashboard" className="DAsidebar-link">
-                              <img src="/dashboardlogo.svg" alt="Logo" className="sidebarlogoimage" />Dashboard
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/DAforassessment" className="DAsidebar-link">
-                              <img src="/DAforassessmentlogo.svg" alt="Logo" className="sidebarlogoimage" />For Assessment
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/DAforpayment" className="DAsidebar-linkactive">
-                              <img src="paymentlogo.svg" alt="Logo" className="sidebarlogoimage" />For Payment
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/DAreleasedpermits" className="DAsidebar-link">
-                              <img src="releasedpermitlogo.svg" alt="Logo" className="sidebarlogoimage" />Released Permits
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/DAreportsngraph" className="DAsidebar-link">
-                              <img src="reportsngraphlogo.svg" alt="Logo" className="sidebarlogoimage" />Reports/Graphs
-                              </a>
-                          </li>
-                          <li>
-                              <a href="/" onClick={handleLogout} className="DAsidebar-link">
-                              <img src="logoutlogo.svg" alt="Logo" className="sidebarlogoimage" />Log Out
-                              </a>
-                          </li>
-                      </ul>
-          </div>
+      <section className="DAbody">
+              <div className="DAsidebar-container">
+        <DASidebar handleLogout={handleLogout} /> {/* Pass handleLogout to DASidebar */}
       </div>
   
       <div className="DAcontent">
@@ -285,19 +250,22 @@ interface PersonalInformation {
           </header>
           <div className='workpermittable'>
             <p>Work Permit Applications (For Payments)</p>
-                  {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search by ID, Status, or Classification"
-          value={inputValue} // Use inputValue for the input field
-          onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
-        />
-        <button onClick={handleSearch}>Search</button> {/* Button to trigger search */}
+{/* Search Bar */}
+<div className="search-bar-container">
+    <input
+        type="text"
+        placeholder="Search by ID, Status, or Classification"
+        value={inputValue} // Use inputValue for the input field
+        onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
+        className="search-input" // Add a class for styling
+    />
+    <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+</div>
   
   
   
    {/* Dropdown for Classification Filter */}
-   <select value={classificationFilter} onChange={handleClassificationChange}>
+  <select value={classificationFilter} onChange={handleClassificationChange}>
           <option value="">All</option>
           <option value="New">New</option>
           <option value="Renew">Renew</option>

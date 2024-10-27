@@ -1,5 +1,5 @@
 /* DASHBOARD CONTAINER STYLE */
-.DAdreleasedpermits-container {
+.DAbody{
     display: flex; /* Use flexbox to create a side-by-side layout */
     height: 100vh; /* Full height of the viewport */
     overflow: hidden; /* Prevents scrolling */
@@ -71,13 +71,6 @@
     background-color: #0000FF; /* Darker background on hover */
 }
 
-/* CONTENT STYLE */
-.DAcontent {
-    flex-grow: 1; /* Allow content area to expand to fill available space */
-    padding: 20px; /* Add padding around the content */
-    overflow-y: auto; /* Enable vertical scrolling for content if necessary */
-}
-
 /* HEADER AND NAVIGATION */
 .DAheader {
     margin-bottom: 20px; /* Space below the header */
@@ -87,4 +80,66 @@
     border-radius: 10px; /* Rounded corners */
     text-align: center; /* Center-align the header text */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for depth */
+}
+
+/* CONTENT STYLE */
+.DAcontent {
+    flex-grow: 1; /* Allow content area to expand to fill available space */
+    padding: 20px; /* Add padding around the content */
+    overflow-y: auto; /* Enable vertical scrolling for content if necessary */
+}
+
+/* BUTTON STYLES */
+.button-container {
+    display: flex; /* Use flexbox to layout buttons */
+    justify-content: center; /* Distribute space between buttons */
+    width: 100%; /* Ensure the container takes full width */
+    gap: 10rem; /* Optional: Space between buttons */
+}
+
+.DAbusinesspermitbutton, .DAworkpermitbutton {
+    display: inline-block; /* Ensure buttons are inline */
+    background-color: #ffffff; /* Button background color */
+    color: rgb(0, 0, 0); /* black text color */
+    padding: 3rem; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.DAbusinesspermitbutton:hover, .DAworkpermitbutton:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* SEARCH BAR CONTAINER */
+.search-bar-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center align items */
+    margin-bottom: 20px; /* Space below the search bar */
+}
+
+/* SEARCH INPUT STYLE */
+.search-input {
+    flex-grow: 1; /* Allow input to grow and fill available space */
+    padding: 10px; /* Padding inside the input */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    margin-right: 10px; /* Space between input and button */
+}
+
+/* SEARCH BUTTON STYLE */
+.search-button {
+    background-color: #0056b3; /* Button background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+/* SEARCH BUTTON HOVER STYLE */
+.search-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
 }

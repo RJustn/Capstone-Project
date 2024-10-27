@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../AuthContext'; // Adjust the import path as necessary
-import '../Styles/SAdashboard.css';
+import '../Styles/SuperAdminStyles.css';
 
 
 interface DataController {

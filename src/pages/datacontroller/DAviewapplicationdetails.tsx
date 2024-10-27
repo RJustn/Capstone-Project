@@ -1,4 +1,5 @@
-import '../Styles/DAviewapplicationdetails.css'; 
+import '../Styles/DataControllerStyles.css'; 
+import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';// Import your CSS file
@@ -283,47 +284,10 @@ const DataControllerViewApplicationDetails: React.FC = () => {
 
 
 return (
-    <section className="DAdreleasedpermits-container">
-    <div className="DAsidebar-container">
-        <div className="DAsidebar">
-        <div className="DAsidebar-logo">
-            <img src="/obpwlsDAlogo.svg" alt="Logo" className="logo-image" />
-        </div>
-                    <ul className="DAsidebar-list">
-                        <li>
-                            <a href="/DAdashboard" className="DAsidebar-link">
-                            <img src="/dashboardlogo.svg" alt="Logo" className="sidebarlogoimage" />Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/DAforassessment" className="DAsidebar-link">
-                            <img src="/DAforassessmentlogo.svg" alt="Logo" className="sidebarlogoimage" />For Assessment
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/DAforpayment" className="DAsidebar-link">
-                            <img src="paymentlogo.svg" alt="Logo" className="sidebarlogoimage" />For Payment
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/DAreleasedpermits" className="DAsidebar-linkactive">
-                            <img src="releasedpermitlogo.svg" alt="Logo" className="sidebarlogoimage" />Released Permits
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/DAreportsngraph" className="DAsidebar-link">
-                            <img src="reportsngraphlogo.svg" alt="Logo" className="sidebarlogoimage" />Reports/Graphs
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/" onClick={handleLogout} className="DAsidebar-link">
-                            <img src="logoutlogo.svg" alt="Logo" className="sidebarlogoimage" />Log Out
-                            </a>
-                        </li>
-                    </ul>
-        </div>
-    </div>
-
+    <section className="DAbody">
+        <div className="DAsidebar-container">
+        <DASidebar handleLogout={handleLogout} /> {/* Pass handleLogout to DASidebar */}
+      </div>
     <div className="DAcontent">
         <header className='DAheader'>
             <h1>Online Business and Work Permit Licensing System</h1>
