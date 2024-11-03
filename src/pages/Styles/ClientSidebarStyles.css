@@ -1,8 +1,14 @@
- /* SIDEBAR STYLE */
-.DAsidebar {
+/* SIDEBAR CONTAINER STYLE */
+.sidebar-container {
+    width: 225px; /* Fixed width for the sidebar */
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+  /* SIDEBAR STYLE */
+.sidebar {
     width: 100%; /* Full width within its container */
     height: 100vh; /* Full height */
-    background-color: #0047AB; /* Dark background color */
+    background-color: #00712D; /* Dark background color */
     padding-top: 20px;
     position: relative; /* Relative positioning within its container */
     overflow-y: auto; /* Add vertical scrolling if necessary */
@@ -12,16 +18,16 @@
 }
 
   /* LOGO STYLE */
-.DAsidebar-logo {
+.sidebar-logo {
     margin-bottom: 20px;
 }
 
-.DAlogo-image {
+.logo-image {
     width: 150px; /* Adjust the width as needed */
     height: 150px; /* Adjust the height as needed */
 }
 
-/* SIDEBAR LOGO STYLES */
+  /* SIDEBAR LOGO STYLES */
 .sidebarlogoimage {
     width: 24px; /* Adjust the size of the logo */
     height: auto; /* Maintain aspect ratio */
@@ -29,31 +35,33 @@
     vertical-align: middle; /* Align with the text */
 }
 
-/* SIDEBAR LIST STYLE */
-.DAsidebar-list {
+  /* SIDEBAR LIST STYLE */
+.sidebar-list {
     list-style-type: none; /* Remove bullets */
     padding: 0; /* Remove default padding */
     margin: 0; /* Remove default margin */
     width: 100%; /* Full width for sidebar links */
 }
 
-/* SIDEBAR LINK STYLE */
-.DAsidebar-link {
-    display: block;
+  /* SIDEBAR LINK STYLE */
+.sidebar-link {
+    display: flex; /* Use flexbox to align items */
+    align-items: center; /* Vertically center the text and logo */
     padding: 15px 20px;
     color: #ffffff; /* White text color */
     text-decoration: none; /* Remove underline */
     transition: background-color 0.3s; /* Smooth hover effect */
+    white-space: nowrap; /* Prevent text from wrapping */
 }
 
-.DAsidebar-linkactive{
+.sidebar-linkactive{
     display: block;
     padding: 15px 20px;
     color: #ffffff; /* White text color */
     text-decoration: none; /* Remove underline */
-    background-color: #0000FF;
+    background-color: #399918;
 }
 
-.DAsidebar-link:hover {
-    background-color: #0000FF; /* Darker background on hover */
+.sidebar-link:hover {
+    background-color: #399918; /* Darker background on hover */
 }

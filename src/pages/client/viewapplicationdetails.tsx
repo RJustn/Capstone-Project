@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../Styles/viewapplicationdetails.css';
+import '../Styles/ClientStyles.css';
+import ClientSideBar from '../components/ClientSideBar';
 
 export interface PersonalInformation {
     lastName: string;
@@ -204,53 +205,7 @@ useEffect(() => {
   return (
     <section className="dashboard-container">
       <div className="sidebar-container">
-        <div className="sidebar">
-          <div className="sidebar-logo">
-            <img src="/obpwlslogo.svg" alt="Logo" className="logo-image" />
-          </div>
-          <ul className="sidebar-list">
-            <li>
-                <a href="/dashboard" className="sidebar-link">
-                <img src="/dashboardlogo.svg" alt="Logo" className="sidebarlogoimage" />Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/workpermitpage" className="sidebar-link">
-                <img src="/applicationslogo.svg" alt="Logo" className="sidebarlogoimage" />Work Permit
-                </a>
-            </li>
-            <li>
-                <a href="/businesspermitpage" className="sidebar-link">
-                <img src="/applicationslogo.svg" alt="Logo" className="sidebarlogoimage" />Business Permit
-                </a>
-            </li>
-            <li>
-                <a href="/viewworkpermitapplication" className="sidebar-link">
-                <img src="/viewspecificapplicationlogo.svg" alt="Logo" className="sidebarlogoimage" />View WP Applications
-                </a>
-            </li>
-            <li>
-                <a href="/viewbusinessapplication" className="sidebar-link">
-                <img src="/viewspecificapplicationlogo.svg" alt="Logo" className="sidebarlogoimage" />View BP Applications
-                </a>
-            </li>
-            <li>
-                <a href="/viewallapplication" className="sidebar-linkactive">
-                <img src="/viewallapplicationslogo.svg" alt="Logo" className="sidebarlogoimage" />View All Applications
-                </a>
-            </li>
-            <li>
-                <a href="/account" className="sidebar-link">
-                <img src="/accountlogo.svg" alt="Logo" className="sidebarlogoimage" />Account
-                </a>
-            </li>
-            <li>
-                <a href="/" onClick={handleLogout} className="sidebar-link">
-                <img src="/logoutlogo.svg" alt="Logo" className="sidebarlogoimage" />Log Out
-                </a>
-            </li>
-        </ul>
-        </div>
+      <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
       </div>
   
       <div className="content">
