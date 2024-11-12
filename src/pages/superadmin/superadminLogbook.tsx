@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/SuperAdminStyles.css';
 
 // Interface definitions for log entries and online employees
@@ -14,7 +15,7 @@ interface OnlineEmployee {
     userId: string;
     firstName: string;
     lastName: string;
-    onlineStatus: boolean;
+    isOnline: boolean;
 }
 
 const Logbook: React.FC = () => {
@@ -22,6 +23,58 @@ const Logbook: React.FC = () => {
     const [dataControllerLogs, setDataControllerLogs] = useState<LogEntry[]>([]);
     const [onlineAdmins, setOnlineAdmins] = useState<OnlineEmployee[]>([]);
     const [onlineDataControllers, setOnlineDataControllers] = useState<OnlineEmployee[]>([]);
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+          try {
+            const response = await fetch('http://localhost:3000/superadmin/authentication', {
+              method: 'GET',
+              credentials: 'include',
+            });
+      
+            if (response.status === 401) {
+              console.error('Access denied: No token');
+              navigate('/superadmin/login');
+              return;
+            }
+      
+            if (response.status === 204) {
+              console.log('Access Success');
+              return;
+            }
+          } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+          }
+        };
+      
+        checkAuth();
+      }, [navigate]);
+
+      
+      const handleLogout = async () => {
+        try {
+          const response = await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            credentials: 'include',
+          });
+      
+          if (response.ok) {
+            localStorage.removeItem('token');
+            navigate('/superadmin/login');
+          } else {
+            const errorText = await response.text();
+            throw new Error(`Failed to logout: ${errorText}`);
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError('An unknown error occurred');
+          }
+        }
+      };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,13 +110,17 @@ const Logbook: React.FC = () => {
         fetchData();
     }, []);
 
+    if (error) {
+        return <div>Error: {error}</div>; // Error message
+    }
+
     return (
         <div className="SAbody">
             <div className="SAnavbar">
                 <div className="logo">Logbook</div>
                 <div className="user-actions">
                     <a href="/superadmin/dashboard" className="return-link">Return</a>
-                    <a href="/superadmin/login" className="logout">Log Out</a>
+                    <a href="/superadmin/login"  onClick={handleLogout} className="logout">Log Out</a>
                     <span className="notification">&#128276;</span>
                 </div>
             </div>
@@ -140,7 +197,7 @@ const Logbook: React.FC = () => {
                                     <td>{admin.firstName}</td>
                                     <td>{admin.lastName}</td>
                                     <td>{admin.userId}</td>
-                                    <td>{admin.onlineStatus ? 'Online' : 'Offline'}</td>
+                                    <td>{admin.isOnline ? 'Online' : 'Offline'}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -165,7 +222,7 @@ const Logbook: React.FC = () => {
                                     <td>{controller.firstName}</td>
                                     <td>{controller.lastName}</td>
                                     <td>{controller.userId}</td>
-                                    <td>{controller.onlineStatus ? 'Online' : 'Offline'}</td>
+                                    <td>{controller.isOnline ? 'Online' : 'Offline'}</td>
                                 </tr>
                             ))}
                         </tbody>

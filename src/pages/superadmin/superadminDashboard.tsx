@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../AuthContext'; // Adjust the import path as necessary
 import '../Styles/SuperAdminStyles.css';
+import { useNavigate } from 'react-router-dom';
 
 
 interface DataController {
@@ -25,24 +24,27 @@ interface UserLog {
   userId: string;
   firstName: string;
   lastName: string;
-  accountOpenedDate: string;
+  lastLoginDate: string | null;
+  lastLogoutDate: string | null;
+}
+interface OnlineUser {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  userrole: string;
+  isOnline: boolean;
 }
 
 
-const SuperAdminDashboard: React.FC = () => {
 
-  const { isAuthenticated, user } = useAuth(); // Assuming `token` is available in `useAuth`
+const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [dataControllers, setDataControllers] = useState<DataController[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]); 
-  const [onlineUsers, setOnlineUsers] = useState<(DataController | Admin)[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]); 
   const [userLogs, setUserLogs] = useState<UserLog[]>([]);
-
-  useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'superadmin') {
-       navigate('/superadmin/login')
-     }
-  }, [isAuthenticated, user, navigate]);
+  const [error, setError] = useState<string | null>(null);
+  
 
   useEffect(() => {
     const fetchAdmins = async () => {
@@ -63,17 +65,20 @@ const SuperAdminDashboard: React.FC = () => {
       }
     };
 
+    const fetchOnlineUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/onlineusers');
+        setOnlineUsers(response.data);
+      } catch (error) {
+        console.error('Failed to fetch online users:', error);
+      }
+    };
+    fetchOnlineUsers();
     fetchDataControllers();
   fetchAdmins();
 }, []);
 
 
-// useEffect(() => {
-//   fetch('http://localhost:3000/online-users')
-//     .then(response => response.json())
-//     .then(data => setOnlineUsers(data)) 
-//     .catch(error => console.error('Error fetching online users:', error));
-// }, []);
 
 useEffect(() => {
   const fetchUserLogs = async () => {
@@ -96,14 +101,68 @@ useEffect(() => {
   setOnlineUsers([...onlineAdmins, ...onlineDataControllers]);
 }, [admins, dataControllers]);
 
+const handleLogout = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      localStorage.removeItem('token');
+      navigate('/superadmin/login');
+    } else {
+      const errorText = await response.text();
+      throw new Error(`Failed to logout: ${errorText}`);
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError('An unknown error occurred');
+    }
+  }
+};
+
+useEffect(() => {
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/superadmin/authentication', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        console.error('Access denied: No token');
+        navigate('/superadmin/login');
+        return;
+      }
+
+      if (response.status === 204) {
+        console.log('Access Success');
+        return;
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
+
+  checkAuth();
+}, [navigate]);
+
+
+
+if (error) {
+  return <div>Error: {error}</div>; // Error message
+}
+
   return (
     <div>
   {/* Navbar */}
   <div className="SAnavbar">
     <div className="logo">Dashboard</div>
     <div className="user-actions">
-      <a href="/superadmin/login" className="logout">Log Out</a>
-      <span className="notification">&#128276;</span>
+      <a href="/superadmin/login" onClick={handleLogout} className="logout">Log Out</a>
     </div>
   </div>
 
@@ -122,7 +181,7 @@ useEffect(() => {
       </div>
       <div className="action-card">
         <div className="icon accounts"></div>
-        <a href="/superadmin/account">Accounts</a>
+        <a href="/superadmin/accounts">Accounts</a>
       </div>
       <div className="action-card">
         <div className="icon logbook"></div>
@@ -224,8 +283,8 @@ useEffect(() => {
             <tr key={log.userId}>
               <td>{log.firstName} {log.lastName}</td>
               <td>{log.userId}</td>
-              
-              
+              <td>{log.lastLoginDate ? new Date(log.lastLoginDate).toLocaleString() : 'N/A'}</td>
+              <td>{log.lastLogoutDate ? new Date(log.lastLogoutDate).toLocaleString() : 'N/A'}</td>
             </tr>
               );
             }
@@ -242,18 +301,23 @@ useEffect(() => {
   <table>
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Employee Name</th>
         <th>Role</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody>
-      {onlineUsers.map(user => (
-        <tr key={user.userId}>
-          <td>{user.firstName} {user.lastName}</td>
-          <td>{user.userrole}</td>
+      {
+      onlineUsers.map(online => {
+        return (
+        <tr key={online.userId}>
+          <td>{online.firstName} {online.lastName}</td>
+          <td>{online.userrole}</td>
+          <td>{online.isOnline ? 'Online' : 'Offline'}</td>
         </tr>
-      ))}
+      );
+      }
+      )}
     </tbody>
   </table>
 </div>
@@ -265,3 +329,4 @@ useEffect(() => {
 };
 
 export default SuperAdminDashboard;
+

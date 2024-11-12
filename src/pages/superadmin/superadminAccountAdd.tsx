@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/SuperAdminStyles.css';
 
@@ -60,6 +60,34 @@ const SuperadminAccountAdd = () => {
   const handleBack = () => {
     navigate(-1); // Navigate to the previous page
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/superadmin/authentication', {
+          method: 'GET',
+          credentials: 'include',
+        });
+  
+        if (response.status === 401) {
+          console.error('Access denied: No token');
+          navigate('/superadmin/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    };
+  
+    checkAuth();
+  }, [navigate]);
+  
+  
 
   return (
     <div>

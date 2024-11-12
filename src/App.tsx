@@ -1,7 +1,6 @@
 // src/App.tsx
 import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // MAIN PAGES
 import Home from './pages/home'; 
@@ -39,12 +38,6 @@ import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 import DataControllerAccount from './pages/datacontroller/DAaccount';
 
-// SuperAdminLayout Component
-const SuperAdminLayout: React.FC = () => (
-  <AuthProvider>
-    <Outlet />
-  </AuthProvider>
-);
 import ViewApplicationDetails from './pages/client/viewapplicationdetails';
 import AppTest from './pages/apptest';
 import AppTest2 from './pages/apptest2';
@@ -85,14 +78,13 @@ const App: React.FC = () => {
         <Route path="/DAaccount" element={<DataControllerAccount />} />
 
         {/* Add more routes as needed */}
-        <Route element={<SuperAdminLayout />}>
+  
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
           <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-          <Route path="/superadmin/edutuser" element={<SuperAdminEditUser />} />
+          <Route path="/superadmin/edituser/:id" element={<SuperAdminEditUser />} />
           <Route path="/superadmin/accounts" element={<SuperAdminAccount />} />
           <Route path="/superadmin/logbooks" element={<SuperAdminLogbook />} />
           <Route path='/superadmin/accountadd' element={<SuperadminAddUser />} />
-        </Route>
       </Routes>
       </Suspense>
     </Router>

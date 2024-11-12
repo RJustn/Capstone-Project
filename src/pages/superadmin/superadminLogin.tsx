@@ -15,6 +15,7 @@ const SuperAdminLogin: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -22,6 +23,10 @@ const SuperAdminLogin: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log('Response data:', data); // Add this line to log the response data
+      if (!data.token) {
+        throw new Error('Token is undefined');
+      }
       localStorage.setItem('token', data.token);
       navigate('/superadmin/dashboard');
     } catch (error) {

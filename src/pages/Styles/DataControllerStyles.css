@@ -1,17 +1,17 @@
 /* DASHBOARD CONTAINER STYLE */
-.DAbody{
+.DAbody {
     display: flex; /* Use flexbox to create a side-by-side layout */
     height: 100vh; /* Full height of the viewport */
     overflow: hidden; /* Prevents scrolling */
 }
 
-  /* SIDEBAR CONTAINER STYLE */
+/* SIDEBAR CONTAINER STYLE */
 .DAsidebar-container {
     width: 225px; /* Fixed width for the sidebar */
     z-index: 1000; /* Ensure it's above other content */
 }
 
-  /* SIDEBAR STYLE */
+/* SIDEBAR STYLE */
 .DAsidebar {
     width: 100%; /* Full width within its container */
     height: 100vh; /* Full height */
@@ -24,7 +24,7 @@
     align-items: center;
 }
 
-  /* LOGO STYLE */
+/* LOGO STYLE */
 .DAsidebar-logo {
     margin-bottom: 20px;
 }
@@ -59,7 +59,7 @@
     transition: background-color 0.3s; /* Smooth hover effect */
 }
 
-.DAsidebar-linkactive{
+.DAsidebar-linkactive {
     display: block;
     padding: 15px 20px;
     color: #ffffff; /* White text color */
@@ -142,4 +142,57 @@
 /* SEARCH BUTTON HOVER STYLE */
 .search-button:hover {
     background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* STATUS CARDS */
+.status-cards {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.status-card {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 22%;
+}
+
+/* CHARTS CONTAINER */
+.charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.chart {
+    width: 45%;
+    margin-bottom: 20px;
+}
+
+/* APPLICATION LOGS */
+.application-logs {
+    margin-top: 20px;
+    color: grey;
+}
+
+.application-logs table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.application-logs th, .application-logs td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.application-logs th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.text{
+    color: black;
 }

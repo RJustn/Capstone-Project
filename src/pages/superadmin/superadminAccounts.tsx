@@ -16,8 +16,6 @@ const Accounts: React.FC = () => {
   const navigate = useNavigate();
 
   
-
-  
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
@@ -51,6 +49,56 @@ const Accounts: React.FC = () => {
     fetchAccounts();
   }, []);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/superadmin/authentication', {
+          method: 'GET',
+          credentials: 'include',
+        });
+  
+        if (response.status === 401) {
+          console.error('Access denied: No token');
+          navigate('/superadmin/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    };
+  
+    checkAuth();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        localStorage.removeItem('token');
+        navigate('/superadmin/login');
+      } else {
+        const errorText = await response.text();
+        throw new Error(`Failed to logout: ${errorText}`);
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
+  };
+
+  
 
   if (error) {
     return <div>Error: {error}</div>; // Error message
@@ -60,17 +108,18 @@ const Accounts: React.FC = () => {
     navigate(`/superadmin/edituser/${account.userId}`);
   };
 
+
   const handleRemove = async (account: Account) => {
     try {
-      const response = await fetch(`http://localhost:3000/accounts/${account.userId}`, {
+      const response = await fetch(`http://localhost:5173/accounts/${account.userId}`, {
         method: 'DELETE',
       });
-
+  
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Failed to remove account: ${errorText}`);
       }
-
+  
       // Update the state to remove the deleted account
       setAdmins((prevAdmins) => prevAdmins.filter((admin) => admin.userId !== account.userId));
       setDataControllers((prevDataControllers) =>
@@ -107,8 +156,7 @@ const Accounts: React.FC = () => {
         </div>
         <div className="logo">Accounts</div>
         <div className="user-actions">
-          <a href="/superadmin/login" className="logout">Log Out</a>
-          <span className="notification">&#128276;</span>
+          <a href="#  " className="logout" onClick={handleLogout}>Log Out</a>
         </div>
       </div>
 
@@ -157,7 +205,6 @@ const Accounts: React.FC = () => {
             <tr>
               <th>Employee Name</th>
               <th>Employee ID</th>
-              <th>Username</th>
               <th>Mobile No.</th>
               <th>Email</th>
               <th>Actions</th>

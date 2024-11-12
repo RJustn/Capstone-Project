@@ -79,6 +79,9 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   contactNumber: String,
   address: String,
+  lastLoginDate: { type: Date },
+  lastLogoutDate: { type: Date },
+  isOnline: { type: Boolean },
   //Otp Group
   otpcontent:{
   otp: { type: String }, // Store OTP
@@ -98,20 +101,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-//data controller and admin schema
-const specialuserSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  middleInitial: String,
-  lastName: { type: String, required: true },
-  contactNumber: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  username: String,
-  password: { type: String, required: true },
-  role: { type: String, enum: ['client', 'admin', 'data controller'], default: 'client', required: true },
-  empId: {type: String},
-});
-
-const SpecialUser = mongoose.model('SpecialUser', specialuserSchema);
 
 
 // Define schema and model for Business Permit Application
@@ -224,6 +213,7 @@ receipt: {
 const WorkPermit = mongoose.model('WorkPermit', workPermitSchema);
 
 // #region Client
+
 app.post('/signup', async (req, res) => {
   const { firstName, middleName, lastName, contactNumber, address, email, password } = req.body;
 
@@ -255,7 +245,6 @@ app.post('/signup', async (req, res) => {
       isVerified: false,
       userrole: userRole,
       userId: userID,
-  
     
 
     });
@@ -284,6 +273,13 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    if (['data controller', 'admin'].includes(user.userrole) && (!user.accountOpenedDate || user.accountOpenedDate > new Date())) {
+      return res.status(400).json({ error: 'Account is not opened' });
+    }
+
+    user.isOnline = true;
+    user.lastLoginDate = new Date(); // Set the last login date
+    await user.save();
     // Generate JWT
     const token = jwt.sign({ userId: user._id, userrole: user.userrole }, JWT_SECRET, { expiresIn: '3h' });
 
@@ -353,14 +349,24 @@ app.get('/check-auth-datacontroller', authenticateToken, (req, res) => {
 });
 
 
-app.post('/logout', (req, res) => {
-  res.clearCookie('authToken', {
-    httpOnly: true,
-    secure: false, // Set to true in production with HTTPS
-  });
-  res.status(200).json({ message: 'Logged out successfully' });
-});
+app.post('/logout', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
+    user.isOnline = false;
+    user.lastLogoutDate = new Date(); // Set the last logout date
+    await user.save();
+
+
+    res.clearCookie('authToken');
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error logging out' });
+  }
+});
 
 
 app.get('/profile', async (req, res) => {
@@ -923,29 +929,87 @@ app.use('/uploads', express.static(path.join(__dirname)));
 // Apptest Codes @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
+//#endregion Client
+
+//#region Superadmin
+
 
 
 // API for superadmin login
 app.post('/superadmin/login', async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    const user = await User.findOne({ email, userrole: 'superadmin' });
-    if (!user) {
-      console.log('Superadmin not found');
-      return res.status(401).json({ message: 'Invalid credentials' });
+    const user = await User.findOne({ email });
+    if (!user.isVerified) {
+      return res.status(400).json({ error: 'Email is not verified' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.log('Password does not match');
-      return res.status(401).json({ message: 'Invalid credentials' });
+    if (user.userrole !== 'superadmin') {
+      return res.status(403).json({ error: 'Access denied' });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
-    res.json({ token });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user._id, userrole: user.userrole }, JWT_SECRET, { expiresIn: '3h' });
+
+    res.cookie('authToken', token, { 
+      httpOnly: true, 
+      secure: false, // Set to true in production
+      maxAge: 10800000 // 3 hours in milliseconds
+    });
+
+    res.status(200).json({ 
+      message: 'Login successful!', 
+      token, 
+      role: user.userrole
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: 'Error logging in' });
   }
+});
+
+
+const authenticateSuperAdmin = (req, res, next) => {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    console.error('No token provided');
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    console.log('Token decoded:', req.user); // Check if the decoded token contains the expected data
+
+    if (req.user.userrole !== 'superadmin') {
+      console.error('Access denied: user is not a superadmin');
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Token verification failed:', error.message);
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+app.get('/superadmin/authentication', authenticateSuperAdmin, (req, res) => {
+    // Assuming the user role is stored in req.user after token verification
+    const userRole = req.user.userrole; // Adjust this if the role key is different
+    console.log(userRole);
+    if (userRole === 'superadmin') {
+      // If the user's role is 'SuperAdmin', respond with a 204 No Content status
+      return res.sendStatus(204);
+    } else {
+      console.log('Access denied: user is not a SuperAdmin');
+      // If the user's role is not 'SuperAdmin', respond with a 401 Unauthorized status
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 });
 
 
@@ -994,7 +1058,8 @@ app.post('/adduser', async (req, res) => {
       password: hashedPassword,
       userrole: userRole, // Correct the variable name
       isVerified: true,
-      accountOpenedDate: new Date().toISOString() 
+      accountOpenedDate: new Date().toISOString(),
+      accountOpenedDate: new Date().toISOString()
     });
 
     // Save the user to the database
@@ -1057,6 +1122,16 @@ app.get('/datacontrollers', async (req, res) => {
   }
 });
 
+app.get('/onlineusers', async (req, res) => {
+  try {
+    const onlineUsers = await User.find({ isOnline: true, userrole: { $in: ['Data Controller', 'Admin'] } });
+    res.status(200).json(onlineUsers);
+  } catch (error) {
+    console.error('Error fetching online users:', error);
+    res.status(500).json({ error: 'Error fetching online users' });
+  }
+});
+
 
 app.get('/account/:userId', async (req, res) => {
   try {
@@ -1074,18 +1149,29 @@ app.get('/account/:userId', async (req, res) => {
 });
 
 // API endpoint to fetch user data by ID
-app.get('/accounts/:id', async (req, res) => {
+app.delete('/accounts/:id', async (req, res) => {
   try {
-    const user = await User.findOne({ userId: req.params.id });
+    const user = await User.findOneAndDelete({ userId: req.params.id });
     if (!user) {
       return res.status(404).send('User not found');
     }
-    res.send(user);
+    res.send({ message: 'Account deleted successfully' });
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
+app.delete('/accounts/:id', async (req, res) => {
+  try {
+    const user = await User.findOneAndDelete({ userId: req.params.id });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.send({ message: 'Account deleted successfully' });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 // API endpoint to update user data by ID
 app.put('/accounts/:id', async (req, res) => {
   try {
@@ -1126,7 +1212,6 @@ app.get('/api/onlineDataControllers', async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 
 
 //#endregion
@@ -1482,7 +1567,22 @@ const checkExpired = async () => {
   }
 };
 
+app.get('/permit-data', async (req, res) => {
+  try {
+    const workingPermits = await WorkPermit.countDocuments();
+    const businessPermits = await BusinessPermit.countDocuments();
 
+    const permitData = [
+      { label: 'Working Permit', value: workingPermits },
+      { label: 'Business Permit', value: businessPermits },
+    ];
+
+    res.json(permitData);
+  } catch (error) {
+    console.error('Error fetching permit data:', error);
+    res.status(500).json({ message: 'Error fetching permit data' });
+  }
+});
 
 // Schedule a job to run every day at midnight
 cron.schedule('0 0 * * *', async () => {
