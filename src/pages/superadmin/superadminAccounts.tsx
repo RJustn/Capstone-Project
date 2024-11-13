@@ -111,7 +111,7 @@ const Accounts: React.FC = () => {
 
   const handleRemove = async (account: Account) => {
     try {
-      const response = await fetch(`http://localhost:5173/accounts/${account.userId}`, {
+      const response = await fetch(`http://localhost:3000/accounts/${account.userId}`, {
         method: 'DELETE',
       });
   
