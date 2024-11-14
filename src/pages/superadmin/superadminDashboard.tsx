@@ -297,33 +297,40 @@ if (error) {
       {/* Online Accounts Panel */}
 
       <div className="panel online-accounts-panel">
-  <h3>Online Accounts</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Employee Name</th>
-        <th>Role</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {
-      onlineUsers.map(online => {
-        return (
-        <tr key={online.userId}>
-          <td>{online.firstName} {online.lastName}</td>
-          <td>{online.userrole}</td>
-          <td>{online.isOnline ? 'Online' : 'Offline'}</td>
-        </tr>
-      );
-      }
-      )}
-    </tbody>
-  </table>
-</div>
+        <div className="panel-header">
+          <h3>Online Accounts</h3>
+        </div>
+        <div className="panel-searchbar">
+          <h3>Search</h3>
+          <input type="text" placeholder="Enter Employee Name or ID" className="search-box" />
+        </div>
+        <div className="panel-content"></div>
+          <table>
+            <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+              {
+              onlineUsers.map(online => {
+              return (
+            <tr key={online.userId}>
+              <td>{online.firstName} {online.lastName}</td>
+              <td>{online.userrole}</td>
+              <td>{online.isOnline ? 'Online' : 'Offline'}</td>
+            </tr>
+              );
+            }
+          )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
   );
 };

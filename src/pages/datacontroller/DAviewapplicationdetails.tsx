@@ -292,67 +292,74 @@ return (
         <header className='DAheader'>
             <h1>Online Business and Work Permit Licensing System</h1>
         </header>
-        <div>
-        
+        <div className='panel'>
         <h1>Work Permit Details</h1>
         {workPermit ? (
           <>
             <p> Date Issued: {workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
             <p> Work Permit Status: {workPermit.workpermitstatus}</p>
+
             <h1>Personal Information Details</h1>
-            <p><strong>Application ID:</strong> {workPermit.id}</p>
-            <p><strong>Fullname:</strong>  {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
-            <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
-            <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
-            <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
-            <p><strong>Birth Date:</strong> {workPermit.formData.personalInformation.dateOfBirth?.toLocaleDateString()}</p>
-            <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
-            <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
-            <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
-            <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus}</p>
-            <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender}</p>
-            <p><strong>Height:</strong> {workPermit.formData.personalInformation.height}</p>
-            <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight}</p>
-            <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age}</p>
-            <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-            <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment}</p>
-            <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork}</p>
-            <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork}</p>
-            <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName}</p>
-            <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-            <p><strong>Work Permit Classifiation:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'left' }}>
+  <p><strong>Application ID:</strong> {workPermit.id}</p>
+  <p><strong>Fullname:</strong> {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
+  <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
+  <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
+  <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
+  <p><strong>Birth Date:</strong> {workPermit.formData.personalInformation.dateOfBirth?.toLocaleDateString()}</p>
+  <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
+  <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
+  <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
+  <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus}</p>
+  <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender}</p>
+  <p><strong>Height:</strong> {workPermit.formData.personalInformation.height}</p>
+  <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight}</p>
+  <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age}</p>
+  <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
+  <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment}</p>
+  <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork}</p>
+  <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork}</p>
+  <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName}</p>
+  <p><strong>Work Permit Classification:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
+</div>
+
+
+
 
             <h1>Emergency Contact Details</h1>
-            <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2}</p>
-            <p><strong>Mobile Number:</strong> {workPermit.formData.emergencyContact.mobileTel2}</p>
-            <p><strong>Address:</strong> {workPermit.formData.emergencyContact.address}</p>
+            <div style={{ textAlign: 'left' }}>
+  <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2}</p>
+  <p><strong>Mobile Number:</strong> {workPermit.formData.emergencyContact.mobileTel2}</p>
+  <p><strong>Address:</strong> {workPermit.formData.emergencyContact.address}</p>
+</div>
+
 
 
             <h3>Documents</h3>
-            <div>
-            <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-            <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-            <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-            <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
-              
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+  <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+  <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+  <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
+  <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+
   {workPermit.receipt?.receiptFile && (
     <p>Receipt: {renderDocument(workPermit.receipt.receiptFile, 'receipts')}</p>
   )}
-    {workPermit.permitFile && (
+  {workPermit.permitFile && (
     <p>Work Permit: {renderDocument(workPermit.permitFile, 'permits')}</p>
   )}
- {workPermit.applicationComments && (
+  {workPermit.applicationComments && (
     <p>Comments: {workPermit.applicationComments}</p>
   )}
+</div>
 
-            </div>
 
 
 
             {workPermit.workpermitstatus === 'Pending' && (
               <p>
-        <button onClick={handleUpdate}>Accept Application</button>
-        <button onClick={openRejectModal}>Reject Application</button>
+        <button className="action-button" onClick={handleUpdate}>Accept Application</button>
+        <button className="actionreject-button" onClick={openRejectModal}>Reject Application</button>
         </p>
       )}
     
@@ -375,7 +382,7 @@ return (
                 )}
               </div>
             )}
-            <button onClick={closeModal}>Close</button>
+            <button className="action-button" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}
@@ -385,13 +392,13 @@ return (
 
 {showRejectModal && (
         <div className="modal-overlay">
-          <div className="modalreject">
+          <div className="modal">
             <h2>Reject Application</h2>
             {!isCommentVisible ? (
               <>
                 <p>Are you sure you want to reject this application?</p>
-                <button onClick={handleConfirm}>Confirm</button>
-                <button onClick={closeRejectModal}>Cancel</button>
+                <button className="action-button" onClick={handleConfirm}>Confirm</button>
+                <button className="actionreject-button" onClick={closeRejectModal}>Cancel</button>
               </>
             ) : (
               <>
@@ -404,23 +411,14 @@ return (
                   rows={4}
                   style={{ width: '100%' }} // Adjust width as needed
                 />
-                <button onClick={handleFinalConfirm}>Submit</button>
-                <button onClick={() => setIsCommentVisible(false)}>Back</button>
+                <button className="action-button" onClick={handleFinalConfirm}>Submit</button>
+                <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
               </>
             )}
           </div>
         </div>
       )}
-
         </div>
-        
-
-
-
-
-
-
-
     </div>
     </section>
 );

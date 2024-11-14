@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../Styles/SuperAdminStyles.css'
 
 interface Account {
   userId: string;
@@ -150,25 +151,28 @@ const Accounts: React.FC = () => {
 
   return (
     <div>
-      <div className="navbar">
-        <div className="menu-toggle">
+      <div className="SAnavbar">
+        <div className="SAmenu-toggle">
           <span>&#9776;</span>
         </div>
         <div className="logo">Accounts</div>
         <div className="user-actions">
-          <a href="#  " className="logout" onClick={handleLogout}>Log Out</a>
+        <a href="/superadmin/dashboard" className="return-link">Return</a>
+          <a href="# " className="logout" onClick={handleLogout}>
+            Log Out
+          </a>
         </div>
       </div>
 
-      <section className="account-section">
-        <h2>Admin</h2>
-        <div className="filter-search">
+      <section className="panel">
+        <h2 className="panel-header">Admin</h2>
+        <div className="panel-searchbar">
           <span>Filter:</span>
-          <input type="text" placeholder="" />
+          <input type="text" className="search-box" placeholder="Filter" />
           <span>Search:</span>
-          <input type="text" placeholder="" />
+          <input type="text" className="search-box" placeholder="Search" />
         </div>
-        <table className="account-table">
+        <table className="table">
           <thead>
             <tr>
               <th>Employee Name</th>
@@ -181,7 +185,9 @@ const Accounts: React.FC = () => {
           <tbody>
             {admins.map((admin, index) => (
               <tr key={index}>
-                <td>{admin.firstName} {admin.lastName}</td>
+                <td>
+                  {admin.firstName} {admin.lastName}
+                </td>
                 <td>{admin.userId}</td>
                 <td>{admin.contactNumber}</td>
                 <td>{admin.email}</td>
@@ -192,15 +198,15 @@ const Accounts: React.FC = () => {
         </table>
       </section>
 
-      <section className="account-section">
-        <h2>Data Controller</h2>
-        <div className="filter-search">
+      <section className="panel">
+        <h2 className="panel-header">Data Controller</h2>
+        <div className="panel-searchbar">
           <span>Filter:</span>
-          <input type="text" placeholder="" />
+          <input type="text" className="search-box" placeholder="Filter" />
           <span>Search:</span>
-          <input type="text" placeholder="" />
+          <input type="text" className="search-box" placeholder="Search" />
         </div>
-        <table className="account-table">
+        <table className="table">
           <thead>
             <tr>
               <th>Employee Name</th>
@@ -213,7 +219,9 @@ const Accounts: React.FC = () => {
           <tbody>
             {dataControllers.map((controller, index) => (
               <tr key={index}>
-                <td>{controller.firstName} {controller.lastName}</td>
+                <td>
+                  {controller.firstName} {controller.lastName}
+                </td>
                 <td>{controller.userId}</td>
                 <td>{controller.contactNumber}</td>
                 <td>{controller.email}</td>

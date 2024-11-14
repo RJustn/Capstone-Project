@@ -214,33 +214,38 @@ useEffect(() => {
         </header>
         <div>
         
+        <div className="panel">
         <h1>Work Permit Details</h1>
         {workPermit ? (
           <> 
             <p> Date Issued: {workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
             <p> Work Permit Status: {workPermit.workpermitstatus}</p>
+
             <h1>Personal Information Details</h1>
-            <p><strong>Application ID:</strong> {workPermit.id}</p>
-            <p><strong>Fullname:</strong>  {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
-            <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
-            <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
-            <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
-            <p><strong>Birth Date:</strong> {workPermit.formData.personalInformation.dateOfBirth?.toLocaleDateString()}</p>
-            <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
-            <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
-            <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
-            <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus}</p>
-            <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender}</p>
-            <p><strong>Height:</strong> {workPermit.formData.personalInformation.height}</p>
-            <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight}</p>
-            <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age}</p>
-            <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-            <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment}</p>
-            <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork}</p>
-            <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork}</p>
-            <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName}</p>
-            <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-            <p><strong>Work Permit Classifiation:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', textAlign: 'left'}}>
+  <p><strong>Application ID:</strong> {workPermit.id}</p>
+  <p><strong>Fullname:</strong> {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
+  <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
+  <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
+  <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
+  <p><strong>Birth Date:</strong> {workPermit.formData.personalInformation.dateOfBirth?.toLocaleDateString()}</p>
+  <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
+  <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
+  <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
+  <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus}</p>
+  <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender}</p>
+  <p><strong>Height:</strong> {workPermit.formData.personalInformation.height}</p>
+  <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight}</p>
+  <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age}</p>
+  <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
+  <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment}</p>
+  <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork}</p>
+  <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork}</p>
+  <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName}</p>
+  <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
+  <p><strong>Work Permit Classification:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
+</div>
+
 
             <h1>Emergency Contact Details</h1>
             <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2}</p>
@@ -250,10 +255,12 @@ useEffect(() => {
 
             <h3>Documents</h3>
             <div>
-            <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-            <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-            <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-            <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+<div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
+  <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+  <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+  <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
+  <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+</div>
               
   {workPermit.receipt?.receiptFile && (
     <p>Receipt: {renderDocument(workPermit.receipt.receiptFile, 'receipts')}</p>
@@ -261,7 +268,7 @@ useEffect(() => {
     {workPermit.permitFile && (
     <p>Work Permit: {renderDocument(workPermit.permitFile, 'permits')}</p>
   )}
-   {workPermit.applicationComments && (
+  {workPermit.applicationComments && (
     <p>Comments: {workPermit.applicationComments}</p>
   )}
 
@@ -279,12 +286,12 @@ useEffect(() => {
         )}
 
 {isModalOpen && (
-        <div className="modal" onClick={closeModal}>
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             {modalFile && (
               <div>
                 {modalFile.endsWith('.pdf') ? (
-                  <iframe src={modalFile} style={{ width: '100%', height: '600px' }} title="PDF Viewer" />
+                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
                 ) : (
                   <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
                 )}
@@ -297,6 +304,7 @@ useEffect(() => {
         </div>
         
     
+      </div>
       </div>
     </section>
   );

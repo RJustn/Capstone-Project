@@ -449,8 +449,8 @@ const handleLogout = async () => {
 
 {latestStatus === 'Released' && (
         <p>
-          <button onClick={handleOpenReceiptPDF}>View Receipt</button>
-          <button onClick={handleOpenPermitPDF}>View Released Permit</button>
+          <button className='viewReceiptbutton'onClick={handleOpenReceiptPDF}>View Receipt</button>
+          <button className='viewpermitbutton'onClick={handleOpenPermitPDF}>View Released Permit</button>
         </p>
       )}
 
@@ -499,7 +499,7 @@ const handleLogout = async () => {
               : '---'}
           </td>
           <td>
-            <button onClick={() => openModal(permit)} className="action-button">
+            <button onClick={() => openModal(permit)} className="table-button">
               Choose Action
             </button>
           </td>
@@ -522,13 +522,13 @@ const handleLogout = async () => {
             <div className="modal-overlay">
               <div className="modal">
               <h3>Choose an Action for Permit ID: {activePermit.id}</h3> {/* Display the permit ID */}
-              <button onClick={handleViewApplication}>View Application</button>
+              <button className="clientmodal-button" onClick={handleViewApplication}>View Application</button>
                {/* Conditionally render the Delete button */}
                {activePermit.workpermitstatus === 'Pending' && (
-              <button onClick={handleDelete}>Delete</button>
+              <button className="clientcancel-button" onClick={handleDelete}>Delete</button>
            )}
 
-<button onClick={closeModal}>Cancel</button>
+<button className="clientcancel-button" onClick={closeModal}>Cancel</button>
               </div>
             </div>
           )}

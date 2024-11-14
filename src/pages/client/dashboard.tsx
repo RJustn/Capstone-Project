@@ -386,7 +386,7 @@ useEffect(() => {
               : '---'}
           </td>
           <td>
-            <button onClick={() => openModal(permit)} className="action-button">
+            <button onClick={() => openModal(permit)} className="table-button">
               Choose Action
             </button>
           </td>
@@ -406,12 +406,12 @@ useEffect(() => {
           {/* Modal for Action Options */}
           {isModalOpen && activePermit && (
             <div className="modal-overlay">
-              <div className="modal">
+              <div className="clientmodal">
               <h3>Choose an Action for Permit ID: {activePermit.id}</h3> {/* Display the permit ID */}
-              <button onClick={handleViewApplication}>View Application</button>
+              <button className="clientmodal-button" onClick={handleViewApplication}>View Application</button>
                {/* Conditionally render the Delete button */}
                {activePermit.workpermitstatus === 'Pending' && (
-              <button onClick={handleDelete}>Delete</button>
+              <button className="clientcancel-button" onClick={handleDelete}>Delete</button>
            )}
 
             {activePermit.workpermitstatus === 'Waiting for Payment' && (
@@ -507,7 +507,7 @@ useEffect(() => {
         </div>
       )}
 
-<button onClick={closeModal}>Cancel</button>
+<button className="clientcancel-button" onClick={closeModal}>Cancel</button>
               </div>
             </div>
           )}

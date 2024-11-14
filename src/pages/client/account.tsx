@@ -246,13 +246,14 @@ const handleVerifyOtp = async () => {
  {/* Forget Password Section */}
  <div>
       {/* Step 3: Render a button to toggle the form */}
-      <button onClick={handleButtonClick}>
+      <button className='viewpermitbutton' onClick={handleButtonClick}>
         {isFormVisible ? 'Close' : 'Change Password?'}
       </button>
 
       {/* Conditionally render the form based on isFormVisible */}
       {isFormVisible && (
-        <div className="emailverification-container">
+        <div className="modal-overlay">
+          <div className="modal">
         <h1>Forgot Password</h1>
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
@@ -319,14 +320,14 @@ const handleVerifyOtp = async () => {
                 <label className="otp-timer-label">
                 {otpSent && otpCountdown !== null ? `(${otpCountdown}s)` : ''}
                 </label>
-            <button
-                type="button"
+            <button type="button"
                 className="verifyemail"
                 onClick={handleVerifyOtp}
             >
                 Change Password
             </button>
         </div>
+    </div>
     </div>
       )}
     </div>
