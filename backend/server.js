@@ -14,9 +14,13 @@ const { v4: uuidv4 } = require('uuid');
 const PDFDocument = require('pdfkit'); 
 const cron = require('node-cron');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Setup Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -81,7 +85,9 @@ const userSchema = new mongoose.Schema({
   address: String,
   lastLoginDate: { type: Date },
   lastLogoutDate: { type: Date },
-  isOnline: { type: Boolean },
+  isOnline: { type: Boolean ,default: false },
+  region: String,
+  district: String,
   //Otp Group
   otpcontent:{
   otp: { type: String }, // Store OTP
@@ -1122,34 +1128,23 @@ app.get('/datacontrollers', async (req, res) => {
   }
 });
 
-app.get('/onlineusers', async (req, res) => {
+
+
+app.get('/accounts/:id', async (req, res) => {
   try {
-    const onlineUsers = await User.find({ isOnline: true, userrole: { $in: ['Data Controller', 'Admin'] } });
-    res.status(200).json(onlineUsers);
-  } catch (error) {
-    console.error('Error fetching online users:', error);
-    res.status(500).json({ error: 'Error fetching online users' });
-  }
-});
-
-
-app.get('/account/:userId', async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const user = await User.findById(userId);
-
+    const user = await User.findOne({ userId: req.params.id });
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
-
-    res.status(200).json(user);
+    res.json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 // API endpoint to fetch user data by ID
-app.delete('/accounts/:id', async (req, res) => {
+app.delete('/api/accounts/:id', async (req, res) => {
   try {
     const user = await User.findOneAndDelete({ userId: req.params.id });
     if (!user) {
@@ -1161,17 +1156,6 @@ app.delete('/accounts/:id', async (req, res) => {
   }
 });
 
-app.delete('/accounts/:id', async (req, res) => {
-  try {
-    const user = await User.findOneAndDelete({ userId: req.params.id });
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    res.send({ message: 'Account deleted successfully' });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 // API endpoint to update user data by ID
 app.put('/accounts/:id', async (req, res) => {
   try {
@@ -1193,26 +1177,24 @@ app.put('/accounts/:id', async (req, res) => {
 });
 
 
-// API endpoint to fetch online admins
-app.get('/api/onlineAdmins', async (req, res) => {
-  try {
-    const onlineAdmins = await User.find({ role: 'admin', status: 'online' });
-    res.json(onlineAdmins);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
-// API endpoint to fetch online data controllers
-app.get('/api/onlineDataControllers', async (req, res) => {
-  try {
-    const onlineDataControllers = await User.find({ role: 'dataController', status: 'online' });
-    res.json(onlineDataControllers);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
 
+  socket.on('userOnline', async (userId) => {
+    await User.findByIdAndUpdate(userId, { isOnline: true });
+    io.emit('statusUpdate', { userId, isOnline: true });
+  });
+
+  socket.on('userOffline', async (userId) => {
+    await User.findByIdAndUpdate(userId, { isOnline: false });
+    io.emit('statusUpdate', { userId, isOnline: false });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected:', socket.id);
+  });
+});
 
 //#endregion
 
@@ -1567,25 +1549,39 @@ const checkExpired = async () => {
   }
 };
 
-app.get('/permit-data', async (req, res) => {
-  try {
-    const workingPermits = await WorkPermit.countDocuments();
-    const businessPermits = await BusinessPermit.countDocuments();
 
-    const permitData = [
-      { label: 'Working Permit', value: workingPermits },
-      { label: 'Business Permit', value: businessPermits },
-    ];
 
-    res.json(permitData);
-  } catch (error) {
-    console.error('Error fetching permit data:', error);
-    res.status(500).json({ message: 'Error fetching permit data' });
-  }
-});
+
+
 
 // Schedule a job to run every day at midnight
 cron.schedule('0 0 * * *', async () => {
   console.log('Running scheduled job to check for expired work permits.');
   await checkExpired(); // Call the function to check for expired permits
 });
+
+
+app.get('/chart/working-permits', async (req, res) => {
+  try {
+    const workingPermits = await WorkPermit.countDocuments();
+    res.json({ label: 'Working Permit', count: workingPermits });
+  } catch (error) {
+    console.error('Error fetching working permit data:', error);
+    res.status(500).json({ message: 'Error fetching working permit data' });
+  }
+});
+
+// Endpoint for fetching the count of business permits
+app.get('/chart/business-permits', async (req, res) => {
+  try {
+    const businessPermits = await BusinessPermit.countDocuments();
+    res.json({ label: 'Business Permit', count: businessPermits });
+  } catch (error) {
+    console.error('Error fetching business permit data:', error);
+    res.status(500).json({ message: 'Error fetching business permit data' });
+  }
+});
+
+
+
+

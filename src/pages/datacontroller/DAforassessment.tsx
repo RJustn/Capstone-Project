@@ -78,7 +78,8 @@ const DataControllerForAssessment: React.FC = () => {
                     <a href="/DAforassessmentWP" className="DAworkpermitbutton">
                         For Assessment Working Permit
                     </a>
-                </div>
+          
+            </div>
             </div>
         </section>
     );

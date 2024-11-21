@@ -16,7 +16,6 @@ const Accounts: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
@@ -89,7 +88,7 @@ const Accounts: React.FC = () => {
       } else {
         const errorText = await response.text();
         throw new Error(`Failed to logout: ${errorText}`);
-      }
+      } 
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -99,20 +98,17 @@ const Accounts: React.FC = () => {
     }
   };
 
-  
-
   if (error) {
     return <div>Error: {error}</div>; // Error message
-}
+  }
 
   const handleEdit = (account: Account) => {
     navigate(`/superadmin/edituser/${account.userId}`);
   };
 
-
   const handleRemove = async (account: Account) => {
     try {
-      const response = await fetch(`http://localhost:3000/accounts/${account.userId}`, {
+      const response = await fetch(`http://localhost:3000/api/accounts/${account.userId}`, {
         method: 'DELETE',
       });
   
@@ -135,18 +131,11 @@ const Accounts: React.FC = () => {
     }
   };
 
-  const renderActionsDropdown = (account: Account) => (
-    <select
-      onChange={(e) => {
-        const action = e.target.value;
-        if (action === 'edit') handleEdit(account);
-        if (action === 'remove') handleRemove(account);
-      }}
-    >
-      <option value="">Select</option>
-      <option value="edit">Edit</option>
-      <option value="remove">Remove</option>
-    </select>
+  const renderActionsButtons = (account: Account) => (
+    <div className="SAaction-buttons">
+      <button className="SAedit-button" onClick={() => handleEdit(account)}>Edit</button>
+      <button className="SAremove-button" onClick={() => handleRemove(account)}>Remove</button>
+    </div>
   );
 
   return (
@@ -157,80 +146,97 @@ const Accounts: React.FC = () => {
         </div>
         <div className="logo">Accounts</div>
         <div className="user-actions">
-        <a href="/superadmin/dashboard" className="return-link">Return</a>
+          <a href="/superadmin/dashboard" className="return-link">Return</a>
           <a href="# " className="logout" onClick={handleLogout}>
             Log Out
           </a>
         </div>
       </div>
 
-      <section className="panel">
-        <h2 className="panel-header">Admin</h2>
-        <div className="panel-searchbar">
-          <span>Filter:</span>
-          <input type="text" className="search-box" placeholder="Filter" />
-          <span>Search:</span>
-          <input type="text" className="search-box" placeholder="Search" />
+      <div className="top-actions">
+          <div className="action-card">
+            <div className="icon create-account"></div>
+            <a href="/superadmin/accountadd">Create Account</a>
+          </div>
+          <div className="action-card">
+            <div className="icon accounts"></div>
+            <a href="/superadmin/dashboard">Dashboard</a>
+          </div>
+          <div className="action-card">
+            <div className="icon logbook"></div>
+            <a href="/superadmin/logbooks">Logbook</a>
+          </div>
         </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Employee Name</th>
-              <th>Employee ID</th>
-              <th>Mobile No.</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {admins.map((admin, index) => (
-              <tr key={index}>
-                <td>
-                  {admin.firstName} {admin.lastName}
-                </td>
-                <td>{admin.userId}</td>
-                <td>{admin.contactNumber}</td>
-                <td>{admin.email}</td>
-                <td>{renderActionsDropdown(admin)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
 
-      <section className="panel">
-        <h2 className="panel-header">Data Controller</h2>
-        <div className="panel-searchbar">
-          <span>Filter:</span>
-          <input type="text" className="search-box" placeholder="Filter" />
-          <span>Search:</span>
-          <input type="text" className="search-box" placeholder="Search" />
-        </div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Employee Name</th>
-              <th>Employee ID</th>
-              <th>Mobile No.</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataControllers.map((controller, index) => (
-              <tr key={index}>
-                <td>
-                  {controller.firstName} {controller.lastName}
-                </td>
-                <td>{controller.userId}</td>
-                <td>{controller.contactNumber}</td>
-                <td>{controller.email}</td>
-                <td>{renderActionsDropdown(controller)}</td>
+      <div className="superadmin-accounts">
+        <section className="SApanel">
+          <h2 className="panel-header">Admin</h2>
+          <div className="panel-searchbar">
+            <span>Filter:</span>
+            <input type="text" className="search-box" placeholder="Filter" />
+            <span>Search:</span>
+            <input type="text" className="search-box" placeholder="Search" />
+          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Mobile No.</th>
+                <th>Email</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {admins.map((admin, index) => (
+                <tr key={index}>
+                  <td>
+                    {admin.firstName} {admin.lastName}
+                  </td>
+                  <td>{admin.userId}</td>
+                  <td>{admin.contactNumber}</td>
+                  <td>{admin.email}</td>
+                  <td>{renderActionsButtons(admin)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="SApanel">
+          <h2 className="panel-header">Data Controller</h2>
+          <div className="panel-searchbar">
+            <span>Filter:</span>
+            <input type="text" className="search-box" placeholder="Filter" />
+            <span>Search:</span>
+            <input type="text" className="search-box" placeholder="Search" />
+          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Mobile No.</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataControllers.map((controller, index) => (
+                <tr key={index}>
+                  <td>
+                    {controller.firstName} {controller.lastName}
+                  </td>
+                  <td>{controller.userId}</td>
+                  <td>{controller.contactNumber}</td>
+                  <td>{controller.email}</td>
+                  <td>{renderActionsButtons(controller)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </div>
     </div>
   );
 };

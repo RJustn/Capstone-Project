@@ -5,6 +5,30 @@
     overflow: hidden; /* Prevents scrolling */
 }
 
+.DAstats {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .DAstats div {
+    margin-right: 20px;
+    font-size: 16px;
+  }
+
+
+  .DAchart {
+    padding: 10px; /* Reduced padding */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the chart */
+  }
 /* SIDEBAR CONTAINER STYLE */
 .DAsidebar-container {
     width: 225px; /* Fixed width for the sidebar */

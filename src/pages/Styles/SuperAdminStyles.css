@@ -252,7 +252,20 @@ input:focus {
 
 /* ===================================  Account Styles =================================== */
 
-
+.superadmin-accounts {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .SApanel {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
   /* ===================================  Account Add Styles =================================== */
 .SaAccountAddForm {
     background-color: #f9f9f9;
@@ -351,8 +364,106 @@ p {
     text-align: center;
     font-size: 14px;
 }
+ 
+.SAaction-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 
-  /* ===================================  Account Edit Styles =================================== */
+.SAedit-button, .SAremove-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
 
+.SAedit-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.SAremove-button {
+  background-color: #f44336;
+  color: white;
+}
 
       /* ===================================  Account Add Styles =================================== */
+
+      
+  /* ===================================  Account Edit Styles =================================== */
+
+/* FILE: SuperAdminStyles.css */
+
+.SA {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .SAaccountaddH1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .form-group input::placeholder {
+    color: #aaa;
+  }
+  
+  .SAbackButton {
+    background-color: Black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .SAbackButton:hover {
+    background-color: #bbb;
+  }
+  
+  button[type="submit"] {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
+  p {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+  }

@@ -51,6 +51,7 @@ const SuperadminAccountAdd = () => {
           userrole,
         }),
       });
+      navigate('/superadmin/accounts');
       await response.json();
     } catch (error) {
       console.error('Error:', error);
@@ -134,7 +135,6 @@ const SuperadminAccountAdd = () => {
           Role:
           <select value={userrole} onChange={(e) => setRole(e.target.value)} required>
             <option value="" disabled>Select a role</option>
-            <option value="CL">Client</option>
             <option value="ADM">Admin</option>
             <option value="DC">Data Controller</option>
           </select>
@@ -142,7 +142,7 @@ const SuperadminAccountAdd = () => {
 
         <div className="button-group">
           <button type="button" onClick={handleBack} className="SAbackButton">Back</button>
-          <button type="submit" className="SAcreateAccountButton">Create User</button>
+          <button type="submit" className="SAcreateAccountButton" >Create User</button>
         </div>
       </form>
     </div>
