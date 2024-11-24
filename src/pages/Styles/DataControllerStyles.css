@@ -20,15 +20,33 @@
     font-size: 16px;
   }
 
-
-  .DAchart {
-    padding: 10px; /* Reduced padding */
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 80%; /* Adjust the width as needed */
-    margin: 0 auto; /* Center the chart */
+  .DaChartcontainer {
+    display: flex;
+    gap: 20px; /* Adds spacing between the charts */
+    justify-content: center; /* Centers the charts horizontally */
+    align-items: center; /* Centers the charts vertically */
+    flex-wrap: wrap; /* Allows charts to wrap on smaller screens */
+    padding: 20px; /* Adds padding around the container */
+    background-color: #f5f5f5; /* Subtle background color for the container */
   }
+  
+  .DAchart {
+    padding: 20px; /* Increased padding for a cleaner appearance */
+    background-color: #ffffff; /* Bright white for better contrast */
+    border: 1px solid #ccc; /* Softer border color */
+    border-radius: 12px; /* Slightly more rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 100%; /* Default width for small screens */
+    max-width: 500px; /* Restricts the maximum width of charts */
+    margin: 10px; /* Margin for spacing when wrapping */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+  }
+  
+  .DAchart:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  }
+
 /* SIDEBAR CONTAINER STYLE */
 .DAsidebar-container {
     width: 225px; /* Fixed width for the sidebar */
@@ -138,13 +156,15 @@
 /* SEARCH BAR CONTAINER */
 .search-bar-container {
     display: flex; /* Use flexbox for layout */
-    justify-content: center; /* Center align items */
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Center items vertically */
     margin-bottom: 20px; /* Space below the search bar */
+    width: 400px;
 }
 
 /* SEARCH INPUT STYLE */
 .search-input {
-    flex-grow: 1; /* Allow input to grow and fill available space */
+    width: 360px; /* Set a fixed width for the input */
     padding: 10px; /* Padding inside the input */
     border: 1px solid #ccc; /* Border color */
     border-radius: 5px; /* Rounded corners */
@@ -152,8 +172,9 @@
     margin-right: 10px; /* Space between input and button */
 }
 
+
 /* SEARCH BUTTON STYLE */
-.search-button, .action-button {
+.search-button {
     background-color: #0056b3; /* Button background color */
     color: white; /* White text color */
     padding: 10px 20px; /* Padding for the button */
@@ -175,9 +196,22 @@
 
 /* SEARCH BUTTON HOVER STYLE */
 .search-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+    background-color: #0074f1; /* Darker shade on hover */
 }
 
+.DAactionbutton{
+    background-color: #0056b3; /* Button background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.DAactionbutton:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
 /* STATUS CARDS */
 .status-cards {
     display: flex;
@@ -279,6 +313,13 @@
 
 .cancel-button {
     background-color: #d9534f; /* A red color for cancel */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: background-color 0.3s;
 }
 
 .cancel-button:hover {

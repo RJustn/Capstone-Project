@@ -378,7 +378,7 @@ if (WorkPermitData.length > 0) {
               <label>CIVIL STATUS:</label>
               <input type="text" value={civilStatus} onChange={(e) => setCivilStatus(e.target.value)} placeholder="Enter Civil Status"  />
               </div>
-                  <div className="form-group gender-group">
+                  <div className="form-group">
                  <label>GENDER:</label>
                 <label>
                 <input 
@@ -473,22 +473,36 @@ if (WorkPermitData.length > 0) {
             <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Enter Emegency Contact Person Address"  />
           </div>
           {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
-          <button type="button" onClick={goToNextStep}>Next</button>
+          <button type="button" className="nextbutton"onClick={goToNextStep}>Next</button>
         </div>
 )}{step === 2 && (
-  <div>
-    {/* Content for Step 2 */}
-    <button type="button" onClick={goToPreviousStep}>Back</button>
-      <label>Upload 1x1 Picture:</label>
-      <input type="file" onChange={(e) => handleFileChange(e, 'document1')}  />
-      <label>Upload Cedula</label>
-      <input type="file" onChange={(e) => handleFileChange(e, 'document2')}  />
-      <label>Upload Referral Letter</label>
-      <input type="file" onChange={(e) => handleFileChange(e, 'document3')} disabled={currentlyResiding} />
-      <label>Upload FTJS Cert.</label>
-      <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workpermitclassification === "Renewal"} />
-      <button type="submit" className="submitbuttonworkpermit">Submit</button>
+<div className="upload-section"> 
+  <div className="upload-item">
+    <label>Upload 1x1 Picture:</label>
+    <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
   </div>
+  
+  <div className="upload-item">
+    <label>Upload Cedula:</label>
+    <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+  </div>
+  
+  <div className="upload-item">
+    <label>Upload Referral Letter:</label>
+    <input type="file" onChange={(e) => handleFileChange(e, 'document3')} disabled={currentlyResiding} />
+  </div>
+  
+  <div className="upload-item">
+    <label>Upload FTJS Cert.:</label>
+    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workpermitclassification === "Renewal"} />
+  </div>
+
+<div>
+  <button type="button" onClick={goToPreviousStep} className="back-button">Back</button>
+  <button type="submit" className="upload-button">Submit</button>
+  </div>
+</div>
+
 )}
 
 

@@ -14,7 +14,7 @@ const DAdashboard: React.FC = () => {
     labels: [] as string[],
     datasets: [
       {
-        label: 'Business Permits',
+        label: 'New Permits',
         data: [] as number[],
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -22,12 +22,41 @@ const DAdashboard: React.FC = () => {
         fill: false,
       },
       {
-        label: 'Working Permits',
+        label: 'Renewal Permits',
         data: [] as number[],
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
         borderColor: 'rgba(153, 102, 255, 1)',
         borderWidth: 1,
         fill: false,
+      },
+    ],
+  });
+
+  // Generate labels for years starting from 2010 to the current year
+const generateYearLabels = () => {
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let year = 2010; year <= currentYear; year++) {
+    years.push(year.toString());
+  }
+  return years;
+};
+
+// Mock data: Replace this with actual data from your backend if available
+const generateYearlyData = () => {
+  return generateYearLabels().map(() => Math.floor(Math.random() * 1000)); // Random data
+};
+
+  const [totalPermitsData] = useState({
+    labels: generateYearLabels(), 
+    datasets: [
+      {
+        label: 'Total Permits Released',
+        data: generateYearlyData(),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        fill: true, // Filled area under the line
       },
     ],
   });
@@ -157,7 +186,7 @@ const DAdashboard: React.FC = () => {
         </header>
 
         <div>
-          <h2>Dashboard</h2>
+          <h2>Work Permit</h2>
         </div>
 
         <div className="DAstats-chart-container">
@@ -168,13 +197,36 @@ const DAdashboard: React.FC = () => {
             <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
           </div>
           
-          <div className="DAcharts">
+          <div className="DaChartcontainer">
+          <div className="DAchart">
+              <Line data={totalPermitsData} />
+            </div>
             <div className="DAchart">
               <Line data={lineChartData} />
             </div>
           </div>
         </div>
-        
+
+        <div>
+          <h2>Business Permit</h2>
+        </div>
+        <div className="DAstats-chart-container">
+          <div className="DAstats">
+            <div>{`Total Permit Applications for 2024: ${dashboardData.totalPermitApplications}`}</div>
+            <div>{`Total Renewal Applications for 2024: ${dashboardData.totalRenewalApplications}`}</div>
+            <div>{`Total Collections 2024: ${dashboardData.totalCollections}`}</div>
+            <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
+          </div>
+          
+          <div className="DaChartcontainer">
+          <div className="DAchart">
+              <Line data={totalPermitsData} />
+            </div>
+            <div className="DAchart">
+              <Line data={lineChartData} />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

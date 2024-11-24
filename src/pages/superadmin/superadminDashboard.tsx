@@ -166,12 +166,7 @@ const SuperAdminDashboard: React.FC = () => {
           <a href="/superadmin/login" onClick={handleLogout} className="logout">Log Out</a>
         </div>
       </div>
-
-      {/* Breadcrumb */}
-      <div className="SAbreadcrumb">
-        <span>Home / Dashboard</span>
-      </div>
-
+      
       {/* Main Dashboard Layout */}
       <div className="SAdashboard">
         {/* Top Action Buttons */}

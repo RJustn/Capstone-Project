@@ -356,6 +356,9 @@ useEffect(() => {
         <header>
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
+        <div>
+        <img src="/public/instructions.svg" alt="Instruction Icon" width="1375" height="300" />
+        </div>
   
         {error && <p className="error">{error}</p>}
         {userDetails ? (
@@ -375,13 +378,13 @@ useEffect(() => {
           </div>
           <div>
           <a 
-           href={!(latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') ? "/workpermitpage" : "#"} 
-           className='workpermitbutton'
-           onClick={(e) => {
-           if (latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') {
+          href={!(latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') ? "/workpermitpage" : "#"} 
+          className='workpermitbutton'
+          onClick={(e) => {
+          if (latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') {
            e.preventDefault(); // Disable click if status is 'For Assessment', 'Waiting for Payment', or 'Released'
-           }
-           }}
+          }
+          }}
             >
           Apply for Work Permit
           </a>

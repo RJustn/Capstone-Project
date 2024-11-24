@@ -305,7 +305,7 @@ interface PersonalInformation {
                   <td>{permit.classification}</td>
                   <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
                   <td>
-                      <button onClick={() => openModal(permit)}>
+                      <button className="DAactionbutton" onClick={() => openModal(permit)}>
                           <span>Choose an Action for Permit ID: {permit.id}</span> {/* Use <span> instead of <h3> */}
                       </button>
                   </td>
@@ -327,10 +327,10 @@ interface PersonalInformation {
               <div className="modal-overlay">
                 <div className="modal">
                 <h3>Choose an Action for Permit ID: {activePermit.id}</h3> {/* Display the permit ID */}
-                <button onClick={handleViewApplication}>View Application</button>
+                <button className="modal-button" onClick={handleViewApplication}>View Application</button>
   
   
-  <button onClick={closeModal}>Cancel</button>
+  <button className="cancel-button" onClick={closeModal}>Cancel</button>
                 </div>
               </div>
             )}

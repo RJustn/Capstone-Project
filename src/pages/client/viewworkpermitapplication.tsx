@@ -336,13 +336,13 @@ const handleLogout = async () => {
 
             <div className="content">
                 <header>
-                    <h1>All Applications</h1>
+                    <h1>View Work Permit Applications</h1>
                 </header>
 
                 <div className="contentcontainer">
                     <div className="applicationStatusContainer">
                         <div className="applicationstatusWorkPermit">
-                            <h2>Current Application Status For Work Permit:</h2>
+                            <h2>Current Application Status For Work Permit</h2>
                             <div>
       {latestPermitID ? (
         <>

@@ -253,14 +253,14 @@ return (
     <input
         type="text"
         placeholder="Search by ID, Status, or Classification"
-        value={inputValue} // Use inputValue for the input field
-        onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
-        className="search-input" // Add a class for styling
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className="search-input"
     />
-    <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+    <button onClick={handleSearch} className="search-button">
+        Search
+    </button>
 </div>
-
-
 
  {/* Dropdown for Classification Filter */}
  <select value={classificationFilter} onChange={handleClassificationChange}>

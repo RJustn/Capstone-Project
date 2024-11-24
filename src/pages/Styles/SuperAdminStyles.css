@@ -46,15 +46,6 @@
     font-size: 1.5rem;
     cursor: pointer;
 }
-
-  /* Breadcrumb Styles */
-.SAbreadcrumb {
-    padding: 10px 20px;
-    font-size: 24px;
-    color: #555;
-    font-weight: bold;
-}
-
   /* Dashboard Layout */
 .SAdashboard {
     padding: 20px;
@@ -393,77 +384,3 @@ p {
       
   /* ===================================  Account Edit Styles =================================== */
 
-/* FILE: SuperAdminStyles.css */
-
-.SA {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .SAaccountaddH1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .form-group input::placeholder {
-    color: #aaa;
-  }
-  
-  .SAbackButton {
-    background-color: Black;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .SAbackButton:hover {
-    background-color: #bbb;
-  }
-  
-  button[type="submit"] {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #45a049;
-  }
-  
-  p {
-    margin-top: 10px;
-    color: red;
-    font-weight: bold;
-  }
