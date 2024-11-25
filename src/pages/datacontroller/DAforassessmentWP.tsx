@@ -304,7 +304,7 @@ return (
                 <td>{permit.classification}</td>
                 <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
                 <td>
-                    <button className="action-button" onClick={() => openModal(permit)}>
+                    <button className="DAactionbutton" onClick={() => openModal(permit)}>
                         <span>Choose an Action for Permit ID: {permit.id}</span> {/* Use <span> instead of <h3> */}
                     </button>
                 </td>

@@ -152,20 +152,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
           } }
     
         fetchWorkPermitDetails(); // Call the fetch function
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
       }, [id, token, navigate]);
-
-
-
 
 // REJECT Modal @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       const openRejectModal = () => {
@@ -240,10 +227,6 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       );
     };
 
-
-
-
-
     const handleUpdate = async () => {
       console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
   
@@ -277,11 +260,6 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       }
   };
   
-      
-      
-
-
-
 
 return (
     <section className="DAbody">
@@ -382,6 +360,8 @@ return (
       <div className="documents-container">
         <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
         <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+        <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
+        <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
         {/* Continue with other documents */}
       </div>
 
@@ -402,7 +382,7 @@ return (
 
             {workPermit.workpermitstatus === 'Pending' && (
               <p>
-        <button className="action-button" onClick={handleUpdate}>Accept Application</button>
+        <button className="DAactionbutton" onClick={handleUpdate}>Accept Application</button>
         <button className="actionreject-button" onClick={openRejectModal}>Reject Application</button>
         </p>
       )}
@@ -415,8 +395,8 @@ return (
         )}
 
 {isModalOpen && (
-        <div className="modal" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             {modalFile && (
               <div>
                 {modalFile.endsWith('.pdf') ? (
@@ -426,7 +406,7 @@ return (
                 )}
               </div>
             )}
-            <button className="action-button" onClick={closeModal}>Close</button>
+            <button className="cancel-button" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}
@@ -441,7 +421,7 @@ return (
             {!isCommentVisible ? (
               <>
                 <p>Are you sure you want to reject this application?</p>
-                <button className="action-button" onClick={handleConfirm}>Confirm</button>
+                <button className="DAactionbutton" onClick={handleConfirm}>Confirm</button>
                 <button className="actionreject-button" onClick={closeRejectModal}>Cancel</button>
               </>
             ) : (
@@ -455,7 +435,7 @@ return (
                   rows={4}
                   style={{ width: '100%' }} // Adjust width as needed
                 />
-                <button className="action-button" onClick={handleFinalConfirm}>Submit</button>
+                <button className="DAactionbutton" onClick={handleFinalConfirm}>Submit</button>
                 <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
               </>
             )}
