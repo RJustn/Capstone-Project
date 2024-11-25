@@ -453,15 +453,9 @@ const handleLogout = async () => {
           <button className='viewpermitbutton'onClick={handleOpenPermitPDF}>View Released Permit</button>
         </p>
       )}
-
-
-
-
-
-    </div>  
-                                <button className='viewapplicationbutton'  onClick={() => navigate(`/viewapplicationdetails/${latestPermitmainID}`)}>View Application</button>
-                        
-                        </div>
+        </div>  
+            <button className='viewapplicationbutton'  onClick={() => navigate(`/viewapplicationdetails/${latestPermitmainID}`)}>View Application</button>
+        </div>
                     </div>
 
                     <div className="paymentandviewpermitcontainer">
@@ -532,16 +526,7 @@ const handleLogout = async () => {
               </div>
             </div>
           )}
-
-
-
         </div>
-
-        
-
-
-
-
             </div>
         </section>
     );
