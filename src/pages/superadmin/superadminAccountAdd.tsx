@@ -35,7 +35,7 @@ const SuperadminAccountAdd = () => {
     logFormData(formData);
 
     try {
-      const response = await fetch('http://localhost:3000/adduser', {
+      const response = await fetch('http://localhost:3000/superadmin/adduser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const SuperadminAccountAdd = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/superadmin/authentication', {
+        const response = await fetch('http://localhost:3000/superadmin/superadmin/authentication', {
           method: 'GET',
           credentials: 'include',
         });

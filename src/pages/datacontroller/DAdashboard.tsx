@@ -71,7 +71,7 @@ const generateYearlyData = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-auth-datacontroller', {
+        const response = await fetch('http://localhost:3000/client/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include',
         });
@@ -156,7 +156,7 @@ const generateYearlyData = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/client/logout', {
         method: 'POST',
         credentials: 'include',
       });

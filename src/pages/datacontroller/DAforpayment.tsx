@@ -9,7 +9,7 @@ const DataControllerForPaymentWP: React.FC = () => {
     useEffect(() => {
         const checkAuth = async () => {
           try {
-            const response = await fetch('http://localhost:3000/check-auth-datacontroller', {
+            const response = await fetch('http://localhost:3000/datacontroller/check-auth-datacontroller', {
               method: 'GET',
               credentials: 'include', // This ensures cookies are sent with the request
             });

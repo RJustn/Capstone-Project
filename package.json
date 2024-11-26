@@ -12,7 +12,7 @@
   "dependencies": {
     "@types/axios": "^0.9.36",
     "@types/react-datepicker": "^6.2.0",
-    "axios": "^1.7.7",
+    "axios": "^1.7.8",
     "axis": "^1.0.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
@@ -47,7 +47,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.10.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/socket.io-client": "^1.4.36",

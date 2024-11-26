@@ -135,8 +135,28 @@ const workPermitSchema = new mongoose.Schema({
 
 const WorkPermit = mongoose.model('WorkPermit', workPermitSchema);
 
+const PersonSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  applicationForm: {
+    age: Number,
+    address: String,
+    phoneNumber: String,
+    isActive: Boolean,
+  },
+  files: {
+    document1: String,
+    document2: String,
+    document3: String,
+  },
+});
+
+const Person = mongoose.model('Person', PersonSchema);
+
+
 module.exports = {
   User,
   BusinessPermit,
-  WorkPermit
+  WorkPermit,
+  Person
 };

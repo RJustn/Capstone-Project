@@ -29,7 +29,7 @@ const DAreleasedpermitsWP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-auth-datacontroller', {
+        const response = await fetch('http://localhost:3000/client/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -58,7 +58,7 @@ const DAreleasedpermitsWP: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/client/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -181,7 +181,7 @@ const DAreleasedpermitsWP: React.FC = () => {
 
   const fetchWorkPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/getreleasedworkpermits', {
+      const response = await fetch('http://localhost:3000/datacontroller/getreleasedworkpermits', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

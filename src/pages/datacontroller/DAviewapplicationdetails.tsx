@@ -83,7 +83,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('http://localhost:3000/check-auth-datacontroller', {
+          const response = await fetch('http://localhost:3000/client/check-auth-datacontroller', {
             method: 'GET',
             credentials: 'include', // This ensures cookies are sent with the request
           });
@@ -112,7 +112,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
 
     const handleLogout = async () => {
       try {
-        const response = await fetch('http://localhost:3000/logout', {
+        const response = await fetch('http://localhost:3000/client/logout', {
           method: 'POST',
           credentials: 'include', // Include cookies in the request
         });
@@ -142,7 +142,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
               } 
           try {
             console.log(id);
-            const response = await axios.get(`http://localhost:3000/DCworkpermitdetails/${id}`, {
+            const response = await axios.get(`http://localhost:3000/datacontroller/DCworkpermitdetails/${id}`, {
 
             });
             setWorkPermit(response.data as WorkPermit); // Set the work permit details to state
@@ -178,7 +178,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
         console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
       
         try {
-          const response = await axios.put(`http://localhost:3000/work-permitsreject/${workPermit?._id}`, {
+          const response = await axios.put(`http://localhost:3000/datacontroller/work-permitsreject/${workPermit?._id}`, {
             status: 'Rejected',
             comments: comments,
           });
@@ -211,7 +211,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
       };
       
     const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
@@ -242,7 +242,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
   
           // If newStatus is set, proceed with the update
           if (newStatus) {
-              const response = await axios.put(`http://localhost:3000/work-permits/${workPermit?._id}`, {
+              const response = await axios.put(`http://localhost:3000/datacontroller/work-permits/${workPermit?._id}`, {
                   status: newStatus,
               });
   

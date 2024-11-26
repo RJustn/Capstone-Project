@@ -49,7 +49,7 @@ const Logbook: React.FC = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/adminusers');
+        const response = await axios.get('http://localhost:3000/superadmin/adminusers');
         setAdmins(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -58,7 +58,7 @@ const Logbook: React.FC = () => {
 
     const fetchDataControllers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/datacontrollers');
+        const response = await axios.get('http://localhost:3000/superadmin/datacontrollers');
         setDataControllers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -73,8 +73,8 @@ const Logbook: React.FC = () => {
     const fetchData = async () => {
       try {
         // Fetching data from the API
-        const adminLogsResponse = await fetch('http://localhost:3000/adminusers');
-        const dataControllerLogsResponse = await fetch('http://localhost:3000/datacontrollers');
+        const adminLogsResponse = await fetch('http://localhost:3000/superadmin/adminusers');
+        const dataControllerLogsResponse = await fetch('http://localhost:3000/superadmin/datacontrollers');
       
         // Check if any of the responses were not OK
         if (!adminLogsResponse.ok || !dataControllerLogsResponse.ok) {
@@ -121,7 +121,7 @@ const Logbook: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/superadmin/logout', {
         method: 'POST',
         credentials: 'include',
       });
@@ -145,7 +145,7 @@ const Logbook: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/superadmin/authentication', {
+        const response = await fetch('http://localhost:3000/superadmin/superadmin/authentication', {
           method: 'GET',
           credentials: 'include',
         });

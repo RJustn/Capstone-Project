@@ -19,8 +19,8 @@ const Accounts: React.FC = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const adminResponse = await fetch('http://localhost:3000/adminusers');
-        const dataControllerResponse = await fetch('http://localhost:3000/datacontrollers');
+        const adminResponse = await fetch('http://localhost:3000/superadmin/adminusers');
+        const dataControllerResponse = await fetch('http://localhost:3000/superadmin/datacontrollers');
 
         if (!adminResponse.ok) {
           const errorText = await adminResponse.text();
@@ -52,7 +52,7 @@ const Accounts: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/superadmin/authentication', {
+        const response = await fetch('http://localhost:3000/superadmin/superadmin/authentication', {
           method: 'GET',
           credentials: 'include',
         });
@@ -77,7 +77,7 @@ const Accounts: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/superadmin/logout', {
         method: 'POST',
         credentials: 'include',
       });
