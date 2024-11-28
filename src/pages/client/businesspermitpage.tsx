@@ -2925,7 +2925,7 @@ const handleRemoveBusiness = (index: number) => {
               <h2>Step 1: Personal Details</h2>
               <h2>Personal Details</h2>
               <div className="form-group">
-                <label>
+                <label className="checkbox-label">
                   <input
                     type="checkbox"
                     checked={corporation}
@@ -2966,6 +2966,7 @@ const handleRemoveBusiness = (index: number) => {
                   <input type="text" value={companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
                 </div>
               </div>
+              <div className="form-row">
               <div className="form-group">
                 <label>CIVIL STATUS:</label>
                 <select
@@ -2998,20 +2999,21 @@ const handleRemoveBusiness = (index: number) => {
               <div className="form-group">
                 <label>CITIZENSHIP:</label>
                 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
-
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>TIN NUMBER:</label>
                   <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
                 </div>
+                </div>
               </div>
               <div className="form-group">
-                <label>
+              <label className="checkbox-label">
                   <input type="checkbox" checked={representative} onChange={() => setRepresentative(!representative)} />
                   Check if Thru Representative
                 </label>
               </div>
+              <div className="form-row">
               <div className="form-group">
                 <label>Representative Full Name:</label>
                 <input type="text" value={repfullname} onChange={(e) => setRepFullName(e.target.value)} disabled={!representative} />
@@ -3024,7 +3026,9 @@ const handleRemoveBusiness = (index: number) => {
                 <label>Representative Mobile Number:</label>
                 <input type="text" value={repmobilenumber} onChange={(e) => setRepMobileNumber(e.target.value)} disabled={!representative} />
               </div>
+              </div>
               <h2>Contact Information</h2>
+              <div className="form-row">
               <div className="form-group">
                 <label>House/Bldg No./Blk and Lot</label>
                 <input type="text" value={houseandlot} onChange={(e) => setHouseandLot(e.target.value)} />
@@ -3037,6 +3041,8 @@ const handleRemoveBusiness = (index: number) => {
                 <label>Subdivision / Compound Name</label>
                 <input type="text" value={subdivision} onChange={(e) => setSubdivision(e.target.value)} />
               </div>
+              </div>
+              <div className="form-row">
               <div className="form-group">
                 <label>Region</label>
                 <input type="text" value={region} onChange={(e) => setRegion(e.target.value)} />
@@ -3049,6 +3055,8 @@ const handleRemoveBusiness = (index: number) => {
                 <label>Municipality</label>
                 <input type="text" value={municipality} onChange={(e) => setMunicipality(e.target.value)} />
               </div>
+              </div>
+              <div className="form-row">
               <div className="form-group">
                 <label>Barangay</label>
                 <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
@@ -3060,6 +3068,7 @@ const handleRemoveBusiness = (index: number) => {
               <div className="form-group">
                 <label>Mobile Number</label>
                 <input type="text" value={mobilenumber} onChange={(e) => setMobileNumber(e.target.value)} />
+              </div>
               </div>
               <div className="form-group">
                 <label>Email Address</label>
@@ -3075,7 +3084,7 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 2 */}
               <div className="businesspermit-form">
-                <button type="button" onClick={goToPreviousStep}>Back</button>
+                <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
                 <h2>Step 2 Business Information</h2>
                 <div className="form-group">
                   <label>Business Name:</label>
@@ -3904,11 +3913,8 @@ const handleRemoveBusiness = (index: number) => {
           ))}
         </tbody>
       </table>
-                
-    
-    
-                 
-                <button type="button" onClick={goToNextStep}>Next</button>
+
+                <button className="nextbutton" type="button" onClick={goToNextStep}>Next</button>
 
               </div>
             </div>
@@ -3917,7 +3923,7 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               <div className="businesspermit-form">
                 {/* Content for Step 6 */}
-                <button type="button" onClick={goToPreviousStep}>Backc</button>
+                <button className="back-button"type="button" onClick={goToPreviousStep}>Back</button>
                 <label>Upload DTI / SEC / CDA:</label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
                 <label>Occupancy Permit (Optional)</label>
