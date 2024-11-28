@@ -342,37 +342,237 @@ router.post('/signup', async (req, res) => {
     }
   });
   
+
   // Route to get all business permit applications
-  router.post('/businesspermitpage', async (req, res) => {
-  
-    try {
-      // Get the userID from the decoded token
-      const token = req.headers.authorization?.split(' ')[1];
-      const decoded = jwt.verify(token, JWT_SECRET);
-      const userID = decoded.userId;
-      
-      // Create a new business permit application
-      const newBusinessPermit = new BusinessPermit({
-  
-        statusBusiness,
-        transaction,
-        dateIssued,
-        expiryDate
-      });
-  
-      // Save the new application to the database
-      await newBusinessPermit.save();
-  
-         // Retrieve all business permit applications for the user
-      const businessPermits = await BusinessPermit.find({ userID });
-      
-      res.status(200).json({ workPermits });
-      res.status(201).json({ message: 'Business Permit Application submitted successfully!' });
-    } catch (error) {
-      console.error('Error saving business permit application:', error);
-      res.status(500).json({ error: 'An error occurred while saving the application.' });
-    }
-  });
+router.post('/businesspermitpage', upload.fields([
+  { name: 'document1', maxCount: 1 },
+  { name: 'document2', maxCount: 1 },
+  { name: 'document3', maxCount: 1 },
+  { name: 'document4', maxCount: 1 },
+  { name: 'document5', maxCount: 1 },
+  { name: 'document6', maxCount: 1 }
+]), async (req, res) => {
+  const token = req.cookies.authToken; // Extract token from the cookie
+  // console.log('Received token:', token);
+   
+   if (!token) {
+     return res.status(401).json({ error: 'Unauthorized' });
+   }
+ 
+   const files = req.files;
+   const {
+    //Step 1
+     corporation,
+     lastname,
+     firstname,
+     middleinitial,
+     civilstatus,
+     companyname,
+     gender,
+     citizenship,
+     tinnumber,
+     representative,
+     repfullname,
+     repdesignation,
+     repmobilenumber,
+     houseandlot,
+     buildingstreetname,
+     subdivision,
+     region,
+     province,
+     municipality,
+     barangay,
+     telephonenumber,
+     mobilenumber,
+     email,
+
+    //Step 2
+    businessname,
+    businessscale,
+    paymentmethod,
+    businessbuildingblocklot,
+    businessbuildingname,
+    businesssubcompname,
+    businessregion,
+    businessprovince,
+    businessmunicipality,
+    businessbarangay,
+    businesszip,
+    businesscontactnumber,
+    ownershiptype,
+    agencyregistered,
+    dtiregistrationnum,
+    dtiregistrationdate,
+    dtiregistrationexpdate,
+    secregistrationnum,
+    birregistrationnum,
+    industrysector,
+    businessoperation,
+    typeofbusiness,
+
+    //Step 3
+    dateestablished,
+    startdate,
+    occupancy,
+    otherbusinesstype,
+    businessemail,
+    businessarea,
+    businesslotarea,
+    numofworkermale,
+    numofworkerfemale,
+    numofworkertotal,
+    numofworkerlgu,
+    lessorfullname,
+    lessormobilenumber,
+    monthlyrent,
+    lessorfulladdress,
+    lessoremailaddress,
+    
+
+    //Step 4
+    lat,
+    lng,
+ 
+    //Step 5
+    newBusiness,
+    businesses,
+
+
+   } = req.body;
+   console.log('Incoming data:', req.body);
+   console.log(req.files)
+
+
+   try {
+     const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
+     console.log('Decoded token:', decoded);
+
+     const parsedNewBusiness = JSON.parse(newBusiness);
+     const parsedBusinesses = JSON.parse(businesses);
+     const userId = decoded.userId;
+     const permitID = await generateBusinessPermitID('BP');
+     const status = "Pending";
+
+     const newBusinessPermit = new BusinessPermit({
+       id: permitID,
+       userId,
+       businesspermitstatus: status,
+       businessstatus: null,
+       classification: 'NewBusiness',
+       transaction: null,
+       amountToPay: null,
+       permitFile: null,
+       permitDateIssued: null,
+       permitExpiryDate: null,
+       expiryDate: null,
+       applicationdateIssued: new Date(Date.now()).toISOString(),
+       applicationComments: null,
+       owner:{
+        corporation,
+     lastname,
+     firstname,
+     middleinitial,
+     civilstatus,
+     companyname,
+     gender,
+     citizenship,
+     tinnumber,
+     representative,
+     houseandlot,
+     buildingstreetname,
+     subdivision,
+     region,
+     province,
+     municipality,
+     barangay,
+     telephonenumber,
+     mobilenumber,
+     email,
+        representativedetails: {
+          repfullname,
+          repdesignation,
+          repmobilenumber,
+        },
+       },
+       business: {
+        businessname,
+        businessscale,
+        paymentmethod,
+        businessbuildingblocklot,
+        businessbuildingname,
+        businesssubcompname,
+        businessregion,
+        businessprovince,
+        businessmunicipality,
+        businessbarangay,
+        businesszip,
+        businesscontactnumber,
+        ownershiptype,
+        agencyregistered,
+        dtiregistrationnum,
+        dtiregistrationdate,
+        dtiregistrationexpdate,
+        secregistrationnum,
+        birregistrationnum,
+        industrysector,
+        businessoperation,
+        typeofbusiness,
+      },
+      otherbusinessinfo:{
+        dateestablished,
+    startdate,
+    occupancy,
+    otherbusinesstype,
+    businessemail,
+    businessarea,
+    businesslotarea,
+    numofworkermale,
+    numofworkerfemale,
+    numofworkertotal,
+    numofworkerlgu,
+    lessorfullname,
+    lessormobilenumber,
+    monthlyrent,
+    lessorfulladdress,
+    lessoremailaddress,
+      },
+      mapview:{
+      lat,
+      lng,
+      },
+      businesses: parsedBusinesses, // Save businesses as an array
+      files: {
+        document1: files.document1 ? files.document1[0].path : null,
+        document2: files.document2 ? files.document2[0].path : null,
+        document3: files.document3 ? files.document3[0].path : null,
+        document4: files.document4 ? files.document4[0].path : null,
+        document5: files.document5 ? files.document5[0].path : null,
+        document6: files.document6 ? files.document6[0].path : null,
+      },
+       receipt: {
+       receiptId: null, //Generated
+       modeOfPayment: null, //online, onsite
+       paymentType: null, // gcash, bank payment, onsite
+       paymentNumber: null, // gcashnumber, card number
+       receiptName: null, //user's name
+       receiptDate: null, //date
+       amountPaid: null, // amount
+       receiptFile: null,
+       }
+     });
+ 
+     // Save new work permit and retrieve its _id
+     const savedBusinessPermit = await newBusinessPermit.save();
+     console.log('Saved BusinessPermit ID:', savedBusinessPermit._id); // Log the saved ID
+     
+     await User.findByIdAndUpdate(userId, { $push: { businessPermits: savedBusinessPermit._id } });
+     
+     res.status(200).json({ message: 'Application submitted successfully' });
+   } catch (error) {
+     console.error('Error saving application:', error.message); // Log the error message
+     res.status(500).json({ message: 'Error submitting application', error: error.message });
+   }
+ });
   
   router.post('/workpermitpage', upload.fields([
     { name: 'document1', maxCount: 1 },
@@ -552,6 +752,50 @@ router.post('/signup', async (req, res) => {
         throw error; // or handle the error as needed
     }
   }
+
+  async function generateBusinessPermitID(permitType) {
+    const today = new Date();
+    
+    // Get the current date in DDMMYYYY format
+    const year = today.getFullYear(); 
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const dateString = `${day}${month}${year}`;
+  
+    try {
+        // Fetch the latest permit ID for the given permit type where the ID matches today's date exactly
+        const latestPermit = await BusinessPermit.findOne({
+            permittype: permitType,
+            id: { $regex: `^${permitType}\\d{4}${dateString}$` } // Match permits for today
+        }).sort({ id: -1 }); // Sort to get the latest permit ID for today
+  
+        let sequenceNumber = 1; // Default to 1 if no permits exist for today
+  
+        if (latestPermit) {
+            // Extract the sequence number from the latest permit ID
+            const latestPermitID = latestPermit.id;
+  
+            // Use a regex to extract the 4-digit sequence part (assuming format: WP0001DDMMYYYY)
+            const match = latestPermitID.match(new RegExp(`^${permitType}(\\d{4})${dateString}$`));
+  
+            if (match) {
+                sequenceNumber = parseInt(match[1], 10) + 1; // Increment by 1
+            }
+        }
+  
+        // Pad sequence number to ensure it's always 4 digits
+        const sequenceString = String(sequenceNumber).padStart(4, '0');
+  
+        // Construct the final permit ID
+        const permitID = `${permitType}${sequenceString}${dateString}`;
+  
+        // Return the constructed permit ID
+        return permitID; 
+    } catch (error) {
+        console.error('Error generating permit ID:', error);
+        throw error; // or handle the error as needed
+    }
+  }
   
   async function generateUserId(role) {
     const today = new Date();
@@ -632,6 +876,29 @@ router.post('/signup', async (req, res) => {
       res.status(500).json({ message: 'Error retrieving work permits', error });
     }
   });
+
+  router.get('/fetchuserbusinesspermits', async (req, res) => {
+    const token = req.cookies.authToken; // Extract token from the cookie
+  // console.log('Received token:', token);
+    try {
+      
+      const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
+      console.log('Decoded token:', decoded);
+      const userId = decoded.userId;
+  
+      // Fetch user and populate work permits
+      const user = await User.findById(userId).populate('businessPermits');
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Send the populated work permits to the client
+      res.json(user.businessPermits);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving work permits', error });
+    }
+  });
   
   
   router.get('/workpermitdetails/:id', async (req, res) => {
@@ -658,6 +925,37 @@ router.post('/signup', async (req, res) => {
   
       // Return the specific work permit details
       res.json(workPermit);
+    } catch (error) {
+      console.error('Error retrieving work permit:', error);
+      res.status(500).json({ message: 'Error retrieving work permit', error });
+    }
+  });
+  
+
+  router.get('/businesspermitdetails/:id', async (req, res) => {
+    const { id } = req.params;
+    const token = req.cookies.authToken; // Extract token from the cookie
+    
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get userId
+      const userId = decoded.userId;
+  console.log(userId);
+      // Find the user by ID
+      const user = await User.findById(userId).populate('businessPermits'); // Populate work permits
+  console.log(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Check if the user has the specified work permit
+      const businessPermit = user.businessPermits.find(permit => permit._id.toString() === id);
+      console.log(businessPermit);
+      if (!businessPermit) {
+        return res.status(404).json({ message: 'Work permit not found for this user' });
+      }
+  
+      // Return the specific work permit details
+      res.json(businessPermit);
     } catch (error) {
       console.error('Error retrieving work permit:', error);
       res.status(500).json({ message: 'Error retrieving work permit', error });

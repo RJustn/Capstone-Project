@@ -34,16 +34,17 @@ const ViewWorkPermitApplication: React.FC = () => {
     const [latestPermitFile, setLatestPermitFile] = useState<string |null>(null);
     const [latestReceiptFile, setLatestReceiptFile] = useState<string |null>(null);
 
+   const [modalFile, setModalFile] = useState<string | null>(null);
+
+   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
 
 const [latestReleasedPermitID, setLatestReleasedPermitID] = useState<string | null>(null);
 const [latestReleasedPermitIDMain, setLatestReleasedPermitIDMain] = useState<string | null>(null);
 
-
+const [activePermitId, setActivePermitId] = useState<string | null>(null);
 
 
 // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-const [activePermit, setActivePermit] = useState<WorkPermit | null>(null);
-const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 const [currentPage, setCurrentPage] = useState(0);
 const itemsPerPage = 5;
 const totalPages = Math.ceil(workPermits.length / itemsPerPage)
@@ -76,23 +77,17 @@ const handlePreviousPage = () => {
   }
 };
 
-const openModal = (permit: WorkPermit) => {
-  setActivePermit(permit);
-  setIsModalOpen(true);
+
+const openModal = (filePath: string) => {
+  setModalFile(filePath);
+  setIsModalOpenFile(true);
 };
 
 const closeModal = () => {
-  setActivePermit(null);
-  setIsModalOpen(false);
+  setIsModalOpenFile(false);
+  setModalFile(null);
 };
 
-const handleViewApplication = () => {
-  if (activePermit) {
-    console.log(`Edit permit ID: ${activePermit._id}`);
-    navigate(`/viewapplicationdetails/${activePermit._id}`);
-  
-  }
-};
 const handleViewLatestReleasedApplication = () => {
   
     console.log(`Edit permit ID: ${latestReleasedPermitIDMain}`);
@@ -101,11 +96,22 @@ const handleViewLatestReleasedApplication = () => {
 
 };
 
-const handleDelete = () => {
-  if (activePermit) {
-    console.log(`Delete permit ID: ${activePermit._id}`);
-    // Implement your delete logic here
-    closeModal(); // Close the modal after action
+
+const handleDelete = async (permitId: string) => {
+  console.log(`Delete permit ID: ${permitId}`);
+  try {
+    const response = await fetch(`http://localhost:3000/datacontroller/deletePermit/${permitId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert("Permit deleted successfully");
+      window.location.reload(); // Reload the page to refresh the data
+    } else {
+      alert("Failed to delete permit");
+    }
+  } catch (error) {
+    console.error("Error deleting permit:", error);
   }
 };
 //END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -154,37 +160,111 @@ const handleDelete = () => {
     };
   
     const handleSubmitPayment = async () => {
-      console.log(accountNumber);
-      console.log(amount);
-      console.log(latestPermitID);
-
-      console.log('Updating permit with ID:', latestPermitmainID); // Log ID for debugging
-      
-        try {
-          const response = await axios.put(`http://localhost:3000/handlepayments/${latestPermitmainID}`, {
-            accountNumber: accountNumber,
-            amount: amount,
-            paymentName: paymentName,
-            paymentMethod: paymentMethod,
-            paymentType: paymentType,
+      // Check if activePermit exists before proceeding
+      if (!activePermitId) {
+          console.error('No active permit found.');
+          return; // Exit the function if there's no active permit
+      }
+    
+      console.log('Account Number:', accountNumber);
+      console.log('Amount:', amount);
+      console.log('Updating permit with ID:', activePermitId); // Log ID for debugging
+    
+      try {
+          const response = await axios.put(`http://localhost:3000/datacontroller/handlepayments/${activePermitId}`, {
+              accountNumber: accountNumber,
+              amount: amount,
+              paymentName: paymentName,
+              paymentMethod: paymentMethod,
+              paymentType: paymentType,
           });
+          
           console.log('Updated Permit:', response.data);
-          setModalStep(2);
-        } catch (error) {
+    
+          setModalStep(2); // Move to the next step of your modal or process
+    
+      } catch (error) {
           console.error('Error updating work permit:', error);
-        }
+      }
+    
       // Reset the state variables to null
       setAccountNumber(null); // Clear account number
       setAmount(null); // Clear amount
+      setActivePermitId(null); // Clear activepermit
     };
+
+    
+  const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
+    if (!fileName) return null;
+    
+    // Return the file URL based on the folder specified
+    return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
+  };
+  
+  const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
+    const fileUrl = fetchDocumentUrl(fileName, folder);
+  
+    if (!fileUrl) return <span>Not uploaded</span>;
+  
+    const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
+  
+    // Automatically open the modal if a valid file is found
+   
+        openModal(fileUrl); // Open the modal automatically
+  
+  
+    return (
+      <span>
+        {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
+      </span>
+    );
+  };
 
     //ENDMODAL TESTING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     
 // Content CODE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+const handleAction = (action: string, permit: WorkPermit) => {
+  switch (action) {
+    case 'viewApplication':
+  console.log(`Edit permit ID: ${permit._id}`);
+    navigate(`/viewapplicationdetails/${permit._id}`);
+      break;
+    case 'delete':
+      handleDelete(permit._id);
+      console.log(`Delete permit: ${permit._id}`);
+      break;
+    case 'pay':
+      setActivePermitId(permit._id);  // Save the permit ID
+      setShowPaymentMethod(true);
+      setModalStep(0);                 // Reset modal to the first step
+      setPaymentMethod(null);          // Reset payment method
+       setPaymentType(null);            // Reset payment type
+       console.log(`Pay for permit: ${permit._id}`);
+      console.log(`Pay for permit: ${permit.id}`);
+      break;
+    case 'viewReceipt':
+      if (permit.receipt?.receiptFile) { // Check if the receipt file exists
+          renderDocument(permit.receipt.receiptFile, 'receipts'); // Automatically open modal
+          console.log(`View receipt for permit: ${permit.id}`);
+        } else {
+          console.log(`No receipt file found for permit: ${permit.id}`);
+        }
+      break;
+    case 'viewPermit':
+   
+      renderDocument(permit.permitFile, 'permits');
+
+      console.log(`View permit: ${permit.permitFile}`);
+      console.log(`View permit: ${permit.id}`);
+      break;
+    default:
+      console.warn('Unknown action');
+  }
+};
 
 const handleLogout = async () => {
   try {
-    const response = await fetch('http://localhost:3000/logout', {
+    const response = await fetch('http://localhost:3000/client/logout', {
       method: 'POST',
       credentials: 'include', // Include cookies in the request
     });
@@ -214,7 +294,7 @@ const handleLogout = async () => {
   
     const fetchWorkPermits = async () => {
       try {
-        const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
+        const response = await fetch('http://localhost:3000/client/fetchuserworkpermits', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -287,7 +367,7 @@ const handleLogout = async () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-auth-client', {
+        const response = await fetch('http://localhost:3000/client/check-auth-client', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -470,39 +550,65 @@ const handleLogout = async () => {
                 <div className='workpermittable'>
   <p>Work Permit Applications</p>
   <table className="permit-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Status</th>
-        <th>Transaction</th>
-        <th>Date Issued</th>
-        <th>Date Expired</th>
-        <th>Action</th>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Status</th>
+      <th>Transaction</th>
+      <th>Date Issued</th>
+      <th>Date Expired</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentItems.map((permit) => (
+      <tr key={permit._id}>
+        <td>{permit.id}</td>
+        <td>{permit.workpermitstatus}</td>
+        <td>{permit.classification}</td>
+        <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
+        <td>
+          {permit.permitExpiryDate
+            ? new Date(permit.permitExpiryDate).toLocaleDateString()
+            : '---'}
+        </td>
+        <td>
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              handleAction(e.target.value, permit);
+              e.target.value = ""; // Reset dropdown to default
+            }}
+            className="dropdown-button"
+          >
+            <option value="" disabled>
+              Select Action
+            </option>
+            {permit.workpermitstatus === 'Pending' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="delete">Delete</option>
+              </>
+            )}
+            {permit.workpermitstatus === 'Waiting for Payment' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="pay">Pay</option>
+              </>
+            )}
+            {permit.workpermitstatus === 'Released' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewReceipt">View Receipt</option>
+                <option value="viewPermit">View Permit</option>
+              </>
+            )}
+          </select>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      {currentItems.map((permit) => (
-        <tr key={permit._id}>
-          <td>{permit.id}</td>
-          <td>{permit.workpermitstatus}</td>
-          <td>{permit.classification}</td>
-          <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
-          <td>
-            {permit.permitExpiryDate 
-              ? new Date(permit.permitExpiryDate).toLocaleDateString() 
-              : '---'}
-          </td>
-          <td>
-            <button onClick={() => openModal(permit)} className="table-button">
-              Choose Action
-            </button>
-          </td>
-        </tr>
-      ))}
-            </tbody>
-          </table>
-
-          
+    ))}
+  </tbody>
+</table>
           <div className="pagination-buttons">
             {currentPage > 0 && (
               <button onClick={handlePreviousPage}>Back</button>
@@ -512,20 +618,22 @@ const handleLogout = async () => {
             )}
           </div>
           {/* Modal for Action Options */}
-          {isModalOpen && activePermit && (
-            <div className="modal-overlay">
-              <div className="modal">
-              <h3>Choose an Action for Permit ID: {activePermit.id}</h3> {/* Display the permit ID */}
-              <button className="clientmodal-button" onClick={handleViewApplication}>View Application</button>
-               {/* Conditionally render the Delete button */}
-               {activePermit.workpermitstatus === 'Pending' && (
-              <button className="clientcancel-button" onClick={handleDelete}>Delete</button>
-           )}
-
-<button className="clientcancel-button" onClick={closeModal}>Cancel</button>
+          {isModalOpenFile && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {modalFile && (
+              <div>
+                {modalFile.endsWith('.pdf') ? (
+                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
+                ) : (
+                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
+                )}
               </div>
-            </div>
-          )}
+            )}
+            <button onClick={closeModal}>Close</button>
+          </div>
+        </div>
+      )}
         </div>
             </div>
         </section>

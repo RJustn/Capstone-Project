@@ -284,34 +284,34 @@ return (
       </div>
       <div className="section">
         <label>Work Permit Status:</label>
-        <input type="text" value={workPermit.workpermitstatus} readOnly />
+        <input type="text" value={workPermit.workpermitstatus || ""} readOnly />
       </div>
 
       <h2>Personal Information Details</h2>
       <div className="grid-container">
         <div className="section">
           <label>Application ID:</label>
-          <input type="text" value={workPermit.id} readOnly />
+          <input type="text" value={workPermit.id || ""} readOnly />
         </div>
         <div className="section">
           <label>Full Name:</label>
           <input
             type="text"
-            value={`${workPermit.formData.personalInformation.lastName}, ${workPermit.formData.personalInformation.firstName} ${workPermit.formData.personalInformation.middleInitial}`}
+            value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
             readOnly
           />
         </div>
         <div className="section">
           <label>Permanent Address:</label>
-          <input type="text" value={workPermit.formData.personalInformation.permanentAddress} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.permanentAddress|| ""} readOnly />
         </div>
         <div className="section">
           <label>Currently Residing:</label>
-          <input type="text" value={workPermit.formData.personalInformation.age} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.age|| ""} readOnly />
         </div>
         <div className="section">
           <label>Temporary Address:</label>
-          <input type="text" value={workPermit.formData.personalInformation.temporaryAddress} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.temporaryAddress || ""} readOnly />
         </div>
         <div className="section">
           <label>Birth Date:</label>
@@ -323,19 +323,19 @@ return (
         </div>
         <div className="section">
           <label>Age:</label>
-          <input type="text" value={workPermit.formData.personalInformation.age} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.age|| ""} readOnly />
         </div>
         <div className="section">
           <label>Place of Birth:</label>
-          <input type="text" value={workPermit.formData.personalInformation.placeOfBirth} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.placeOfBirth|| ""} readOnly />
         </div>
         <div className="section">
           <label>Citizenship:</label>
-          <input type="text" value={workPermit.formData.personalInformation.citizenship} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.citizenship|| ""} readOnly />
         </div>
         <div className="section">
           <label>Company Name:</label>
-          <input type="text" value={workPermit.formData.personalInformation.companyName} readOnly />
+          <input type="text" value={workPermit.formData.personalInformation.companyName|| ""} readOnly />
         </div>
         {/* Add the remaining fields in similar fashion */}
       </div>
@@ -344,15 +344,15 @@ return (
       <div className="grid-container">
         <div className="section">
           <label>Name:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.name2} readOnly />
+          <input type="text" value={workPermit.formData.emergencyContact.name2|| ""} readOnly />
         </div>
         <div className="section">
           <label>Mobile Number:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.mobileTel2} readOnly />
+          <input type="text" value={workPermit.formData.emergencyContact.mobileTel2|| ""} readOnly />
         </div>
         <div className="section">
           <label>Address:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.address} readOnly />
+          <input type="text" value={workPermit.formData.emergencyContact.address|| ""} readOnly />
         </div>
       </div>
 

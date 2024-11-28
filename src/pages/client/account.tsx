@@ -47,7 +47,7 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
 
 
       try {
-        const response = await fetch('http://localhost:3000/profile', {
+        const response = await fetch('http://localhost:3000/client/profile', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -92,7 +92,7 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-auth-client', {
+        const response = await fetch('http://localhost:3000/client/check-auth-client', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -138,7 +138,7 @@ const handleSendOtp = async () => {
 
 
   try {
-      const response = await fetch('http://localhost:3000/send-otp', {
+      const response = await fetch('http://localhost:3000/client/send-otp', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ const handleVerifyOtp = async () => {
   }
 
   try {
-      const response = await fetch('http://localhost:3000/update-password', {
+      const response = await fetch('http://localhost:3000/client/update-password', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',

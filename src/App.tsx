@@ -17,6 +17,8 @@ import WorkPermit from './pages/client/workpermitpage';
 import ViewWorkPermitApplication from './pages/client/viewworkpermitapplication';
 import ViewBusinessApplication from './pages/client/viewbusinessapplication';
 import ViewAllApplication from './pages/client/viewallapplication';
+import ViewApplicationDetails from './pages/client/viewapplicationdetails';
+import ViewApplicationDetailsBusiness from './pages/client/viewapplicationdetailsbusiness';
 
 // SUPERADMIN PAGES
 import SuperAdminLogin from './pages/superadmin/superadminLogin';
@@ -38,9 +40,10 @@ import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 import DataControllerAccount from './pages/datacontroller/DAaccount';
 
-import ViewApplicationDetails from './pages/client/viewapplicationdetails';
 import AppTest from './pages/apptest';
 import AppTest2 from './pages/apptest2';
+import AppTest3 from './pages/apptest3';
+import AppTest4 from './pages/apptest4';
 
 const App: React.FC = () => {
   return (
@@ -61,8 +64,12 @@ const App: React.FC = () => {
         <Route path="/viewallapplication" element={<ViewAllApplication />} />
         <Route path="/viewapplicationdetails/:id" element={<ViewApplicationDetails />} />
         <Route path="/viewapplicationdetails/" element={<ViewApplicationDetails />} />
+        <Route path="/viewapplicationdetailsbusiness/:id" element={<ViewApplicationDetailsBusiness />} />
+        <Route path="/viewapplicationdetailsbusiness/" element={<ViewApplicationDetailsBusiness />} />
         <Route path="/apptest" element={<AppTest />} />
         <Route path="/apptest2" element={<AppTest2 />} />
+        <Route path="/apptest3" element={<AppTest3 />} />
+        <Route path="/apptest4" element={<AppTest4 />} />
 
         {/* Routes for Data Controller */}
         <Route path="/DAdashboard" element={<DataControllerDashboard />} />

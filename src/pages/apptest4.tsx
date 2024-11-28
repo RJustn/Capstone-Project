@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Styles/ClientStyles.css'; //  CSS file
-import ClientSideBar from '../components/ClientSideBar'
+import './Styles/ClientStyles.css'; //  CSS file
+import ClientSideBar from './components/ClientSideBar'
 import axios from 'axios';
 
 // Define the WorkPermit interface
@@ -54,7 +54,7 @@ export interface Receipt {
     businesssubcompname?: string;
   }
 
-const Dashboard: React.FC = () => {
+const AppTest4: React.FC = () => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState<{ email: string; firstName: string; lastName: string; id: string} | null>(null);;
   const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
@@ -793,4 +793,4 @@ const handleAction = (action: string, permit: WorkPermit) => {
   
 };
 
-export default Dashboard;
+export default AppTest4;

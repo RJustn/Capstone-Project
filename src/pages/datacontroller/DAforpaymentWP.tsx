@@ -182,7 +182,7 @@ const DataControllerForPaymentWP: React.FC = () => {
 
   const fetchWorkPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforpayment', {
+      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforpayments', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

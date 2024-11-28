@@ -181,7 +181,7 @@ const DAreleasedpermitsWP: React.FC = () => {
 
   const fetchWorkPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/getreleasedworkpermits', {
+      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforrelease', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

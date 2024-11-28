@@ -90,7 +90,7 @@ const ViewApplicationDetails: React.FC = () => {
           } 
       try {
         console.log(id);
-        const response = await axios.get(`http://localhost:3000/workpermitdetails/${id}`, {
+        const response = await axios.get(`http://localhost:3000/client/workpermitdetails/${id}`, {
           headers: { },
           withCredentials: true, 
 
@@ -116,7 +116,7 @@ const ViewApplicationDetails: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/client/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -138,7 +138,9 @@ const ViewApplicationDetails: React.FC = () => {
     }
   };
 
-
+  useEffect(() => {
+    console.log(workPermit); // This will log the updated workPermit when it changes
+  }, [workPermit]); // Dependency array ensures it runs when workPermit updates
 
 
 
@@ -156,7 +158,7 @@ const ViewApplicationDetails: React.FC = () => {
     if (!fileName) return null;
     
     // Return the file URL based on the folder specified
-    return `http://localhost:3000/${folder}/${fileName}`;
+    return `http://localhost:3000/client/${folder}/${fileName}`;
   };
   
 const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
@@ -175,7 +177,7 @@ const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' |
 useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:3000/check-auth-client', {
+      const response = await fetch('http://localhost:3000/client/check-auth-client', {
         method: 'GET',
         credentials: 'include', // This ensures cookies are sent with the request
       });

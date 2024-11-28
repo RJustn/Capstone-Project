@@ -119,7 +119,7 @@ const WorkPermit: React.FC = () => {
   const [latestWorkPermit, setLatestWorkPermit] = useState<WorkPermits | null>(null);
   const fetchWorkPermits = async () => {
       try {
-        const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
+        const response = await fetch('http://localhost:3000/client/fetchuserworkpermits', {
           method: 'GET',
           credentials: 'include', 
           headers: {
@@ -146,6 +146,7 @@ if (WorkPermitData.length > 0) {
         console.error('Error fetching profile:', error);
       }
     };
+    
   useEffect(() => {
 
  
@@ -268,7 +269,7 @@ if (WorkPermitData.length > 0) {
 
   
     try {
-      const response = await axios.post('http://localhost:3000/workpermitpage', formData, {
+      const response = await axios.post('http://localhost:3000/client/workpermitpage', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -291,7 +292,7 @@ if (WorkPermitData.length > 0) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch('http://localhost:3000/client/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });

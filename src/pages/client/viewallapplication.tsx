@@ -161,7 +161,7 @@ const handleDelete = () => {
       console.log('Updating permit with ID:', latestPermitmainID); // Log ID for debugging
       
         try {
-          const response = await axios.put(`http://localhost:3000/handlepayments/${latestPermitmainID}`, {
+          const response = await axios.put(`http://localhost:3000/datacontroller/handlepayments/${latestPermitmainID}`, {
             accountNumber: accountNumber,
             amount: amount,
             paymentName: paymentName,
@@ -184,7 +184,7 @@ const handleDelete = () => {
 
 const handleLogout = async () => {
   try {
-    const response = await fetch('http://localhost:3000/logout', {
+    const response = await fetch('http://localhost:3000/client/logout', {
       method: 'POST',
       credentials: 'include', // Include cookies in the request
     });
@@ -210,7 +210,7 @@ const handleLogout = async () => {
 
     const fetchWorkPermits = async () => {
       try {
-        const response = await fetch('http://localhost:3000/fetchuserworkpermits', {
+        const response = await fetch('http://localhost:3000/client/fetchuserworkpermits', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -233,7 +233,7 @@ const handleLogout = async () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-auth-client', {
+        const response = await fetch('http://localhost:3000/client/check-auth-client', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -320,7 +320,7 @@ const handleLogout = async () => {
   };
 
   const handleOpenReceiptPDF = () => {
-    const pdfUrl = `http://localhost:3000/receipts/${latestReceiptFile}`;
+    const pdfUrl = `http://localhost:3000/datacontroller/receipts/${latestReceiptFile}`;
     
     // Open the PDF in a new tab
     window.open(pdfUrl, '_blank');
