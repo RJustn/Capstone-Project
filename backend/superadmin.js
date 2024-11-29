@@ -4,6 +4,7 @@ const router = express.Router();
 
 const { User } = require('./Modals');
 
+const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -13,6 +14,58 @@ const socketIo = require('socket.io');
 const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
 const server = http.createServer(app);
 const io = socketIo(server);
+
+router.use(bodyParser.json());
+
+async function generateUserId(role) {
+  const today = new Date();
+
+  // Get the current date in YYYYMMDD format
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const formattedDate = `${year}${month}${day}`; // YYYYMMDD format
+
+  try {
+      // Fetch the latest user ID for the given role
+      const latestUser = await User.findOne({
+          userId: { $regex: `^USER${role}\\d{4}${formattedDate}$` } // Match users for today
+      }).sort({ userId: -1 }); // Sort to get the latest user ID for today
+
+      let sequenceNumber = 1; // Default to 1 if no users exist for today
+
+      if (latestUser) {
+          // Extract the sequence number from the latest user ID
+          const latestUserID = latestUser.userId;
+
+          // Use a regex to extract the 4-digit sequence part (assuming format: USER<role><seq><date>)
+          const match = latestUserID.match(new RegExp(`^USER${role}(\\d{4})${formattedDate}$`));
+
+          if (match) {
+              sequenceNumber = parseInt(match[1], 10) + 1; // Increment by 1
+          }
+      }
+
+      // Pad sequence number to ensure it's always 4 digits
+      const sequenceString = String(sequenceNumber).padStart(4, '0');
+
+      // Construct the final user ID
+      const userID = `USER${role}${sequenceString}${formattedDate}`;
+
+      // Return the constructed user ID
+      return userID; 
+  } catch (error) {
+      console.error('Error generating user ID:', error);
+      throw error; // or handle the error as needed
+  }
+}
+
+// Example usage
+async function createUser(role) {
+  const userId = await generateUserId(role);
+  console.log('Generated User ID:', userId);
+  // Here you can create the user in your database with the generated user ID
+}
 
   router.post('/superadmin/login', async (req, res) => {
   const { email, password } = req.body;
@@ -109,9 +162,6 @@ router.post('/adduser', async (req, res) => {
     // Assign userRole and userID based on the userrole from the request
     if (userrole === 'ADM') {
       userRole = 'Admin';
-      userID = await generateUserId(userrole);
-    } else if (userrole === 'CL') {
-      userRole = 'Client';
       userID = await generateUserId(userrole);
     } else if (userrole === 'DC') {
       userRole = 'Data Controller';
@@ -238,6 +288,8 @@ io.on('connection', (socket) => {
     console.log('A user disconnected:', socket.id);
   });
 });
+
+
 module.exports = router;
 
 

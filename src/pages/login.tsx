@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         // Check the user's role and navigate accordingly
         switch (data.role) {
           case 'Admin':
-            navigate('/admin-dashboard'); // Redirect to admin dashboard
+            navigate('/Adashboard'); // Redirect to admin dashboard
             break;
           case 'Client':
             navigate('/dashboard'); // Redirect to client dashboard

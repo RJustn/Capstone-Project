@@ -43,7 +43,7 @@ const Logbook: React.FC = () => {
   const [dataControllerLogs, setDataControllerLogs] = useState<UserLog[]>([]);
   const [dataControllers, setDataControllers] = useState<DataController[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+  const [, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ const Logbook: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/superadmin/logout', {
+      const response = await fetch('http://localhost:3000/client/logout', {
         method: 'POST',
         credentials: 'include',
       });

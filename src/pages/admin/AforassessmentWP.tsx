@@ -1,0 +1,339 @@
+import React, { useEffect, useState } from 'react';
+// import ASidebar from '../components/Asidebar';
+import { useNavigate } from 'react-router-dom';
+
+interface WorkPermit {
+  _id: string;
+  id: string;
+  workpermitstatus: string;
+  classification: string;
+  createdAt: string;
+  permitExpiryDate: string;
+  formData: FormData;
+}
+// interface BusinessPermit {
+//   _id: string;
+//   id: string;
+//   businessName: string;
+//   permitType: string;
+//   createdAt: string;
+//   permitExpiryDate: string;
+// }
+interface FormData {
+  personalInformation: PersonalInformation;
+}
+interface PersonalInformation {
+  firstName: string;
+  lastName: string;
+}
+
+const AdminForAssessmentWP: React.FC = () => {
+  const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
+  const [filteredWorkPermits, setFilteredWorkPermits] = useState<WorkPermit[]>([]);
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/client/check-auth-admin', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
+
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
+        }
+
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } 
+    };
+
+    checkAuth();
+  }, [navigate]); // Only depend on navigate, which is necessary for the redirection
+
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/client/logout', {
+  //       method: 'POST',
+  //       credentials: 'include', // Include cookies in the request
+  //     });
+
+  //     if (response.ok) {
+  //       // Clear any local storage data (if applicable)
+  //       localStorage.removeItem('profile');
+  //       localStorage.removeItem('userId');
+
+  //       // Redirect to the login page
+  //       navigate('/login');
+  //     } else {
+  //       // Handle any errors from the server
+  //       const errorData = await response.json();
+  //       console.error('Logout error:', errorData.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error logging out:', error);
+  //   }
+  // };
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(workPermits.length / itemsPerPage);
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleViewApplication = (permitId: string) => {
+    navigate(`/Aviewapplicationdetails/${permitId}`);
+  };
+
+  const [inputValue, setInputValue] = useState<string>('');
+  const [classificationFilter, setClassificationFilter] = useState<string>('');
+
+  const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
+    key: '', 
+    direction: null
+  });
+
+  const handleSort = (key: keyof WorkPermit) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+
+    setSortConfig({ key, direction });
+
+    const sortedItems = [...filteredWorkPermits].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === 'ascending' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setFilteredWorkPermits(sortedItems);
+  };
+
+  const currentWorkItems = filteredWorkPermits.slice(startIndex, endIndex); 
+
+  const applyFilters = (searchValue: string, classification: string) => {
+    const results = workPermits.filter((permit) => {
+      const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
+        permit.classification.toLowerCase().includes(searchValue.toLowerCase());
+
+      const matchesClassification = classification ? permit.classification === classification : true;
+
+      return matchesSearchQuery && matchesClassification;
+    });
+
+    setFilteredWorkPermits(results); // Update filtered items
+    setCurrentPage(0); // Reset to the first page of results
+    console.log('Filtered Results:', results); // Log the filtered results
+  };
+
+  const handleSearch = () => {
+    const searchValue = inputValue; // Use input value for search
+    applyFilters(searchValue, classificationFilter); // Apply both search and classification filters
+  };
+
+  const handleClassificationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedClassification = event.target.value;
+    setClassificationFilter(selectedClassification); // Set the classification filter
+    applyFilters(inputValue, selectedClassification); // Apply both search and classification filters
+    console.log('Selected Classification:', selectedClassification); // Log selected classification
+  };
+
+  const fetchWorkPermits = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/admin/getworkpermitsforassessment', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const WorkPermitData = await response.json();
+      setWorkPermits(WorkPermitData);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  // const fetchBusinessPermits = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforassessment', {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+      
+  //     const BusinessPermitData = await response.json();
+  //     setBusinessPermits(BusinessPermitData);
+  //   } catch (error) {
+  //     console.error('Error fetching profile:', error);
+  //   }
+  // };
+
+  useEffect(() => {
+    const handleTokenCheck = () => {
+      if (!token) {
+          navigate('/'); // Redirect to login if no token
+      } else {
+          fetchWorkPermits(); // Fetch work permits if token is present
+          // fetchBusinessPermits(); // Fetch business permits if token is present
+      }
+    };
+
+    handleTokenCheck(); // Call the function to check the token
+  }, [navigate, token]);
+
+  useEffect(() => {
+    setFilteredWorkPermits(workPermits); // Display all work permits by default
+    // setFilteredBusinessPermits(businessPermits); // Display all business permits by default
+  }, [workPermits]); // businessPermits
+
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
+  const handleDateSearch = () => {
+    const filteredByDate = workPermits.filter((permit) => {
+      const permitDate = new Date(permit.createdAt);
+      const isAfterStartDate = startDate ? permitDate >= new Date(startDate) : true;
+      const isBeforeEndDate = endDate ? permitDate <= new Date(endDate) : true;
+      return isAfterStartDate && isBeforeEndDate;
+    });
+
+    setFilteredWorkPermits(filteredByDate);
+    setCurrentPage(0); // Reset to the first page of results
+  };
+
+  const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+  return (
+    <section className="Abody">
+      <div className="Asidebar-container">
+        {/* <ASidebar handleLogout={handleLogout} /> Pass handleLogout to DASidebar */}
+      </div>
+
+      <div className="Acontent">
+        <header className='Aheader'>
+          <h1>Online Business and Work Permit Licensing System</h1>
+        </header>
+        <div className='workpermittable'>
+          <p>Work Permit Applications (For Assessments)</p>
+          {/* Search Bar */}
+          <div className="search-bar-container">
+            <input
+              type="text"
+              placeholder="Search by ID, Status, or Classification"
+              value={inputValue} // Use inputValue for the input field
+              onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
+              className="search-input" // Add a class for styling
+            />
+            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+          </div>
+
+          {/* Dropdown for Classification Filter */}
+          <select value={classificationFilter} onChange={handleClassificationChange}>
+            <option value="">All</option>
+            <option value="New">New</option>
+            <option value="Renew">Renew</option>
+          </select>
+
+          {/* Date Pickers for Date Range Filter */}
+          <div className="date-picker-container">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              max={maxDate} // Set the maximum date to today
+              placeholder="Start Date"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              max={maxDate} // Set the maximum date to today
+              placeholder="End Date"
+            />
+            <button onClick={handleDateSearch} className="search-button">Search by Date</button>
+          </div>
+
+          <table className="permit-table">
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('id')}>
+                  ID {sortConfig.key === 'id' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => handleSort('createdAt')}>
+                  Name {sortConfig.key === 'createdAt' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => handleSort('workpermitstatus')}>
+                  Status {sortConfig.key === 'workpermitstatus' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => handleSort('classification')}>
+                  Classification {sortConfig.key === 'classification' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => handleSort('createdAt')}>
+                  Date Issued {sortConfig.key === 'createdAt' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                </th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentWorkItems.map((permit) => (
+                <tr key={permit._id}>
+                  <td>{permit.id}</td>
+                  <td>{permit.formData.personalInformation.lastName} {permit.formData.personalInformation.firstName}</td>
+                  <td>{permit.workpermitstatus}</td>
+                  <td>{permit.classification}</td>
+                  <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
+                  <td>
+                      <button className="modal-button" onClick={() => handleViewApplication(permit._id)}>View Application</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="pagination-buttons">
+            {currentPage > 0 && (
+              <button onClick={handlePreviousPage}>Back</button>
+            )}
+            {currentPage < totalPages - 1 && (
+              <button onClick={handleNextPage}>Next</button>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default AdminForAssessmentWP;

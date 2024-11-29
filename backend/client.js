@@ -184,6 +184,20 @@ router.post('/signup', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
   });
+
+  router.get('/check-auth-admin', authenticateToken, (req, res) => {
+    // Assuming the user role is stored in req.user after token verification
+    const userRole = req.user.userrole; // Adjust this if the role key is different
+    console.log(userRole);
+    if (userRole === 'Admin') {
+      // If the user's role is 'client', respond with a 204 No Content status
+      return res.sendStatus(204);
+    } else {
+      console.log('Access denied: user is not a client');
+      // If the user's role is not 'client', respond with a 401 Unauthorized status
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  });
   
   
   router.post('/logout', authenticateToken, async (req, res) => {

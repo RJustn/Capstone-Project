@@ -13,6 +13,7 @@ const { User, BusinessPermit, WorkPermit } = require('./Modals');
 const superadminRoutes = require('./superadmin');
 const clientRoutes = require('./client');
 const datacontollerRoute = require('./datacontroller');
+const adminRoutes = require('./admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,6 +40,7 @@ mongoose.connect('mongodb://localhost:27017/obpwlsdatabase', {
 app.use('/client', clientRoutes);
 app.use('/superadmin', superadminRoutes);
 app.use('/datacontroller', datacontollerRoute);
+app.use("/admin", adminRoutes);
 
 const seedSuperadmin = async () => {
   const SuperAdmin_Email = process.env.SUPERADMIN_EMAIL;
