@@ -230,7 +230,6 @@ useEffect(() => {
               <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
               <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
               <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
-              <p><strong>Birth Date:</strong> {workPermit.formData.personalInformation.dateOfBirth?.toLocaleDateString()}</p>
               <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
               <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
               <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
@@ -294,7 +293,7 @@ useEffect(() => {
                 )}
               </div>
             )}
-            <button onClick={closeModal}>Close</button>
+            <button className="back-button"onClick={closeModal}>Close</button>
           </div>
         </div>
       )}

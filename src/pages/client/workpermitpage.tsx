@@ -347,10 +347,14 @@ if (WorkPermitData.length > 0) {
             <input type="text" value={permanentAddress} onChange={(e) => setPermanentAddress(e.target.value)} placeholder="Enter Permanent Address"  />
           </div>
           <div className="form-group">
-            <label>
-              <input type="checkbox" checked={currentlyResiding} onChange={() => setCurrentlyResiding(!currentlyResiding)} />
-              Check if Currently Residing in Dasmarinas
-            </label>
+          <label className="checkbox-label">
+            <input 
+            type="checkbox" 
+            checked={currentlyResiding} 
+            onChange={() => setCurrentlyResiding(!currentlyResiding)} 
+          />
+            Check if Currently Residing in Dasmarinas
+          </label>
           </div>
           <div className="form-group">
             <label>TEMPORARY ADDRESS (IF ANY):</label>
@@ -379,50 +383,46 @@ if (WorkPermitData.length > 0) {
               <label>CIVIL STATUS:</label>
               <input type="text" value={civilStatus} onChange={(e) => setCivilStatus(e.target.value)} placeholder="Enter Civil Status"  />
               </div>
-                  <div className="form-group">
-                 <label>GENDER:</label>
-                <label>
-                <input 
-                type="radio" 
-                name="gender" // Grouping name for radio buttons
-                value="Male" // Set the value directly here
-                checked={gender === "Male"} // Set checked based on state
-                onChange={() => setGender("Male")} 
-                 /> Male
-                 </label>
-              <label>
-              <input 
-                  type="radio" 
-                  name="gender" // Grouping name for radio buttons
-                  value="Female" // Set the value directly here
-                  checked={gender === "Female"} // Set checked based on state
-                  onChange={() => setGender("Female")} 
-               />Female
-                 </label>
-                </div>
+              <div className="form-group">
+              <label htmlFor="gender">GENDER:</label>
+                <select 
+                  id="gender" 
+                  name="gender" 
+                  value={gender} 
+                  onChange={(e) => setGender(e.target.value)} 
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+</div>
+
                 </div>
               <div className="form-row">
-               <div className="form-group">
+              <div className="form-group">
               <label>HEIGHT:</label>
               <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Enter Height"  />
-               </div>
+              </div>
               <div className="form-group">
               <label>WEIGHT:</label>
               <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter Weight"  />
             </div>
           </div>
+          <div className="form-row">
           <div className="form-group">
             <label>MOBILE/TEL. NO:</label>
             <input type="text" value={mobileTel} onChange={(e) => setMobileTel(e.target.value)} placeholder="Enter Phone Number"  />
-          </div>
-          <div className="form-group">
+            </div>
+            <div className="form-group">
             <label>EMAIL ADDRESS:</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter Email"  />
-          </div>
-          <div className="form-group">
+            </div>
+            <div className="form-group">
             <label>EDUCATIONAL ATTAINMENT:</label>
             <input type="text" value={educationalAttainment} onChange={(e) => setEducationalAttainment(e.target.value)} placeholder="Enter Educational Attainment"  />
           </div>
+          </div>
+          <div className="form-row">
           <div className="form-group">
             <label>NATURE OF WORK:</label>
             <input type="text" value={natureOfWork} onChange={(e) => setNatureOfWork(e.target.value)} placeholder="Enter Nature of Work"  />
@@ -435,32 +435,32 @@ if (WorkPermitData.length > 0) {
             <label>COMPANY NAME:</label>
             <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Enter Company Name"  />
           </div>
-          <div className="form-group gender-group">
-                 <label>Work Permit Classification:</label>
-                <label>
-                <input 
-                type="radio" 
-                name="Classification" // Grouping name for radio buttons
-                value="New" // Set the value directly here
-                checked={workpermitclassification === "New"} // Set checked based on state
-                onChange={() => setWorkPermitClassification("New")} 
-                disabled={workPermits.length > 0} // Disable if there are no work permits
-                required
-                 /> First Time Job Seeker / New Work Permit
-                 </label>
-              <label>
-              <input 
-                  type="radio" 
-                  name="Classification" // Grouping name for radio buttons
-                  value="Renew" // Set the value directly here
-                  checked={workpermitclassification === "Renewal"} // Set checked based on state
-                  onChange={() => setWorkPermitClassification("Renewal")} 
-                  disabled={workPermits.length === 0} // Disable if there are no work permits
-               />Work Permit Renewal
-                 </label>
-                 
-                </div>
+          </div>
+
+        <div className="form-group gender-group">
+          <label htmlFor="classification">Work Permit Classification:</label>
+          <select
+            id="classification"
+              name="classification"
+              value={workpermitclassification}
+              onChange={(e) => setWorkPermitClassification(e.target.value)}
+              required
+              disabled={
+            workPermits.length === 0 || 
+            (workpermitclassification === "New" && workPermits.length > 0)
+          }
+        >
+            <option value="">Select Classification</option>
+            <option value="New" disabled={workPermits.length > 0}>
+              First Time Job Seeker / New Work Permit
+            </option>
+            <option value="Renewal" disabled={workPermits.length === 0}>
+              Work Permit Renewal
+            </option>
+          </select>
+        </div>
           <h2>In Case of Emergency</h2>
+          <div className="form-row">
           <div className="form-group">
             <label>NAME:</label>
             <input type="text" value={name2} onChange={(e) => setName2(e.target.value)} placeholder="Enter Emegency Contact Person"  />
@@ -468,6 +468,7 @@ if (WorkPermitData.length > 0) {
           <div className="form-group">
             <label>MOBILE/TEL. NO:</label>
             <input type="text" value={mobileTel2} onChange={(e) => setMobileTel2(e.target.value)} placeholder="Enter Emegency Contact Person Phone Number"  />
+          </div>
           </div>
           <div className="form-group">
             <label>ADDRESS:</label>
