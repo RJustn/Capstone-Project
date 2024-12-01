@@ -60,9 +60,8 @@ const Dashboard: React.FC = () => {
   const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
   const [businessPermits, setBusinesPermits] = useState<BusinessPermit[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+//Update Table COde
   const [activePermitId, setActivePermitId] = useState<string | null>(null);
-
   const [modalFile, setModalFile] = useState<string | null>(null);
   const [isModalOpenFile, setIsModalOpenFile] = useState(false);
   // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

@@ -31,6 +31,7 @@ import SuperadminAddUser from './pages/superadmin/superadminAccountAdd';
 // DATA CONTROLLER PAGES
 import DataControllerDashboard from './pages/datacontroller/DAdashboard';
 import DataControllerForAssessment from './pages/datacontroller/DAforassessment';
+import DataControllerForAssessmentBP from './pages/datacontroller/DAforassessmentBP';
 import DataControllerForAssessmentWP from './pages/datacontroller/DAforassessmentWP';
 import DataControllerForPayment from './pages/datacontroller/DAforpayment';
 import DataControllerForPaymentWP from './pages/datacontroller/DAforpaymentWP';
@@ -38,6 +39,7 @@ import DataControllerReleasedPermit from './pages/datacontroller/DAreleasedpermi
 import DataControllerReleasedPermitWP from './pages/datacontroller/DAreleasedpermitsWP';
 import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph';
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
+import DataControllerViewBusinessApplicationDetails from './pages/datacontroller/DAviewbusinessapplicationdetails';
 import DataControllerAccount from './pages/datacontroller/DAaccount';
 
 // ADMIN PAGES
@@ -89,6 +91,7 @@ const App: React.FC = () => {
         {/* Routes for Data Controller */}
         <Route path="/DAdashboard" element={<DataControllerDashboard />} />
         <Route path="/DAforassessment" element={<DataControllerForAssessment />} />
+        <Route path="/DAforassessmentBP" element={<DataControllerForAssessmentBP />} />
         <Route path="/DAforassessmentWP" element={<DataControllerForAssessmentWP />} />
         <Route path="/DAforpayment" element={<DataControllerForPayment />} />
         <Route path="/DAforpaymentWP" element={<DataControllerForPaymentWP />} />
@@ -97,6 +100,8 @@ const App: React.FC = () => {
         <Route path="/DAreportsngraph" element={<DataControllerReportandGraph />} />
         <Route path="/DAviewapplicationdetails/" element={<DataControllerViewApplicationDetails />} />
         <Route path="/DAviewapplicationdetails/:id" element={<DataControllerViewApplicationDetails />} />
+        <Route path="/DAviewbusinessapplicationdetails/" element={<DataControllerViewBusinessApplicationDetails />} />
+        <Route path="/DAviewbusinessapplicationdetails/:id" element={<DataControllerViewBusinessApplicationDetails />} />
         <Route path="/DAaccount" element={<DataControllerAccount />} />
 
         {/* Routes for Superadmin */}

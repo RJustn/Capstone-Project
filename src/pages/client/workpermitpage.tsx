@@ -76,11 +76,7 @@ const WorkPermit: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isFormValid, setIsFormValid] = useState(true); 
-
   const [workPermits, setWorkPermits] = useState<WorkPermits[]>([]);
- 
-  
-
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [middleInitial, setMiddleInitial] = useState('');
@@ -230,7 +226,14 @@ if (WorkPermitData.length > 0) {
         }
       };
     
-
+      useEffect(() => {
+        if (workPermits.length === 0) {
+          setWorkPermitClassification("New");
+        } else {
+          setWorkPermitClassification("Renew");
+        }
+      }, [workPermits]);
+      
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -439,25 +442,17 @@ if (WorkPermitData.length > 0) {
 
         <div className="form-group gender-group">
           <label htmlFor="classification">Work Permit Classification:</label>
-          <select
-            id="classification"
-              name="classification"
-              value={workpermitclassification}
-              onChange={(e) => setWorkPermitClassification(e.target.value)}
-              required
-              disabled={
-            workPermits.length === 0 || 
-            (workpermitclassification === "New" && workPermits.length > 0)
-          }
-        >
-            <option value="">Select Classification</option>
-            <option value="New" disabled={workPermits.length > 0}>
-              First Time Job Seeker / New Work Permit
-            </option>
-            <option value="Renewal" disabled={workPermits.length === 0}>
-              Work Permit Renewal
-            </option>
-          </select>
+          <input
+  type="text"
+  id="classification"
+  name="classification"
+  value={
+    workPermits.length === 0
+      ? "First Time Job Seeker / New Work Permit"
+      : "Work Permit Renewal"
+  }
+  disabled
+/>
         </div>
           <h2>In Case of Emergency</h2>
           <div className="form-row">

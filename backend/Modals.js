@@ -134,6 +134,12 @@ typeofbusiness: String,
     document5: String,
     document6: String,
   },
+  department:{
+    Zoning: String,
+    OffBldOfcl: String,
+    CtyHlthOff: String,
+    BreuFrPrt: String,
+  },
   receipt: {
     receiptId: String, //Generated
     modeOfPayment: String, //online, onsite
@@ -197,7 +203,8 @@ const workPermitSchema = new mongoose.Schema({
       document1: String,
       document2: String,
       document3: String,
-      document4: String
+      document4: String,
+      document5: String,
     }
   },
   receipt: {

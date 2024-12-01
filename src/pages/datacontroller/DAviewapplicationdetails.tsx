@@ -164,6 +164,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       const [comments, setComments] = useState(''); // State for comments
     
       const closeModal = () => {
+        setIsModalOpen(false)
         setShowRejectModal(false);
         setIsCommentVisible(false); // Reset comment visibility when closing
         setComments(''); // Reset comments when closing
@@ -219,7 +220,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       if (!fileUrl) return <span>Not uploaded</span>;
     
       const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
-    
+      console.log(fileUrl);
       return (
         <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => openModal(fileUrl)}>
           {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
@@ -399,6 +400,7 @@ return (
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             {modalFile && (
               <div>
+                {modalFile}
                 {modalFile.endsWith('.pdf') ? (
                   <iframe src={modalFile} style={{ width: '100%', height: '600px' }} title="PDF Viewer" />
                 ) : (

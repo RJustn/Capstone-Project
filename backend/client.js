@@ -40,15 +40,15 @@ const transporter = nodemailer.createTransport({
     cookie: { secure: false } // Set to true in production with HTTPS
   }));
   const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: function (req, file, cb) {
       cb(null, 'uploads/');
     },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname);
-    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname); // Customize the filename
+    }
   });
-
-  const upload = multer({ storage });
+  
+  const upload = multer({ storage: storage });
 
 
 router.post('/signup', async (req, res) => {
@@ -100,6 +100,15 @@ router.post('/signup', async (req, res) => {
     try {
       const user = await User.findOne({ email });
       // Check if the email is verified
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      if (!user.isVerified) {
+        return res.status(400).json({ error: 'Email is not verified' });
+      }
+  
       if (!user.isVerified) {
         return res.status(400).json({ error: 'Email is not verified' });
       }
@@ -180,20 +189,6 @@ router.post('/signup', async (req, res) => {
       return res.sendStatus(204);
     } else {
       console.log('Access denied: user is not a Data Controller');
-      // If the user's role is not 'client', respond with a 401 Unauthorized status
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-  });
-
-  router.get('/check-auth-admin', authenticateToken, (req, res) => {
-    // Assuming the user role is stored in req.user after token verification
-    const userRole = req.user.userrole; // Adjust this if the role key is different
-    console.log(userRole);
-    if (userRole === 'Admin') {
-      // If the user's role is 'client', respond with a 204 No Content status
-      return res.sendStatus(204);
-    } else {
-      console.log('Access denied: user is not a client');
       // If the user's role is not 'client', respond with a 401 Unauthorized status
       return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -471,7 +466,7 @@ router.post('/businesspermitpage', upload.fields([
        id: permitID,
        userId,
        businesspermitstatus: status,
-       businessstatus: null,
+       businessstatus: 'On Process',
        classification: 'NewBusiness',
        transaction: null,
        amountToPay: null,
@@ -556,12 +551,18 @@ router.post('/businesspermitpage', upload.fields([
       },
       businesses: parsedBusinesses, // Save businesses as an array
       files: {
-        document1: files.document1 ? files.document1[0].path : null,
-        document2: files.document2 ? files.document2[0].path : null,
-        document3: files.document3 ? files.document3[0].path : null,
-        document4: files.document4 ? files.document4[0].path : null,
-        document5: files.document5 ? files.document5[0].path : null,
-        document6: files.document6 ? files.document6[0].path : null,
+        document1: files.document1 ? files.document1[0].filename : null,
+        document2: files.document2 ? files.document2[0].filename : null,
+        document3: files.document3 ? files.document3[0].filename : null,
+        document4: files.document4 ? files.document4[0].filename : null,
+        document5: files.document5 ? files.document5[0].filename : null,
+        document6: files.document6 ? files.document6[0].filename : null,
+      },
+      department:{
+        Zoning: 'Zoning',
+        OffBldOfcl:'Office of the Building Official',
+        CtyHlthOff:'Ctiy Health Office',
+        BreuFrPrt: 'Bureau of Fire Protection',
       },
        receipt: {
        receiptId: null, //Generated
@@ -690,10 +691,10 @@ router.post('/businesspermitpage', upload.fields([
             address,
           },
           files: {
-            document1: files.document1 ? files.document1[0].path : null,
-            document2: files.document2 ? files.document2[0].path : null,
-            document3: files.document3 ? files.document3[0].path : null,
-            document4: files.document4 ? files.document4[0].path : null,
+            document1: files.document1 ? files.document1[0].filename : null,
+            document2: files.document2 ? files.document2[0].filename : null,
+            document3: files.document3 ? files.document3[0].filename : null,
+            document4: files.document4 ? files.document4[0].filename : null,
           },
         },
         receipt: {
@@ -999,7 +1000,7 @@ router.post('/businesspermitpage', upload.fields([
        files: {
           document1: files.document1 ? files.document1[0].path : null,
           document2: files.document2 ? files.document2[0].path : null,
-         document3: files.document3 ? files.document3[0].path : null,
+          document3: files.document3 ? files.document3[0].path : null,
   
         },
       });
@@ -1055,8 +1056,9 @@ router.post('/businesspermitpage', upload.fields([
     }
   });
   
-  // Serve static files from the 'uploads' directory
-  router.use('/uploads', express.static(path.join(__dirname)));
+
+
   // Apptest Codes @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  router.use('/uploads', express.static('uploads'));
 
   module.exports = router;

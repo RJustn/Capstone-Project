@@ -19,6 +19,7 @@ interface FormData {
 interface PersonalInformation {
   firstName: string;
   lastName: string;
+  middleInitial: string;
 }
 
 const DataControllerForAssessmentWP: React.FC = () => {
@@ -26,6 +27,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const [filteredItems, setFilteredItems] = useState<WorkPermit[]>([]);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -99,9 +101,6 @@ const DataControllerForAssessmentWP: React.FC = () => {
     }
   };
 
-  const handleViewApplication = (permitId: string) => {
-    navigate(`/DAviewapplicationdetails/${permitId}`);
-  };
 
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -231,6 +230,17 @@ const DataControllerForAssessmentWP: React.FC = () => {
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
+  const handleAction = (action: string, permit: WorkPermit) => {
+    switch (action) {
+      case 'viewApplication':
+    console.log(`Edit permit ID: ${permit._id}`);
+      navigate(`/DAviewapplicationdetails/${permit._id}`);
+        break;
+      default:
+        console.warn('Unknown action');
+    }
+  };
+
   return (
     <section className="DAbody">
       <div className="DAsidebar-container">
@@ -244,6 +254,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
         <div className='workpermittable'>
           <p>Work Permit Applications (For Assessments)</p>
           {/* Search Bar */}
+          Search:
           <div className="search-bar-container">
             <input
               type="text"
@@ -256,6 +267,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
           </div>
 
           {/* Dropdown for Classification Filter */}
+          Classification:
           <select value={classificationFilter} onChange={handleClassificationChange}>
             <option value="">All</option>
             <option value="New">New</option>
@@ -263,6 +275,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
           </select>
 
           {/* Date Pickers for Date Range Filter */}
+          Start Date:
           <div className="date-picker-container">
             <input
               type="date"
@@ -271,6 +284,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
               max={maxDate} // Set the maximum date to today
               placeholder="Start Date"
             />
+            End Date:
             <input
               type="date"
               value={endDate}
@@ -303,19 +317,32 @@ const DataControllerForAssessmentWP: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((permit) => (
-                <tr key={permit._id}>
-                  <td>{permit.id}</td>
-                  <td>{permit.formData.personalInformation.lastName} {permit.formData.personalInformation.firstName}</td>
-                  <td>{permit.workpermitstatus}</td>
-                  <td>{permit.classification}</td>
-                  <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
-                  <td>
-                      <button className="modal-button" onClick={() => handleViewApplication(permit._id)}>View Application</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+    {currentItems.map((permit) => (
+      <tr key={permit._id}>
+        <td>{permit.id}</td>
+        <td>{permit.formData.personalInformation.lastName}, {permit.formData.personalInformation.firstName} {permit.formData.personalInformation.middleInitial}</td>
+        <td>{permit.workpermitstatus}</td>
+        
+        <td>{permit.classification}</td>
+        <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
+        <td>
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              handleAction(e.target.value, permit);
+              e.target.value = ""; // Reset dropdown to default
+            }}
+            className="dropdown-button"
+          >
+            <option value="" disabled>
+              Select Action
+            </option>
+                <option value="viewApplication">View Application</option>
+          </select>
+        </td>
+      </tr>
+    ))}
+  </tbody>
           </table>
 
           <div className="pagination-buttons">

@@ -4,7 +4,6 @@ const router = express.Router();
 
 const { User } = require('./Modals');
 
-const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -14,58 +13,6 @@ const socketIo = require('socket.io');
 const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
 const server = http.createServer(app);
 const io = socketIo(server);
-
-router.use(bodyParser.json());
-
-async function generateUserId(role) {
-  const today = new Date();
-
-  // Get the current date in YYYYMMDD format
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  const formattedDate = `${year}${month}${day}`; // YYYYMMDD format
-
-  try {
-      // Fetch the latest user ID for the given role
-      const latestUser = await User.findOne({
-          userId: { $regex: `^USER${role}\\d{4}${formattedDate}$` } // Match users for today
-      }).sort({ userId: -1 }); // Sort to get the latest user ID for today
-
-      let sequenceNumber = 1; // Default to 1 if no users exist for today
-
-      if (latestUser) {
-          // Extract the sequence number from the latest user ID
-          const latestUserID = latestUser.userId;
-
-          // Use a regex to extract the 4-digit sequence part (assuming format: USER<role><seq><date>)
-          const match = latestUserID.match(new RegExp(`^USER${role}(\\d{4})${formattedDate}$`));
-
-          if (match) {
-              sequenceNumber = parseInt(match[1], 10) + 1; // Increment by 1
-          }
-      }
-
-      // Pad sequence number to ensure it's always 4 digits
-      const sequenceString = String(sequenceNumber).padStart(4, '0');
-
-      // Construct the final user ID
-      const userID = `USER${role}${sequenceString}${formattedDate}`;
-
-      // Return the constructed user ID
-      return userID; 
-  } catch (error) {
-      console.error('Error generating user ID:', error);
-      throw error; // or handle the error as needed
-  }
-}
-
-// Example usage
-async function createUser(role) {
-  const userId = await generateUserId(role);
-  console.log('Generated User ID:', userId);
-  // Here you can create the user in your database with the generated user ID
-}
 
   router.post('/superadmin/login', async (req, res) => {
   const { email, password } = req.body;
@@ -143,37 +90,34 @@ router.get('/superadmin/authentication', authenticateSuperAdmin, (req, res) => {
 });
 
 
-router.post('/adduser', async (req, res) => {
+router.post('/addinguser', async (req, res) => {
   const { firstName, middleName, lastName, contactNumber, email, address, password, userrole } = req.body;
 
   console.log('Incoming data:', req.body);
 
   try {
-    // Check if the user already exists by email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
     }
 
-    // Declare variables for userRole and userID
     let userRole;
     let userID;
 
-    // Assign userRole and userID based on the userrole from the request
     if (userrole === 'ADM') {
       userRole = 'Admin';
-      userID = await generateUserId(userrole);
+    } else if (userrole === 'CL') {
+      userRole = 'Client';
     } else if (userrole === 'DC') {
       userRole = 'Data Controller';
-      userID = await generateUserId(userrole);
     } else {
       return res.status(400).json({ message: 'Invalid user role' });
     }
 
-    // Hash the password before saving
+    userID = await generateUserId(userrole);
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
     const newUser = new User({
       firstName,
       middleName,
@@ -183,13 +127,11 @@ router.post('/adduser', async (req, res) => {
       address,
       userId: userID,
       password: hashedPassword,
-      userrole: userRole, // Correct the variable name
+      userrole: userRole,
       isVerified: true,
       accountOpenedDate: new Date().toISOString(),
-      accountOpenedDate: new Date().toISOString()
     });
 
-    // Save the user to the database
     await newUser.save();
 
     return res.status(201).json({ message: 'User created successfully' });
@@ -201,6 +143,48 @@ router.post('/adduser', async (req, res) => {
 
 
 
+async function generateUserId(role) {
+  const today = new Date();
+
+  // Get the current date in YYYYMMDD format
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const formattedDate = `${year}${month}${day}`; // YYYYMMDD format
+
+  try {
+      // Fetch the latest user ID for the given role
+      const latestUser = await User.findOne({
+          userId: { $regex: `^USER${role}\\d{4}${formattedDate}$` } // Match users for today
+      }).sort({ userId: -1 }); // Sort to get the latest user ID for today
+
+      let sequenceNumber = 1; // Default to 1 if no users exist for today
+
+      if (latestUser) {
+          // Extract the sequence number from the latest user ID
+          const latestUserID = latestUser.userId;
+
+          // Use a regex to extract the 4-digit sequence part (assuming format: USER<role><seq><date>)
+          const match = latestUserID.match(new RegExp(`^USER${role}(\\d{4})${formattedDate}$`));
+
+          if (match) {
+              sequenceNumber = parseInt(match[1], 10) + 1; // Increment by 1
+          }
+      }
+
+      // Pad sequence number to ensure it's always 4 digits
+      const sequenceString = String(sequenceNumber).padStart(4, '0');
+
+      // Construct the final user ID
+      const userID = `USER${role}${sequenceString}${formattedDate}`;
+
+      // Return the constructed user ID
+      return userID; 
+  } catch (error) {
+      console.error('Error generating user ID:', error);
+      throw error; // or handle the error as needed
+  }
+}
 
 
 router.get('/adminusers', async (req, res) => {
@@ -271,6 +255,8 @@ router.put('/accounts/:id', async (req, res) => {
 
 
 
+
+
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
@@ -288,8 +274,6 @@ io.on('connection', (socket) => {
     console.log('A user disconnected:', socket.id);
   });
 });
-
-
 module.exports = router;
 
 

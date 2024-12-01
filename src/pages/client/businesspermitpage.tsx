@@ -2946,8 +2946,8 @@ const handleRemoveBusiness = (index: number) => {
                   />
                   Check if Corporation
                 </label>
-              </div>
-              <div className="form-row">
+                </div>
+               <div className="form-row">
                 <div className="form-group">
                   <label>LAST NAME:</label>
 
@@ -2965,9 +2965,9 @@ const handleRemoveBusiness = (index: number) => {
                   <label>Company Name:</label>
                   <input type="text" value={companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
                 </div>
-              </div>
-              <div className="form-row">
-              <div className="form-group">
+                </div>
+               <div className="form-row">
+                <div className="form-group">
                 <label>CIVIL STATUS:</label>
                 <select
                   value={civilstatus}
@@ -2981,8 +2981,8 @@ const handleRemoveBusiness = (index: number) => {
                   <option value="Seperated">Seperated</option>
                   <option value="Undefined">Undefined</option>
                 </select>
-              </div>
-              <div className="form-group">
+                </div>
+                <div className="form-group">
                 <label>Gender:</label>
                 <select
                   value={gender}
@@ -2995,55 +2995,55 @@ const handleRemoveBusiness = (index: number) => {
                   <option value="Other">Other</option>
                   <option value="Corp">Corporation</option>
                 </select>
-              </div>
-              <div className="form-group">
+                </div>
+                <div className="form-group">
                 <label>CITIZENSHIP:</label>
                 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
-              </div>
-              <div className="form-row">
+                </div>
+               <div className="form-row">
                 <div className="form-group">
                   <label>TIN NUMBER:</label>
                   <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
+                 </div>
                 </div>
                 </div>
-              </div>
-              <div className="form-group">
-              <label className="checkbox-label">
+                <div className="form-group">
+                <label className="checkbox-label">
                   <input type="checkbox" checked={representative} onChange={() => setRepresentative(!representative)} />
                   Check if Thru Representative
                 </label>
-              </div>
-              <div className="form-row">
-              <div className="form-group">
-                <label>Representative Full Name:</label>
+               </div>
+               <div className="form-row">
+                <div className="form-group">
+                    <label>Representative Full Name:</label>
                 <input type="text" value={repfullname} onChange={(e) => setRepFullName(e.target.value)} disabled={!representative} />
-              </div>
-              <div className="form-group">
+                </div>
+               <div className="form-group">
                 <label>Designation/Position:</label>
                 <input type="text" value={repdesignation} onChange={(e) => setRepDesignation(e.target.value)} disabled={!representative} />
-              </div>
-              <div className="form-group">
+                </div>
+                <div className="form-group">
                 <label>Representative Mobile Number:</label>
                 <input type="text" value={repmobilenumber} onChange={(e) => setRepMobileNumber(e.target.value)} disabled={!representative} />
-              </div>
-              </div>
-              <h2>Contact Information</h2>
-              <div className="form-row">
-              <div className="form-group">
+               </div>
+               </div>
+                <h2>Contact Information</h2>
+               <div className="form-row">
+                <div className="form-group">
                 <label>House/Bldg No./Blk and Lot</label>
                 <input type="text" value={houseandlot} onChange={(e) => setHouseandLot(e.target.value)} />
-              </div>
-              <div className="form-group">
+               </div>
+                <div className="form-group">
                 <label>Building Name / Street Name</label>
                 <input type="text" value={buildingstreetname} onChange={(e) => setBuildingStreetName(e.target.value)}  />
-              </div>
-              <div className="form-group">
+                </div>
+               <div className="form-group">
                 <label>Subdivision / Compound Name</label>
                 <input type="text" value={subdivision} onChange={(e) => setSubdivision(e.target.value)} />
-              </div>
-              </div>
-              <div className="form-row">
-              <div className="form-group">
+               </div>
+               </div>
+               <div className="form-row">
+               <div className="form-group">
                 <label>Region</label>
                 <input type="text" value={region} onChange={(e) => setRegion(e.target.value)} />
               </div>

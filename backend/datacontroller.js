@@ -7,9 +7,21 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const { User, WorkPermit,BusinessPermit} = require('./Modals')
+const multer = require('multer');
 
 
 router.use(express.json());
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Customize the filename
+  }
+});
+
+const upload = multer({ storage: storage });
 
 
 router.get('/getworkpermitsforassessment', async (req, res) => {
@@ -25,6 +37,18 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     }
   });
   
+  router.get('/getbusinesspermitsforassessment', async (req, res) => {
+    try {
+      // Query to find only work permits where workpermitstatus is 'pending'
+      const pendingWorkPermits = await BusinessPermit.find({ businesspermitstatus: 'Pending' });
+  
+      // Send the filtered result as a JSON response
+      res.json(pendingWorkPermits);
+    } catch (error) {
+      console.error('Error fetching work permits:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
   
   router.get('/getworkpermitsforpayments', async (req, res) => {
     try {
@@ -67,6 +91,26 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
   
       // Return the work permit details
       res.json(workPermit);
+    } catch (error) {
+      console.error('Error retrieving work permit:', error);
+      res.status(500).json({ message: 'Error retrieving work permit', error });
+    }
+  });
+
+  router.get('/DCbusinesspermitdetails/:id', async (req, res) => {
+    const { id } = req.params;  // Extract the work permit ID from the route parameters
+  
+    try {
+      // Find the work permit directly by its ID
+      const businessPermit = await BusinessPermit.findById(id);
+  
+      if (!businessPermit) {
+        return res.status(404).json({ message: 'Work permit not found' });
+      }
+  
+      // Return the work permit details
+      res.json(businessPermit);
+      console.log(businessPermit);
     } catch (error) {
       console.error('Error retrieving work permit:', error);
       res.status(500).json({ message: 'Error retrieving work permit', error });
@@ -252,6 +296,14 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
   }
   // Serve static files from the receipts directory
   router.use('/receipts', express.static(receiptsDir));
+
+   // Ensure the receipts directory exists
+   const uploadsDir = path.join(__dirname, 'uploads');
+   if (!fs.existsSync(uploadsDir)) {
+       fs.mkdirSync(uploadsDir);
+   }
+   // Serve static files from the receipts directory
+   router.use('/uploads', express.static(uploadsDir));
   
   
   
@@ -383,4 +435,72 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     }
   });
 
+
+
+  router.put('/updatebusinessownerPermit/:id', async (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body; // Updated fields from frontend
+  
+    try {
+      const updatedPermit = await BusinessPermit.findByIdAndUpdate(
+        id,
+        { $set: updatedData }, // Use $set to update only specified fields
+        { new: true, runValidators: true } // Return updated document and validate schema
+      );
+  
+      if (!updatedPermit) {
+        return res.status(404).json({ error: 'Permit not found' });
+      }
+  
+      res.status(200).json(updatedPermit);
+    } catch (error) {
+      console.error('Error updating permit:', error);
+      res.status(500).json({ error: 'Failed to update permit' });
+    }
+  });
+
+
+  // Route to update business permit documents
+router.post('/updatebusinessattachment/:id', upload.fields([
+  { name: 'document1', maxCount: 1 },
+  { name: 'document2', maxCount: 1 },
+  { name: 'document3', maxCount: 1 },
+  { name: 'document4', maxCount: 1 },
+  { name: 'document5', maxCount: 1 },
+  { name: 'document6', maxCount: 1 },
+]), async (req, res) => {
+  try {
+    const permitId = req.params.id;
+    const files = req.files;
+
+    if (!permitId) {
+      return res.status(400).json({ message: 'Permit ID is required' });
+    }
+
+    const updates = {};
+
+    // Update each document field if a new file is uploaded
+    if (files.document1) updates['files.document1'] = files.document1[0].filename;
+    if (files.document2) updates['files.document2'] = files.document2[0].filename;
+    if (files.document3) updates['files.document3'] = files.document3[0].filename;
+    if (files.document4) updates['files.document4'] = files.document4[0].filename;
+    if (files.document5) updates['files.document5'] = files.document5[0].filename;
+    if (files.document6) updates['files.document6'] = files.document6[0].filename;
+
+    // Update the MongoDB document
+    const updatedPermit = await BusinessPermit.findByIdAndUpdate(
+      permitId,
+      { $set: updates },
+      { new: true } // Return the updated document
+    );
+
+    res.status(200).json({
+      message: 'Business permit updated successfully',
+      updatedPermit,
+    });
+  } catch (error) {
+    console.error('Error updating permit:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
   module.exports = router;

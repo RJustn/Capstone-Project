@@ -13,29 +13,13 @@ const SuperadminAccountAdd = () => {
   const [address, setAddress] = useState('');
   const [userrole, setRole] = useState('');
 
-  const logFormData = (formData: FormData) => {
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('lastName', lastName);
-    formData.append('firstName', firstName);
-    formData.append('middleInitial', middleName);
-    formData.append('contactNumber', contactNumber);
-    formData.append('password', password);
-    formData.append('address', address);
-    formData.append('userrole', userrole);
-    formData.append('email', email);
-
-    logFormData(formData);
-
+  
     try {
-      const response = await fetch('http://localhost:3000/superadmin/adduser', {
+      const response = await fetch('http://localhost:3000/superadmin/addinguser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,12 +35,19 @@ const SuperadminAccountAdd = () => {
           userrole,
         }),
       });
-      navigate('/superadmin/accounts');
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to add user');
+      }
+  
       await response.json();
+      navigate('/superadmin/accounts');
     } catch (error) {
       console.error('Error:', error);
     }
   };
+  
 
   const handleBack = () => {
     navigate(-1); // Navigate to the previous page
@@ -135,6 +126,7 @@ const SuperadminAccountAdd = () => {
           Role:
           <select value={userrole} onChange={(e) => setRole(e.target.value)} required>
             <option value="" disabled>Select a role</option>
+            <option value="CL">Client</option>
             <option value="ADM">Admin</option>
             <option value="DC">Data Controller</option>
           </select>
