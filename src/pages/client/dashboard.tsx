@@ -780,7 +780,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
                 )}
               </div>
             )}
-            <button onClick={closeModal}>Close</button>
+            <button className="back-button" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}

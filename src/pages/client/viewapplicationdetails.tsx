@@ -224,7 +224,7 @@ useEffect(() => {
             <p> Work Permit Status: {workPermit.workpermitstatus}</p>
 
             <h1>Personal Information Details</h1>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', textAlign: 'left'}}>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', textAlign: 'left'}}>
               <p><strong>Application ID:</strong> {workPermit.id}</p>
               <p><strong>Fullname:</strong> {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
               <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
@@ -247,12 +247,10 @@ useEffect(() => {
               <p><strong>Work Permit Classification:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
             </div>
 
-
             <h1>Emergency Contact Details</h1>
             <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2}</p>
             <p><strong>Mobile Number:</strong> {workPermit.formData.emergencyContact.mobileTel2}</p>
             <p><strong>Address:</strong> {workPermit.formData.emergencyContact.address}</p>
-
 
             <h1>Documents</h1>
             <div>

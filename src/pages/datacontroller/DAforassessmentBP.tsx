@@ -1088,24 +1088,21 @@ if (selectedFiles.document4) {
     disabled={!isEditing} // Disable if not editing or is corporation
   />
 </div>
-          
           {/* Additional fields */}
           <div>
-              <div>
-  <button onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
+  <button className="editbutton"onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
-    <button onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
+    <button className="cancel-button" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
-              </div>
-            <button onClick={editcloseModal}>Close</button>
+            <button className="cancel-button" onClick={editcloseModal}>Close</button>
           </div>
         </div>
       </div>
-           )}
+          )}
 
 {viewAttachmentsModal && activePermitId && (
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>

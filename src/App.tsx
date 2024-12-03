@@ -45,17 +45,10 @@ import DataControllerAccount from './pages/datacontroller/DAaccount';
 // ADMIN PAGES
 import AdminDashboard from './pages/admin/Adashboard';
 import AdminAccount from './pages/admin/Aaccount';
-import AdminForAssessment from './pages/admin/Aforassessment';
-import AdminForAssessmentWP from './pages/admin/AforassessmentWP';
-import AdminForAssessmentBP from './pages/admin/AforassessmentBP';
-import AdminForPayment from './pages/admin/Aforpayment';
-import AdminForPaymentWP from './pages/admin/AforpaymentWP';
-import AdminForPaymentBP from './pages/admin/AforpaymentBP';
 import AdminReleasedPermits from './pages/admin/Areleasedpermits';
 import AdminReleasedPermitsWP from './pages/admin/AreleasedpermitsWP';
 import AdminReleasedPermitsBP from './pages/admin/AreleasedpermitsBP';
 import AdminReportsAndGraph from './pages/admin/Areportsngraphs';
-import AdminViewApplicationDetails from './pages/admin/Aviewapplicationdetails';
 
 import AppTest from './pages/apptest';
 import AppTest2 from './pages/apptest2';
@@ -116,17 +109,10 @@ const App: React.FC = () => {
           {/* Routes for Admin */}
           <Route path="/Adashboard" element={<AdminDashboard />} />
           <Route path="/Aaccount" element={<AdminAccount />} />
-          <Route path="/Aforassessment" element={<AdminForAssessment />} />
-          <Route path="/AforassessmentWP" element={<AdminForAssessmentWP />} />
-          <Route path="/AforassessmentBP" element={<AdminForAssessmentBP/>} />
-          <Route path="/Aforpayment" element={<AdminForPayment />} />
-          <Route path="/AforpaymentWP" element={<AdminForPaymentWP />} />
-          <Route path="/AforpaymentBP" element={<AdminForPaymentBP />} />
           <Route path="/Areleasedpermits" element={<AdminReleasedPermits />} />
           <Route path="/AreleasedpermitsWP" element={<AdminReleasedPermitsWP />} /> 
           <Route path="/AreleasedpermitsBP" element={<AdminReleasedPermitsBP />} />
           <Route path="/Areportsngraphs" element={<AdminReportsAndGraph />} />
-          <Route path="/Aviewapplicationdetails/:id" element={<AdminViewApplicationDetails />} />
         
       </Routes>
       </Suspense>

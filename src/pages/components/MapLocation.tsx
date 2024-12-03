@@ -3,6 +3,7 @@
   import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
   import L, { LatLngExpression, Marker as LeafletMarker } from 'leaflet';
   import 'leaflet/dist/leaflet.css';
+  import '../Styles/Maplocation.css'
 
   // Fix for missing marker icon images in Leaflet with Webpack/CRA
   import markerIconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -95,13 +96,15 @@
       <div style={{ position: 'relative' }}>
         {/* Center-aligned Address input */}
         <div className="search-container">
-          <input
-            type="text"
-            placeholder="Enter address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <button onClick={(e) => { e.preventDefault(); searchAddress(); }}>Search</button>
+        <input
+                type="text"
+                placeholder="Enter address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+        />
+        <button onClick={(e) => { e.preventDefault(); searchAddress(); }}>
+                Search
+        </button>
         </div>
 
         {/* Map */}

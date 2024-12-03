@@ -53,66 +53,6 @@
     z-index: 1000; /* Ensure it's above other content */
 }
 
-/* SIDEBAR STYLE */
-.DAsidebar {
-    width: 100%; /* Full width within its container */
-    height: 100vh; /* Full height */
-    background-color: #0047AB; /* Dark background color */
-    padding-top: 20px;
-    position: relative; /* Relative positioning within its container */
-    overflow-y: auto; /* Add vertical scrolling if necessary */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* LOGO STYLE */
-.DAsidebar-logo {
-    margin-bottom: 20px;
-}
-
-.DAlogo-image {
-    width: 150px; /* Adjust the width as needed */
-    height: 150px; /* Adjust the height as needed */
-}
-
-/* SIDEBAR LOGO STYLES */
-.sidebarlogoimage {
-    width: 24px; /* Adjust the size of the logo */
-    height: auto; /* Maintain aspect ratio */
-    margin-right: 8px; /* Space between logo and text */
-    vertical-align: middle; /* Align with the text */
-}
-
-/* SIDEBAR LIST STYLE */
-.DAsidebar-list {
-    list-style-type: none; /* Remove bullets */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-    width: 100%; /* Full width for sidebar links */
-}
-
-/* SIDEBAR LINK STYLE */
-.DAsidebar-link {
-    display: block;
-    padding: 15px 20px;
-    color: #ffffff; /* White text color */
-    text-decoration: none; /* Remove underline */
-    transition: background-color 0.3s; /* Smooth hover effect */
-}
-
-.DAsidebar-linkactive {
-    display: block;
-    padding: 15px 20px;
-    color: #ffffff; /* White text color */
-    text-decoration: none; /* Remove underline */
-    background-color: #0000FF;
-}
-
-.DAsidebar-link:hover {
-    background-color: #0000FF; /* Darker background on hover */
-}
-
 /* HEADER AND NAVIGATION */
 .DAheader {
     margin-bottom: 20px; /* Space below the header */
@@ -194,6 +134,10 @@
     transition: background-color 0.3s; /* Smooth hover effect */
 }
 
+.actionreject-button:hover{
+    background-color: #ff2921
+}
+
 /* SEARCH BUTTON HOVER STYLE */
 .search-button:hover {
     background-color: #0074f1; /* Darker shade on hover */
@@ -232,7 +176,7 @@
 }
 
 .DAactionbutton:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+    background-color: #014084; /* Darker shade on hover */
 }
 /* STATUS CARDS */
 .status-cards {
@@ -318,7 +262,7 @@
     font-weight: bold;
 }
 
-.modal-button {
+.modal-button,.editbutton {
     background-color: #0056b3;
     color: #ffffff;
     border: none;

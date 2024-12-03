@@ -144,7 +144,7 @@
     max-width: 800px;
     margin: auto;
   }
-  .submitbuttonworkpermit {
+  .submitbuttonworkpermit,.submitbuttonbusinesspermit,.addbusiness {
     padding: 10px 20px;
     background-color: #28a745;
     color: white;
@@ -154,8 +154,27 @@
     font-size: 14px;
   }
   
-  .submitbuttonworkpermit:hover {
+  .submitbuttonworkpermit:hover,
+  .submitbuttonbusinesspermit:hover,
+  .addbusiness:hover {
     background-color: #005a1a;
+  }
+
+  .removebutton{
+    border: none;
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 7rem;
+    margin-right: 6px;
+    font-size: 0.875rem; /* Smaller font size for buttons */
+    font-weight: bold; /* Bold text */
+    background-color: #d9534f; /* Green background */
+    color: white;
+  }
+
+  .removebutton:hover{
+    background-color: #c9302c; /* Darker red on hover */
   }
 
 /* ========================================== BUSINESS PERMIT STYLES ========================================== */
@@ -168,22 +187,6 @@
     max-width: 800px;
     margin: auto;
 }
-
-.businesspermit-form button{
-    padding: 0.5rem 1rem; /* Reduced padding for buttons */
-    border: none;
-    border-radius: 4px; /* Rounded corners */
-    cursor: pointer;
-    font-size: 0.875rem; /* Smaller font size for buttons */
-    font-weight: bold; /* Bold text */
-    background-color: #28a745; /* Green background */
-    color: white;
-}
-
-.businesspermit-form button:hover {
-    background-color: #005a1a; /* Darker green on hover */
-}
-
 .business-reference-form {
     padding: 20px;
     background-color: #ffffff;
@@ -292,14 +295,16 @@
   }
 
 .back-button{
-  padding: 8px 16px;
-  background-color: #d9534f;
-  margin-right: 1rem;
-  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 4px; /* Rounded corners */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 0.5rem;
+  width: 7rem;
+  margin-right: 6px;
+  font-size: 0.875rem; /* Smaller font size for buttons */
+  font-weight: bold; /* Bold text */
+  background-color: #d9534f; /* Green background */
+  color: white;
 }
 
 .back-button:hover{

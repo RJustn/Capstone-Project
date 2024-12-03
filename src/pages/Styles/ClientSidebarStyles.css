@@ -60,6 +60,7 @@
     color: #ffffff; /* White text color */
     text-decoration: none; /* Remove underline */
     background-color: #399918;
+    font-size: 15px;
 }
 
 .sidebar-link:hover {
