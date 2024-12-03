@@ -202,7 +202,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
     };
 
     useEffect(() => {
-      const fetchWorkPermitDetails = async () => {
+      const fetchBusinessPermitDetails = async () => {
           if (!token) {
               navigate('/'); // Redirect to login if no token
               return;
@@ -214,11 +214,11 @@ const DataControllerViewApplicationDetails: React.FC = () => {
           });
           setBusinessPermit(response.data as BusinessPermit); // Set the work permit details to state
         } catch (error) {
-          console.error('Error fetching work permit details:', error);
+          console.error('Error fetching business permit details:', error);
        
         } }
   
-      fetchWorkPermitDetails(); // Call the fetch function
+        fetchBusinessPermitDetails(); // Call the fetch function
     }, [id, token, navigate]);
 
 

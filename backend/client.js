@@ -557,6 +557,12 @@ router.post('/businesspermitpage', upload.fields([
         document4: files.document4 ? files.document4[0].filename : null,
         document5: files.document5 ? files.document5[0].filename : null,
         document6: files.document6 ? files.document6[0].filename : null,
+        remarksdoc1: null,
+        remarksdoc2: null,
+        remarksdoc3: null,
+        remarksdoc4: null,
+        remarksdoc5: null,
+        remarksdoc6: null,
       },
       department:{
         Zoning: 'Zoning',

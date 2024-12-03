@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 export interface BusinessPermit {
   _id: string;
   id: string;
@@ -138,6 +137,12 @@ document3: string | null; // Optional
 document4: string | null; // Optional
 document5: string | null; // Optional
 document6: string | null; // Optional
+remarksdoc1: string;
+remarksdoc2: string;
+remarksdoc3: string;
+remarksdoc4: string;
+remarksdoc5: string;
+remarksdoc6: string;
 }
 
 const DataControllerForAssessmentBP: React.FC = () => {
@@ -146,22 +151,29 @@ const DataControllerForAssessmentBP: React.FC = () => {
   
   const navigate = useNavigate();
 
-
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
-
-
-
+//Selected Permit Id
+  const [selectedUserIdDep, setSelectedUserId] = useState<string | null>(null); //For Departments Display
   const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
 
-
-  //Modals
+  //Modals Owner Edit
   const [editownermodal, setEditOwnerModal] = useState(false);
-  const [viewAttachmentsModal, setViewAttatchmentsModal] = useState(false);
-
-
   const [isEditing, setIsEditing] = useState(false); // Track if fields are editable
+
+  //Modals Attachments Edit
+  const [viewAttachmentsModal, setViewAttatchmentsModal] = useState(false);
   const [isEditingAttach, setIsEditingAttach] = useState(false); // Track if fields are editable
+
+  //Modals Business Edit
+  const [viewbusinessdetails, setViewBusinessDetails] = useState(false);
+  const [editbusiness, setEditBusiness] = useState(false);
+
+  //Actionupdate
+  const [updatesuccess, setUpdateSuccess] = useState(false);
+
+  const closeupdateSuccess = () => {
+    setUpdateSuccess(false);
+  };
+
   //Step 1
   const [corporation, setCorporation] = useState(false);
   const [lastname, setLastName] = useState('');
@@ -186,6 +198,30 @@ const DataControllerForAssessmentBP: React.FC = () => {
   const [telephonenumber, setTelephoneNumber] = useState('');
   const [mobilenumber, setMobileNumber] = useState('');
   const [email, setEmail] = useState('');
+
+  //Step2
+  const [businessname, setBusinessName] = useState('');
+  const [businessscale, setBusinessScale] = useState('');
+  const [paymentmethod, setPaymentMethod] = useState('');
+  const [businessbuildingblocklot, setBusinessBuildingBlockLot] = useState('');
+  const [businessbuildingname, setBusinessBuildingName] = useState('');
+  const [businesssubcompname, setBusinessSubCompName] = useState('');
+  const [businessregion, setBusinessRegion] = useState('REGION IV-A (CALABARZON)');
+  const [businessprovince, setBusinessProvince] = useState('CAVITE');
+  const [businessmunicipality, setBusinessMunicipality] = useState('CITY OF DASMARIÑAS');
+  const [businessbarangay, setbusinessBarangay] = useState('');
+  const [businesszip, setBusinessZip] = useState('4114');
+  const [businesscontactnumber, setBusinessContactNumber] = useState('');
+  const [ownershiptype, setOwnershipType] = useState('');
+  const [agencyregistered, setAgencyRegistered] = useState('');
+  const [dtiregistrationnum, setDTIRegistrationNum] = useState('');
+  const [dtiregistrationdate, setDTIRegistrationDate] = useState('');
+  const [dtiregistrationexpdate, setDTIRegistrationExpDate] = useState('');
+  const [secregistrationnum, setSECRegistrationNum] = useState('');
+  const [birregistrationnum, setBIRRegistrationNum] = useState('');
+  const [industrysector, setIndustrySector] = useState('');
+  const [businessoperation, setBusinessOperation] = useState('');
+  const [typeofbusiness, setTypeofBusiness] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -241,7 +277,7 @@ const DataControllerForAssessmentBP: React.FC = () => {
     }
   };
 
-  // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //Table Code
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(businessPermits.length / itemsPerPage)
@@ -258,18 +294,14 @@ const DataControllerForAssessmentBP: React.FC = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+  //Table Code
 
-
-  // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-  // Search QUERY @@@@@@@@@@@@@@@@@@@@@
+// Date Search
   const [, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
 
-
   // Get current items
   const currentItems = filteredItems.slice(startIndex, endIndex); 
-
 
   // Handle the search when the button is clicked
   const handleSearch = () => {
@@ -277,12 +309,24 @@ const DataControllerForAssessmentBP: React.FC = () => {
     setSearchQuery(searchValue); // Update search query state
   };
 
+const [startDate, setStartDate] = useState<string>('');
+const [endDate, setEndDate] = useState<string>('');
+
+// Handle date search
+const handleDateSearch = () => {
+  const filteredByDate = businessPermits.filter((permit) => {
+    const permitDate = new Date(permit?.applicationdateIssued || Date.now());
+    const isAfterStartDate = startDate ? permitDate >= new Date(startDate) : true;
+    const isBeforeEndDate = endDate ? permitDate <= new Date(endDate) : true;
+    return isAfterStartDate && isBeforeEndDate;
+  });
+  setFilteredItems(filteredByDate);
+  setCurrentPage(0); // Reset to the first page of results
+};
+// Date Search
 
 
 //File
-
-
-
 const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
 
       const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
@@ -316,52 +360,13 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
 //File
 
 
+const [remarksdoc1, setRemarksdoc1] = useState('');
+const [remarksdoc2, setRemarksdoc2] = useState('');
+const [remarksdoc3, setRemarksdoc3] = useState('');
+const [remarksdoc4, setRemarksdoc4] = useState('');
+const [remarksdoc5, setRemarksdoc5] = useState('');
+const [remarksdoc6, setRemarksdoc6] = useState('');
 
-
-
-
-  const handleeditsave = async () => {
-    if (!activePermitId) return;
-  
-    const updatedData = {
-      owner: {
-        lastname,
-        firstname,
-        middleinitial,
-        companyname,
-        civilstatus,
-        gender,
-        citizenship,
-        tinnumber,
-        representative,
-        representativedetails: {
-          repfullname,
-          repdesignation,
-          repmobilenumber,
-        },
-        houseandlot,
-        buildingstreetname,
-        subdivision,
-        region,
-        province,
-        municipality,
-        barangay,
-        telephonenumber,
-        mobilenumber,
-        email,
-      },
-    };
-  
-    try {
-      const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessownerPermit/${activePermitId._id}`, updatedData);
-
-      fetchBusinessPermits(); // Fetch work permits if token is present
-      console.log('Update successful:', response.data);
-      setIsEditing(false); // Exit editing mode
-    } catch (error) {
-      console.error('Update failed:', error);
-    }
-  };
   
   //Attach
   const [files, setFiles] = useState<{
@@ -369,14 +374,18 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
     document2: File | null;
     document3: File | null;
     document4: File | null;
+    document5: File | null;
+    document6: File | null;
   }>({
     document1: null,
     document2: null,
     document3: null,
     document4: null,
+    document5: null,
+    document6: null,
   });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4') => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6') => {
     const selectedFiles = event.target.files;
   if (selectedFiles && selectedFiles.length > 0) {
     setFiles((prev) => ({
@@ -401,11 +410,22 @@ const logFormData = (formData: FormData) => {
     if (!activePermitId) return;
   
     const formData = new FormData();
+    
+    formData.append('remarksdoc1', remarksdoc1);
+    formData.append('remarksdoc2', remarksdoc2);
+    formData.append('remarksdoc3', remarksdoc3);
+    formData.append('remarksdoc4', remarksdoc4);
+    formData.append('remarksdoc5', remarksdoc5);
+    formData.append('remarksdoc6', remarksdoc6);
+
 
     if (files.document1) formData.append('document1', files.document1);
     if (files.document2) formData.append('document2', files.document2);
     if (files.document3) formData.append('document3', files.document3);
     if (files.document4) formData.append('document4', files.document4);
+    if (files.document5) formData.append('document5', files.document5);
+    if (files.document6) formData.append('document5', files.document6);
+
 
     logFormData(formData);
 
@@ -423,7 +443,8 @@ const logFormData = (formData: FormData) => {
         console.log(response.data);
         if (response.status === 200) {
           fetchBusinessPermits(); // Fetch work permits if token is present
-          alert('Work Permit Application submitted successfully!');
+          setUpdateSuccess(true);
+          closeViewAttachmentsModal();
         } else {
           const errorMessage = (response.data as { message: string }).message;
           console.error('Error submitting application:', errorMessage);
@@ -431,36 +452,6 @@ const logFormData = (formData: FormData) => {
       } catch (error) {
         console.error('Error:', error);
       }
-  };
-  //Attach
-
-
-  const handleActionBP = (action: string, permit: BusinessPermit) => {
-    setSelectedUserId(null);
-    setActivePermitId(null);
-    switch (action) {
-      case 'viewApplication':
-        navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
-    console.log(`Edit permit ID: ${permit._id}`);
-        break;
-        case 'department':
-          setSelectedUserId(permit._id);
-          break;
-          case 'editowner':
-            setActivePermitId(permit);
-            setEditOwnerModal(true);
-            break;
-          case 'viewattatchments':
-            setViewAttatchmentsModal(true)
-            setActivePermitId(permit);
-        break;
-      default:
-        console.warn('Unknown action');
-    }
-  };
-  const editcloseModal = () => {
-    setEditOwnerModal(false);
-    setIsEditing(false);
   };
 
   const closeViewAttachmentsModal = () => {
@@ -476,7 +467,12 @@ const logFormData = (formData: FormData) => {
     if (selectedFiles.document4) {
       URL.revokeObjectURL(selectedFiles.document4);
     }
-  
+    if (selectedFiles.document5) {
+      URL.revokeObjectURL(selectedFiles.document5);
+    }
+    if (selectedFiles.document6) {
+      URL.revokeObjectURL(selectedFiles.document6);
+    }
     setViewAttatchmentsModal(false);
     setSelectedFiles({});
     setIsEditingAttach(false);
@@ -485,10 +481,165 @@ const logFormData = (formData: FormData) => {
       document2: null,
       document3: null,
       document4: null,
+      document5: null,
+      document6: null,
     });
   };
 
+  const handleCancelEditAttach = () => {
+    setIsEditingAttach(false);
+    setRemarksdoc1('');
+    setFiles({
+     document1: null,
+     document2: null,
+     document3: null,
+     document4: null,
+     document5: null,
+     document6: null,
+   });
+   setSelectedFiles({});
+   if (selectedFiles.document1) {
+     URL.revokeObjectURL(selectedFiles.document1);
+   }
+   if (selectedFiles.document2) {
+     URL.revokeObjectURL(selectedFiles.document2);
+   }
+   if (selectedFiles.document3) {
+     URL.revokeObjectURL(selectedFiles.document3);
+   }
+   if (selectedFiles.document4) {
+     URL.revokeObjectURL(selectedFiles.document4);
+   }
+   if (selectedFiles.document5) {
+    URL.revokeObjectURL(selectedFiles.document5);
+  }
+  if (selectedFiles.document6) {
+    URL.revokeObjectURL(selectedFiles.document6);
+  }
+   
+     };
+  //Attach
 
+
+  //Edit Business
+  const closeViewBusinessDetails = () => {
+    setViewBusinessDetails(false);
+    setEditBusiness(false);
+  };
+
+  const handlecancelbusinessedit = () => {
+    if (activePermitId) {
+      setBusinessName(activePermitId.business.businessname || '');
+      setBusinessScale(activePermitId.business.businessscale || '');
+      setPaymentMethod(activePermitId.business.paymentmethod || '');
+      setBusinessBuildingBlockLot(activePermitId.business.businessbuildingblocklot || '');
+      setBusinessSubCompName(activePermitId.business.businesssubcompname || '');
+      setBusinessRegion(activePermitId.business.businessregion || '');
+      setBusinessProvince(activePermitId.business.businessprovince || '');
+      setBusinessMunicipality(activePermitId.business.businessmunicipality || '');
+      setbusinessBarangay(activePermitId.business.businessbarangay || '');
+      setBusinessZip(activePermitId.business.businesszip || '');
+      setBusinessContactNumber(activePermitId.business.businesscontactnumber || '');
+      setOwnershipType(activePermitId.business.ownershiptype || '');
+      setAgencyRegistered(activePermitId.business.agencyregistered || '');
+      setDTIRegistrationNum(activePermitId.business.dtiregistrationnum || '');
+      setDTIRegistrationDate(activePermitId.business.dtiregistrationdate || '');
+      setDTIRegistrationExpDate(activePermitId.business.dtiregistrationexpdate || '');
+      setSECRegistrationNum(activePermitId.business.secregistrationnum || '');
+      setBIRRegistrationNum(activePermitId.business.birregistrationnum || '');
+      setIndustrySector(activePermitId.business.industrysector || '');
+      setBusinessOperation(activePermitId.business.businessoperation || '');
+      setTypeofBusiness(activePermitId.business.typeofbusiness || '');
+  
+    }
+    setEditBusiness(false);
+  };
+
+  const handlesavebusinessedit = async () => {
+    if (!activePermitId) return;
+  
+    const updatedData = {
+       business: {
+        businessname,
+        businessscale,
+        paymentmethod,
+        businessbuildingblocklot,
+        businessbuildingname,
+        businesssubcompname,
+        businessregion,
+        businessprovince,
+        businessmunicipality,
+        businessbarangay,
+        businesszip,
+        businesscontactnumber,
+        ownershiptype,
+        agencyregistered,
+        dtiregistrationnum,
+        dtiregistrationdate,
+        dtiregistrationexpdate,
+        secregistrationnum,
+        birregistrationnum,
+        industrysector,
+        businessoperation,
+        typeofbusiness,
+        
+        },
+    };
+  
+    try {
+      const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessinfoPermit/${activePermitId._id}`, updatedData);
+  
+      fetchBusinessPermits(); // Fetch work permits if token is present
+      console.log('Update successful:', response.data);
+      closeViewBusinessDetails(); // Exit editing mode
+      setUpdateSuccess(true);
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
+  };
+  //Edit Business
+
+  const handleActionBP = (action: string, permit: BusinessPermit) => {
+    setSelectedUserId(null);
+    setActivePermitId(null);
+    switch (action) {
+
+
+          case 'editowner':
+            setActivePermitId(permit);
+            setEditOwnerModal(true);
+            break;
+
+            case 'editbusiness':
+              setViewBusinessDetails(true);
+              setActivePermitId(permit);
+              break;
+
+            case 'viewApplication':
+        navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
+    console.log(`Edit permit ID: ${permit._id}`);
+        break;
+
+        case 'editnature':
+          navigate(`/DAEditBusinessNature/${permit._id}`);
+          break;
+
+          case 'viewattatchments':
+            setViewAttatchmentsModal(true);
+            setActivePermitId(permit);
+        break;
+
+        case 'department':
+          setSelectedUserId(permit._id);
+          break;
+
+      default:
+        console.warn('Unknown action');
+    }
+  };
+
+
+//Use Effect
   useEffect(() => {
     if (activePermitId) {
       setLastName(activePermitId.owner.lastname || '');
@@ -514,25 +665,58 @@ const logFormData = (formData: FormData) => {
       setEmail(activePermitId.owner.email || '');
       setCorporation(activePermitId.owner.corporation || false);
       setRepresentative(activePermitId.owner.representative || false);
+
+      setBusinessName(activePermitId.business.businessname || '');
+      setBusinessScale(activePermitId.business.businessscale || '');
+      setPaymentMethod(activePermitId.business.paymentmethod || '');
+      setBusinessBuildingBlockLot(activePermitId.business.businessbuildingblocklot || '');
+      setBusinessSubCompName(activePermitId.business.businesssubcompname || '');
+      setBusinessRegion(activePermitId.business.businessregion || '');
+      setBusinessProvince(activePermitId.business.businessprovince || '');
+      setBusinessMunicipality(activePermitId.business.businessmunicipality || '');
+      setbusinessBarangay(activePermitId.business.businessbarangay || '');
+      setBusinessZip(activePermitId.business.businesszip || '');
+      setBusinessContactNumber(activePermitId.business.businesscontactnumber || '');
+      setOwnershipType(activePermitId.business.ownershiptype || '');
+      setAgencyRegistered(activePermitId.business.agencyregistered || '');
+      setDTIRegistrationNum(activePermitId.business.dtiregistrationnum || '');
+      setDTIRegistrationDate(activePermitId.business.dtiregistrationdate || '');
+      setDTIRegistrationExpDate(activePermitId.business.dtiregistrationexpdate || '');
+      setSECRegistrationNum(activePermitId.business.secregistrationnum || '');
+      setBIRRegistrationNum(activePermitId.business.birregistrationnum || '');
+      setIndustrySector(activePermitId.business.industrysector || '');
+      setBusinessOperation(activePermitId.business.businessoperation || '');
+      setTypeofBusiness(activePermitId.business.typeofbusiness || '');
+
+
+      setRemarksdoc1(activePermitId.files.remarksdoc1 || '');
+      setRemarksdoc2(activePermitId.files.remarksdoc2 || '');
+      setRemarksdoc3(activePermitId.files.remarksdoc3 || '');
+      setRemarksdoc4(activePermitId.files.remarksdoc4 || '');
+      setRemarksdoc5(activePermitId.files.remarksdoc5 || '');
+      setRemarksdoc6(activePermitId.files.remarksdoc6 || '');
+
     }
   }, [activePermitId]);
 
   useEffect(() => {
-    const fileUrls: { [key: string]: string } = {};
+    const urls: Record<string, string> = {}; // Define a typed object for URLs
   
+    // Iterate through each file key in the `files` object
     Object.entries(files).forEach(([key, file]) => {
       if (file) {
         const fileUrl = URL.createObjectURL(file);
-        fileUrls[key] = fileUrl;
-  
-        // Cleanup for this specific file
-        return () => URL.revokeObjectURL(fileUrl);
+        urls[key] = fileUrl; // Store the created URL
+        setSelectedFiles((prev) => ({ ...prev, [key]: fileUrl }));
       }
     });
   
-    setSelectedFiles((prev) => ({ ...prev, ...fileUrls }));
-  }, [files]); // Dependency on `files`
-
+    // Cleanup function to revoke URLs
+    return () => {
+      Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [files]); // Watch the `files` object for changes
+  
   const fetchBusinessPermits = async () => {
     try {
       const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforassessment', {
@@ -573,116 +757,132 @@ const logFormData = (formData: FormData) => {
   useEffect(() => {
     setFilteredItems(businessPermits); // Display all work permits by default
   }, [businessPermits]);
+//Use Effect
 
-  // Date picker states
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
 
-  // Handle date search
-  const handleDateSearch = () => {
-    const filteredByDate = businessPermits.filter((permit) => {
-      const permitDate = new Date(permit?.applicationdateIssued || Date.now());
-      const isAfterStartDate = startDate ? permitDate >= new Date(startDate) : true;
-      const isBeforeEndDate = endDate ? permitDate <= new Date(endDate) : true;
-      return isAfterStartDate && isBeforeEndDate;
-    });
-
-    setFilteredItems(filteredByDate);
-    setCurrentPage(0); // Reset to the first page of results
-  };
-
-  const handleCorpChange = () => {
-    if (!corporation) {
-      // If toggling to corporation, clear the first and last names
-      setFirstName('');
-      setLastName('');
-      setMiddleInitial('');
-      setCompanyName(activePermitId?.owner?.companyname || '');
-    } else {
-      // If switching back to individual, restore original names from activePermitId (or keep current state)
-      setFirstName(activePermitId?.owner?.firstname || '');
-      setLastName(activePermitId?.owner?.lastname || '');
-      setMiddleInitial(activePermitId?.owner?.middleinitial || '');
-      setCompanyName('');
-    }
-  
-    // Toggle corporation state
-    setCorporation(!corporation);
-  };
-
-  const handleRepChange = () => {
-    if (!representative) {
-      // If toggling to corporation, clear the first and last names
-      setRepFullName(activePermitId?.owner?.representativedetails?.repfullname || '');
-      setRepDesignation(activePermitId?.owner?.representativedetails?.repdesignation || '');
-      setRepMobileNumber(activePermitId?.owner?.representativedetails?.repmobilenumber || '');
-    } else {
-      // If switching back to individual, restore original names from activePermitId (or keep current state)
-      setRepFullName('');
-      setRepDesignation('');
-      setRepMobileNumber('');
-    }
-  
-    // Toggle corporation state
-    setRepresentative(!representative);
-  };
 
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
-  const handleCancelEdit = () => {
-    if (activePermitId) {
-      setLastName(activePermitId.owner.lastname || '');
-      setFirstName(activePermitId.owner.firstname || '');
-      setMiddleInitial(activePermitId.owner.middleinitial || '');
-      setCompanyName(activePermitId.owner.companyname || '');
-      setCivilStatus(activePermitId.owner.civilstatus || '');
-      setGender(activePermitId.owner.gender || '');
-      setCitizenship(activePermitId.owner.citizenship || '');
-      setTinNumber(activePermitId.owner.tinnumber || '');
-      setRepFullName(activePermitId.owner.representativedetails?.repfullname || '');
-      setRepDesignation(activePermitId.owner.representativedetails?.repdesignation || '');
-      setRepMobileNumber(activePermitId.owner.representativedetails?.repmobilenumber || '');
-      setHouseandLot(activePermitId.owner.houseandlot || '');
-      setBuildingStreetName(activePermitId.owner.buildingstreetname || '');
-      setSubdivision(activePermitId.owner.subdivision || '');
-      setRegion(activePermitId.owner.region || '');
-      setProvince(activePermitId.owner.province || '');
-      setMunicipality(activePermitId.owner.municipality || '');
-      setBarangay(activePermitId.owner.barangay || '');
-      setTelephoneNumber(activePermitId.owner.telephonenumber || '');
-      setMobileNumber(activePermitId.owner.mobilenumber || '');
-      setEmail(activePermitId.owner.email || '');
 
-    }
+//ModalEditOwner
+const handleeditsave = async () => {
+  if (!activePermitId) return;
+
+  const updatedData = {
+    owner: {
+      lastname,
+      firstname,
+      middleinitial,
+      companyname,
+      civilstatus,
+      gender,
+      citizenship,
+      tinnumber,
+      representative,
+      representativedetails: {
+        repfullname,
+        repdesignation,
+        repmobilenumber,
+      },
+      houseandlot,
+      buildingstreetname,
+      subdivision,
+      region,
+      province,
+      municipality,
+      barangay,
+      telephonenumber,
+      mobilenumber,
+      email,
+    },
+  };
+
+  try {
+    const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessownerPermit/${activePermitId._id}`, updatedData);
+
+    fetchBusinessPermits(); // Fetch work permits if token is present
+    editcloseModal();
+    setUpdateSuccess(true);
+    console.log('Update successful:', response.data);
+    setIsEditing(false); // Exit editing mode
+  } catch (error) {
+    console.error('Update failed:', error);
+  }
+};
+
+const handleCorpChange = () => {
+  if (!corporation) {
+    // If toggling to corporation, clear the first and last names
+    setFirstName('');
+    setLastName('');
+    setMiddleInitial('');
+    setCompanyName(activePermitId?.owner?.companyname || '');
+  } else {
+    // If switching back to individual, restore original names from activePermitId (or keep current state)
+    setFirstName(activePermitId?.owner?.firstname || '');
+    setLastName(activePermitId?.owner?.lastname || '');
+    setMiddleInitial(activePermitId?.owner?.middleinitial || '');
+    setCompanyName('');
+  }
+
+  // Toggle corporation state
+  setCorporation(!corporation);
+};
+
+const handleRepChange = () => {
+  if (!representative) {
+    // If toggling to corporation, clear the first and last names
+    setRepFullName(activePermitId?.owner?.representativedetails?.repfullname || '');
+    setRepDesignation(activePermitId?.owner?.representativedetails?.repdesignation || '');
+    setRepMobileNumber(activePermitId?.owner?.representativedetails?.repmobilenumber || '');
+  } else {
+    // If switching back to individual, restore original names from activePermitId (or keep current state)
+    setRepFullName('');
+    setRepDesignation('');
+    setRepMobileNumber('');
+  }
+
+  // Toggle corporation state
+  setRepresentative(!representative);
+};
+
+const handleCancelEdit = () => {
+  if (activePermitId) {
+    setLastName(activePermitId.owner.lastname || '');
+    setFirstName(activePermitId.owner.firstname || '');
+    setMiddleInitial(activePermitId.owner.middleinitial || '');
+    setCompanyName(activePermitId.owner.companyname || '');
+    setCivilStatus(activePermitId.owner.civilstatus || '');
+    setGender(activePermitId.owner.gender || '');
+    setCitizenship(activePermitId.owner.citizenship || '');
+    setTinNumber(activePermitId.owner.tinnumber || '');
+    setRepFullName(activePermitId.owner.representativedetails?.repfullname || '');
+    setRepDesignation(activePermitId.owner.representativedetails?.repdesignation || '');
+    setRepMobileNumber(activePermitId.owner.representativedetails?.repmobilenumber || '');
+    setHouseandLot(activePermitId.owner.houseandlot || '');
+    setBuildingStreetName(activePermitId.owner.buildingstreetname || '');
+    setSubdivision(activePermitId.owner.subdivision || '');
+    setRegion(activePermitId.owner.region || '');
+    setProvince(activePermitId.owner.province || '');
+    setMunicipality(activePermitId.owner.municipality || '');
+    setBarangay(activePermitId.owner.barangay || '');
+    setTelephoneNumber(activePermitId.owner.telephonenumber || '');
+    setMobileNumber(activePermitId.owner.mobilenumber || '');
+    setEmail(activePermitId.owner.email || '');
+
+  }
+  setIsEditing(false);
+  setCorporation(false);
+  setRepresentative(false);
+};
+
+  const editcloseModal = () => {
+    setEditOwnerModal(false);
     setIsEditing(false);
-    setCorporation(false);
-    setRepresentative(false);
   };
+//ModalEditOwner
 
-  const handleCancelEditAttach = () => {
- setIsEditingAttach(false);
- setFiles({
-  document1: null,
-  document2: null,
-  document3: null,
-  document4: null,
-});
-setSelectedFiles({});
-if (selectedFiles.document1) {
-  URL.revokeObjectURL(selectedFiles.document1);
-}
-if (selectedFiles.document2) {
-  URL.revokeObjectURL(selectedFiles.document2);
-}
-if (selectedFiles.document3) {
-  URL.revokeObjectURL(selectedFiles.document3);
-}
-if (selectedFiles.document4) {
-  URL.revokeObjectURL(selectedFiles.document4);
-}
-
-  };
 
   return (
     <section className="DAbody">
@@ -695,7 +895,7 @@ if (selectedFiles.document4) {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Work Permit Applications (For Assessments)</p>
+          <p>Business Permit Applications New Business(For Assessments)</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">
@@ -778,9 +978,9 @@ if (selectedFiles.document4) {
             </option>
               <>
                 <option value="editowner">Edit Owner Details</option>
-                <option>Edit Business Details</option>
+                <option value="editbusiness">Edit Business Details</option>
                 <option value="viewApplication">View Application</option>
-                <option>Edit Business Nature</option>
+                <option value="editnature">Edit Business Nature</option>
                 <option>Assessment</option>
                 <option value="viewattatchments">View Attatchments</option>
                 <option value="department">Department</option>
@@ -789,7 +989,7 @@ if (selectedFiles.document4) {
           </select>
         </td>
       </tr>
-      {selectedUserId === permit._id && (
+      {selectedUserIdDep === permit._id && (
   <tr>
     <td colSpan={6}>
       <table>
@@ -813,13 +1013,10 @@ if (selectedFiles.document4) {
     </td>
   </tr>
 )}
-
-               </React.Fragment>
+      </React.Fragment>
     ))}
-  
   </tbody>
           </table>
-
           <div className="pagination-buttons">
             {currentPage > 0 && (
               <button onClick={handlePreviousPage}>Back</button>
@@ -830,9 +1027,7 @@ if (selectedFiles.document4) {
           </div>
         </div>
 
-
-
-        {editownermodal && activePermitId && (
+{editownermodal && activePermitId && (
       <div className="modal-overlay" onClick={editcloseModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <p>Edit Owner Details {activePermitId._id}</p>
@@ -1105,23 +1300,22 @@ if (selectedFiles.document4) {
           </div>
         </div>
       </div>
-           )}
+      )}
 
 {viewAttachmentsModal && activePermitId && (
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <p>Permit ID: {activePermitId._id}</p>
 
-        {/* Document 1 */}
-        <p>
-          Document 1: {activePermitId.files.document1 || 'Not uploaded'}
-        
-          {activePermitId.files.document1 && (
+{/* Document 1 */}
+<p>
+  Document 1: {activePermitId.files.document1 || 'Not uploaded'}
+
+  {activePermitId.files.document1 && (
     <button
       onClick={() => {
         const newFileUrl = fetchDocumentUrl(activePermitId.files.document1, 'uploads');
         setSelectedFiles((prev) => {
-          // Toggle logic to ensure proper update
           const isFileSelected = prev.document1 === newFileUrl;
           return {
             ...prev,
@@ -1139,77 +1333,212 @@ if (selectedFiles.document4) {
   )}
 
   <label>Remarks:</label>
-  <input
-    type="text"
-    disabled={!isEditingAttach} // Disable if not editing or is corporation
-  />
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc1 || '') : (activePermitId.files.remarksdoc1 || '')} 
+  onChange={(e) => setRemarksdoc1(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
 </p>
 
 {renderFile(
   selectedFiles.document1 || (files.document1 && URL.createObjectURL(files.document1))
 )}
 
-        {/* Document 2 */}
-        <p>
-          Document 2: {activePermitId.files.document2 || 'Not uploaded'}
-          {activePermitId.files.document2 && (
-            <button
-              onClick={() =>
-                setSelectedFiles((prev) => ({
-                  ...prev,
-                  document2:
-                  prev.document2 === null
-                    ? fetchDocumentUrl(activePermitId.files.document2, 'uploads')
-                    : null, // Toggle visibility by setting to null
-                }))
-              }
-            >
-               {selectedFiles.document2 ? 'Close' : 'View'}
-            </button>
-          )}
-        </p>
-        {renderFile(selectedFiles.document2)}
+{/* Document 2 */}
+<p>
+  Document 2: {activePermitId.files.document2 || 'Not uploaded'}
 
-        {/* Document 3 */}
-        <p>
-          Document 3: {activePermitId.files.document3 || 'Not uploaded'}
-          {activePermitId.files.document3 && (
-            <button
-              onClick={() =>
-                setSelectedFiles((prev) => ({
-                  ...prev,
-                  document3:
-                  prev.document3 === null
-                    ? fetchDocumentUrl(activePermitId.files.document3, 'uploads')
-                    : null, // Toggle visibility by setting to null
-                }))
-              }
-            >
-               {selectedFiles.document3 ? 'Close' : 'View'}
-            </button>
-          )}
-        </p>
-        {renderFile(selectedFiles.document3)}
+  {activePermitId.files.document2 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document2, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document2 === newFileUrl;
+          return {
+            ...prev,
+            document2: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document2 ? 'Close' : 'View'}
+    </button>
+  )}
 
-        <p>
-          Document 4: {activePermitId.files.document4 || 'Not uploaded'}
-          {activePermitId.files.document4 && (
-            <button
-              onClick={() =>
-                setSelectedFiles((prev) => ({
-                  ...prev,
-                  document4:
-                    prev.document4 === null
-                      ? fetchDocumentUrl(activePermitId.files.document4, 'uploads')
-                      : null, // Toggle visibility by setting to null
-                }))
-              }
-            >
-              {selectedFiles.document4 ? 'Close' : 'View'}
-            </button>
-          )}
-        </p>
-        {renderFile(selectedFiles.document4)}
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc2 || '') : (activePermitId.files.remarksdoc2 || '')} 
+  onChange={(e) => setRemarksdoc2(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document2 || (files.document2 && URL.createObjectURL(files.document2))
+)}
+
+
+{/* Document 3 */}
+<p>
+  Document 3: {activePermitId.files.document3 || 'Not uploaded'}
+
+  {activePermitId.files.document3 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document3, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document3 === newFileUrl;
+          return {
+            ...prev,
+            document3: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document3 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc3 || '') : (activePermitId.files.remarksdoc3 || '')} 
+  onChange={(e) => setRemarksdoc3(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document3 || (files.document3 && URL.createObjectURL(files.document3))
+)}
+
+
+{/* Document 4 */}
+<p>
+  Document 4: {activePermitId.files.document4 || 'Not uploaded'}
+
+  {activePermitId.files.document4 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document4, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document4 === newFileUrl;
+          return {
+            ...prev,
+            document4: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document4 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc4 || '') : (activePermitId.files.remarksdoc4 || '')} 
+  onChange={(e) => setRemarksdoc4(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document4 || (files.document4 && URL.createObjectURL(files.document4))
+)}
+
+{/* Document 5 */}
+<p>
+  Document 5: {activePermitId.files.document5 || 'Not uploaded'}
+
+  {activePermitId.files.document5 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document5, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document5 === newFileUrl;
+          return {
+            ...prev,
+            document5: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document5 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc5 || '') : (activePermitId.files.remarksdoc5 || '')} 
+  onChange={(e) => setRemarksdoc5(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document5 || (files.document5 && URL.createObjectURL(files.document5))
+)}
+
+{/* Document 6 */}
+<p>
+  Document 6: {activePermitId.files.document6 || 'Not uploaded'}
+
+  {activePermitId.files.document6 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document6, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document6 === newFileUrl;
+          return {
+            ...prev,
+            document6: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document6 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc6 || '') : (activePermitId.files.remarksdoc6 || '')} 
+  onChange={(e) => setRemarksdoc6(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document6 || (files.document6 && URL.createObjectURL(files.document6))
+)}
+
+
+
         <button onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
     {isEditingAttach ? 'Save' : 'Edit'}
   </button>
@@ -1226,11 +1555,574 @@ if (selectedFiles.document4) {
     </div>
       )}
 
+{viewbusinessdetails && activePermitId && (
+  <div className="modal-overlay" onClick={closeViewBusinessDetails}>
+  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+  <p>Edit Owner Details {activePermitId._id}</p>
 
 
+<div className="form-group">
+                  <label>Business Name:</label>
+                  <input type="text" value={editbusiness ? businessname : activePermitId.business.businessname} onChange={(e) => setBusinessName(e.target.value)} disabled={!editbusiness}/>
+                </div>
+                <div className="form-group">
+                  <label>Business Scale:</label>
+                  <select
+                    value={editbusiness ? businessscale : activePermitId.business.businessscale}
+                    onChange={(e) => setBusinessScale(e.target.value)}
+                    className="form-control"
+                    disabled={!editbusiness}
+                  >
+                    <option value="" disabled>Select Business Scale</option>
+                    <option value="Micro">Micro (Not more than 3M or Having 1-9 Employees)</option>
+                    <option value="Small">Small (3M - 15M or Having 10-99 Employees)</option>
+                    <option value="Medium">Medium (15M - 100M or Having 100-199 Employees)</option>
+                    <option value="Large">Large (more than 100M or Asset size of more than 100M)</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Payment Mode:</label>
+                  <select
+                    value={editbusiness ? paymentmethod : activePermitId.business.paymentmethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="form-control"
+                    disabled={true}
+                  >
+                    <option value="" disabled>Select Payment Method</option>
+                    <option value="Annual">Annual</option>
+                    <option value="Semi-Annual">Semi-Annual</option>
+                    <option value="Quarterly">Quarterly</option>
+                  </select>
+                </div>
+                <h2>Buisness Contact Information</h2>
+                <div className="form-group">
+                  <label>House/Bldg No./Blk and Lot:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbuildingblocklot : activePermitId.business.businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Building Name/Street Name:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbuildingname : activePermitId.business.businessbuildingname} onChange={(e) => setBusinessBuildingName(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Subdivision/Compound Name:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesssubcompname : activePermitId.business.businesssubcompname} onChange={(e) => setBusinessSubCompName(e.target.value)}  />
+                </div>
+                <div className="form-group">
+                  <label>Region:</label>
+                  <input type="text"  value={editbusiness ? businessregion : activePermitId.business.businessregion} onChange={(e) => setBusinessRegion(e.target.value)} disabled />
+                </div>
+                <div className="form-group">
+                  <label>Province:</label>
+                  <input type="text"  value={editbusiness ? businessprovince : activePermitId.business.businessprovince} onChange={(e) => setBusinessProvince(e.target.value)} disabled />
+                </div>
+                <div className="form-group">
+                  <label>City/Municipality:</label>
+                  <input type="text"  value={editbusiness ? businessmunicipality : activePermitId.business.businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
+                </div>
+                <div className="form-group">
+                  <label>Barangay:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbarangay : activePermitId.business.businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
+                </div>
+
+                <div className="form-group">
+                  <label>Zip:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesszip : activePermitId.business.businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Contact Number:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesscontactnumber : activePermitId.business.businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
 
 
+                </div>
+                <h2>Necessities Information</h2>
+                <div className="form-group">
+                  <label>Ownership Type:</label>
+                  <select
+                    value={editbusiness ? ownershiptype : activePermitId.business.ownershiptype}
+                    onChange={(e) => {
+                      setOwnershipType(e.target.value);
+                      if (e.target.value === "COOP") {
+                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
+                        setDTIRegistrationDate('');
+                        setDTIRegistrationExpDate('');
+                        setSECRegistrationNum('');
+                      }
+                      if (e.target.value === "CORP" || e.target.value === "INST" || e.target.value === "PART") {
+                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
+                        setDTIRegistrationDate('');
+                        setDTIRegistrationExpDate('');
+                        setBIRRegistrationNum('');
+                      }
+                      if (e.target.value === "SOLE") {
+                        setSECRegistrationNum('');
+                        setBIRRegistrationNum('');
 
+                      }
+                    }}
+                    className="form-control"
+                    disabled={!editbusiness}
+                  >
+                    <option value="" disabled>Select Ownership Type</option>
+                    <option value="COOP">Cooperative</option>
+                    <option value="CORP">Corporation</option>
+                    <option value="INST">Institutional</option>
+                    <option value="PART">Partnership</option>
+                    <option value="SOLE">Sole Person</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Agency Registered No:</label>
+                  <input type="text" disabled={!editbusiness} value={editbusiness ? agencyregistered : activePermitId.business.agencyregistered} onChange={(e) => setAgencyRegistered(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>DTI Registration No:</label>
+                  <input
+                    type="text"
+                    value={editbusiness ? dtiregistrationnum : activePermitId.business.dtiregistrationnum}
+                    onChange={(e) => setDTIRegistrationNum(e.target.value)}
+                    placeholder="Enter DTI Registration No"
+                    disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>DTI Registration Date:</label>
+                  <input type="date"  value={editbusiness ? dtiregistrationdate : activePermitId.business.dtiregistrationdate} onChange={(e) => setDTIRegistrationDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness} />
+                </div>
+                <div className="form-group">
+                  <label>DTI Expiration Date:</label>
+                  <input type="date"  value={editbusiness ? dtiregistrationexpdate : activePermitId.business.dtiregistrationexpdate} onChange={(e) => setDTIRegistrationExpDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness} />
+                </div>
+                <div className="form-group">
+                  <label>SEC Registration No:</label>
+                  <input type="text"  value={editbusiness ? secregistrationnum : activePermitId.business.secregistrationnum} onChange={(e) => setSECRegistrationNum(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "SOLE" || !editbusiness} />
+                </div>
+                <div className="form-group">
+                  <label>BIR Registration No:</label>
+                  <input type="text" value={editbusiness ? birregistrationnum : activePermitId.business.birregistrationnum} onChange={(e) => setBIRRegistrationNum(e.target.value)} disabled={ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || ownershiptype === "SOLE" || !editbusiness} />
+                </div>
+                <div className="form-group">
+                  <label>Industry Sector:</label>
+                  <select
+                    value={editbusiness ? industrysector : activePermitId.business.industrysector}
+                    onChange={(e) => setIndustrySector(e.target.value)}
+                    className="form-control"
+                    disabled={!editbusiness}
+                  >
+                    <option value="EL">Electronic</option>
+                    <option value="CN">Construction</option>
+                    <option value="GM">Garments</option>
+                    <option value="CH">Chemical</option>
+                    <option value="MT">Metal</option>
+                    <option value="PL">Plastic</option>
+                    <option value="AL">Aluminum</option>
+                    <option value="BLB">Bulb</option>
+                    <option value="FP">Food Processing</option>
+                    <option value="LPG">LPG</option>
+                    <option value="CR">Ceramics</option>
+                    <option value="HT">Hatchery</option>
+                    <option value="BC">Batching</option>
+                    <option value="RF">Refinery</option>
+                    <option value="PR">Printing</option>
+                    <option value="P">Paper</option>
+                    <option value="CT">Concrete</option>
+                    <option value="FRN">Furniture</option>
+                    <option value="RL">Realty</option>
+                    <option value="TRD">Trading</option>
+                    <option value="SVC">Services</option>
+                    <option value="INS">Institutional</option>
+                    <option value="AMU">Amusement</option>
+                    <option value="RS">Repair Shop</option>
+                    <option value="BNK">Bank</option>
+                    <option value="FL">Financing/Lending</option>
+                    <option value="LS">Lease</option>
+                    <option value="DEV">Developer</option>
+                    <option value="MC">Medical Clinic</option>
+                    <option value="LC">Laboratory Clinic</option>
+                    <option value="MPS">Manpower Supply</option>
+                    <option value="GRY">Grocery</option>
+                    <option value="SSS">Sari-Sari Store</option>
+                    <option value="LSR">Lessor</option>
+                    <option value="PP">Power Plants</option>
+                    <option value="RFN">Refineries</option>
+                    <option value="PTC">Petrochemicals</option>
+                    <option value="EPD">Electric Power Distributor</option>
+                    <option value="TC">Telecommunication Company</option>
+                    <option value="MLR">Millers</option>
+                    <option value="MFR">Manufacturer</option>
+                    <option value="EXP">Exporters</option>
+                    <option value="IMP">Importers</option>
+                    <option value="RTL">Retailer</option>
+                    <option value="CTR">Contractor</option>
+                    <option value="FDS">Food Services</option>
+                    <option value="PF">Poultry Farm</option>
+                    <option value="PGY">Piggery</option>
+                    <option value="CMT">Cemetery</option>
+                    <option value="COP">Cooperative</option>
+                    <option value="JS">Junkshop</option>
+                    <option value="CTN">Canteen</option>
+                    <option value="BSL">Beauty Salon</option>
+                    <option value="FF">Frozen Foods</option>
+                    <option value="DG">Dry Goods</option>
+                    <option value="PN">Party Needs</option>
+                    <option value="WS">Water Station</option>
+                    <option value="GFS">Gift Shop</option>
+                    <option value="VLS">Vulcanizing Shop</option>
+                    <option value="BKY">Bakery</option>
+                    <option value="TLR">Tailoring</option>
+                    <option value="IA">Insurance Agency</option>
+                    <option value="ENT">Enterprises</option>
+                    <option value="HCS">Hardware Construction Supply</option>
+                    <option value="CP">Coconut Processor</option>
+                    <option value="CS">Computer Shop</option>
+                    <option value="LO">Lotto Outlet</option>
+                    <option value="GBR">Gowns and Barong Rentals</option>
+                    <option value="BR">Beach Resort</option>
+                    <option value="RST">Restaurant</option>
+                    <option value="GSW">Glassware</option>
+                    <option value="FDC">Firework Display Center</option>
+                    <option value="FST">Food Stand</option>
+                    <option value="RP">Refreshment Parlor</option>
+                    <option value="FC">Food Cart</option>
+                    <option value="AF">Agricultural Farm</option>
+                    <option value="SFO">Steel Fabrication and Oxygen/Acetylene Plant</option>
+                    <option value="TRKS">Trucking Services</option>
+                    <option value="ES">Electrical Supplies</option>
+                    <option value="RSV">Roofing Services</option>
+                    <option value="HSP">Hospital</option>
+                    <option value="CNS">Cable Network System</option>
+                    <option value="CRS">Cellphone Repair Shop</option>
+                    <option value="MPA">Motorcycle Parts and Accessories</option>
+                    <option value="TT">Travel and Tours</option>
+                    <option value="LDH">Lodging House</option>
+                    <option value="SA">Security Agency</option>
+                    <option value="RWS">Repair and Welding Shop</option>
+                    <option value="SRS">Shoe Repair Shop</option>
+                    <option value="PHS">Photographic Studio</option>
+                    <option value="RCP">Recapping Shop</option>
+                    <option value="BSP">Barber Shop</option>
+                    <option value="BPR">Beauty Parlor</option>
+                    <option value="FPS">Funeral Parlor and Services</option>
+                    <option value="FSH">Furniture Shop</option>
+                    <option value="MASC">Massage Clinic</option>
+                    <option value="RFDS">Rice and Feeds Supply</option>
+                    <option value="MST">Meat Stand</option>
+                    <option value="EMS">Events Management Services</option>
+                    <option value="DC">Dental Clinic</option>
+                    <option value="RR">Rice Retailer</option>
+                    <option value="SS">School Supplies</option>
+                    <option value="DFR">Dried Fish Retailer</option>
+                    <option value="ER">Egg Retailer</option>
+                    <option value="EAT">Eatery</option>
+                    <option value="GMC">General Merchandise</option>
+                    <option value="FW">Footwear</option>
+                    <option value="FV">Fruits and Vegetables Stand</option>
+                    <option value="CTS">Catering Services</option>
+                    <option value="CMS">Consultancy Marketing Services</option>
+                    <option value="FS">Feeds Supply</option>
+                    <option value="FRW">Fireworks Retailer</option>
+                    <option value="MP">Motorcycle Parts</option>
+                    <option value="BS">Bike Shop</option>
+                    <option value="VSP">Veterinary Supply</option>
+                    <option value="FSTN">Food Stand (Night Market)</option>
+                    <option value="TNEC">Trading of Non-Essential Commodities</option>
+                    <option value="HR">Hotel and Rental</option>
+                    <option value="CRD">Carinderia</option>
+                    <option value="ARS">Auto Repair Shop</option>
+                    <option value="STF">Storage Tank Facility</option>
+                    <option value="AS">Auto Supply</option>
+                    <option value="OE">Office Equipment</option>
+                    <option value="SOS">School and Office Supplies</option>
+                    <option value="PGF">Piggery Farm</option>
+                    <option value="HBM">Hollow Block Making</option>
+                    <option value="CHBM">CHB Manufacturing</option>
+                    <option value="CSUP">Construction and Supply</option>
+                    <option value="FSUP">Fishing Supply</option>
+                    <option value="BDC">Bridal Collection</option>
+                    <option value="MSC">Massage and Spa Center</option>
+                    <option value="IR">In-Land Resort</option>
+                    <option value="COD">Cooking Oil Dealer</option>
+                    <option value="NP">Native Products</option>
+                    <option value="MD">Motorcycle Dealer</option>
+                    <option value="FV2">Fruits and Vegetables</option>
+                    <option value="EPS">Electronic Parts and Supply</option>
+                    <option value="WRS">Water Refilling Station</option>
+                    <option value="CA">Cellphone and Accessories</option>
+                    <option value="PH">Pharmacy</option>
+                    <option value="SHF">Sash Factory</option>
+                    <option value="FS2">Funeral Services</option>
+                    <option value="CPG">Cockpit Personnel - Gaffer</option>
+                    <option value="MM">Minimart</option>
+                    <option value="NSNP">Non-Stock/Non-Profit</option>
+                    <option value="BH">Burger House</option>
+                    <option value="DGS">Drugstore</option>
+                    <option value="OS">Office Supply</option>
+                    <option value="JRS">Jewelry and Repair Shop</option>
+                    <option value="GS">Gas Station</option>
+                    <option value="PS">Port Services</option>
+                    <option value="EI">Educational Institution</option>
+                    <option value="ELTS">Electronic Services</option>
+                    <option value="BT">Bet Taker</option>
+                    <option value="PDT">Petroleum Depot and Terminal</option>
+                    <option value="SSIE">Seaport Services and Industrial Estate Developer</option>
+                    <option value="ETC">Emission Testing Center</option>
+                    <option value="CRR">Car Rental</option>
+                    <option value="PD">Petroleum Depot</option>
+                    <option value="BAS">Bakery Supply</option>
+                    <option value="GAF">Gaffer</option>
+                    <option value="BKS">Banking Services</option>
+                    <option value="BTM">Bet Manager</option>
+                    <option value="FS3">Flower Shop</option>
+                    <option value="CSP">Catering Services and Party Needs </option>
+                    <option value="PS2">Pawnshop</option>
+                    <option value="M">Medicator</option>
+                    <option value="GAS">Glass and Aluminum Supply</option>
+                    <option value="CKA">Cockpit Arena</option>
+                    <option value="FCL">Furniture and Coco Lumber</option>
+                    <option value="LWO">Law Office</option>
+                    <option value="RFS">Rice and Fertilizer Supply</option>
+                    <option value="MANS">Manpower Services</option>
+                    <option value="IC">Internet Cafe</option>
+                    <option value="TS">Trading and Services</option>
+                    <option value="LH">Lomi House</option>
+                    <option value="BK">Banking</option>
+                    <option value="RTW2">RTW</option>
+                    <option value="A">Appliances</option>
+                    <option value="TGBS">Tugboat Services</option>
+                    <option value="FNI">Financial Institution</option>
+                    <option value="MLA">Med. Lab./Scientific Apparatus/Microscope/Anatomical Models, Equipment Supplies</option>
+                    <option value="MSH">Meat Shop</option>
+                    <option value="CGS">Construction and General Services</option>
+                    <option value="SH">Slaughter House</option>
+                    <option value="R">Resort</option>
+                    <option value="TRS">Tire and Retreading Services</option>
+                    <option value="L">Lending</option>
+                    <option value="LIC">Lying-in Clinic</option>
+                    <option value="AM">Alcohol Manufacturing</option>
+                    <option value="RW">Retailer/Wholesaler</option>
+                    <option value="DPS">Digital Printing Services</option>
+                    <option value="RDI">Retailer of Disposable Items</option>
+                    <option value="PSMR">Pawnshop, Money Remittance, E-Loading, Money Changer</option>
+                    <option value="ICM">Ice Cream Maker</option>
+                    <option value="CC">Cold Cuts</option>
+                    <option value="DS">Department Store</option>
+                    <option value="PBB">Photocopying and Book Binding</option>
+                    <option value="CG">Cereal and Grains</option>
+                    <option value="PSGM">Pawnshop/Kwarta Padala/General Merchandise/Money Changer</option>
+                    <option value="GLM">Gloves Manufacturing</option>
+                    <option value="BRDS">Bread Store</option>
+                    <option value="GWGS">Glassware and Gift Shop</option>
+                    <option value="WR">Wholesaler/Retailer</option>
+                    <option value="RE">Real Estate</option>
+                    <option value="PPO">Power Plant Operator</option>
+                    <option value="MRCB">Money Remittance/Courier Cargo/Bills Payment and Ticketing Services</option>
+                    <option value="AAS">Auto Aircon Services</option>
+                    <option value="FI2">Financing Institution</option>
+                    <option value="TSP">T-Shirt Printing</option>
+                    <option value="MPKS">Memorial Park Services</option>
+                    <option value="PG">Power Generation</option>
+                    <option value="PSMSA">Pawnshop, Money Transfer, and Other Service Activities</option>
+                    <option value="CVS">Convenience Store</option>
+                    <option value="DPC">Digital Printing Clothing</option>
+                    <option value="ASS">Association</option>
+                    <option value="JWRS">Jewelry Repair Shop</option>
+                    <option value="AGS">Agricultural Supply</option>
+                    <option value="AWS">Autoworks and Vulcanizing Shop</option>
+                    <option value="TRC">Training Center</option>
+                    <option value="FR">Feeds Retailer</option>
+                    <option value="CPA">Cellphone Accessories</option>
+                    <option value="VAC">Visa Assistance/Consultancy</option>
+                    <option value="IGM">Industrial Gas Manufacturing</option>
+                    <option value="GFF">Game Fowl Farm</option>
+                    <option value="LNDS">Laundry Shop</option>
+                    <option value="CAP">Candies and Pasalubong</option>
+                    <option value="LR">Lechon Retailer</option>
+                    <option value="IRT">Ice Retailer</option>
+                    <option value="SPOS">Sports Officiating Services</option>
+                    <option value="CF">Cooked Food</option>
+                    <option value="TCN">Tiles Center</option>
+                    <option value="DGW">Dry Goods and Glassware</option>
+                    <option value="RPH">Retailer of Pharmaceutical, Medical, Cosmetics, and Toilet Articles</option>
+                    <option value="BP">Beauty Products</option>
+                    <option value="HS">Hauling Services</option>
+                    <option value="PC">Paint Center</option>
+                    <option value="ERS">Electronics Repair Shop</option>
+                    <option value="PPF">Piggery and Poultry Farm</option>
+                    <option value="VFS">Veterinary and Feeds Supply</option>
+                    <option value="FA">Footwear and Accessories</option>
+                    <option value="CGH">Cargo Handling</option>
+                    <option value="MSSS">Meat Shop and Sari-Sari Store</option>
+                    <option value="CPSS">Coconut Processor and Sari-Sari Store</option>
+                    <option value="CARS">Cellphone Accessories and Repair Shop</option>
+                    <option value="SSE">Sari-Sari Store and Eatery</option>
+                    <option value="OC">Optical Clinic</option>
+                    <option value="FG">Food Store/Grocery</option>
+                    <option value="BPMRS">Bills Payment and Money Remittance Services</option>
+                    <option value="PLS">Poultry Supply</option>
+                    <option value="BATM">Banking/ATM Machine</option>
+                    <option value="EC">Electric Cooperative</option>
+                    <option value="N">Nursery</option>
+                    <option value="STS">Stevedoring Services</option>
+                    <option value="CSC">Contractor (Supplier of Coal)</option>
+                    <option value="RH">Retreat House</option>
+                    <option value="CW">Car Wash</option>
+                    <option value="LD">LPG Depot</option>
+                    <option value="MRBC">Money Remittance/Bayad Center/Ticketing/E-Load/PA Insurance/Money Changer/Foreign Exchange Dealer</option>
+                    <option value="CCS">CCTV and Computer Supplies</option>
+                    <option value="LA">Legal Activities</option>
+                    <option value="DIIS">Distributor of Industrial Iodized Salt</option>
+                    <option value="W">Warehouse</option>
+                    <option value="DF">Dragon Fruit Farm</option>
+                    <option value="FRFW">Freight Forwarder</option>
+                    <option value="FCNM">Food Cart (Night Market)</option>
+                    <option value="ESI">Electrical Supply and Installation</option>
+                    <option value="PCS">Pest Control Services</option>
+                    <option value="MTS">Management and Technical Services</option>
+                    <option value="CD">Chemical Depot</option>
+                    <option value="SRM">Storage of Raw Materials for Surfactants (Linear Alkyl Benzene)</option>
+                    <option value="PED">Peddler (Selling Dry Goods)</option>
+                    <option value="BGS">Burger Stand</option>
+                    <option value="SP">Sugarcane Planters</option>
+                    <option value="TRNS">Transport Services</option>
+                    <option value="VCGC">Veterinary Clinic and Grooming Center</option>
+                    <option value="HAA">Hawker (Accessories)</option>
+                    <option value="HA8">Hawker (Dry Goods) 8 sq. m.</option>
+                    <option value="HAF88">Hawker (Footwear) 8.8 sq. m.</option>
+                    <option value="HA85">Hawker (Dry Goods) 8.5 sq. m.</option>
+                    <option value="HA575">Hawker (Dry Goods) 5.75 sq. m.</option>
+                    <option value="HA4">Hawker (Dry Goods) 4 sq. m.</option>
+                    <option value="HA3">Hawker (Dry Goods) 3 sq. m.</option>
+                    <option value="HA7">Hawker (Dry Goods) 7 sq. m.</option>
+                    <option value="HAF2">Hawker (Dried Fish) 2 sq. m.</option>
+                    <option value="RED">Real Estate Developer</option>
+                    <option value="HAG525">Hawker (Glassware) 5.25 sq. m.</option>
+                    <option value="HA6S">Hawker (Dry Goods) 6 sq. m.</option>
+                    <option value="HAA5">Hawker (Accessories) 5 sq. m.</option>
+                    <option value="SWO">Social Work Without Accommodation</option>
+                    <option value="HPR">Health Product Retailer</option>
+                    <option value="WSF">Warehousing/Storage Facility</option>
+                    <option value="MS">Medical Supply</option>
+                    <option value="CFMT">Construction and Fabrication of Mild Steel Vertical Storage Tank</option>
+                    <option value="SSA">Storage of Sulfuric Acid</option>
+                    <option value="PLBS">Plumbing Services</option>
+                    <option value="PBL">Publishing</option>
+                    <option value="HAAF4">Hawker (Aquatic Fish) 4 sq. m.</option>
+                    <option value="HAA2">Hawker (Accessories) 2 sq. m.</option>
+                    <option value="HAF13">Hawker (Footwear) 13 sq. m.</option>
+                    <option value="HAA6">Hawker (Accessories) 6 sq. m.</option>
+                    <option value="HA125">Hawker (Dry Goods) 12.5 sq. m.</option>
+                    <option value="CEWS">Civil Engineering Works Services</option>
+                    <option value="ACRS">Aircon Repair Shop</option>
+                    <option value="HA42">Hawker (Dry Goods) 4.2 sq. m.</option>
+                    <option value="TRPS">Transportation Services</option>
+                    <option value="HA245">Hawker (Dry Goods) 24.5 sq. m.</option>
+                    <option value="PZP">Pizza Parlor</option>
+                    <option value="HA9">Hawker (Dry Goods) 9 sq. m.</option>
+                    <option value="GASAW">Glass and Aluminum Supply and Steel Works</option>
+                    <option value="FVSNM">Fruits and Vegetables Stand (Night Market)</option>
+                    <option value="MTBP">Money Transfer/Bills Payment</option>
+                    <option value="PSTC">Pest Control</option>
+                    <option value="CWT">Construction of Water Tank</option>
+                    <option value="RRC">Sale/Retail/Oven Roasted Chicken</option>
+                    <option value="MRMC">Money Remittance/Money Changer</option>
+                    <option value="RENES">Retailer of Essential, Non-Essential, Cigarette, Liquor, Drugstore, Refreshment</option>
+                    <option value="BCTM">Bayad Center/Ticketing/Money Changer/Money Remittance</option>
+                    <option value="CSPN">Computer Shop (Piso Net)</option>
+                    <option value="TPS">Trading and Pest Control Services</option>
+                    <option value="MTLS">Money Transfer/Loading Station</option>
+                    <option value="PNDT">Plant Non-Destructive Testing</option>
+                    <option value="SBPR">Sante Barley Product Retailer</option>
+                    <option value="T2CS">Tower for Two Cell Sites</option>
+                    <option value="PMSCPP">PMS Contractor for Power Plants</option>
+                    <option value="CTST">Contractor (Sharpening Tools)</option>
+                    <option value="HER">Heavy Equipment Rentals</option>
+                    <option value="CFNM">Cooked Food (Night Market)</option>
+                    <option value="PSMTFE">Pawnshop/Money Transfer/Foreign Exchange Dealing/Other Service Activities</option>
+                    <option value="CPC">Cockpit Personnel/Cashier</option>
+                    <option value="FXD">Foreign Exchange Dealer/Money Remittance/Money Changer/Ticketing/Bayad Center/E-Load/PA Insurance/DepED/Pension Loan</option>
+                    <option value="CSH">Cashier</option>
+                    <option value="APC">Atchara Processing Center</option>
+                    <option value="PM">Pit Manager</option>
+                    <option value="PRT">Promoter</option>
+                    <option value="CPR">Cockpit Personnel - Referee</option>
+                    <option value="TF">Temporary Facility</option>
+                    <option value="DGCP">Dry Goods and Cosmetic Products</option>
+                    <option value="DT">Depot (Terminaling)</option>
+                    <option value="APIS">All Types of Paint, Industrial Services</option>
+                    <option value="PRWC">Prawn Culture</option>
+                    <option value="BKKS">Bookkeeping Services</option>
+                    <option value="CSER">Construction Services</option>
+                    <option value="INKR">Ink Retailer</option>
+                    <option value="FER">Fire Extinguisher Retailer</option>
+                    <option value="LPGP">LPG Refilling Plant</option>
+                    <option value="LPR">LPG Retailer</option>
+                    <option value="EWS">Engineering Works Services</option>
+                    <option value="DMC">Dealer - Motorcycle</option>
+                    <option value="D">Distributor</option>
+                    <option value="EXEMPT">EXEMPTED</option>
+                    <option value="PRVS">Private School</option>
+                    <option value="PRVM">Private Market</option>
+                    <option value="PUBM">Public Market</option>
+                    <option value="ML">Mall</option>
+                    <option value="SPM">Supermarket</option>
+
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Business Operation:</label>
+                  <select
+                    value={editbusiness ? businessoperation : activePermitId.business.businessoperation}
+                    onChange={(e) => setBusinessOperation(e.target.value)}
+                    className="form-control"
+                    disabled={!editbusiness}
+                  >
+                    <option value="Daytime">DAYTIME</option>
+                    <option value="Nightshift">NIGHTSHIFT</option>
+                    <option value="Day&Night">BOTH DAY AND NIGHT</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Business Type:</label>
+                  <select
+                    value={editbusiness ? typeofbusiness : activePermitId.business.typeofbusiness}
+                    onChange={(e) => setTypeofBusiness(e.target.value)}
+                    className="form-control"
+                    disabled={!editbusiness}
+                  >
+                    <option value="Main">MAIN</option>
+                    <option value="Franchise">FRANCHISE</option>
+                    <option value="Branch">BRANCH</option>
+                  </select>
+                </div>
+
+
+  <div>
+  <button onClick={editbusiness ? handlesavebusinessedit : () => setEditBusiness(true)}>
+    {editbusiness ? 'Save' : 'Edit'}
+  </button>
+  {editbusiness && (
+    <button onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
+      Cancel
+    </button>
+  )}
+          {/* Close Modal Button */}
+          <button className="close-modal" onClick={closeViewBusinessDetails}>
+          Close
+        </button>
+    </div>
+</div>
+</div>
+      )}
+
+{updatesuccess && activePermitId && (
+  <div className="modal-overlay" onClick={closeupdateSuccess}>
+  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <p>Updated Business Permit ID:{activePermitId.id}</p>
+    <button className="close-modal" onClick={closeupdateSuccess}>
+          Close
+        </button>
+  </div>
+  </div>
+      )}
 
       </div>
     </section>

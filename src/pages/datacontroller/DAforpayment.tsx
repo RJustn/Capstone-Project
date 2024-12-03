@@ -73,13 +73,31 @@ return (
 
         <div className="button-container">
         <a href="/DAforpaymentBP" className='DAbusinesspermitbutton'>
-              For Payment Business Permit
+              For Payment New Business Permit
             </a>
             <a href="/DAforpaymentWP" className='DAworkpermitbutton'>
-              For Payment Working Permit
+              For Payment New Working Permit
+            </a>
+          </div>
+
+          <div className="button-container">
+        <a href="/DAforpaymentBP" className='DAbusinesspermitbutton'>
+              For Payment Renew Business Permit
+            </a>
+            <a href="/DAforpaymentWP" className='DAworkpermitbutton'>
+              For Payment Renew Working Permit
             </a>
           </div>
       
+          <div className="button-container">
+        <a href="/DAforpaymentBP" className='DAbusinesspermitbutton'>
+              View All For Payment Business Permit
+            </a>
+            <a href="/DAforpaymentWP" className='DAworkpermitbutton'>
+              View all For Payment New Working Permit
+            </a>
+          </div>
+
     </div>
     </section>
 );

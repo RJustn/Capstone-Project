@@ -1,297 +1,237 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../Styles/ClientStyles.css';
-import ClientSideBar from '../components/ClientSideBar';
-import MapLocation from '../components/MapLocation';
+import '../Styles/DataControllerStyles.css'; 
+import DASidebar from '../components/DAsidebar';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Select from 'react-select';
-
+import Select from 'react-select'; 
 
 interface BusinessNatureOption {
   value: string;
   label: string;
 }
 
-const BusinessPermit: React.FC = () => {
-  const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [isFormValid, setIsFormValid] = useState(true);
-  //Step 1
-  const [corporation, setCorporation] = useState(false);
-  const [lastname, setLastName] = useState('');
-  const [firstname, setFirstName] = useState('');
-  const [middleinitial, setMiddleInitial] = useState('');
-  const [civilstatus, setCivilStatus] = useState('');
-  const [companyname, setCompanyName] = useState('');
-  const [gender, setGender] = useState('');
-  const [citizenship, setCitizenship] = useState('');
-  const [tinnumber, setTinNumber] = useState('');
-  const [representative, setRepresentative] = useState(false);
-  const [repfullname, setRepFullName] = useState('');
-  const [repdesignation, setRepDesignation] = useState('');
-  const [repmobilenumber, setRepMobileNumber] = useState('');
-  const [houseandlot, setHouseandLot] = useState('');
-  const [buildingstreetname, setBuildingStreetName] = useState('');
-  const [subdivision, setSubdivision] = useState('');
-  const [region, setRegion] = useState('');
-  const [province, setProvince] = useState('');
-  const [municipality, setMunicipality] = useState('');
-  const [barangay, setBarangay] = useState('');
-  const [telephonenumber, setTelephoneNumber] = useState('');
-  const [mobilenumber, setMobileNumber] = useState('');
-  const [email, setEmail] = useState('');
-  //Step 2
-  const [businessname, setBusinessName] = useState('');
-  const [businessscale, setBusinessScale] = useState('');
-  const [paymentmethod, setPaymentMethod] = useState('');
-  const [businessbuildingblocklot, setBusinessBuildingBlockLot] = useState('');
-  const [businessbuildingname, setBusinessBuildingName] = useState('');
-  const [businesssubcompname, setBusinessSubCompName] = useState('');
-  const [businessregion, setBusinessRegion] = useState('REGION IV-A (CALABARZON)');
-  const [businessprovince, setBusinessProvince] = useState('CAVITE');
-  const [businessmunicipality, setBusinessMunicipality] = useState('CITY OF DASMARIÑAS');
-  const [businessbarangay, setbusinessBarangay] = useState('');
-  const [businesszip, setBusinessZip] = useState('4114');
-  const [businesscontactnumber, setBusinessContactNumber] = useState('');
-  const [ownershiptype, setOwnershipType] = useState('');
-  const [agencyregistered, setAgencyRegistered] = useState('');
-  const [dtiregistrationnum, setDTIRegistrationNum] = useState('');
-  const [dtiregistrationdate, setDTIRegistrationDate] = useState('');
-  const [dtiregistrationexpdate, setDTIRegistrationExpDate] = useState('');
-  const [secregistrationnum, setSECRegistrationNum] = useState('');
-  const [birregistrationnum, setBIRRegistrationNum] = useState('');
-  const [industrysector, setIndustrySector] = useState('');
-  const [businessoperation, setBusinessOperation] = useState('');
-  const [typeofbusiness, setTypeofBusiness] = useState('');
-  //Step 3
-  const [dateestablished, setDateEstablished] = useState('');
-  const [startdate, setStartDate] = useState('');
-  const [occupancy, setOccupancy] = useState('');
-  const [otherbusinesstype, setOtherBusinessType] = useState('');
-  const [businessemail, setBusinessEmail] = useState('');
-  const [businessarea, setBusinessArea] = useState('');
-  const [businesslotarea, setBusinessLotArea] = useState('');
-  const [numofworkermale, setNumofWorkerMale] = useState('');
-  const [numofworkerfemale, setNumofWorkerFemale] = useState('');
-  const [numofworkertotal, setNumofWorkerTotal] = useState(0);
-  const [numofworkerlgu, setNumofWorkerLGU] = useState('');
-  const [lessorfullname, setLessorFullName] = useState('');
-  const [lessormobilenumber, setLessorMobileNumber] = useState('');
-  const [monthlyrent, setMonthlyRent] = useState('');
-  const [lessorfulladdress, setLessorFullAddress] = useState('');
-  const [lessoremailaddress, setLessorEmailAddress] = useState('');
-  //Step 4
-  const [lat, setLat] = useState<number>(14.326248);
-  const [lng, setLng] = useState<number>(120.935973);
-  //Step 5
+export interface BusinessPermit {
+    _id: string;
+    id: string;
+    userId: string;
+    permittype?: string;
+    businesspermitstatus?: string;
+    businessstatus?: string;
+    classification?: string;
+    transaction?: string;
+    amountToPay?: string;
+    permitFile?: string;
+    permitDateIssued?: string;
+    permitExpiryDate?: string;
+    expiryDate?: string;
+    applicationdateIssued?: string;
+    applicationComments?: string;
+  
+    owner: Owner;
+    business: Business;
+    otherbusinessinfo: OtherBusiness;
+    mapview: MapView;
+    businesses: Businesses[];
+    files: Files;
+    department: Department;
+  
+    createdAt?: string;
+  }
 
-  //Step 6
-  const [files, setFiles] = useState<{
-    document1: File | null;
-    document2: File | null;
-    document3: File | null;
-    document4: File | null;
-    document5: File | null;
-    document6: File | null;
-  }>({
-    document1: null,
-    document2: null,
-    document3: null,
-    document4: null,
-    document5: null,
-    document6: null,
-  });
+    
+  export interface Businesses {
+    _id?: string;
+    businessNature: string;
+    businessType: string;
+    capitalInvestment: string;
+    lastYearGross: string;
 
-  const logFormData = (formData: FormData) => {
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
     }
-  };
+    
+  
+  export interface Owner {
+  corporation?: boolean;
+  lastname?: string;
+  firstname?: string;
+  middleinitial?: string;
+  civilstatus?: string;
+  companyname?: string;
+  gender?: string;
+  citizenship?: string;
+  tinnumber?: string;
+  representative?: boolean;
+  houseandlot?: string;
+  buildingstreetname?: string;
+  subdivision?: string;
+  region?: string;
+  province?: string;
+  municipality?: string;
+  barangay?: string;
+  telephonenumber?: string;
+  mobilenumber?: string;
+  email?: string;
+  representativedetails?: RepDetails;
+  }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6') => {
-    const selectedFiles = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: selectedFiles[0],
-      }));
-    } else {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: null,
-      }));
-    }
-  };
-
-  const handleLocationChange = (latitude: number, longitude: number) => {
-    setLat(latitude);
-    setLng(longitude);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    //Step 1
-    formData.append('corporation', String(corporation));
-    formData.append('lastname', lastname);
-    formData.append('firstname', firstname);
-    formData.append('middleinitial', middleinitial);
-    formData.append('civilstatus', civilstatus);
-    formData.append('companyname', companyname);
-    formData.append('gender', gender);
-    formData.append('citizenship', citizenship);
-    formData.append('tinnumber', tinnumber);
-    formData.append('representative', String(representative));
-    formData.append('repfullname', repfullname);
-    formData.append('repdesignation', repdesignation);
-    formData.append('repmobilenumber', repmobilenumber);
-    formData.append('houseandlot', houseandlot);
-    formData.append('buildingstreetname', buildingstreetname);
-    formData.append('subdivision', subdivision);
-    formData.append('region', region);
-    formData.append('province', province);
-    formData.append('municipality', municipality);
-    formData.append('barangay', barangay);
-    formData.append('telephonenumber', telephonenumber);
-    formData.append('mobilenumber', mobilenumber);
-    formData.append('email', email);
-
-    //Step 2
-    formData.append('businessname', businessname);
-    formData.append('businessscale', businessscale);
-    formData.append('paymentmethod', paymentmethod);
-    formData.append('businessbuildingblocklot', businessbuildingblocklot);
-    formData.append('businessbuildingname', businessbuildingname);
-    formData.append('businesssubcompname', businesssubcompname);
-    formData.append('businessregion', businessregion);
-    formData.append('businessprovince', businessprovince);
-    formData.append('businessmunicipality', businessmunicipality);
-    formData.append('businessbarangay', businessbarangay);
-    formData.append('businesszip', businesszip);
-    formData.append('businesscontactnumber', businesscontactnumber);
-    formData.append('ownershiptype', ownershiptype);
-    formData.append('agencyregistered', agencyregistered);
-    formData.append('dtiregistrationnum', dtiregistrationnum);
-    formData.append('dtiregistrationdate', dtiregistrationdate);
-    formData.append('dtiregistrationexpdate', dtiregistrationexpdate);
-    formData.append('secregistrationnum', secregistrationnum);
-    formData.append('birregistrationnum', birregistrationnum);
-    formData.append('industrysector', industrysector);
-    formData.append('businessoperation', businessoperation);
-    formData.append('typeofbusiness', typeofbusiness);
-   
-    //Step 3
-    formData.append('dateestablished', dateestablished);
-    formData.append('startdate', startdate);
-    formData.append('occupancy', occupancy);
-    formData.append('otherbusinesstype', otherbusinesstype);
-    formData.append('businessemail', businessemail);
-    formData.append('businessarea', businessarea);
-    formData.append('businesslotarea', businesslotarea);
-    formData.append('numofworkermale', numofworkermale);
-    formData.append('numofworkerfemale', numofworkerfemale);
-    formData.append('numofworkertotal', String(numofworkertotal));
-    formData.append('numofworkerlgu', numofworkerlgu);
-    formData.append('lessorfullname', lessorfullname);
-    formData.append('lessormobilenumber', lessormobilenumber);
-    formData.append('monthlyrent', monthlyrent);
-    formData.append('lessorfulladdress', lessorfulladdress);
-    formData.append('lessoremailaddress', lessoremailaddress);
-
-    //Step 4
-    formData.append('lat', String(lat));
-    formData.append('lng', String(lng));
-   
-    //Step 5
-    formData.append('newBusiness', JSON.stringify(newBusiness));
-    formData.append('businesses', JSON.stringify(businesses));
-
-    if (files.document1) formData.append('document1', files.document1);
-    if (files.document2) formData.append('document2', files.document2);
-    if (files.document3) formData.append('document3', files.document3);
-    if (files.document4) formData.append('document4', files.document4);
-    if (files.document5) formData.append('document5', files.document5);
-    if (files.document6) formData.append('document6', files.document6);
-    logFormData(formData);
-
-
-    try {
-      const response = await axios.post('http://localhost:3000/client/businesspermitpage', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-      console.log(response.data);
-      if (response.status === 200) {
-        alert('Work Permit Application submitted successfully!');
-        navigate('/dashboard');
-      } else {
-        const errorMessage = (response.data as { message: string }).message;
-        console.error('Error submitting application:', errorMessage);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const handleMaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const male = parseInt(e.target.value) || 0; // Convert to number or default to 0
-    setNumofWorkerMale(e.target.value); // Update male workers
-    setNumofWorkerTotal(male + (parseInt(numofworkerfemale) || 0)); // Update total
-  };
-
-  const handleFemaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const female = parseInt(e.target.value) || 0; // Convert to number or default to 0
-    setNumofWorkerFemale(e.target.value); // Update female workers
-    setNumofWorkerTotal((parseInt(numofworkermale) || 0) + female); // Update total
-  };
-
-  //Form Pages
-  const goToNextStep = () => {
-    // Perform validation based on the current step
-
-    if (step === 1) {
-      // Check if required fields are filled for step 1
-      if (!firstname || !lastname) {
-        setIsFormValid(false); // Set form as invalid
-        return; // Prevent moving to the next step
-      }
-    }
-
-    // Reset validity state if validation passes
-    setIsFormValid(true);
-    setStep(prevStep => prevStep + 1);
-  };
-
-  const goToPreviousStep = () => {
-    setStep(prevStep => prevStep - 1);
-  };
-
-  const handleLogout = () => {
-    sessionStorage.clear(); // Example: clear session storage
-    alert('You have been logged out.');
-    navigate('/'); // Redirect to home or login page
-  };
-  //Form Pages End
-
-  //Business Nature
-  // Define type for newBusiness and businesses state
- const [newBusiness, setNewBusiness] = useState<{
+  
+  
+  export interface RepDetails {
+  repfullname: string,
+  repdesignation: string,
+  repmobilenumber: string,
+  }
+  
+  export interface Business {
+  businessname?: string,
+  businessscale?: string,
+  paymentmethod?: string,
+  businessbuildingblocklot?: string,
+  businessbuildingname?: string,
+  businesssubcompname?: string,
+  businessregion?: string,
+  businessprovince?: string,
+  businessmunicipality?: string,
+  businessbarangay?: string,
+  businesszip?: string,
+  businesscontactnumber?: string,
+  ownershiptype?: string,
+  agencyregistered?: string,
+  dtiregistrationnum?: string,
+  dtiregistrationdate?: string,
+  dtiregistrationexpdate?: string,
+  secregistrationnum?: string,
+  birregistrationnum?: string,
+  industrysector?: string,
+  businessoperation?: string,
+  typeofbusiness?: string,
+  
+  }
+  
+  export interface OtherBusiness {
+  dateestablished?: string,
+  startdate?: string,
+  occupancy?: string,
+  otherbusinesstype?: string,
+  businessemail?: string,
+  businessarea?: string,
+  businesslotarea?: string,
+  numofworkermale?: string,
+  numofworkerfemale?: string,
+  numofworkertotal?: string,
+  numofworkerlgu?: string,
+  lessorfullname?: string,
+  lessormobilenumber?: string,
+  monthlyrent?: string,
+  lessorfulladdress?: string,
+  lessoremailaddress?: string,
+  }
+  
+  export interface MapView{
+  lat: string,
+  lng: string,
+  }
+  
+  export interface Businesses {
+  _id?: string;
   businessNature: string;
   businessType: string;
   capitalInvestment: string;
-}>({
-  businessNature: '',
-  businessType: '',
-  capitalInvestment: '',
-});
+  lastYearGross: string;
+  }
+  
+  
+  export interface Department{
+   
+    Zoning: string;
+    OffBldOfcl: string;
+    CtyHlthOff: string;
+    BreuFrPrt: string;
+  
+  }
+  
+  export interface Files {
+  document1: string | null; // Optional
+  document2: string | null; // Optional
+  document3: string | null; // Optional
+  document4: string | null; // Optional
+  document5: string | null; // Optional
+  document6: string | null; // Optional
+  }
 
-// Define businesses state as an array of objects
-const [businesses, setBusinesses] = useState<
-  { businessNature: string; businessType: string; capitalInvestment: string }[]
->([]);
+const DataControllerEditBusinessNature: React.FC = () => {
+    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState('user'); // Initial state set to 'user'
+
+    const handleTabClick = (tab: string) => {
+        setActiveTab(tab); // Update active tab when clicked
+    };
+    const { id } = useParams<{ id: string }>(); // Extract work permit ID from URL
+    const [businessPermit, setBusinessPermit] = useState<BusinessPermit | null>(null);
+    const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Remove token from 
+        navigate('/'); // Redirect to home page
+    };
+
+    useEffect(() => {
+        const fetchBusinessPermitDetails = async () => {
+            if (!token) {
+                navigate('/'); // Redirect to login if no token
+                return;
+              } 
+          try {
+            console.log(id);
+            const response = await axios.get(`http://localhost:3000/datacontroller/DCbusinesspermitdetails/${id}`, {
+  
+            });
+            setBusinessPermit(response.data as BusinessPermit); // Set the work permit details to state
+          } catch (error) {
+            console.error('Error fetching business permit details:', error);
+         
+          } }
+    
+          fetchBusinessPermitDetails(); // Call the fetch function
+      }, [id, token, navigate]);
+
+       useEffect(() => {
+         if (businessPermit?.businesses) {
+          setOriginalBusinesses(businessPermit.businesses);
+        }
+      }, [businessPermit]);
+
+//File
+const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
+
+      const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
+        if (!fileName) return null;
+        
+        // Return the file URL based on the folder specified
+        return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
+      };
+  const renderFile = (fileUrl: string | null) => {
+    if (!fileUrl) return <p>No file selected.</p>;
+
+    if (fileUrl.endsWith('.pdf')) {
+      return (
+        <iframe
+          src={fileUrl}
+          style={{ width: '100%', height: '400px', marginTop: '10px' }}
+          title="PDF Viewer"
+        />
+      );
+    } else {
+      return (
+        <img
+          src={fileUrl}
+          alt="Document"
+          style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+        />
+      );
+    }
+  };
+
+  //Business Adding
 
 // Dropdown options (business nature)
 const businessNatureOptions: BusinessNatureOption[] = [
@@ -2863,16 +2803,6 @@ const businessNatureMap = {
   "WHO_FLR": "Wholesaler-Essential - Distributor - Flour",
 };
 
-
-// Handle input changes for form fields
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  setNewBusiness((prevState) => ({
-    ...prevState,
-    [name]: value,
-  }));
-};
-
 // Handle change for businessNature dropdown
 const handleDropdownChange = (selectedOption: BusinessNatureOption | null) => {
   setNewBusiness((prevState) => ({
@@ -2880,217 +2810,328 @@ const handleDropdownChange = (selectedOption: BusinessNatureOption | null) => {
     businessNature: selectedOption ? selectedOption.value : '',
   }));
 };
+  const [originalBusinesses, setOriginalBusinesses] = useState<Businesses[]>(businessPermit?.businesses || []);
+  const [businesses, setBusinesses] = useState<Businesses[]>(businessPermit?.businesses || []);
+  const [newBusiness, setNewBusiness] = useState<Businesses>({
+    _id: '',
+    businessNature: '',
+    businessType: '',
+    capitalInvestment: '',
+    lastYearGross: '',
+  });
 
-// Handle form submission (adding business to the table)
-const handleAddBusiness = () => {
-  if (newBusiness.businessNature === '') {
-    // Handle the case when businessNature is empty
-    alert("Please select a Business Nature");
-    return; // Exit the function to prevent further action
-  } else {
-    // Proceed to add the business
-    setBusinesses((prevState) => [...prevState, newBusiness]);
-    setNewBusiness({
-      businessNature: '',
-      businessType: '',
-      capitalInvestment: '',
+  const handletest = () => {
+    console.log(originalBusinesses); // Logs the current state of businesses
+    setBusinesses(originalBusinesses);
+  };
+
+  const edittest = () => {
+    console.log(businesses); // Logs the current state of businesses
+    setBusinesses(businessPermit?.businesses || []);
+  };
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setNewBusiness((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleDelete = (index: number) => {
+    const updatedBusinesses = businesses.filter((_, i) => i !== index); // Remove the business at the specific index
+    setBusinesses(updatedBusinesses); // Update the state with the new businesses list
+  };
+
+  const handleAddBusiness = () => {
+    // Validate based on business type
+    if (
+      newBusiness.businessNature.trim() &&
+      newBusiness.businessType.trim() &&
+      (newBusiness.businessType === 'New'
+        ? newBusiness.capitalInvestment.trim()  // For "new", validate capitalInvestment
+        : newBusiness.businessType === 'Renew' && newBusiness.lastYearGross.trim()) // For "renew", validate lastYearGross
+    ) {
+      const newBusinessWithId = {
+        ...newBusiness,
+        _id: Date.now().toString(), // Temporary _id for local use
+        capitalInvestment: newBusiness.capitalInvestment,  // Ensure this is treated as string
+        lastYearGross: newBusiness.lastYearGross, // Store lastYearGross as string
+      };
+  
+      // Add new business to the state
+      setBusinesses([...businesses, newBusinessWithId]);
+  
+      // Reset input fields after adding
+      setNewBusiness({
+        _id: '',
+        businessNature: '',
+        businessType: '',
+        capitalInvestment: '',
+        lastYearGross: '',
+      });
+    } else {
+      alert('Please provide valid inputs.');
+    }
+  };
+
+  const handleSaveBusinessNature = async () => {
+    if (!businessPermit) return;
+  
+    // Find deleted businesses by comparing the original and current lists
+    const deletedBusinesses = originalBusinesses.filter(
+      (original) => !businesses.some((current) => current._id === original._id)
+    );
+  
+    // Find added businesses
+    const addedBusinesses = businesses.filter((current) => 
+      !originalBusinesses.some((original) => original._id === current._id)
+    );
+    
+    // Reset _id to undefined for new businesses
+    addedBusinesses.forEach((business) => {
+      business._id = undefined;
     });
-  }
-};
+    
 
+    // Prepare data to send
+    const updatedData = {
+      businesses: addedBusinesses, // Updated list of businesses
+      deletedIds: deletedBusinesses.map((business) => business._id), // IDs of businesses to delete
+    };
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/datacontroller/updatebusinessnature/${businessPermit._id}`,
+        updatedData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        }
+      );
+  
+      if (response.status === 200) {
+        console.log(addedBusinesses);
+ 
+        alert('Successfully updated businesses');
+        window.location.reload()
+      } else {
+        console.error('Error updating businesses:', response.data.message);
+      }
+    } catch (error) {
+      console.log(addedBusinesses);
+      console.error('Error:', error);
+    }
+  };
+  // Business Adding
 
-// Handle removing a business from the table
-const handleRemoveBusiness = (index: number) => {
-  setBusinesses((prevState) => prevState.filter((_, i) => i !== index));
-};
+return (
+    <section className="DAbody">
+        <div className="DAsidebar-container">
+        <DASidebar handleLogout={handleLogout} /> {/* Pass handleLogout to DASidebar */}
+    </div>
 
-  return (
-    <section className="dashboard-container">
-      <div className="sidebar-container">
-        <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
+    <div className="DAcontent">
+            <header className='DAheader'>
+                <h1>Online Business and Work Permit Licensing System</h1>
+            </header>
+
+             {/* Tabs */}
+             <div className="tabs">
+                <button 
+                    className={`tab-button ${activeTab === 'user' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('user')}
+                >
+                    Edit Business Nature
+                </button>
+                <button 
+                    className={`tab-button ${activeTab === 'business' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('business')}
+                >
+                    View Full Business Information
+                </button>
+                <button 
+                    className={`tab-button ${activeTab === 'attachments' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('attachments')}
+                >
+                    Attachments
+                </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="tab-content">
+                {activeTab === 'user' ? (
+                    <div className="user-info">
+                        <h2>Edit Business Nature</h2>
+                        {/* Add your user information content here */}
+
+                        <h2>Add a New Business</h2>
+      <div style={{ marginBottom: '1rem' }}>
+      <label>Business Nature:</label>
+        <Select
+        
+          name="businessNature"
+          placeholder="Business Nature"
+          value={newBusiness.businessNature
+            ? businessNatureOptions.find(
+                (option) => option.value === newBusiness.businessNature
+              )
+            : null // Reset the value to null to show the placeholder
+          }
+          onChange={handleDropdownChange}
+          options={businessNatureOptions}
+        
+        />
+
+         <label>Business Type:</label>
+           <select
+      name="businessType"
+      value={newBusiness.businessType || ""}
+      onChange={handleInputChange}
+      style={{ marginRight: '0.5rem' }}
+    >
+      <option value="" disabled>Select Type</option>
+      <option value="New">New</option>
+      <option value="Renew">Renew</option>
+    </select>
+
+    <div>
+  {newBusiness.businessType === 'New' ? (
+    <div>
+      <label>Capital Investment:</label>
+      <input
+        type="number"
+        name="capitalInvestment"
+        placeholder="Capital Investment"
+        value={newBusiness.capitalInvestment || ""}
+        onChange={handleInputChange}
+        style={{ marginRight: '0.5rem' }}
+      />
+    </div>
+  ) : newBusiness.businessType === 'Renew' ? (
+    <div>
+      <label>Last Gross Sales:</label>
+      <input
+        type="number"
+        name="lastYearGross"
+        placeholder="Last Gross Sales"
+        value={newBusiness.lastYearGross || ""}
+        onChange={handleInputChange}
+        style={{ marginRight: '0.5rem' }}
+      />
+    </div>
+  ) : null}
+</div>
+        <button onClick={handleAddBusiness}>Add Business</button>
+        <button onClick={handletest}>Original Business</button>
+        <button onClick={edittest}>Edit Business</button>
+        <button onClick={handleSaveBusinessNature}>Save</button>
       </div>
 
-      <div className="content">
-        <header>
-          <h1>Business Permit Application</h1>
-        </header>
-        <form onSubmit={handleSubmit}>
-          {step === 1 && (
-            <div className="businesspermit-form">
-              <h2>Step 1: Personal Details</h2>
-              <h2>Personal Details</h2>
-              <div className="form-group">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={corporation}
-                    onChange={() => {
-                      setCorporation(!corporation);
-                      setFirstName('');
-                      setLastName('');
-                      setMiddleInitial('');
-                      setCivilStatus('Undefined');
-                      setGender('Corp');
+                        <h1>List of Businesses</h1>
+          {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Business Nature</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Type</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Capital Investment</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Last Gross Sales</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+  {businesses.map((business, index) => (
+    <tr key={business._id}>
+ <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+        {businessNatureMap[business.businessNature as keyof typeof businessNatureMap] || business.businessNature}
+      </td>
+      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+        {business.businessType}
+      </td>
+      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+        <input
+          type="number"
+          value={business.capitalInvestment || ""}
+          placeholder='---'
+          onChange={(e) => {
+            const updatedBusinesses = [...businesses];
+            updatedBusinesses[index] = {
+              ...business,
+              capitalInvestment: e.target.value,
+            };
+            setBusinesses(updatedBusinesses); // Update the state
+          }}
+          style={{ width: '70%', padding: '4px', boxSizing: 'border-box' }}
+        />
+      </td>
+      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+        <input
+          type="number"
+          value={business.lastYearGross || ""}
+          placeholder='---'
+          onChange={(e) => {
+            const updatedBusinesses = [...businesses];
+            updatedBusinesses[index] = {
+              ...business,
+              lastYearGross: e.target.value,
+            };
+            setBusinesses(updatedBusinesses); // Update the state
+          }}
+          style={{ width: '70%', padding: '4px', boxSizing: 'border-box' }}
+        />
+      </td>
+      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+      <button
+          onClick={() => handleDelete(index)}
+          style={{
+            padding: '4px 8px',
+            marginLeft: '8px',
+            backgroundColor: 'red',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Delete
+        </button>
+        </td>
+    </tr>
+  ))}
+</tbody>
+        </table>
+      ) : (
+        <div>No businesses to display.</div>
+      )}
 
-                      if (corporation) {
-                        setCompanyName(''); // Clear the company name if unchecking
-                        setCivilStatus('');
-                        setGender('');
-                      }
-                    }}
-                  />
-                  Check if Corporation
-                </label>
-                </div>
-               <div className="form-row">
-                <div className="form-group">
-                  <label>LAST NAME:</label>
+      
 
-                  <input type="text" value={lastname} onChange={(e) => setLastName(e.target.value)} required disabled={corporation} />
-                </div>
-                <div className="form-group">
-                  <label>FIRST NAME:</label>
-                  <input type="text" value={firstname} onChange={(e) => setFirstName(e.target.value)}  required disabled={corporation} />
-                </div>
-                <div className="form-group">
-                  <label>MIDDLE INITIAL:</label>
-                  <input type="text" value={middleinitial} onChange={(e) => setMiddleInitial(e.target.value)}  disabled={corporation} />
-                </div>
-                <div className="form-group">
-                  <label>Company Name:</label>
-                  <input type="text" value={companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
-                </div>
-                </div>
-               <div className="form-row">
-                <div className="form-group">
-                <label>CIVIL STATUS:</label>
-                <select
-                  value={civilstatus}
-                  onChange={(e) => setCivilStatus(e.target.value)}
-                  className="form-control"
-                >
-                  <option value="" disabled>Select Civil Status</option>
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-                  <option value="Widowed">Widowed / Widower</option>
-                  <option value="Seperated">Seperated</option>
-                  <option value="Undefined">Undefined</option>
-                </select>
-                </div>
-                <div className="form-group">
-                <label>Gender:</label>
-                <select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="form-control"
-                >
-                  <option value="" disabled>Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                  <option value="Corp">Corporation</option>
-                </select>
-                </div>
-                <div className="form-group">
-                <label>CITIZENSHIP:</label>
-                <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
-                </div>
-               <div className="form-row">
-                <div className="form-group">
-                  <label>TIN NUMBER:</label>
-                  <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
-                 </div>
-                </div>
-                </div>
-                <div className="form-group">
-                <label className="checkbox-label">
-                  <input type="checkbox" checked={representative} onChange={() => setRepresentative(!representative)} />
-                  Check if Thru Representative
-                </label>
-               </div>
-               <div className="form-row">
-                <div className="form-group">
-                    <label>Representative Full Name:</label>
-                <input type="text" value={repfullname} onChange={(e) => setRepFullName(e.target.value)} disabled={!representative} />
-                </div>
-               <div className="form-group">
-                <label>Designation/Position:</label>
-                <input type="text" value={repdesignation} onChange={(e) => setRepDesignation(e.target.value)} disabled={!representative} />
-                </div>
-                <div className="form-group">
-                <label>Representative Mobile Number:</label>
-                <input type="text" value={repmobilenumber} onChange={(e) => setRepMobileNumber(e.target.value)} disabled={!representative} />
-               </div>
-               </div>
-                <h2>Contact Information</h2>
-               <div className="form-row">
-                <div className="form-group">
-                <label>House/Bldg No./Blk and Lot</label>
-                <input type="text" value={houseandlot} onChange={(e) => setHouseandLot(e.target.value)} />
-               </div>
-                <div className="form-group">
-                <label>Building Name / Street Name</label>
-                <input type="text" value={buildingstreetname} onChange={(e) => setBuildingStreetName(e.target.value)}  />
-                </div>
-               <div className="form-group">
-                <label>Subdivision / Compound Name</label>
-                <input type="text" value={subdivision} onChange={(e) => setSubdivision(e.target.value)} />
-               </div>
-               </div>
-               <div className="form-row">
-               <div className="form-group">
-                <label>Region</label>
-                <input type="text" value={region} onChange={(e) => setRegion(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Province</label>
-                <input type="text" value={province} onChange={(e) => setProvince(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Municipality</label>
-                <input type="text" value={municipality} onChange={(e) => setMunicipality(e.target.value)} />
-              </div>
-              </div>
-              <div className="form-row">
-              <div className="form-group">
-                <label>Barangay</label>
-                <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Telephone Number</label>
-                <input type="text" value={telephonenumber} onChange={(e) => setTelephoneNumber(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>Mobile Number</label>
-                <input type="text" value={mobilenumber} onChange={(e) => setMobileNumber(e.target.value)} />
-              </div>
-              </div>
-              <div className="form-group">
-                <label>Email Address</label>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div>
-                {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
-                <button type="button" onClick={goToNextStep}>Next</button>
-              </div>
-            </div>
-          )}
-          {step === 2 && (
-            <div>
-              {/* Content for Step 2 */}
-              <div className="businesspermit-form">
-                <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
-                <h2>Step 2 Business Information</h2>
-                <div className="form-group">
+
+                        <p>{/* User Info content */}</p>
+                    </div>
+                ) : activeTab === 'business' ? (
+                    <div className="business-info">
+                        <h2>Business Information</h2>
+                        <p>{businessPermit?._id}</p>
+                        {/* Add your business information content here */}
+
+                        <div className="form-group">
                   <label>Business Name:</label>
-                  <input type="text" value={businessname} onChange={(e) => setBusinessName(e.target.value)} />
+                  <input type="text" value={businessPermit?.business.businessname} disabled/>
                 </div>
                 <div className="form-group">
                   <label>Business Scale:</label>
                   <select
-                    value={businessscale}
-                    onChange={(e) => setBusinessScale(e.target.value)}
-                    className="form-control"
+                    value={businessPermit?.business.businessscale}
+              
+                    className="form-control view-only"
+                 
+                  
+                    disabled
+                    
                   >
                     <option value="" disabled>Select Business Scale</option>
                     <option value="Micro">Micro (Not more than 3M or Having 1-9 Employees)</option>
@@ -3102,9 +3143,9 @@ const handleRemoveBusiness = (index: number) => {
                 <div className="form-group">
                   <label>Payment Mode:</label>
                   <select
-                    value={paymentmethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    value={businessPermit?.business.paymentmethod}
                     className="form-control"
+                    disabled
                   >
                     <option value="" disabled>Select Payment Method</option>
                     <option value="Annual">Annual</option>
@@ -3115,78 +3156,49 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>
-                  <input type="text" value={businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
+                  <input type="text" disabled value={businessPermit?.business.businessbuildingblocklot} />
                 </div>
                 <div className="form-group">
                   <label>Building Name/Street Name:</label>
-                  <input type="text" value={businessbuildingname} onChange={(e) => setBusinessBuildingName(e.target.value)} />
+                  <input type="text" disabled value={businessPermit?.business.businessbuildingname} />
                 </div>
                 <div className="form-group">
                   <label>Subdivision/Compound Name:</label>
-                  <input type="text" value={businesssubcompname} onChange={(e) => setBusinessSubCompName(e.target.value)}  />
+                  <input type="text" disabled value={businessPermit?.business.businesssubcompname}   />
                 </div>
                 <div className="form-group">
                   <label>Region:</label>
-                  <input type="text" value={businessregion} onChange={(e) => setBusinessRegion(e.target.value)} disabled />
+                  <input type="text"  disabled value={businessPermit?.business.businessregion} />
                 </div>
                 <div className="form-group">
                   <label>Province:</label>
-                  <input type="text" value={businessprovince} onChange={(e) => setBusinessProvince(e.target.value)} disabled />
+                  <input type="text"  disabled value={businessPermit?.business.businessprovince} />
                 </div>
                 <div className="form-group">
                   <label>City/Municipality:</label>
-                  <input type="text" value={businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
+                  <input type="text"  disabled value={businessPermit?.business.businessmunicipality} />
                 </div>
                 <div className="form-group">
                   <label>Barangay:</label>
-                  <input type="text" value={businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
+                  <input type="text" disabled value={businessPermit?.business.businessbarangay} />
                 </div>
 
                 <div className="form-group">
                   <label>Zip:</label>
-                  <input type="text" value={businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
+                  <input type="text" disabled value={businessPermit?.business.businesszip} />
                 </div>
                 <div className="form-group">
                   <label>Contact Number:</label>
-                  <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
-                  Check if Same as Owner Info
-                  <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setBusinessContactNumber(mobilenumber); // Set the value when checked
-    } else {
-      setBusinessContactNumber(''); // Clear the value when unchecked
-    }
-  }}
-/>
+                  <input type="text" disabled value={businessPermit?.business.businesscontactnumber} />
+
 
                 </div>
                 <h2>Necessities Information</h2>
                 <div className="form-group">
                   <label>Ownership Type:</label>
                   <select
-                    value={ownershiptype}
-                    onChange={(e) => {
-                      setOwnershipType(e.target.value);
-                      if (e.target.value === "COOP") {
-                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
-                        setDTIRegistrationDate('');
-                        setDTIRegistrationExpDate('');
-                        setSECRegistrationNum('');
-                      }
-                      if (e.target.value === "CORP" || e.target.value === "INST" || e.target.value === "PART") {
-                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
-                        setDTIRegistrationDate('');
-                        setDTIRegistrationExpDate('');
-                        setBIRRegistrationNum('');
-                      }
-                      if (e.target.value === "SOLE") {
-                        setSECRegistrationNum('');
-                        setBIRRegistrationNum('');
-
-                      }
-                    }}
+                    disabled 
+                    value={businessPermit?.business.ownershiptype}
                     className="form-control"
                   >
                     <option value="" disabled>Select Ownership Type</option>
@@ -3199,40 +3211,41 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Agency Registered No:</label>
-                  <input type="text" value={agencyregistered} onChange={(e) => setAgencyRegistered(e.target.value)} />
+                  <input type="text" disabled value={businessPermit?.business.agencyregistered} />
                 </div>
                 <div className="form-group">
                   <label>DTI Registration No:</label>
                   <input
                     type="text"
-                    value={dtiregistrationnum}
-                    onChange={(e) => setDTIRegistrationNum(e.target.value)}
-                    placeholder="Enter DTI Registration No"
-                    disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"}
+                    disabled value={businessPermit?.business.dtiregistrationnum}
+
+                
                   />
                 </div>
                 <div className="form-group">
                   <label>DTI Registration Date:</label>
-                  <input type="date" value={dtiregistrationdate} onChange={(e) => setDTIRegistrationDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
+                  <input type="date" disabled value={businessPermit?.business.dtiregistrationdate}/>
                 </div>
                 <div className="form-group">
                   <label>DTI Expiration Date:</label>
-                  <input type="date" value={dtiregistrationexpdate} onChange={(e) => setDTIRegistrationExpDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
+                  <input type="date"  disabled value={businessPermit?.business.dtiregistrationexpdate} />
                 </div>
                 <div className="form-group">
                   <label>SEC Registration No:</label>
-                  <input type="text" value={secregistrationnum} onChange={(e) => setSECRegistrationNum(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "SOLE"} />
+                  <input type="text"  disabled value={businessPermit?.business.secregistrationnum} />
                 </div>
                 <div className="form-group">
                   <label>BIR Registration No:</label>
-                  <input type="text" value={birregistrationnum} onChange={(e) => setBIRRegistrationNum(e.target.value)} disabled={ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || ownershiptype === "SOLE"} />
+                  <input type="text" disabled value={businessPermit?.business.birregistrationnum}  />
                 </div>
                 <div className="form-group">
                   <label>Industry Sector:</label>
                   <select
-                    value={industrysector}
-                    onChange={(e) => setIndustrySector(e.target.value)}
+                    disabled 
+                    value={businessPermit?.business.industrysector}
+                   
                     className="form-control"
+                    
                   >
                     <option value="EL">Electronic</option>
                     <option value="CN">Construction</option>
@@ -3596,9 +3609,11 @@ const handleRemoveBusiness = (index: number) => {
                 <div className="form-group">
                   <label>Business Operation:</label>
                   <select
-                    value={businessoperation}
-                    onChange={(e) => setBusinessOperation(e.target.value)}
+                    disabled
+                     value={businessPermit?.business.businessoperation}
+                   
                     className="form-control"
+                
                   >
                     <option value="Daytime">DAYTIME</option>
                     <option value="Nightshift">NIGHTSHIFT</option>
@@ -3608,259 +3623,177 @@ const handleRemoveBusiness = (index: number) => {
                 <div className="form-group">
                   <label>Business Type:</label>
                   <select
-                    value={typeofbusiness}
-                    onChange={(e) => setTypeofBusiness(e.target.value)}
+                    disabled 
+                    value={businessPermit?.business.typeofbusiness}
+                
                     className="form-control"
+                    
                   >
                     <option value="Main">MAIN</option>
                     <option value="Franchise">FRANCHISE</option>
                     <option value="Branch">BRANCH</option>
                   </select>
                 </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
+                        <p>{/* Business Info content */}</p>
+                    </div>
+                ) : activeTab === 'attachments' ? (
+                    <div className="attachments-info">
+                        <h2>Attachments</h2>
+                        {/* Add your attachments content here */}
 
-              </div>
+                        {/* Document 1 */}
+<p>
+  Document 1: {businessPermit?.files.document1 || 'Not uploaded'}
+
+  {businessPermit?.files.document1 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document1, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document1 === newFileUrl;
+          return {
+            ...prev,
+            document1: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document1 ? 'Close' : 'View'}
+    </button>
+  )}
+
+</p>
+
+{renderFile( selectedFiles.document1)}
+
+{/* Document 2 */}
+<p>
+  Document 2: {businessPermit?.files.document2 || 'Not uploaded'}
+
+  {businessPermit?.files.document2 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document2, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document2 === newFileUrl;
+          return {
+            ...prev,
+            document2: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document2 ? 'Close' : 'View'}
+    </button>
+  )}
+</p>
+{renderFile(selectedFiles.document2)}
+
+
+{/* Document 3 */}
+<p>
+  Document 3: {businessPermit?.files.document3 || 'Not uploaded'}
+
+  {businessPermit?.files.document3 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document3, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document3 === newFileUrl;
+          return {
+            ...prev,
+            document3: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document3 ? 'Close' : 'View'}
+    </button>
+  )}
+</p>
+
+{renderFile(selectedFiles.document3)}
+
+
+{/* Document 4 */}
+<p>
+  Document 4: {businessPermit?.files.document4 || 'Not uploaded'}
+
+  {businessPermit?.files.document4 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document4, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document4 === newFileUrl;
+          return {
+            ...prev,
+            document4: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document4 ? 'Close' : 'View'}
+    </button>
+  )}
+</p>
+
+{renderFile(selectedFiles.document4)}
+
+{/* Document 5 */}
+<p>
+  Document 5: {businessPermit?.files.document5 || 'Not uploaded'}
+
+  {businessPermit?.files.document5 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document5, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document5 === newFileUrl;
+          return {
+            ...prev,
+            document5: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document5 ? 'Close' : 'View'}
+    </button>
+  )}
+</p>
+
+{renderFile( selectedFiles.document5)}
+
+{/* Document 6 */}
+<p>
+  Document 6: {businessPermit?.files.document6 || 'Not uploaded'}
+
+  {businessPermit?.files.document6 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document6, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document6 === newFileUrl;
+          return {
+            ...prev,
+            document6: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document6 ? 'Close' : 'View'}
+    </button>
+  )}
+</p>
+
+{renderFile(selectedFiles.document6)}
+                        <p>{/* Attachments content */}</p>
+                    </div>
+                ) : null}
             </div>
-          )}
-          {step === 3 && (
-            <div>
-              {/* Content for Step 3 */}
-              <div className="businesspermit-form">
-                <button type="button" onClick={goToPreviousStep}>Backe</button>
-                <h2>Step 3 Other Information</h2>
-                <h2>Other Business Information</h2>
-                <div className="form-group">
-                  <label>Date Established:</label>
-                  <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
-                  <label>Check if Same as DTI</label>
-                  <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setDateEstablished(dtiregistrationdate); // Set the value when checked
-    } else {
-      setDateEstablished(''); // Clear the value when unchecked
-    }
-  }}
-/>
-                </div>
-                <div className="form-group">
-                  <label>Start Date:</label>
-                  <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
-                  <label>Check if Same as DTI</label>
-                  <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setStartDate(dtiregistrationdate); // Set the value when checked
-    } else {
-      setStartDate(''); // Clear the value when unchecked
-    }
-  }}
-/>
-                </div>
-                <div className="form-group">
-                  <label>Occupancy:</label>
-                  <select
-                    value={occupancy}
-                    onChange={(e) => setOccupancy(e.target.value)}
-                    className="form-control"
-                  >
-                    <option value="" disabled>Select Occupancy</option>
-                    <option value="Agree">Agree To Use</option>
-                    <option value="Owned">Owned</option>
-                    <option value="Rented">Rented</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Business Type:</label>
-                  <select
-                    value={otherbusinesstype}
-                    onChange={(e) => setOtherBusinessType(e.target.value)}
-                    className="form-control"
-                  >
-                    <option value="" disabled>Select Business Type</option>
-                    <option value="COMM">COMMERCIAL</option>
-                    <option value="INDUST">INDUSTRIAL</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Email Address:</label>
-                  <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Business Area:</label>
-                  <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Lot Area:</label>
-                  <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>No of Workers:</label>
-                  Male:
-                  <input type="number" value={numofworkermale} onChange={handleMaleChange} /> 
-                  Female:
-                  <input type="number" value={numofworkerfemale} onChange={handleFemaleChange} />
-                </div>
-                <div className="form-group">
-                  <label>Total:</label>
-                  <input type="text" value={numofworkertotal} readOnly placeholder='Total Workers'/>
-                </div>
-                <div className="form-group">
-                  <label>Employees residing within LGU:</label>
-                  <input type="text" value={numofworkerlgu} onChange={(e) => setNumofWorkerLGU(e.target.value)} />
-                </div>
-                <h2>Fill up only if Business Place is Rented</h2>
-                <div className="form-group">
-                  <label>Lessor's Full Name:</label>
-                  <input type="text" value={lessorfullname} onChange={(e) => setLessorFullName(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} />
-                </div>
-                <div className="form-group">
-                  <label>Lessor's Mobile Number:</label>
-                  <input type="text" value={lessormobilenumber} onChange={(e) => setLessorMobileNumber(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
-                </div>
-                <div className="form-group">
-                  <label>Monthly Rent:</label>
-                  <input type="text" value={monthlyrent} onChange={(e) => setMonthlyRent(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
-                </div>
-                <div className="form-group">
-                  <label>Lessor's Full Address:</label>
-                  <input type="text" value={lessorfulladdress} onChange={(e) => setLessorFullAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} />
-                </div>
-                <div className="form-group">
-                  <label>Email Address:</label>
-                  <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
-                </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
-              </div>
-            </div>
-          )}
-          {step === 4 && (
-            <div>
-              {/* Content for Step 4 */}
-              <div className="businesspermit-form">
-                <button type="button" onClick={goToPreviousStep}>Backd</button>
-                <h2>Step 4 Map Location</h2>
-                <h4>Map Location</h4>
-
-                <MapLocation initialLat={lat} initialLng={lng} onLocationChange={handleLocationChange} />
-
-                <div style={{ marginTop: '10px' }}>
-                  <label>
-                    Latitude:
-                    <input type="text" value={lat} readOnly />
-                  </label>
-                  <br />
-                  <label>
-                    Longitude:
-                    <input type="text" value={lng} readOnly />
-                  </label>
-                </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
-              </div>
-            </div>
-          )}
-          {step === 5 && (
-            <div>
-              <div className="businesspermit-form">
-                {/* Content for Step 5 */}
-                <button type="button" onClick={goToPreviousStep}>Backc</button>
-                <h2>Step 5 Business Nature</h2>
-                <Select
-        name="businessNature"
-        value={newBusiness.businessNature
-          ? businessNatureOptions.find(
-              (option) => option.value === newBusiness.businessNature
-            )
-          : null // Reset the value to null to show the placeholder
-        }
-        onChange={handleDropdownChange}
-        options={businessNatureOptions}
-        placeholder="Select or Type Business Nature"
-      />
-
-      {/* Input for Business Type */}
-      <input
-        type="text"
-        name="businessType"
-        placeholder="Business Type"
-        value={newBusiness.businessType = "New"}
-        disabled
-        onChange={handleInputChange}
-      />
-
-      {/* Input for Capital Investment */}
-      <input
-        type="number"
-        name="capitalInvestment"
-        placeholder="Capital Investment"
-        value={newBusiness.capitalInvestment}
-        onChange={handleInputChange}
-      />
-
-      {/* Add Business Button */}
-      <button onClick={(e) => {
-                             e.preventDefault(); // Prevents default form submission or button behavior
-                             handleAddBusiness(); // Calls your custom function
-                            }}>Add Business</button>
-
-      <h2>Businesses to Add</h2>
-
-      {/* Table to display added businesses */}
-      <table className="permit-table">
-        <thead>
-          <tr>
-            <th>Business Nature</th>
-            <th>Business Type</th>
-            <th>Capital Investment</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {businesses.map((business, index) => (
-            <tr key={index}>
-              <td>{businessNatureMap[business.businessNature as keyof typeof businessNatureMap] || business.businessNature}</td>
-              <td>{business.businessType}</td>
-              <td>{business.capitalInvestment}</td>
-              <td>
-                <button onClick={(e) => {handleRemoveBusiness(index); e.preventDefault();}}>Remove</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-                <button className="nextbutton" type="button" onClick={goToNextStep}>Next</button>
-
-              </div>
-            </div>
-          )}
-          {step === 6 && (
-            <div>
-              <div className="businesspermit-form">
-                {/* Content for Step 6 */}
-                <button className="back-button"type="button" onClick={goToPreviousStep}>Back</button>
-                <label>Upload DTI / SEC / CDA:</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
-                <label>Occupancy Permit (Optional)</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
-                <label>Lease Contract (if rented) / Tax Declaration (If Owned)</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
-                <label>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
-                <label>No file chosen Owner's ID</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
-                <label>Picture of Establishment (Perspective View)</label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
-                <button type="submit">Submit</button>
-              </div>
-            </div>
-          )}
-        </form>
-      </div>
+        </div>
     </section>
-  );
+);
+
 };
 
-export default BusinessPermit;
+export default DataControllerEditBusinessNature;
