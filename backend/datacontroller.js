@@ -459,6 +459,28 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     }
   });
 
+  router.put('/updatebusinessinfoPermit/:id', async (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body; // Updated fields from frontend
+  
+    try {
+      const updatedPermit = await BusinessPermit.findByIdAndUpdate(
+        id,
+        { $set: updatedData }, // Use $set to update only specified fields
+        { new: true, runValidators: true } // Return updated document and validate schema
+      );
+  
+      if (!updatedPermit) {
+        return res.status(404).json({ error: 'Permit not found' });
+      }
+  
+      res.status(200).json(updatedPermit);
+    } catch (error) {
+      console.error('Error updating permit:', error);
+      res.status(500).json({ error: 'Failed to update permit' });
+    }
+  });
+
 
   // Route to update business permit documents
 router.post('/updatebusinessattachment/:id', upload.fields([
@@ -472,6 +494,7 @@ router.post('/updatebusinessattachment/:id', upload.fields([
   try {
     const permitId = req.params.id;
     const files = req.files;
+    const { remarksdoc1, remarksdoc2, remarksdoc3, remarksdoc4, remarksdoc5, remarksdoc6} = req.body; // Extract remarks from the request body
 
     if (!permitId) {
       return res.status(400).json({ message: 'Permit ID is required' });
@@ -487,6 +510,13 @@ router.post('/updatebusinessattachment/:id', upload.fields([
     if (files.document5) updates['files.document5'] = files.document5[0].filename;
     if (files.document6) updates['files.document6'] = files.document6[0].filename;
 
+    if (remarksdoc1) updates['files.remarksdoc1'] = remarksdoc1;
+    if (remarksdoc2) updates['files.remarksdoc2'] = remarksdoc2;
+    if (remarksdoc3) updates['files.remarksdoc3'] = remarksdoc3;
+    if (remarksdoc4) updates['files.remarksdoc4'] = remarksdoc4;
+    if (remarksdoc5) updates['files.remarksdoc5'] = remarksdoc5;
+    if (remarksdoc6) updates['files.remarksdoc6'] = remarksdoc6;
+
     // Update the MongoDB document
     const updatedPermit = await BusinessPermit.findByIdAndUpdate(
       permitId,
@@ -500,6 +530,46 @@ router.post('/updatebusinessattachment/:id', upload.fields([
     });
   } catch (error) {
     console.error('Error updating permit:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/updatebusinessnature/:id', async (req, res) => {
+  const { id } = req.params;
+  const { businesses, deletedIds } = req.body;
+
+  try {
+    const permit = await BusinessPermit.findById(id);
+
+    if (!permit) {
+      return res.status(404).json({ message: 'Business permit not found' });
+    }
+
+    // Remove deleted businesses
+    permit.businesses = permit.businesses.filter(
+      (business) => !deletedIds.includes(business._id.toString())
+    );
+
+    // Update existing businesses or add new ones
+    businesses.forEach((business) => {
+      const index = permit.businesses.findIndex(
+        (b) => b._id.toString() === business._id
+      );
+
+      if (index !== -1) {
+        // Update existing business
+        permit.businesses[index] = business;
+      } else {
+        // Add new business
+        permit.businesses.push(business);
+      }
+    });
+
+    await permit.save();
+
+    res.status(200).json({ message: 'Businesses updated successfully', data: permit });
+  } catch (error) {
+    console.error('Database update error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

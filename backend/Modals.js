@@ -124,6 +124,7 @@ typeofbusiness: String,
       businessNature: { type: String,},
       businessType: { type: String,},
       capitalInvestment: { type: Number,},
+      lastYearGross: { type: Number,}
     },
   ],
   files: {
@@ -133,6 +134,13 @@ typeofbusiness: String,
     document4: String,
     document5: String,
     document6: String,
+    remarksdoc1: String,
+    remarksdoc2: String,
+    remarksdoc3: String,
+    remarksdoc4: String,
+    remarksdoc5: String,
+    remarksdoc6: String,
+    
   },
   department:{
     Zoning: String,

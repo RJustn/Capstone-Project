@@ -73,10 +73,32 @@ const DataControllerForAssessment: React.FC = () => {
 
                 <div className="button-container"> {/* Centering container */}
                     <a href="/DAforassessmentBP" className="DAbusinesspermitbutton">
-                        For Assessment Business Permit
+                        For Assessment New Business Permit
                     </a>
+                    
                     <a href="/DAforassessmentWP" className="DAworkpermitbutton">
-                        For Assessment Working Permit
+                        For Assessment New Working Permit
+                    </a>
+          
+            </div>
+            <div className="button-container"> {/* Centering container */}
+                    <a href="/DAforassessmentBP" className="DAbusinesspermitbutton">
+                        For Assessment Renew Business Permit
+                    </a>
+                    
+                    <a href="/DAforassessmentWP" className="DAworkpermitbutton">
+                        For Assessment Renew Working Permit
+                    </a>
+          
+            </div>
+
+            <div className="button-container"> {/* Centering container */}
+                    <a href="/DAforassessmentBP" className="DAbusinesspermitbutton">
+                        View All For Assessment Business Permit
+                    </a>
+                    
+                    <a href="/DAforassessmentWP" className="DAworkpermitbutton">
+                        View All For Assessment Working Permit
                     </a>
           
             </div>

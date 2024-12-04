@@ -41,6 +41,7 @@ import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 import DataControllerViewBusinessApplicationDetails from './pages/datacontroller/DAviewbusinessapplicationdetails';
 import DataControllerAccount from './pages/datacontroller/DAaccount';
+import DataControllerEditBusinessNature from './pages/datacontroller/DAEditBusinessNature';
 
 // ADMIN PAGES
 import AdminDashboard from './pages/admin/Adashboard';
@@ -96,6 +97,8 @@ const App: React.FC = () => {
         <Route path="/DAviewbusinessapplicationdetails/" element={<DataControllerViewBusinessApplicationDetails />} />
         <Route path="/DAviewbusinessapplicationdetails/:id" element={<DataControllerViewBusinessApplicationDetails />} />
         <Route path="/DAaccount" element={<DataControllerAccount />} />
+        <Route path="/DAEditBusinessNature" element={<DataControllerEditBusinessNature />} />
+        <Route path="/DAEditBusinessNature/:id" element={<DataControllerEditBusinessNature />} />
 
         {/* Routes for Superadmin */}
   

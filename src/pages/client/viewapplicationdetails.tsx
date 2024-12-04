@@ -103,15 +103,6 @@ const ViewApplicationDetails: React.FC = () => {
 
     fetchWorkPermitDetails(); // Call the fetch function
 
-
-
-
-
-
-
-
-
-
   }, [id, token, navigate]);
 
   const handleLogout = async () => {

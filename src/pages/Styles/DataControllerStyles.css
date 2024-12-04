@@ -309,6 +309,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000; 
   }
   
   .modal-content {
@@ -318,6 +319,7 @@
     max-width: 600px;
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001; 
   }
   
   .file-viewer {
@@ -336,3 +338,111 @@
   button:hover {
     background-color: #0056b3;
   }
+
+
+
+
+
+
+
+
+
+
+  /*test*/
+  .viewdetailsmodal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);  /* Slightly darker background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .viewdetailscontent {
+    background: linear-gradient(145deg, #f9f9f9, #e0e0e0);  /* Gradient effect */
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);  /* Stronger shadow for depth */
+    position: relative;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+  }
+  
+  /* Add an "active" class to trigger animation */
+  .viewdetailsmodal .viewdetailscontent.active {
+    transform: scale(1);
+    opacity: 1;
+  }
+  
+  /* Optional: Add a close button */
+  .viewdetailscontent .closeview {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff4c4c;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .viewdetailscontent .closeview:hover {
+    background: #ff1c1c;
+  }
+  
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.tab-content {
+    padding: 20px;
+    border-top: 2px solid #ccc;
+}
+
+.user-info,
+.business-info {
+    display: block;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.view-only {
+    background-color: #f9f9f9;  /* Light gray background to show it is non-editable */
+    pointer-events: none;       /* Prevent user from interacting with the select box */
+    border: 1px solid #ccc;     /* Optional: Add a border to keep it consistent */
+    color: #555;                /* Optional: Adjust text color */
+}
+
+/* Optional: To make the selected option stand out */
+.view-only option {
+    color: #555;  /* Adjust the text color of the selected option */
+}

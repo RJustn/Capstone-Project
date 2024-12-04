@@ -2,7 +2,7 @@ import '../Styles/DataControllerStyles.css';
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';// Import your CSS file
+import axios from 'axios';
 export interface PersonalInformation {
     lastName: string;
     firstName: string;
@@ -327,12 +327,17 @@ return (
 
       <h1>Documents</h1>
       <div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
-        <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-        <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-        <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-        <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
-        {/* Continue with other documents */}
-        </div>
+  {workPermit.formData.files ? (
+    <>
+      <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+      <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+      <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
+      <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+    </>
+  ) : (
+    <p>No documents available.</p>
+  )}
+</div>
 
       <div>
   {workPermit.receipt?.receiptFile && (
