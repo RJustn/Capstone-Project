@@ -413,29 +413,28 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     await checkExpired(); // Call the function to check for expired permits
   });
   
-  
-  router.get('/chart/working-permits', async (req, res) => {
-    try {
-      const workingPermits = await WorkPermit.countDocuments();
-      res.json({ label: 'Working Permit', count: workingPermits });
-    } catch (error) {
-      console.error('Error fetching working permit data:', error);
-      res.status(500).json({ message: 'Error fetching working permit data' });
-    }
-  });
-  
-  // Endpoint for fetching the count of business permits
-  router.get('/chart/business-permits', async (req, res) => {
-    try {
-      const businessPermits = await BusinessPermit.countDocuments();
-      res.json({ label: 'Business Permit', count: businessPermits });
-    } catch (error) {
-      console.error('Error fetching business permit data:', error);
-      res.status(500).json({ message: 'Error fetching business permit data' });
-    }
-  });
 
+router.put('/updateworkingPermit/:id', async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body; // Updated fields from frontend
 
+  try {
+    const updatedPermit = await WorkPermit.findByIdAndUpdate( // Corrected model
+      id,
+      { $set: updatedData }, // Use $set to update only specified fields
+      { new: true, runValidators: true } // Return updated document and validate schema
+    );
+
+    if (!updatedPermit) {
+      return res.status(404).json({ error: 'Permit not found' });
+    }
+
+    res.status(200).json(updatedPermit);
+  } catch (error) {
+    console.error('Error updating permit:', error);
+    res.status(500).json({ error: 'Failed to update permit' });
+  }
+});
 
   router.put('/updatebusinessownerPermit/:id', async (req, res) => {
     const { id } = req.params;
@@ -573,4 +572,151 @@ router.post('/updatebusinessnature/:id', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+router.post('/updateworkpermitattachments/:id', upload.fields([
+  { name: 'document1', maxCount: 1 },
+  { name: 'document2', maxCount: 1 },
+  { name: 'document3', maxCount: 1 },
+  { name: 'document4', maxCount: 1 },
+]), async (req, res) => {
+  try {
+    const permitId = req.params.id;
+    const files = req.files;
+    const { remarksdoc1, remarksdoc2, remarksdoc3, remarksdoc4 } = req.body; // Extract remarks from the request body
+
+    if (!permitId) {
+      console.error('Permit ID is required');
+      return res.status(400).json({ message: 'Permit ID is required' });
+    }
+
+    const updates = {};
+
+    // Update each document field if a new file is uploaded
+    if (files.document1) updates['files.document1'] = files.document1[0].filename;
+    if (files.document2) updates['files.document2'] = files.document2[0].filename;
+    if (files.document3) updates['files.document3'] = files.document3[0].filename;
+    if (files.document4) updates['files.document4'] = files.document4[0].filename;
+
+    if (remarksdoc1) updates['files.remarksdoc1'] = remarksdoc1;
+    if (remarksdoc2) updates['files.remarksdoc2'] = remarksdoc2;
+    if (remarksdoc3) updates['files.remarksdoc3'] = remarksdoc3;
+    if (remarksdoc4) updates['files.remarksdoc4'] = remarksdoc4;
+
+    console.log('Permit ID:', permitId); // Log permit ID
+    console.log('Files:', files); // Log files
+    console.log('Remarks:', { remarksdoc1, remarksdoc2, remarksdoc3, remarksdoc4 }); // Log remarks
+    console.log('Updates:', updates); // Log updates for debugging
+
+    // Update the MongoDB document
+    const updatedPermit = await WorkPermit.findByIdAndUpdate(
+      permitId,
+      { $set: updates },
+      { new: true }
+    );
+
+    if (!updatedPermit) {
+      console.error('Work permit not found');
+      return res.status(404).json({ message: 'Work permit not found' });
+    }
+
+    console.log('Updated Permit:', updatedPermit); // Log the updated permit
+
+    res.status(200).json({
+      message: 'Work permit updated successfully',
+      updatedPermit,
+    });
+  } catch (error) {
+    console.error('Error updating permit:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Endpoint for fetching the count of new working permits
+router.get('/newWorkingpermits', async (req, res) => {
+  try {
+    const newPermitsCount = await WorkPermit.countDocuments({ classification: 'New' });
+    res.json({ count: newPermitsCount });
+  } catch (error) {
+    console.error('Error fetching new working permits data:', error);
+    res.status(500).json({ message: 'Error fetching new working permits data' });
+  }
+});
+
+// Endpoint for fetching the count of renewal working permits
+router.get('/renewalWorkingpermits', async (req, res) => {
+  try {
+    const renewalPermitsCount = await WorkPermit.countDocuments({ classification: 'Renewal' });
+    res.json({ count: renewalPermitsCount });
+  } catch (error) {
+    console.error('Error fetching renewal working permits data:', error);
+    res.status(500).json({ message: 'Error fetching renewal working permits data' });
+  }
+});
+
+// Endpoint for fetching the count of new business permits
+router.get('/newBusinesspermits', async (req, res) => {
+  try {
+    const newBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'New' });
+    res.json({ count: newBusinessPermitsCount });
+  } catch (error) {
+    console.error('Error fetching new business permits data:', error);
+    res.status(500).json({ message: 'Error fetching new business permits data' });
+  }
+});
+
+// Endpoint for fetching the count of renewal business permits
+router.get('/renewalBusinesspermits', async (req, res) => {
+  try {
+    const renewalBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'Renewal' });
+    res.json({ count: renewalBusinessPermitsCount });
+  } catch (error) {
+    console.error('Error fetching renewal business permits data:', error);
+    res.status(500).json({ message: 'Error fetching renewal business permits data' });
+  }
+});
+
+// Endpoint for fetching the count of working permits
+router.get('/workingpermitsChart', async (req, res) => {
+  try {
+    const workingPermits = await WorkPermit.countDocuments();
+    res.json({ label: 'Working Permit', count: workingPermits });
+  } catch (error) {
+    console.error('Error fetching working permit data:', error);
+    res.status(500).json({ message: 'Error fetching working permit data' });
+  }
+});
+
+// Endpoint for fetching the count of business permits
+router.get('/businesspermitsChart', async (req, res) => {
+  try {
+    const businessPermits = await BusinessPermit.countDocuments();
+    res.json({ label: 'Business Permit', count: businessPermits });
+  } catch (error) {
+    console.error('Error fetching business permit data:', error);
+    res.status(500).json({ message: 'Error fetching business permit data' });
+  }
+});
+
+// For the 
+// router.get('/dashboard/workpermitdata', async (req, res) => {
+//   try {
+//     const totalPermitApplications = await WorkPermit.countDocuments();
+//     const totalRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renewal' });
+//     const totalCollections = await WorkPermit.aggregate([
+//       { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+//     ]);
+//     const totalReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
+
+//     res.json({
+//       totalPermitApplications,
+//       totalRenewalApplications,
+//       totalCollections: totalCollections[0]?.total || 0,
+//       totalReleased
+//     });
+//   } catch (error) {
+//     console.error('Error fetching dashboard stats:', error);
+//     res.status(500).json({ message: 'Error fetching dashboard stats' });
+//   }
+// });
+
   module.exports = router;

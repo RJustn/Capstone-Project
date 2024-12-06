@@ -10,7 +10,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, Linear
 const DAdashboard: React.FC = () => {
   const navigate = useNavigate();
 
-  const [lineChartData, setLineChartData] = useState({
+  const [WorkingPermitChart, setWorkingpermitchart] = useState({
     labels: [] as string[],
     datasets: [
       {
@@ -32,27 +32,34 @@ const DAdashboard: React.FC = () => {
     ],
   });
 
-  // Generate labels for years starting from 2010 to the current year
-const generateYearLabels = () => {
-  const currentYear = new Date().getFullYear();
-  const years = [];
-  for (let year = 2010; year <= currentYear; year++) {
-    years.push(year.toString());
-  }
-  return years;
-};
-
-// Mock data: Replace this with actual data from your backend if available
-const generateYearlyData = () => {
-  return generateYearLabels().map(() => Math.floor(Math.random() * 1000)); // Random data
-};
-
-  const [totalPermitsData] = useState({
-    labels: generateYearLabels(), 
+  const [BusinessPermitChart, setBusinessPermitChart] = useState({
+    labels: [] as string[],
     datasets: [
       {
-        label: 'Total Permits Released',
-        data: generateYearlyData(),
+        label: 'New Permits',
+        data: [] as number[],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        fill: false,
+      },
+      {
+        label: 'Renewal Permits',
+        data: [] as number[],
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1,
+        fill: false,
+      },
+    ],
+  });
+
+  const [totalWorkingPermitsData, setTotalWorkingPermitsData] = useState({
+    labels: [] as string[],
+    datasets: [
+      {
+        label: 'Total Working Permits Released',
+        data: [] as number[],
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
@@ -60,6 +67,21 @@ const generateYearlyData = () => {
       },
     ],
   });
+
+  const [totalBusinessPermitsData, settotalBusinessPermit] = useState({
+    labels: [] as string[],
+    datasets: [
+      {
+        label: 'Total Working Permits Released',
+        data: [] as number[],
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        fill: true, // Filled area under the line
+      },
+    ],
+  });
+
 
   const [dashboardData, setDashboardData] = useState({
     totalPermitApplications: '',
@@ -96,44 +118,129 @@ const generateYearlyData = () => {
     checkAuth();
   }, [navigate]);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [workingResponse, businessResponse] = await Promise.all([
-          fetch('/chart/working-permits', { method: 'GET', credentials: 'include' }),
-          fetch('/chart/business-permits', { method: 'GET', credentials: 'include' })
+        const [
+          newPermitsResponse,
+          renewalPermitsResponse,
+          workingPermitsResponse,
+          businessPermitsResponse,
+          newBusinessPermitsResponse,
+          renewalBusinessPermitsResponse
+        ] = await Promise.all([
+          fetch('http://localhost:3000/datacontroller/newWorkingpermits', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/renewalWorkingpermits', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/workingpermitsChart', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/businesspermitsChart', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/newBusinesspermits', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' })
         ]);
 
-        if (workingResponse.ok && businessResponse.ok) {
-          const workingData = await workingResponse.json();
-          const businessData = await businessResponse.json();
+        if (!newPermitsResponse.ok) {
+          console.error('Error fetching new permits data:', newPermitsResponse.statusText);
+        }
+        if (!renewalPermitsResponse.ok) {
+          console.error('Error fetching renewal permits data:', renewalPermitsResponse.statusText);
+        }
+        if (!workingPermitsResponse.ok) {
+          console.error('Error fetching working permits data:', workingPermitsResponse.statusText);
+        }
+        if (!businessPermitsResponse.ok) {
+          console.error('Error fetching business permits data:', businessPermitsResponse.statusText);
+        }
+        if (!newBusinessPermitsResponse.ok) {
+          console.error('Error fetching new business permits data:', newBusinessPermitsResponse.statusText);
+        }
+        if (!renewalBusinessPermitsResponse.ok) {
+          console.error('Error fetching renewal business permits data:', renewalBusinessPermitsResponse.statusText);
+        }
 
-          const processedData = {
+        if (newPermitsResponse.ok && renewalPermitsResponse.ok && workingPermitsResponse.ok && businessPermitsResponse.ok && newBusinessPermitsResponse.ok && renewalBusinessPermitsResponse.ok) {
+          const newPermitsData = await newPermitsResponse.json();
+          const renewalPermitsData = await renewalPermitsResponse.json();
+          const workingPermitsData = await workingPermitsResponse.json();
+          const businessPermitsData = await businessPermitsResponse.json();
+          const newBusinessPermitsData = await newBusinessPermitsResponse.json();
+          const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json();
+
+          setWorkingpermitchart({
             labels: ['Permits'],
             datasets: [
               {
-                label: 'Business Permits',
-                data: [businessData.count],
+                label: 'New Permits',
+                data: [newPermitsData.count],
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
-                fill: false,
+                fill: true,
               },
               {
-                label: 'Working Permits',
-                data: [workingData.count],
+                label: 'Renewal Permits',
+                data: [renewalPermitsData.count],
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
-                fill: false,
+                fill: true,
               },
             ],
-          };
-          setLineChartData(processedData);
+          });
 
+          setBusinessPermitChart({
+            labels: ['Permits'],
+            datasets: [
+              {
+                label: 'New Business Permits',
+                data: [newBusinessPermitsData.count],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: true,
+              },
+              {
+                label: 'Renewal Business Permits',
+                data: [renewalBusinessPermitsData.count],
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+                fill: true,
+              },
+            ],
+          });
+
+          setTotalWorkingPermitsData({
+            labels: ['Permits'],
+            datasets: [
+              {
+                label: 'Total Permits Released',
+                data: [workingPermitsData.count],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                fill: true,
+              },
+            ],
+          });
+
+          settotalBusinessPermit({
+            labels: ['Permits'],
+            datasets: [
+              {
+                label: 'Total Business Permits Released',
+                data: [businessPermitsData.count],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                fill: true,
+              },
+            ],
+          });
+
+        
           const dashboardResponse = await fetch('/dashboard/data', { method: 'GET', credentials: 'include' });
           if (dashboardResponse.ok) {
-            const dashboardData = await dashboardResponse.json();
+            const WorkdashboardData = await dashboardResponse.json();
             setDashboardData({
               totalPermitApplications: dashboardData.totalPermitApplications,
               totalRenewalApplications: dashboardData.totalRenewalApplications,
@@ -191,18 +298,18 @@ const generateYearlyData = () => {
 
         <div className="DAstats-chart-container">
           <div className="DAstats">
-            <div>{`Total Permit Applications for 2024: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications for 2024: ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections 2024: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
+            <div>{`Total Permit Applications: ${dashboardData.totalPermitApplications}`}</div>
+            <div>{`Total Renewal Applications : ${dashboardData.totalRenewalApplications}`}</div>
+            <div>{`Total Collections: ${dashboardData.totalCollections}`}</div>
+            <div>{`Total Released: ${dashboardData.totalReleased}`}</div>
           </div>
           
           <div className="DaChartcontainer">
           <div className="DAchart">
-              <Line data={totalPermitsData} />
+              <Line data={totalWorkingPermitsData} />
             </div>
             <div className="DAchart">
-              <Line data={lineChartData} />
+              <Line data={WorkingPermitChart} />
             </div>
           </div>
         </div>
@@ -212,21 +319,22 @@ const generateYearlyData = () => {
         </div>
         <div className="DAstats-chart-container">
           <div className="DAstats">
-            <div>{`Total Permit Applications for 2024: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications for 2024: ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections 2024: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
+            <div>{`Total Permit Applications: ${dashboardData.totalPermitApplications}`}</div>
+            <div>{`Total Renewal Applications: ${dashboardData.totalRenewalApplications}`}</div>
+            <div>{`Total Collections: ${dashboardData.totalCollections}`}</div>
+            <div>{`Total Released: ${dashboardData.totalReleased}`}</div>
           </div>
           
           <div className="DaChartcontainer">
           <div className="DAchart">
-              <Line data={totalPermitsData} />
+              <Line data={totalBusinessPermitsData} />
             </div>
             <div className="DAchart">
-              <Line data={lineChartData} />
+              <Line data={BusinessPermitChart} />
             </div>
           </div>
         </div>
+
       </div>
     </section>
   );

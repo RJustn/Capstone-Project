@@ -213,6 +213,11 @@ const workPermitSchema = new mongoose.Schema({
       document3: String,
       document4: String,
       document5: String,
+
+      remarksdoc1: String,
+      remarksdoc2: String,
+      remarksdoc3: String,
+      remarksdoc4: String
     }
   },
   receipt: {
