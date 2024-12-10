@@ -1,0 +1,59 @@
+ /* SIDEBAR STYLE */
+ .Asidebar {
+    width: 100%; /* Full width within its container */
+    height: 100vh; /* Full height */
+    background-color: #ca294c; /* Dark background color */
+    padding-top: 20px;
+    position: relative; /* Relative positioning within its container */
+    overflow-y: auto; /* Add vertical scrolling if necessary */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+  /* LOGO STYLE */
+.Asidebar-logo {
+    margin-bottom: 20px;
+}
+
+.Alogo-image {
+    width: 150px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+}
+
+/* SIDEBAR LOGO STYLES */
+.sidebarlogoimage {
+    width: 24px; /* Adjust the size of the logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 8px; /* Space between logo and text */
+    vertical-align: middle; /* Align with the text */
+}
+
+/* SIDEBAR LIST STYLE */
+.Asidebar-list {
+    list-style-type: none; /* Remove bullets */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    width: 100%; /* Full width for sidebar links */
+}
+
+/* SIDEBAR LINK STYLE */
+.Asidebar-link {
+    display: block;
+    padding: 15px 20px;
+    color: #ffffff; /* White text color */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.Asidebar-linkactive{
+    display: block;
+    padding: 15px 20px;
+    color: #ffffff; /* White text color */
+    text-decoration: none; /* Remove underline */
+    background-color: #0000FF;
+}
+
+.Asidebar-link:hover {
+    background-color: #0000FF; /* Darker background on hover */
+}

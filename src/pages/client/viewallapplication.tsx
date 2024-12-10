@@ -42,8 +42,7 @@ const [latestReleasedPermitIDMain, setLatestReleasedPermitIDMain] = useState<str
 
 
 // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-const [activePermit, setActivePermit] = useState<WorkPermit | null>(null);
-const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+// Removed unused activePermit state declaration
 const [currentPage, setCurrentPage] = useState(0);
 const itemsPerPage = 5;
 const totalPages = Math.ceil(workPermits.length / itemsPerPage)
@@ -76,23 +75,8 @@ const handlePreviousPage = () => {
   }
 };
 
-const openModal = (permit: WorkPermit) => {
-  setActivePermit(permit);
-  setIsModalOpen(true);
-};
 
-const closeModal = () => {
-  setActivePermit(null);
-  setIsModalOpen(false);
-};
-
-const handleViewApplication = () => {
-  if (activePermit) {
-    console.log(`Edit permit ID: ${activePermit._id}`);
-    navigate(`/viewapplicationdetails/${activePermit._id}`);
-  
-  }
-};
+// Removed unused handleViewApplication function
 const handleViewLatestReleasedApplication = () => {
   
     console.log(`Edit permit ID: ${latestReleasedPermitIDMain}`);
@@ -101,11 +85,26 @@ const handleViewLatestReleasedApplication = () => {
 
 };
 
-const handleDelete = () => {
-  if (activePermit) {
-    console.log(`Delete permit ID: ${activePermit._id}`);
-    // Implement your delete logic here
-    closeModal(); // Close the modal after action
+const handleDelete = async (permitId: string) => {
+  try {
+    const response = await axios.delete(`http://localhost:3000/datacontroller/deletepermit/${permitId}`);
+    if (response.status === 200) {
+      console.log(`Deleted permit ID: ${permitId}`);
+      setWorkPermits(workPermits.filter(permit => permit._id !== permitId));
+    } else {
+      console.error('Failed to delete permit');
+    }
+  } catch (error) {
+    console.error('Error deleting permit:', error);
+  }
+};
+
+const handleActionChange = (e: React.ChangeEvent<HTMLSelectElement>, permit: WorkPermit) => {
+  const action = e.target.value;
+  if (action === 'view') {
+    navigate(`/viewapplicationdetails/${permit._id}`);
+  } else if (action === 'delete') {
+    handleDelete(permit._id);
   }
 };
 //END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -443,20 +442,14 @@ const handleLogout = async () => {
           </div>
         </div>
       )}
-
-{latestStatus === 'Released' && (
+  {latestStatus === 'Released' && (
         <p>
           <button className='viewReceiptbutton' onClick={handleOpenReceiptPDF}>View Receipt</button>
           <button className='viewpermitbutton' onClick={handleOpenPermitPDF}>View Released Permit</button>
         </p>
       )}
-
-
-
-
-
     </div>  
-                                <button className='viewapplicationbutton'  onClick={() => navigate(`/viewapplicationdetails/${latestPermitmainID}`)}>View Application</button>
+        <button className='viewapplicationbutton'  onClick={() => navigate(`/viewapplicationdetails/${latestPermitmainID}`)}>View Application</button>
                         
                         </div>
                     </div>
@@ -496,9 +489,13 @@ const handleLogout = async () => {
               : '---'}
           </td>
           <td>
-            <button onClick={() => openModal(permit)} className="table-button">
-              Choose Action
-            </button>
+            <select onChange={(e) => handleActionChange(e, permit)} className="action-dropdown">
+              <option value="">Choose Action</option>
+              <option value="view">View Application</option>
+              {permit.workpermitstatus === 'Pending' && (
+                <option value="delete">Delete</option>
+              )}
+            </select>
           </td>
         </tr>
       ))}
@@ -514,24 +511,6 @@ const handleLogout = async () => {
               <button onClick={handleNextPage}>Next</button>
             )}
           </div>
-          {/* Modal for Action Options */}
-          {isModalOpen && activePermit && (
-            <div className="modal-overlay">
-              <div className="modal">
-              <h3>Choose an Action for Permit ID: {activePermit.id}</h3> {/* Display the permit ID */}
-              <button className="clientmodal-button" onClick={handleViewApplication}>View Application</button>
-               {/* Conditionally render the Delete button */}
-               {activePermit.workpermitstatus === 'Pending' && (
-              <button onClick={handleDelete}>Delete</button>
-           )}
-
-<button className="clientcancel-button" onClick={closeModal}>Cancel</button>
-              </div>
-            </div>
-          )}
-
-
-
         </div>
 
         

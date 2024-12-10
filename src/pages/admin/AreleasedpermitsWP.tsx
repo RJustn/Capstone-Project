@@ -1,5 +1,5 @@
 import '../Styles/AdminStyles.css'; 
-// import ASidebar from '../components/Asidebar';
+import ASidebar from '../components/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -56,31 +56,30 @@ const AreleasedpermitsWP: React.FC = () => {
     checkAuth();
   }, [navigate]); // Only depend on navigate, which is necessary for the redirection
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/client/logout', {
-  //       method: 'POST',
-  //       credentials: 'include', // Include cookies in the request
-  //     });
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/client/logout', {
+        method: 'POST',
+        credentials: 'include', // Include cookies in the request
+      });
 
-  //     if (response.ok) {
-  //       // Clear any local storage data (if applicable)
-  //       localStorage.removeItem('profile');
-  //       localStorage.removeItem('userId');
+      if (response.ok) {
+        // Clear any local storage data (if applicable)
+        localStorage.removeItem('profile');
+        localStorage.removeItem('userId');
 
-  //       // Redirect to the login page
-  //       navigate('/');
-  //     } else {
-  //       // Handle any errors from the server
-  //       const errorData = await response.json();
-  //       console.error('Logout error:', errorData.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error logging out:', error);
-  //   }
-  // };
+        // Redirect to the login page
+        navigate('/');
+      } else {
+        // Handle any errors from the server
+        const errorData = await response.json();
+        console.error('Logout error:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
-  // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(workPermits.length / itemsPerPage);
@@ -102,9 +101,8 @@ const AreleasedpermitsWP: React.FC = () => {
     navigate(`/Aviewapplicationdetails/${permitId}`);
   };
 
-  // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  // Search QUERY @@@@@@@@@@@@@@@@@@@@@
+
   const [searchQuery, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
   const [classificationFilter, setClassificationFilter] = useState<string>('');
@@ -233,7 +231,7 @@ const AreleasedpermitsWP: React.FC = () => {
   return (
     <section className="Abody">
       <div className="Asidebar-container">
-        {/* <ASidebar handleLogout={handleLogout} /> Pass handleLogout to ASidebar */}
+        <ASidebar handleLogout={handleLogout} /> Pass handleLogout to ASidebar
       </div>
 
       <div className="Acontent">

@@ -247,10 +247,10 @@ useEffect(() => {
             <div>
 
   <div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
-    <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-    <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-    <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-    <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+    <p>Document 1: {workPermit.formData.files && renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+    <p>Document 2: {workPermit.formData.files && renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+    <p>Document 3: {workPermit.formData.files && renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
+    <p>Document 4: {workPermit.formData.files && renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
   </div>
               
   {workPermit.receipt?.receiptFile && (

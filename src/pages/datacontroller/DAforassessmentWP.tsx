@@ -1018,25 +1018,6 @@ useEffect(() => {
                 }
               />
             </label>
-            <label>
-              Work Permit Classification:
-              <input
-                type="text"
-                value={selectedPermit.formData.personalInformation.workpermitclassification || ''}
-                onChange={(e) =>
-                  setSelectedPermit({
-                    ...selectedPermit,
-                    formData: {
-                      ...selectedPermit.formData,
-                      personalInformation: {
-                        ...selectedPermit.formData.personalInformation,
-                        workpermitclassification: e.target.value,
-                      },
-                    },
-                  })
-                }
-              />
-            </label>
             <button type="submit">Save</button>
             <button type="button" onClick={closeModal}>
               Cancel

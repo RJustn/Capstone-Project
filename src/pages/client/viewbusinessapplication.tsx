@@ -1,34 +1,348 @@
-import { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import '../Styles/ClientStyles.css';
 import ClientSideBar from '../components/ClientSideBar';
+import React from 'react';
+import axios from 'axios';
 
+export interface BusinessPermit {
+    _id: string;
+    id: string;
+    userId: string;
+    permittype?: string;
+    businesspermitstatus?: string;
+    businessstatus?: string;
+    classification?: string;
+    transaction?: string;
+    amountToPay?: string;
+    permitFile?: string;
+    permitDateIssued?: string;
+    permitExpiryDate?: string;
+    expiryDate?: string;
+    applicationdateIssued: Date;
+    applicationComments?: string;
+  
+    owner: Owner;
+    business: Business;
+    otherbusinessinfo: OtherBusiness;
+    mapview: MapView;
+    businesses: Businesses[];
+    files: Files;
+    department: Department; // Change to object with key-value pairs
+    statementofaccount: Statement;
+  
+    createdAt?: string;
+  }
+  
+  export interface Owner {
+  corporation?: boolean;
+  lastname?: string;
+  firstname?: string;
+  middleinitial?: string;
+  civilstatus?: string;
+  companyname?: string;
+  gender?: string;
+  citizenship?: string;
+  tinnumber?: string;
+  representative?: boolean;
+  houseandlot?: string;
+  buildingstreetname?: string;
+  subdivision?: string;
+  region?: string;
+  province?: string;
+  municipality?: string;
+  barangay?: string;
+  telephonenumber?: string;
+  mobilenumber?: string;
+  email?: string;
+  representativedetails?: RepDetails;
+  }
+  
+  export interface RepDetails {
+  repfullname: string,
+  repdesignation: string,
+  repmobilenumber: string,
+  }
+  
+  export interface Business {
+  businessname?: string,
+  businessscale?: string,
+  paymentmethod?: string,
+  businessbuildingblocklot?: string,
+  businessbuildingname?: string,
+  businesssubcompname?: string,
+  businessregion?: string,
+  businessprovince?: string,
+  businessmunicipality?: string,
+  businessbarangay?: string,
+  businesszip?: string,
+  businesscontactnumber?: string,
+  ownershiptype?: string,
+  agencyregistered?: string,
+  dtiregistrationnum?: string,
+  dtiregistrationdate?: string,
+  dtiregistrationexpdate?: string,
+  secregistrationnum?: string,
+  birregistrationnum?: string,
+  industrysector?: string,
+  businessoperation?: string,
+  typeofbusiness?: string,
+  
+  }
+  
+  export interface OtherBusiness {
+  dateestablished?: string,
+  startdate?: string,
+  occupancy?: string,
+  otherbusinesstype?: string,
+  businessemail?: string,
+  businessarea?: string,
+  businesslotarea?: string,
+  numofworkermale?: string,
+  numofworkerfemale?: string,
+  numofworkertotal?: string,
+  numofworkerlgu?: string,
+  lessorfullname?: string,
+  lessormobilenumber?: string,
+  monthlyrent?: string,
+  lessorfulladdress?: string,
+  lessoremailaddress?: string,
+  }
+  
+  export interface MapView{
+  lat: string,
+  lng: string,
+  }
+  
+  export interface Businesses {
+  _id: string;
+  businessNature: string;
+  businessType: string;
+  capitalInvestment: string;
+  }
+  
+  
+  export interface Department{
+   
+    Zoning: string;
+    OffBldOfcl: string;
+    CtyHlthOff: string;
+    BreuFrPrt: string;
+  
+  }
+  
+  export interface Files {
+  document1: string | null; // Optional
+  document2: string | null; // Optional
+  document3: string | null; // Optional
+  document4: string | null; // Optional
+  document5: string | null; // Optional
+  document6: string | null; // Optional
+  remarksdoc1: string;
+  remarksdoc2: string;
+  remarksdoc3: string;
+  remarksdoc4: string;
+  remarksdoc5: string;
+  remarksdoc6: string;
+  }
+
+  export interface Statement{
+    permitassessed: string;
+    dateassessed: string;
+    mayorspermit: string;
+    sanitary:  string;
+    health:  string;
+    businessplate:  string;
+    zoningclearance:  string;
+    annualInspection:  string;
+    environmental:  string;
+    miscfee:  string;
+    liquortobaco:  string;
+    liquorplate:  string;
+    statementofaccountfile: string;
+}
+  
+
+  interface GroupedBusinessPermit {
+    _id?: string;
+    id: string; // Business ID
+    permits: BusinessPermit[]; // Array of BusinessPermit
+  }
+  
 const ViewBusinessApplication: React.FC = () => {
     const navigate = useNavigate();
-    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false); 
-    const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false); 
-    const [isPermitModalOpen, setIsPermitModalOpen] = useState(false); 
-    const [isBusinessPermitApplicationModalOpen, setIsBusinessPermitApplicationModalOpen] = useState(false); 
+    const [businessPermits, setBusinessPermits] = useState<GroupedBusinessPermit[]>([]);
+    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
+    const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    //Payment Modal
+    const [viewpayment, setViewPayment] = useState(false);
+
+
+
+    //Logout
     const handleLogout = () => {
         sessionStorage.clear(); 
         alert('You have been logged out.');
         navigate('/'); 
     };
 
-    // Open/Close Modal Functions
-    const openPaymentModal = () => setIsPaymentModalOpen(true);
-    const closePaymentModal = () => setIsPaymentModalOpen(false);
+
+  useEffect(() => {
+    const fetchBusinessPermits = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/client/business-permits', {
+          method: 'GET',
+          credentials: 'include', // Ensure cookies (containing the token) are sent
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const businessPermitData = await response.json();
+        setBusinessPermits(businessPermitData);
+      } catch (error) {
+        console.error('Error fetching business permits:', error);
+      } finally {
+        setLoading(false); // Ensure loading state is updated
+      }
+    };
+
+    fetchBusinessPermits();
+  }, []);
+
+
+  // Toggle the visibility of past permits for a specific business ID
+  const toggleRowExpansion = (businessId: string) => {
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(businessId)) {
+        newSet.delete(businessId);
+      } else {
+        newSet.add(businessId);
+      }
+      return newSet;
+    });
+  };
+  
+  const closeviewpayment = () => {
+    setViewPayment(false);
+    setActivePermitId(null);
+
+  };
+
+  const handlePrint = () => {
+    if (!activePermitId || !activePermitId.statementofaccount?.statementofaccountfile) {
+      console.warn("No active permit or file URL available for printing.");
+      return; // Exit if there is no active permit or file URL
+    }
+  
+    const fileUrl = fetchDocumentUrl(activePermitId.statementofaccount.statementofaccountfile, 'receipts');
     
-    const openReceiptModal = () => setIsReceiptModalOpen(true);
-    const closeReceiptModal = () => setIsReceiptModalOpen(false);
+    // Open a new window
+    const newWindow = window.open('', '', 'height=500,width=800');
     
-    const openPermitModal = () => setIsPermitModalOpen(true);
-    const closePermitModal = () => setIsPermitModalOpen(false);
+    if (newWindow) {
     
-    const openBusinessPermitApplicationModal = () => setIsBusinessPermitApplicationModalOpen(true); 
-    const closeBusinessPermitApplicationModal = () => setIsBusinessPermitApplicationModalOpen(false); 
-    
+      
+      // Embed the PDF file using iframe
+      newWindow.document.write(`
+        <iframe
+          src="${fileUrl}"
+          style="width: 100%; height: 100%; border: none;"
+          title="PDF Viewer"
+        ></iframe>
+      `);
+      newWindow.document.close();  // Ensure the document is fully loaded
+  
+      // Wait for the content to load, then print
+      newWindow.onload = () => {
+        newWindow.print();  // Open the print dialog
+      };
+    }
+  };
+  
+  // Function to handle the payment update
+  const handlePayment = async () => {
+    try {
+      // Call the API to update the payment status
+      const response = await axios.put(`http://localhost:3000/client/updatepayments/${activePermitId?._id}`, {
+        paymentStatus: 'Paid',
+        businesspermitstatus: 'Released'
+      });
+
+      if (response.status === 200) {
+        console.log('Payment status updated successfully');
+      } else {
+        console.error('Failed to update payment status');
+      }
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+    }
+  };
+
+
+
+      const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
+        if (!fileName) return null;
+        
+        // Return the file URL based on the folder specified
+        return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
+      };
+  const renderFile = (fileUrl: string | null) => {
+    if (!fileUrl) return <p>No file selected.</p>;
+
+    if (fileUrl.endsWith('.pdf')) {
+      return (
+        <iframe
+          src={fileUrl}
+          style={{ width: '100%', height: '400px', marginTop: '10px' }}
+          title="PDF Viewer"
+        />
+      );
+    } else {
+      return (
+        <img
+          src={fileUrl}
+          alt="Document"
+          style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+        />
+      );
+    }
+  };
+
+  const handleActionBP = (action: string,  permitId: BusinessPermit) => {
+    console.log(permitId._id);
+    setActivePermitId(null);
+  
+    switch (action) {
+      case 'editowner':
+        setActivePermitId(permitId);  // Set the selected permit
+        break;
+      case 'payment':
+        setViewPayment(true);
+        setActivePermitId(permitId);
+        break;
+      case 'renewbusiness':
+        navigate(`/businesspermitrenew/${permitId._id}`);
+        break;
+  
+  
+      default:
+        console.warn('Unknown action');
+    }
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
     return (
         <section className="dashboard-container">
@@ -40,230 +354,106 @@ const ViewBusinessApplication: React.FC = () => {
                 <header>
                     <h1>View Business Permit Applications</h1>
                 </header>
+                <h1>Business Permits</h1>
+      <table className="permit-table">
+        <thead>
+          <tr>
+            <th>Business Information</th>
+            <th>Business ID</th>
+            <th>Status</th>
+            <th>Application Date</th>
+            <th>Business Status</th>
+            <th>Show Previous</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {businessPermits.map((group) => {
+            const isExpanded = expandedRows.has(group.id);
+            return (
+              <React.Fragment key={group.id}>
+                <tr>
+                  <td>{group.permits[0].business?.businessname || 'N/A'}</td>
+                  <td>{group.id}</td>
+                  <td>{group.permits[0].businesspermitstatus || 'N/A'}</td>
+                  <td>
+                    {group.permits[0].applicationdateIssued
+                      ? new Date(group.permits[0].applicationdateIssued).toLocaleDateString()
+                      : 'N/A'}
+                  </td>
+                  <td>{group.permits[0].businessstatus || 'N/A'}</td>
+                  <td>
+                    <button onClick={() => toggleRowExpansion(group.id)}>
+                      {isExpanded ? 'Hide Past Permits' : 'Show Past Permits'}
+                    </button>
+                  </td>
+                  <td>
+                  <select
+            defaultValue=""
+            onChange={(e) => {
+ handleActionBP(e.target.value, group.permits[0]);  // Pass action and permit to handler
+ e.target.value = ""; // Reset dropdown to default after selection
+            }}
+            className="dropdown-button"
+          >
+            <option value="" disabled>
+              Select Action
+            </option>
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="assessment">View Assessment</option>
+                <option value="department">Department</option>
+                  {/* Conditionally render the "Payment" option */}
+  {group.permits[0].businesspermitstatus === 'Waiting for Payment' && (
+    <option value="payment">Payment</option>
+  )}
+    {group.permits[0].businessstatus === 'Active' && (
+    <option>Retire Business</option>
+  )}
+      {group.permits[0].businesspermitstatus === 'Expired' && (
+    <option value="renewbusiness">Renew Business</option>
+  )}
+   <option value="renewbusiness">Renew Business</option>
+              </>
+          </select>
+                  </td>
+                </tr>
+                {isExpanded &&
+                  group.permits.slice(1).map((permit, index) => (
+                    <tr key={`${group.id}-${index}`} className="past-permit-row">
+                      <td>{permit.business?.businessname || 'N/A'}</td>
+                      <td>{group.id}</td>
+                      <td>{permit.businesspermitstatus || 'N/A'}</td>
+                      <td>
+                        {permit.applicationdateIssued
+                          ? new Date(permit.applicationdateIssued).toLocaleDateString()
+                          : 'N/A'}
+                      </td>
+                      <td>{permit.businessstatus || 'N/A'}</td>
+                      <td></td>
+                    </tr>
+                  ))}
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+             
+             {viewpayment && activePermitId &&(
+              <div className="modal-overlay" onClick={closeviewpayment}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <label>{activePermitId._id}</label>
+                  <label>{activePermitId.statementofaccount.statementofaccountfile}</label>
 
-                <div className="contentcontainer">
-                    <div className="applicationStatusContainer">
-                        <div className="applicationstatusBusinessPermit">
-                            <h2>Current Application Status For Business Permit:</h2>
-                            <button className='viewapplicationbutton' onClick={openBusinessPermitApplicationModal}>View Application</button>
-                        </div>
-                    </div>
+                        {/* Render the PDF or image file */}
+      {renderFile(fetchDocumentUrl(activePermitId.statementofaccount?.statementofaccountfile, 'receipts'))}
 
-                    <div className="paymentandviewpermitcontainer">
-                        <div className="payment">
-                            <h2>Payment</h2>
-                            <div className='paymentbuttoncontainer'>
-                                <button className='paybutton' onClick={openPaymentModal}>Pay</button>
-                                <button className='viewReceiptbutton' onClick={openReceiptModal}>View Receipt</button>
-                            </div>
-                        </div>
-                        <div className="viewpermit">
-                            <h2>Recently Released Permit:</h2>
-                            <button className='viewpermitbutton' onClick={openPermitModal}>View Permit</button>
-                        </div>
-                    </div>
-                </div>
+      <button onClick={handlePrint}>Print</button>
+      <button onClick={handlePayment}>Pay</button> {/* Add the handler for Pay button */}
+          </div>
+        </div>
+             )}
 
-                <div className="application-history-container">
-                    <h2 className="table-title">Application History</h2>
-                    <table className="application-history-table">
-                        <thead>
-                            <tr>
-                                <th>Application Type</th>
-                                <th>Application Status</th>
-                                <th>Application Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Business Permit</td>
-                                <td>Approved</td>
-                                <td>2024-09-10</td>
-                            </tr>
-                            <tr>
-                                <td>Work Permit</td>
-                                <td>Approved</td>
-                                <td>2024-09-15</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Payment Modal */}
-                {isPaymentModalOpen && (
-                    <div className="modal-overlay" onClick={closePaymentModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <h2>Payment</h2>
-                            <p>Choose your payment method:</p>
-                            <div className='paymentbuttons'>
-                                <p>E-Wallet/Gcash</p>
-                                <p>Pay at Counter/Cash</p>
-                                <p>Online Banking</p>
-                            </div>
-                            <button className='closebuttonmodalpayment' onClick={closePaymentModal}>Close</button>
-                        </div>
-                    </div>
-                )}
-
-                {/* Receipt Modal */}
-                {isReceiptModalOpen && (
-                    <div className="modal-overlay" onClick={closeReceiptModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <h2>Receipt</h2>
-                            <p>Here is your payment receipt:</p>
-                            <p>Receipt No: 123456789</p>
-                            <p>Date: 2024-09-15</p>
-                            <button className='closebuttonmodalviewreceipt' onClick={closeReceiptModal}>Close</button>
-                        </div>
-                    </div>
-                )}
-
-                {/* View Permit Modal */}
-                {isPermitModalOpen && (
-                    <div className="modal-overlay" onClick={closePermitModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <h2>Recently Released Permit</h2>
-                            <p>Permit ID: 987654321</p>
-                            <p>Date Issued: 2024-09-15</p>
-                            <button className='closebuttonmodalviewpermit' onClick={closePermitModal}>Close</button>
-                        </div>
-                    </div>
-                )}
-
-                {/* View Application Modal for Business Permit */}
-                {isBusinessPermitApplicationModalOpen && (
-                    <div className="modal-overlay" onClick={closeBusinessPermitApplicationModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            {/* Owner Information Form */}
-                            <form className="businesspermit-form">
-                                <h2>Owner's Personal Information</h2>
-                                <div className="form-group">
-                                    <label>
-                                        <input type="checkbox" name="checkifcorporation" />
-                                        Check if Corporation
-                                    </label>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>LAST NAME:</label>
-                                        <input type="text" name="lastName" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>FIRST NAME:</label>
-                                        <input type="text" name="firstName" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>MIDDLE INITIAL:</label>
-                                        <input type="text" name="middleInitial" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label>CIVIL STATUS:</label>
-                                    <input type="text" name="civilStatus" />
-                                </div>
-                                <div className="form-group gender-group">
-                                    <label>GENDER:</label>
-                                    <label>
-                                        <input type="radio" name="gender" value="male" />
-                                        Male
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="gender" value="female" />
-                                        Female
-                                    </label>
-                                </div>
-                                <div className="form-group">
-                                    <label>CITIZENSHIP:</label>
-                                    <input type="text" name="citizenship" />
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>TIN NUMBER:</label>
-                                        <input type="text" name="tinNumber" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label>
-                                        <input type="checkbox" name="checkIfRepresentative" id="checkIfRepresentative"/>
-                                        Check if Thru Representative
-                                    </label>
-                                </div>
-                                <div className="form-group">
-                                    <label>Representative Full Name:</label>
-                                    <input type="text" name="representative.fullName" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Designation/Position:</label>
-                                    <input type="text" name="representative.designation" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Representative Mobile Number:</label>
-                                    <input type="text" name="representative.mobileNumber" />
-                                </div>
-
-                                {/* Business Reference Form */}
-                                <h2>Business Reference Form</h2>
-                                <div className="form-group">
-                                    <label>Business Name:</label>
-                                    <input type="text" name="businessName" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Business Scale:</label>
-                                    <input type="text" name="businessScale" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Payment Method:</label>
-                                    <input type="text" name="paymentMethod" />
-                                </div>
-                                <div className="form-group">
-                                    <label>House/Bldg No./Blk and Lot:</label>
-                                    <input type="text" name="houseBuildingNo" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Building Name/Street Name:</label>
-                                    <input type="text" name="buildingStreetName" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Subdivision/Compound Name:</label>
-                                    <input type="text" name="subdivisionCompoundName"/>
-                                </div>
-                                <div className="form-group">
-                                    <label>Region:</label>
-                                    <input type="text" name="region" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Province:</label>
-                                    <input type="text" name="province"/>
-                                </div>
-                                <div className="form-group">
-                                    <label>City/Municipality:</label>
-                                    <input type="text" name="cityMunicipality" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Barangay:</label>
-                                    <input type="text" name="barangay" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Business Street:</label>
-                                    <input type="text" name="businessStreet" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Zone:</label>
-                                    <input type="text" name="zone"/>
-                                </div>
-                                <div className="form-group">
-                                    <label>Zip:</label>
-                                    <input type="text" name="zip"/>
-                                </div>
-                                <div className="form-group">
-                                    <label>Contact Number:</label>
-                                    <input type="text" name="contactNumber"/>
-                                </div>
-                            </form>
-                            <button className='closebuttonmodalviewapplication' onClick={closeBusinessPermitApplicationModal}>Close</button>
-                        </div>
-                    </div>
-                )}
 
             </div>
         </section>
