@@ -13,6 +13,7 @@ import ForgotPassword from './pages/forgotpassword';
 import Dashboard from './pages/client/dashboard'; 
 import Account from './pages/client/account'; 
 import BusinessPermit from './pages/client/businesspermitpage';
+import BusinessPermitRenew from './pages/client/businesspermitrenew';
 import WorkPermit from './pages/client/workpermitpage';
 import ViewWorkPermitApplication from './pages/client/viewworkpermitapplication';
 import ViewBusinessApplication from './pages/client/viewbusinessapplication';
@@ -30,13 +31,16 @@ import SuperadminAddUser from './pages/superadmin/superadminAccountAdd';
 
 // DATA CONTROLLER PAGES
 import DataControllerDashboard from './pages/datacontroller/DAdashboard';
+import DataControllerBusinessAssessment from './pages/datacontroller/DABusinessAssessment';
 import DataControllerForAssessment from './pages/datacontroller/DAforassessment';
 import DataControllerForAssessmentBP from './pages/datacontroller/DAforassessmentBP';
 import DataControllerForAssessmentWP from './pages/datacontroller/DAforassessmentWP';
 import DataControllerForPayment from './pages/datacontroller/DAforpayment';
 import DataControllerForPaymentWP from './pages/datacontroller/DAforpaymentWP';
+import DataControllerForPaymentBP from './pages/datacontroller/DAforpaymentBP';
 import DataControllerReleasedPermit from './pages/datacontroller/DAreleasedpermits';
 import DataControllerReleasedPermitWP from './pages/datacontroller/DAreleasedpermitsWP';
+import DataControllerReleasedPermitBP from './pages/datacontroller/DAreleasedpermitsBP';
 import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph';
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 import DataControllerViewBusinessApplicationDetails from './pages/datacontroller/DAviewbusinessapplicationdetails';
@@ -46,6 +50,8 @@ import DataControllerEditBusinessNature from './pages/datacontroller/DAEditBusin
 // ADMIN PAGES
 import AdminDashboard from './pages/admin/Adashboard';
 import AdminAccount from './pages/admin/Aaccount';
+import AdminForAssessment from './pages/admin/Aforassessment';
+import AdminForAssessmentBusinessPermit from './pages/admin/AforassessmentBP';
 import AdminReleasedPermits from './pages/admin/Areleasedpermits';
 import AdminReleasedPermitsWP from './pages/admin/AreleasedpermitsWP';
 import AdminReleasedPermitsBP from './pages/admin/AreleasedpermitsBP';
@@ -67,16 +73,16 @@ const App: React.FC = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/account" element={<Account />} />
         <Route path="/businesspermitpage" element={<BusinessPermit />} />
+        <Route path="/businesspermitrenew/:id?" element={<BusinessPermitRenew />} />
         <Route path="/workpermitpage" element={<WorkPermit />} />
         <Route path="/emailverification" element={<EmailVerification />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/viewbusinessapplication" element={<ViewBusinessApplication />} />
         <Route path="/viewworkpermitapplication" element={<ViewWorkPermitApplication />} />
         <Route path="/viewallapplication" element={<ViewAllApplication />} />
-        <Route path="/viewapplicationdetails/:id" element={<ViewApplicationDetails />} />
-        <Route path="/viewapplicationdetails/" element={<ViewApplicationDetails />} />
-        <Route path="/viewapplicationdetailsbusiness/:id" element={<ViewApplicationDetailsBusiness />} />
-        <Route path="/viewapplicationdetailsbusiness/" element={<ViewApplicationDetailsBusiness />} />
+        <Route path="/viewapplicationdetails/:id?" element={<ViewApplicationDetails />} />
+        <Route path="/viewapplicationdetailsbusiness/:id?" element={<ViewApplicationDetailsBusiness />} />
+
         <Route path="/apptest" element={<AppTest />} />
         <Route path="/apptest2" element={<AppTest2 />} />
         <Route path="/apptest3" element={<AppTest3 />} />
@@ -89,22 +95,22 @@ const App: React.FC = () => {
         <Route path="/DAforassessmentWP" element={<DataControllerForAssessmentWP />} />
         <Route path="/DAforpayment" element={<DataControllerForPayment />} />
         <Route path="/DAforpaymentWP" element={<DataControllerForPaymentWP />} />
+        <Route path="/DAforpaymentBP" element={<DataControllerForPaymentBP />} />
         <Route path="/DAreleasedpermits" element={<DataControllerReleasedPermit />} />
         <Route path="/DAreleasedpermitsWP" element={<DataControllerReleasedPermitWP />} />
+        <Route path="/DAreleasedpermitsBP" element={<DataControllerReleasedPermitBP/>} />
         <Route path="/DAreportsngraph" element={<DataControllerReportandGraph />} />
-        <Route path="/DAviewapplicationdetails/" element={<DataControllerViewApplicationDetails />} />
-        <Route path="/DAviewapplicationdetails/:id" element={<DataControllerViewApplicationDetails />} />
-        <Route path="/DAviewbusinessapplicationdetails/" element={<DataControllerViewBusinessApplicationDetails />} />
-        <Route path="/DAviewbusinessapplicationdetails/:id" element={<DataControllerViewBusinessApplicationDetails />} />
+        <Route path="/DAviewapplicationdetails/:id?" element={<DataControllerViewApplicationDetails />} />
+        <Route path="/DAviewbusinessapplicationdetails/:id?" element={<DataControllerViewBusinessApplicationDetails />} />
         <Route path="/DAaccount" element={<DataControllerAccount />} />
-        <Route path="/DAEditBusinessNature" element={<DataControllerEditBusinessNature />} />
-        <Route path="/DAEditBusinessNature/:id" element={<DataControllerEditBusinessNature />} />
+        <Route path="/DAEditBusinessNature/:id?" element={<DataControllerEditBusinessNature />} />
+        <Route path="/DABusinessAssessment/:id?" element={<DataControllerBusinessAssessment />} />
 
         {/* Routes for Superadmin */}
   
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
           <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-          <Route path="/superadmin/edituser/:id" element={<SuperAdminEditUser />} />
+          <Route path="/superadmin/edituser/:id?" element={<SuperAdminEditUser />} />
           <Route path="/superadmin/accounts" element={<SuperAdminAccount />} />
           <Route path="/superadmin/logbooks" element={<SuperAdminLogbook />} />
           <Route path='/superadmin/accountadd' element={<SuperadminAddUser />} />
@@ -112,6 +118,8 @@ const App: React.FC = () => {
           {/* Routes for Admin */}
           <Route path="/Adashboard" element={<AdminDashboard />} />
           <Route path="/Aaccount" element={<AdminAccount />} />
+          <Route path="/AForAssessment" element={<AdminForAssessment />} />
+          <Route path="/AForAssessmentBP" element={<AdminForAssessmentBusinessPermit />} />
           <Route path="/Areleasedpermits" element={<AdminReleasedPermits />} />
           <Route path="/AreleasedpermitsWP" element={<AdminReleasedPermitsWP />} /> 
           <Route path="/AreleasedpermitsBP" element={<AdminReleasedPermitsBP />} />

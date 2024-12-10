@@ -3,7 +3,6 @@ import '../Styles/DataControllerStyles.css';
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 export interface BusinessPermit {
   _id: string;
@@ -163,83 +162,9 @@ export interface Statement{
 }
 
 
-const DataControllerForAssessmentBP: React.FC = () => {
-  const [businessPermits, setBusinesPermits] = useState<BusinessPermit[]>([]);
-  const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
-  
+const DataControllerForPaymentBP: React.FC = () => {
+
   const navigate = useNavigate();
-
-//Selected Permit Id
-  const [selectedUserIdDep, setSelectedUserId] = useState<string | null>(null); //For Departments Display
-  const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
-
-  //Modals Owner Edit
-  const [editownermodal, setEditOwnerModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Track if fields are editable
-
-  //Modals Attachments Edit
-  const [viewAttachmentsModal, setViewAttatchmentsModal] = useState(false);
-  const [isEditingAttach, setIsEditingAttach] = useState(false); // Track if fields are editable
-
-  //Modals Business Edit
-  const [viewbusinessdetails, setViewBusinessDetails] = useState(false);
-  const [editbusiness, setEditBusiness] = useState(false);
-
-  //Actionupdate
-  const [updatesuccess, setUpdateSuccess] = useState(false);
-
-  const closeupdateSuccess = () => {
-    setUpdateSuccess(false);
-  };
-
-  //Step 1
-  const [corporation, setCorporation] = useState(false);
-  const [lastname, setLastName] = useState('');
-  const [firstname, setFirstName] = useState('');
-  const [middleinitial, setMiddleInitial] = useState('');
-  const [civilstatus, setCivilStatus] = useState('');
-  const [companyname, setCompanyName] = useState('');
-  const [gender, setGender] = useState('');
-  const [citizenship, setCitizenship] = useState('');
-  const [tinnumber, setTinNumber] = useState('');
-  const [representative, setRepresentative] = useState(false);
-  const [repfullname, setRepFullName] = useState('');
-  const [repdesignation, setRepDesignation] = useState('');
-  const [repmobilenumber, setRepMobileNumber] = useState('');
-  const [houseandlot, setHouseandLot] = useState('');
-  const [buildingstreetname, setBuildingStreetName] = useState('');
-  const [subdivision, setSubdivision] = useState('');
-  const [region, setRegion] = useState('');
-  const [province, setProvince] = useState('');
-  const [municipality, setMunicipality] = useState('');
-  const [barangay, setBarangay] = useState('');
-  const [telephonenumber, setTelephoneNumber] = useState('');
-  const [mobilenumber, setMobileNumber] = useState('');
-  const [email, setEmail] = useState('');
-
-  //Step2
-  const [businessname, setBusinessName] = useState('');
-  const [businessscale, setBusinessScale] = useState('');
-  const [paymentmethod, setPaymentMethod] = useState('');
-  const [businessbuildingblocklot, setBusinessBuildingBlockLot] = useState('');
-  const [businessbuildingname, setBusinessBuildingName] = useState('');
-  const [businesssubcompname, setBusinessSubCompName] = useState('');
-  const [businessregion, setBusinessRegion] = useState('REGION IV-A (CALABARZON)');
-  const [businessprovince, setBusinessProvince] = useState('CAVITE');
-  const [businessmunicipality, setBusinessMunicipality] = useState('CITY OF DASMARIÑAS');
-  const [businessbarangay, setbusinessBarangay] = useState('');
-  const [businesszip, setBusinessZip] = useState('4114');
-  const [businesscontactnumber, setBusinessContactNumber] = useState('');
-  const [ownershiptype, setOwnershipType] = useState('');
-  const [agencyregistered, setAgencyRegistered] = useState('');
-  const [dtiregistrationnum, setDTIRegistrationNum] = useState('');
-  const [dtiregistrationdate, setDTIRegistrationDate] = useState('');
-  const [dtiregistrationexpdate, setDTIRegistrationExpDate] = useState('');
-  const [secregistrationnum, setSECRegistrationNum] = useState('');
-  const [birregistrationnum, setBIRRegistrationNum] = useState('');
-  const [industrysector, setIndustrySector] = useState('');
-  const [businessoperation, setBusinessOperation] = useState('');
-  const [typeofbusiness, setTypeofBusiness] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -295,6 +220,67 @@ const DataControllerForAssessmentBP: React.FC = () => {
     }
   };
 
+  const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
+  const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
+  const maxDate = new Date().toISOString().split("T")[0]; 
+
+
+  
+//File
+const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
+
+const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
+  if (!fileName) return null;
+  
+  // Return the file URL based on the folder specified
+  return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
+};
+const renderFile = (fileUrl: string | null) => {
+if (!fileUrl) return <p>No file selected.</p>;
+
+if (fileUrl.endsWith('.pdf')) {
+return (
+  <iframe
+    src={fileUrl}
+    style={{ width: '100%', height: '400px', marginTop: '10px' }}
+    title="PDF Viewer"
+  />
+);
+} else {
+return (
+  <img
+    src={fileUrl}
+    alt="Document"
+    style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+  />
+);
+}
+};
+
+//File
+
+  useEffect(() => {
+    const fetchBusinessPermits = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforpayments', {
+          method: 'GET',
+          credentials: 'include', // Ensure cookies (containing the token) are sent
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        const businessPermitData = await response.json();
+        setBusinessPermits(businessPermitData);
+        console.log(businessPermitData);
+      } catch (error) {
+        console.error('Error fetching work permits:', error);
+      }
+    };
+    fetchBusinessPermits();
+         
+  }, []);
+
   //Table Code
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
@@ -344,566 +330,83 @@ const handleDateSearch = () => {
 // Date Search
 
 
-//File
-const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
+//Selected Permit Id
+const [selectedUserIdDep, setSelectedUserId] = useState<string | null>(null); //For Departments Display
+const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
 
-      const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
-        if (!fileName) return null;
-        
-        // Return the file URL based on the folder specified
-        return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
-      };
-  const renderFile = (fileUrl: string | null) => {
-    if (!fileUrl) return <p>No file selected.</p>;
+//Modals Owner Edit
+const [editownermodal, setEditOwnerModal] = useState(false);
 
-    if (fileUrl.endsWith('.pdf')) {
-      return (
-        <iframe
-          src={fileUrl}
-          style={{ width: '100%', height: '400px', marginTop: '10px' }}
-          title="PDF Viewer"
-        />
-      );
-    } else {
-      return (
-        <img
-          src={fileUrl}
-          alt="Document"
-          style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
-        />
-      );
-    }
-  };
-
-//File
+//Modals Attachments Edit
+const [viewAttachmentsModal, setViewAttatchmentsModal] = useState(false);
 
 
-const [remarksdoc1, setRemarksdoc1] = useState('');
-const [remarksdoc2, setRemarksdoc2] = useState('');
-const [remarksdoc3, setRemarksdoc3] = useState('');
-const [remarksdoc4, setRemarksdoc4] = useState('');
-const [remarksdoc5, setRemarksdoc5] = useState('');
-const [remarksdoc6, setRemarksdoc6] = useState('');
-
-  
-  //Attach
-  const [files, setFiles] = useState<{
-    document1: File | null;
-    document2: File | null;
-    document3: File | null;
-    document4: File | null;
-    document5: File | null;
-    document6: File | null;
-  }>({
-    document1: null,
-    document2: null,
-    document3: null,
-    document4: null,
-    document5: null,
-    document6: null,
-  });
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6') => {
-    const selectedFiles = event.target.files;
-  if (selectedFiles && selectedFiles.length > 0) {
-    setFiles((prev) => ({
-      ...prev,
-      [doc]: selectedFiles[0],
-    }));
-  } else {
-    setFiles((prev) => ({
-      ...prev,
-      [doc]: null, 
-    }));
-  }
-};
-
-const logFormData = (formData: FormData) => {
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-  };
-
-  const updateAttachments = async () => {
-    if (!activePermitId) return;
-  
-    const formData = new FormData();
-    
-    formData.append('remarksdoc1', remarksdoc1);
-    formData.append('remarksdoc2', remarksdoc2);
-    formData.append('remarksdoc3', remarksdoc3);
-    formData.append('remarksdoc4', remarksdoc4);
-    formData.append('remarksdoc5', remarksdoc5);
-    formData.append('remarksdoc6', remarksdoc6);
+//Modals Business Edit
+const [viewbusinessdetails, setViewBusinessDetails] = useState(false);
 
 
-    if (files.document1) formData.append('document1', files.document1);
-    if (files.document2) formData.append('document2', files.document2);
-    if (files.document3) formData.append('document3', files.document3);
-    if (files.document4) formData.append('document4', files.document4);
-    if (files.document5) formData.append('document5', files.document5);
-    if (files.document6) formData.append('document5', files.document6);
+const handleActionBP = (action: string, permit: BusinessPermit) => {
+  setSelectedUserId(null);
+  setActivePermitId(null);
+  switch (action) {
 
 
-    logFormData(formData);
-
-  
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/datacontroller/updatebusinessattachment/${activePermitId._id}`,
-        formData,
-        {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true, 
-      });
-        console.log(response.data);
-        if (response.status === 200) {
-          fetchBusinessPermits(); // Fetch work permits if token is present
-          setUpdateSuccess(true);
-          closeViewAttachmentsModal();
-        } else {
-          const errorMessage = (response.data as { message: string }).message;
-          console.error('Error submitting application:', errorMessage);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-  };
-
-  const closeViewAttachmentsModal = () => {
-    if (selectedFiles.document1) {
-      URL.revokeObjectURL(selectedFiles.document1);
-    }
-    if (selectedFiles.document2) {
-      URL.revokeObjectURL(selectedFiles.document2);
-    }
-    if (selectedFiles.document3) {
-      URL.revokeObjectURL(selectedFiles.document3);
-    }
-    if (selectedFiles.document4) {
-      URL.revokeObjectURL(selectedFiles.document4);
-    }
-    if (selectedFiles.document5) {
-      URL.revokeObjectURL(selectedFiles.document5);
-    }
-    if (selectedFiles.document6) {
-      URL.revokeObjectURL(selectedFiles.document6);
-    }
-    setViewAttatchmentsModal(false);
-    setSelectedFiles({});
-    setIsEditingAttach(false);
-    setFiles({
-      document1: null,
-      document2: null,
-      document3: null,
-      document4: null,
-      document5: null,
-      document6: null,
-    });
-  };
-
-  const handleCancelEditAttach = () => {
-    setIsEditingAttach(false);
-    setRemarksdoc1('');
-    setFiles({
-     document1: null,
-     document2: null,
-     document3: null,
-     document4: null,
-     document5: null,
-     document6: null,
-   });
-   setSelectedFiles({});
-   if (selectedFiles.document1) {
-     URL.revokeObjectURL(selectedFiles.document1);
-   }
-   if (selectedFiles.document2) {
-     URL.revokeObjectURL(selectedFiles.document2);
-   }
-   if (selectedFiles.document3) {
-     URL.revokeObjectURL(selectedFiles.document3);
-   }
-   if (selectedFiles.document4) {
-     URL.revokeObjectURL(selectedFiles.document4);
-   }
-   if (selectedFiles.document5) {
-    URL.revokeObjectURL(selectedFiles.document5);
-  }
-  if (selectedFiles.document6) {
-    URL.revokeObjectURL(selectedFiles.document6);
-  }
-   
-     };
-  //Attach
-
-
-  //Edit Business
-  const closeViewBusinessDetails = () => {
-    setViewBusinessDetails(false);
-    setEditBusiness(false);
-  };
-
-  const handlecancelbusinessedit = () => {
-    if (activePermitId) {
-      setBusinessName(activePermitId.business.businessname || '');
-      setBusinessScale(activePermitId.business.businessscale || '');
-      setPaymentMethod(activePermitId.business.paymentmethod || '');
-      setBusinessBuildingBlockLot(activePermitId.business.businessbuildingblocklot || '');
-      setBusinessSubCompName(activePermitId.business.businesssubcompname || '');
-      setBusinessRegion(activePermitId.business.businessregion || '');
-      setBusinessProvince(activePermitId.business.businessprovince || '');
-      setBusinessMunicipality(activePermitId.business.businessmunicipality || '');
-      setbusinessBarangay(activePermitId.business.businessbarangay || '');
-      setBusinessZip(activePermitId.business.businesszip || '');
-      setBusinessContactNumber(activePermitId.business.businesscontactnumber || '');
-      setOwnershipType(activePermitId.business.ownershiptype || '');
-      setAgencyRegistered(activePermitId.business.agencyregistered || '');
-      setDTIRegistrationNum(activePermitId.business.dtiregistrationnum || '');
-      setDTIRegistrationDate(activePermitId.business.dtiregistrationdate || '');
-      setDTIRegistrationExpDate(activePermitId.business.dtiregistrationexpdate || '');
-      setSECRegistrationNum(activePermitId.business.secregistrationnum || '');
-      setBIRRegistrationNum(activePermitId.business.birregistrationnum || '');
-      setIndustrySector(activePermitId.business.industrysector || '');
-      setBusinessOperation(activePermitId.business.businessoperation || '');
-      setTypeofBusiness(activePermitId.business.typeofbusiness || '');
-  
-    }
-    setEditBusiness(false);
-  };
-
-  const handlesavebusinessedit = async () => {
-    if (!activePermitId) return;
-  
-    const updatedData = {
-       business: {
-        businessname,
-        businessscale,
-        paymentmethod,
-        businessbuildingblocklot,
-        businessbuildingname,
-        businesssubcompname,
-        businessregion,
-        businessprovince,
-        businessmunicipality,
-        businessbarangay,
-        businesszip,
-        businesscontactnumber,
-        ownershiptype,
-        agencyregistered,
-        dtiregistrationnum,
-        dtiregistrationdate,
-        dtiregistrationexpdate,
-        secregistrationnum,
-        birregistrationnum,
-        industrysector,
-        businessoperation,
-        typeofbusiness,
-        
-        },
-    };
-  
-    try {
-      const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessinfoPermit/${activePermitId._id}`, updatedData);
-  
-      fetchBusinessPermits(); // Fetch work permits if token is present
-      console.log('Update successful:', response.data);
-      closeViewBusinessDetails(); // Exit editing mode
-      setUpdateSuccess(true);
-    } catch (error) {
-      console.error('Update failed:', error);
-    }
-  };
-  //Edit Business
-
-  const handleActionBP = (action: string, permit: BusinessPermit) => {
-    setSelectedUserId(null);
-    setActivePermitId(null);
-    switch (action) {
-
-
-          case 'editowner':
-            setActivePermitId(permit);
-            setEditOwnerModal(true);
-            break;
-
-            case 'editbusiness':
-              setViewBusinessDetails(true);
-              setActivePermitId(permit);
-              break;
-
-            case 'viewApplication':
-        navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
-    console.log(`Edit permit ID: ${permit._id}`);
-        break;
-
-        case 'editnature':
-          navigate(`/DAEditBusinessNature/${permit._id}`);
+        case 'editowner':
+          setActivePermitId(permit);
+          setEditOwnerModal(true);
           break;
 
-          case 'assessment':
-            navigate(`/DABusinessAssessment/${permit._id}`);
+          case 'editbusiness':
+            setViewBusinessDetails(true);
+            setActivePermitId(permit);
             break;
 
-          case 'viewattatchments':
-            setViewAttatchmentsModal(true);
-            setActivePermitId(permit);
+          case 'viewApplication':
+      navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
+  console.log(`Edit permit ID: ${permit._id}`);
+      break;
+
+      case 'editnature':
+        navigate(`/DAEditBusinessNature/${permit._id}`);
         break;
 
-        case 'department':
-          setSelectedUserId(permit._id);
+        case 'assessment':
+          navigate(`/DABusinessAssessment/${permit._id}`);
           break;
 
-      default:
-        console.warn('Unknown action');
-    }
-  };
+        case 'viewattatchments':
+          setViewAttatchmentsModal(true);
+          setActivePermitId(permit);
+      break;
 
+      case 'department':
+        setSelectedUserId(permit._id);
+        break;
 
-//Use Effect
-  useEffect(() => {
-    if (activePermitId) {
-      setLastName(activePermitId.owner.lastname || '');
-      setFirstName(activePermitId.owner.firstname || '');
-      setMiddleInitial(activePermitId.owner.middleinitial || '');
-      setCompanyName(activePermitId.owner.companyname || '');
-      setCivilStatus(activePermitId.owner.civilstatus || '');
-      setGender(activePermitId.owner.gender || '');
-      setCitizenship(activePermitId.owner.citizenship || '');
-      setTinNumber(activePermitId.owner.tinnumber || '');
-      setRepFullName(activePermitId.owner.representativedetails?.repfullname || '');
-      setRepDesignation(activePermitId.owner.representativedetails?.repdesignation || '');
-      setRepMobileNumber(activePermitId.owner.representativedetails?.repmobilenumber || '');
-      setHouseandLot(activePermitId.owner.houseandlot || '');
-      setBuildingStreetName(activePermitId.owner.buildingstreetname || '');
-      setSubdivision(activePermitId.owner.subdivision || '');
-      setRegion(activePermitId.owner.region || '');
-      setProvince(activePermitId.owner.province || '');
-      setMunicipality(activePermitId.owner.municipality || '');
-      setBarangay(activePermitId.owner.barangay || '');
-      setTelephoneNumber(activePermitId.owner.telephonenumber || '');
-      setMobileNumber(activePermitId.owner.mobilenumber || '');
-      setEmail(activePermitId.owner.email || '');
-      setCorporation(activePermitId.owner.corporation || false);
-      setRepresentative(activePermitId.owner.representative || false);
-
-      setBusinessName(activePermitId.business.businessname || '');
-      setBusinessScale(activePermitId.business.businessscale || '');
-      setPaymentMethod(activePermitId.business.paymentmethod || '');
-      setBusinessBuildingBlockLot(activePermitId.business.businessbuildingblocklot || '');
-      setBusinessSubCompName(activePermitId.business.businesssubcompname || '');
-      setBusinessRegion(activePermitId.business.businessregion || '');
-      setBusinessProvince(activePermitId.business.businessprovince || '');
-      setBusinessMunicipality(activePermitId.business.businessmunicipality || '');
-      setbusinessBarangay(activePermitId.business.businessbarangay || '');
-      setBusinessZip(activePermitId.business.businesszip || '');
-      setBusinessContactNumber(activePermitId.business.businesscontactnumber || '');
-      setOwnershipType(activePermitId.business.ownershiptype || '');
-      setAgencyRegistered(activePermitId.business.agencyregistered || '');
-      setDTIRegistrationNum(activePermitId.business.dtiregistrationnum || '');
-      setDTIRegistrationDate(activePermitId.business.dtiregistrationdate || '');
-      setDTIRegistrationExpDate(activePermitId.business.dtiregistrationexpdate || '');
-      setSECRegistrationNum(activePermitId.business.secregistrationnum || '');
-      setBIRRegistrationNum(activePermitId.business.birregistrationnum || '');
-      setIndustrySector(activePermitId.business.industrysector || '');
-      setBusinessOperation(activePermitId.business.businessoperation || '');
-      setTypeofBusiness(activePermitId.business.typeofbusiness || '');
-
-
-      setRemarksdoc1(activePermitId.files.remarksdoc1 || '');
-      setRemarksdoc2(activePermitId.files.remarksdoc2 || '');
-      setRemarksdoc3(activePermitId.files.remarksdoc3 || '');
-      setRemarksdoc4(activePermitId.files.remarksdoc4 || '');
-      setRemarksdoc5(activePermitId.files.remarksdoc5 || '');
-      setRemarksdoc6(activePermitId.files.remarksdoc6 || '');
-
-    }
-  }, [activePermitId]);
-
-  useEffect(() => {
-    const urls: Record<string, string> = {}; // Define a typed object for URLs
-  
-    // Iterate through each file key in the `files` object
-    Object.entries(files).forEach(([key, file]) => {
-      if (file) {
-        const fileUrl = URL.createObjectURL(file);
-        urls[key] = fileUrl; // Store the created URL
-        setSelectedFiles((prev) => ({ ...prev, [key]: fileUrl }));
-      }
-    });
-  
-    // Cleanup function to revoke URLs
-    return () => {
-      Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [files]); // Watch the `files` object for changes
-  
-  const fetchBusinessPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforassessment', {
-        method: 'GET',
-        credentials: 'include', // Ensure cookies (containing the token) are sent
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const businessPermitData = await response.json();
-      setBusinesPermits(businessPermitData);
-    } catch (error) {
-      console.error('Error fetching work permits:', error);
-    }
-  };
-
-  useEffect(() => {
-          fetchBusinessPermits(); // Fetch work permits if token is present
-
-         
-            const fileUrls: { [key: string]: string } = {};
-          
-            Object.entries(files).forEach(([key, file]) => {
-              if (file) {
-                const fileUrl = URL.createObjectURL(file);
-                fileUrls[key] = fileUrl;
-          
-                // Cleanup for this specific file
-                return () => URL.revokeObjectURL(fileUrl);
-              }
-            });
-          
-            setSelectedFiles((prev) => ({ ...prev, ...fileUrls }));
-         
-  }, [files]);
-
-  useEffect(() => {
-    setFilteredItems(businessPermits); // Display all work permits by default
-  }, [businessPermits]);
-//Use Effect
-
-
-
-
-  const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-
-
-//ModalEditOwner
-const handleeditsave = async () => {
-  if (!activePermitId) return;
-
-  const updatedData = {
-    owner: {
-      lastname,
-      firstname,
-      middleinitial,
-      companyname,
-      civilstatus,
-      gender,
-      citizenship,
-      tinnumber,
-      representative,
-      representativedetails: {
-        repfullname,
-        repdesignation,
-        repmobilenumber,
-      },
-      houseandlot,
-      buildingstreetname,
-      subdivision,
-      region,
-      province,
-      municipality,
-      barangay,
-      telephonenumber,
-      mobilenumber,
-      email,
-    },
-  };
-
-  try {
-    const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessownerPermit/${activePermitId._id}`, updatedData);
-
-    fetchBusinessPermits(); // Fetch work permits if token is present
-    editcloseModal();
-    setUpdateSuccess(true);
-    console.log('Update successful:', response.data);
-    setIsEditing(false); // Exit editing mode
-  } catch (error) {
-    console.error('Update failed:', error);
+    default:
+      console.warn('Unknown action');
   }
 };
 
-const handleCorpChange = () => {
-  if (!corporation) {
-    // If toggling to corporation, clear the first and last names
-    setFirstName('');
-    setLastName('');
-    setMiddleInitial('');
-    setCompanyName(activePermitId?.owner?.companyname || '');
-  } else {
-    // If switching back to individual, restore original names from activePermitId (or keep current state)
-    setFirstName(activePermitId?.owner?.firstname || '');
-    setLastName(activePermitId?.owner?.lastname || '');
-    setMiddleInitial(activePermitId?.owner?.middleinitial || '');
-    setCompanyName('');
-  }
 
-  // Toggle corporation state
-  setCorporation(!corporation);
+//Modals
+const CloseOwnerModal = () => {
+  setEditOwnerModal(false);
 };
 
-const handleRepChange = () => {
-  if (!representative) {
-    // If toggling to corporation, clear the first and last names
-    setRepFullName(activePermitId?.owner?.representativedetails?.repfullname || '');
-    setRepDesignation(activePermitId?.owner?.representativedetails?.repdesignation || '');
-    setRepMobileNumber(activePermitId?.owner?.representativedetails?.repmobilenumber || '');
-  } else {
-    // If switching back to individual, restore original names from activePermitId (or keep current state)
-    setRepFullName('');
-    setRepDesignation('');
-    setRepMobileNumber('');
-  }
-
-  // Toggle corporation state
-  setRepresentative(!representative);
+const closeViewBusinessDetails = () => {
+  setViewBusinessDetails(false);
 };
 
-const handleCancelEdit = () => {
-  if (activePermitId) {
-    setLastName(activePermitId.owner.lastname || '');
-    setFirstName(activePermitId.owner.firstname || '');
-    setMiddleInitial(activePermitId.owner.middleinitial || '');
-    setCompanyName(activePermitId.owner.companyname || '');
-    setCivilStatus(activePermitId.owner.civilstatus || '');
-    setGender(activePermitId.owner.gender || '');
-    setCitizenship(activePermitId.owner.citizenship || '');
-    setTinNumber(activePermitId.owner.tinnumber || '');
-    setRepFullName(activePermitId.owner.representativedetails?.repfullname || '');
-    setRepDesignation(activePermitId.owner.representativedetails?.repdesignation || '');
-    setRepMobileNumber(activePermitId.owner.representativedetails?.repmobilenumber || '');
-    setHouseandLot(activePermitId.owner.houseandlot || '');
-    setBuildingStreetName(activePermitId.owner.buildingstreetname || '');
-    setSubdivision(activePermitId.owner.subdivision || '');
-    setRegion(activePermitId.owner.region || '');
-    setProvince(activePermitId.owner.province || '');
-    setMunicipality(activePermitId.owner.municipality || '');
-    setBarangay(activePermitId.owner.barangay || '');
-    setTelephoneNumber(activePermitId.owner.telephonenumber || '');
-    setMobileNumber(activePermitId.owner.mobilenumber || '');
-    setEmail(activePermitId.owner.email || '');
 
-  }
-  setIsEditing(false);
-  setCorporation(false);
-  setRepresentative(false);
+const closeViewAttachmentsModal = () => {
+  setViewAttatchmentsModal(false);
+  setSelectedFiles({});
 };
 
-  const editcloseModal = () => {
-    setEditOwnerModal(false);
-    setIsEditing(false);
-  };
-//ModalEditOwner
+useEffect(() => {
+  setFilteredItems(businessPermits); // Display all work permits by default
+}, [businessPermits]);
 
 
   return (
@@ -916,7 +419,7 @@ const handleCancelEdit = () => {
         <header className='DAheader'>
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
-        <div className='workpermittable'>
+  <div className='workpermittable'>
           <p>Business Permit Applications New Business(For Assessments)</p>
           {/* Search Bar */}
           Search:
@@ -999,14 +502,13 @@ const handleCancelEdit = () => {
               Select Action
             </option>
               <>
-                <option value="editowner">Edit Owner Details</option>
-                <option value="editbusiness">Edit Business Details</option>
+                <option value="editowner">View Owner Details</option>
+                <option value="editbusiness">View Business Details</option>
                 <option value="viewApplication">View Application</option>
-                <option value="editnature">Edit Business Nature</option>
-                <option value="assessment">Assessment</option>
+                <option value="editnature">View Business Nature</option>
+                <option value="assessment">View Assessment</option>
                 <option value="viewattatchments">View Attatchments</option>
                 <option value="department">Department</option>
-                <option>Cancel Application</option>
               </>
           </select>
         </td>
@@ -1048,278 +550,221 @@ const handleCancelEdit = () => {
             )}
           </div>
         </div>
-
-{editownermodal && activePermitId && (
-      <div className="modal-overlay" onClick={editcloseModal}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <p>Edit Owner Details {activePermitId._id}</p>
-
-          <div className="form-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={isEditing ? corporation : activePermitId?.owner?.corporation || false}
-                onChange={() => {
-                  handleCorpChange();
-                                }}
-                disabled={!isEditing} // Disable unless editing
-              />
-              Check if Corporation
-            </label>
-          </div>
-
         
-          <div className="form-group">
-  <label>LAST NAME:</label>
-  <input
-    type="text"
-    value={isEditing ? lastname : activePermitId.owner.lastname} // Use `lastname` when editing
-    onChange={(e) => setLastName(e.target.value)}
-    required
-    disabled={!isEditing || corporation} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>FIRST NAME:</label>
-  <input
-    type="text"
-    value={isEditing ? firstname : activePermitId.owner.firstname} // Use `lastname` when editing
-    onChange={(e) => setFirstName(e.target.value)}
-    required
-    disabled={!isEditing || corporation} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>MIDDLE INITIAL:</label>
-  <input
-    type="text"
-    value={isEditing ? middleinitial : activePermitId.owner.middleinitial} // Use `lastname` when editing
-    onChange={(e) => setMiddleInitial(e.target.value)}
-    required
-    disabled={!isEditing || corporation} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>COMPANY NAME:</label>
-  <input
-    type="text"
-    value={isEditing ? companyname : activePermitId.owner.companyname} // Use `lastname` when editing
-    onChange={(e) => setCompanyName(e.target.value)}
-    required
-    disabled={!isEditing || !corporation} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Civil Status:</label>
-   <select
-                  value={isEditing ? civilstatus : activePermitId.owner.civilstatus} // Use `lastname` when editing
-                  onChange={(e) => setCivilStatus(e.target.value)}
-                  required
-                  disabled={!isEditing}
-                  className="form-control"
-                >
-                  <option value="" disabled>Select Civil Status</option>
-                  <option value="Single">Single</option>
-                  <option value="Married">Married</option>
-                  <option value="Widowed">Widowed / Widower</option>
-                  <option value="Seperated">Seperated</option>
-                  <option value="Undefined">Undefined</option>
-                </select>
-</div>
-<div className="form-group">
-  <label>Gender:</label>
-  <select
-                  value={isEditing ? gender : activePermitId.owner.gender} // Use `lastname` when editing
-                  onChange={(e) => setGender(e.target.value)}
-                  className="form-control"
-                  disabled={!isEditing} // Disable if not editing or is corporation
-                >
-                  <option value="" disabled>Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                  <option value="Corp">Corporation</option>
-                </select>
-</div>
-<div className="form-group">
-  <label>Citizenship:</label>
-  <input
-    type="text"
-    value={isEditing ? citizenship : activePermitId.owner.citizenship} // Use `lastname` when editing
-    onChange={(e) => setCitizenship(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Tin Number:</label>
-  <input
-    type="text"
-    value={isEditing ? tinnumber : activePermitId.owner.tinnumber} // Use `lastname` when editing
-    onChange={(e) => setTinNumber(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={isEditing ? representative : activePermitId?.owner?.representative || false}
-                onChange={() => {
-                  handleRepChange();
-                                }}
-                disabled={!isEditing} // Disable unless editing
-              />
-              Check if thru Representative
-            </label>
-          </div>
-          <div className="form-group">
-  <label>Representative Full Name:</label>
-  <input
-    type="text"
-    value={isEditing ? repfullname : activePermitId.owner.representativedetails?.repfullname} // Use `lastname` when editing
-    onChange={(e) => setRepFullName(e.target.value)}
-    required
-    disabled={!isEditing || !representative} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Representative Designation:</label>
-  <input
-    type="text"
-    value={isEditing ? repdesignation : activePermitId.owner.representativedetails?.repdesignation} // Use `lastname` when editing
-    onChange={(e) => setRepDesignation(e.target.value)}
-    required
-    disabled={!isEditing || !representative} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Representative Mobile Number:</label>
-  <input
-    type="text"
-    value={isEditing ? repmobilenumber : activePermitId.owner.representativedetails?.repmobilenumber} // Use `lastname` when editing
-    onChange={(e) => setRepMobileNumber(e.target.value)}
-    required
-    disabled={!isEditing || !representative} // Disable if not editing or is corporation
-  />
-</div>
-<h1>Contact Details</h1>
-<div className="form-group">
-  <label>House/Bldg No./Blk and Lot:</label>
-  <input
-    type="text"
-    value={isEditing ? houseandlot : activePermitId.owner.houseandlot} // Use `lastname` when editing
-    onChange={(e) => setHouseandLot(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Building Name / Street Name:</label>
-  <input
-    type="text"
-    value={isEditing ? buildingstreetname : activePermitId.owner.buildingstreetname} // Use `lastname` when editing
-    onChange={(e) => setBuildingStreetName(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Subdivision / Compound Name:</label>
-  <input
-    type="text"
-    value={isEditing ? subdivision : activePermitId.owner.subdivision} // Use `lastname` when editing
-    onChange={(e) => setSubdivision(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Region:</label>
-  <input
-    type="text"
-    value={isEditing ? region : activePermitId.owner.region} // Use `lastname` when editing
-    onChange={(e) => setRegion(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Province:</label>
-  <input
-    type="text"
-    value={isEditing ? province : activePermitId.owner.province} // Use `lastname` when editing
-    onChange={(e) => setProvince(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Municipality:</label>
-  <input
-    type="text"
-    value={isEditing ? municipality : activePermitId.owner.municipality} // Use `lastname` when editing
-    onChange={(e) => setMunicipality(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Barangay:</label>
-  <input
-    type="text"
-    value={isEditing ? barangay : activePermitId.owner.barangay} // Use `lastname` when editing
-    onChange={(e) => setBarangay(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Telephone Number:</label>
-  <input
-    type="text"
-    value={isEditing ? telephonenumber : activePermitId.owner.telephonenumber} // Use `lastname` when editing
-    onChange={(e) => setTelephoneNumber(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Mobile Number:</label>
-  <input
-    type="text"
-    value={isEditing ? mobilenumber : activePermitId.owner.mobilenumber} // Use `lastname` when editing
-    onChange={(e) => setMobileNumber(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-<div className="form-group">
-  <label>Email:</label>
-  <input
-    type="text"
-    value={isEditing ? email : activePermitId.owner.email} // Use `lastname` when editing
-    onChange={(e) => setEmail(e.target.value)}
-    required
-    disabled={!isEditing} // Disable if not editing or is corporation
-  />
-</div>
-          {/* Additional fields */}
-          <div>
-  <button className="editbutton"onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
-    {isEditing ? 'Save' : 'Edit'}
-  </button>
-  {isEditing && (
-    <button className="cancel-button" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
-      Cancel
-    </button>
-  )}
-            <button className="cancel-button" onClick={editcloseModal}>Close</button>
-          </div>
-        </div>
+
+        {editownermodal && activePermitId && (
+  <div className="modal-overlay">
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <p>Viewing Owner Details of {activePermitId.id}</p>
+
+      <div className="form-group">
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={activePermitId?.owner?.corporation || false}
+            disabled={true} // Disabled for view-only mode
+          />
+          Check if Corporation
+        </label>
       </div>
-          )}
+
+      <div className="form-group">
+        <label>LAST NAME:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.lastname}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>FIRST NAME:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.firstname}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>MIDDLE INITIAL:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.middleinitial}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>COMPANY NAME:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.companyname}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Civil Status:</label>
+        <select
+          value={activePermitId.owner.civilstatus}
+          disabled={true} // Disabled for view-only mode
+          className="form-control"
+        >
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+          <option value="Widowed">Widowed / Widower</option>
+          <option value="Seperated">Seperated</option>
+          <option value="Undefined">Undefined</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label>Gender:</label>
+        <select
+          value={activePermitId.owner.gender}
+          disabled={true} // Disabled for view-only mode
+          className="form-control"
+        >
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+          <option value="Corp">Corporation</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label>Citizenship:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.citizenship}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Tin Number:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.tinnumber}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={activePermitId?.owner?.representative || false}
+            disabled={true} // Disabled for view-only mode
+          />
+          Check if thru Representative
+        </label>
+      </div>
+      <div className="form-group">
+        <label>Representative Full Name:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.representativedetails?.repfullname}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Representative Designation:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.representativedetails?.repdesignation}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Representative Mobile Number:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.representativedetails?.repmobilenumber}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <h1>Contact Details</h1>
+      <div className="form-group">
+        <label>House/Bldg No./Blk and Lot:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.houseandlot}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Building Name / Street Name:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.buildingstreetname}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Subdivision / Compound Name:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.subdivision}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Region:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.region}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Province:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.province}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Municipality:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.municipality}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Barangay:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.barangay}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Telephone Number:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.telephonenumber}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Mobile Number:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.mobilenumber}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+      <div className="form-group">
+        <label>Email:</label>
+        <input
+          type="text"
+          value={activePermitId.owner.email}
+          disabled={true} // Disabled for view-only mode
+        />
+      </div>
+
+      <div>
+        <button className="cancel-button" onClick={CloseOwnerModal}>Close</button>
+      </div>
+    </div>
+  </div>
+      )}
 
 {viewAttachmentsModal && activePermitId && (
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>
@@ -1347,21 +792,18 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc1 || '') : (activePermitId.files.remarksdoc1 || '')} 
-  onChange={(e) => setRemarksdoc1(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc1 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document1 || (files.document1 && URL.createObjectURL(files.document1))
+  selectedFiles.document1 || (activePermitId.files.document1)
 )}
 
 {/* Document 2 */}
@@ -1385,21 +827,18 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc2 || '') : (activePermitId.files.remarksdoc2 || '')} 
-  onChange={(e) => setRemarksdoc2(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc2 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document2 || (files.document2 && URL.createObjectURL(files.document2))
+  selectedFiles.document2 || (activePermitId.files.document2)
 )}
 
 
@@ -1424,23 +863,19 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc3 || '') : (activePermitId.files.remarksdoc3 || '')} 
-  onChange={(e) => setRemarksdoc3(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc3 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document3 || (files.document3 && URL.createObjectURL(files.document3))
+  selectedFiles.document3 || (activePermitId.files.document3)
 )}
-
 
 {/* Document 4 */}
 <p>
@@ -1463,21 +898,18 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc4 || '') : (activePermitId.files.remarksdoc4 || '')} 
-  onChange={(e) => setRemarksdoc4(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc4 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document4 || (files.document4 && URL.createObjectURL(files.document4))
+  selectedFiles.document4 || (activePermitId.files.document4)
 )}
 
 {/* Document 5 */}
@@ -1501,21 +933,18 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc5 || '') : (activePermitId.files.remarksdoc5 || '')} 
-  onChange={(e) => setRemarksdoc5(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc5 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document5 || (files.document5 && URL.createObjectURL(files.document5))
+  selectedFiles.document5 || (activePermitId.files.document5)
 )}
 
 {/* Document 6 */}
@@ -1539,33 +968,20 @@ const handleCancelEdit = () => {
     </button>
   )}
 
-  {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
-  )}
-
+  {/* Remarks Section - Disabled for view only */}
   <label>Remarks:</label>
   <input 
-  type="text" 
-  value={isEditingAttach ? (remarksdoc6 || '') : (activePermitId.files.remarksdoc6 || '')} 
-  onChange={(e) => setRemarksdoc6(e.target.value)} 
-  disabled={!isEditingAttach} 
-/>
+    type="text" 
+    value={activePermitId.files.remarksdoc6 || ''} 
+    disabled 
+  />
 </p>
 
+{/* Render Document */}
 {renderFile(
-  selectedFiles.document6 || (files.document6 && URL.createObjectURL(files.document6))
+  selectedFiles.document6 || (activePermitId.files.document6)
 )}
 
-
-
-        <button onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
-    {isEditingAttach ? 'Save' : 'Edit'}
-  </button>
-  {isEditingAttach && (
-    <button onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
-      Cancel
-    </button>
-  )}
         {/* Close Modal Button */}
         <button className="close-modal" onClick={closeViewAttachmentsModal}>
           Close
@@ -1577,20 +993,19 @@ const handleCancelEdit = () => {
 {viewbusinessdetails && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessDetails}>
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-  <p>Edit Owner Details {activePermitId._id}</p>
+  <p>View Business Details {activePermitId._id}</p>
 
 
 <div className="form-group">
                   <label>Business Name:</label>
-                  <input type="text" value={editbusiness ? businessname : activePermitId.business.businessname} onChange={(e) => setBusinessName(e.target.value)} disabled={!editbusiness}/>
+                  <input type="text" value={activePermitId.business.businessname} disabled/>
                 </div>
                 <div className="form-group">
                   <label>Business Scale:</label>
                   <select
-                    value={editbusiness ? businessscale : activePermitId.business.businessscale}
-                    onChange={(e) => setBusinessScale(e.target.value)}
+                    value={activePermitId.business.businessscale}
                     className="form-control"
-                    disabled={!editbusiness}
+                    disabled
                   >
                     <option value="" disabled>Select Business Scale</option>
                     <option value="Micro">Micro (Not more than 3M or Having 1-9 Employees)</option>
@@ -1602,10 +1017,9 @@ const handleCancelEdit = () => {
                 <div className="form-group">
                   <label>Payment Mode:</label>
                   <select
-                    value={editbusiness ? paymentmethod : activePermitId.business.paymentmethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    value={activePermitId.business.paymentmethod}
                     className="form-control"
-                    disabled={true}
+                    disabled
                   >
                     <option value="" disabled>Select Payment Method</option>
                     <option value="Annual">Annual</option>
@@ -1616,40 +1030,40 @@ const handleCancelEdit = () => {
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbuildingblocklot : activePermitId.business.businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.businessbuildingblocklot} />
                 </div>
                 <div className="form-group">
                   <label>Building Name/Street Name:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbuildingname : activePermitId.business.businessbuildingname} onChange={(e) => setBusinessBuildingName(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.businessbuildingname} />
                 </div>
                 <div className="form-group">
                   <label>Subdivision/Compound Name:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesssubcompname : activePermitId.business.businesssubcompname} onChange={(e) => setBusinessSubCompName(e.target.value)}  />
+                  <input type="text" disabled value={activePermitId.business.businesssubcompname} />
                 </div>
                 <div className="form-group">
                   <label>Region:</label>
-                  <input type="text"  value={editbusiness ? businessregion : activePermitId.business.businessregion} onChange={(e) => setBusinessRegion(e.target.value)} disabled />
+                  <input type="text"  value={activePermitId.business.businessregion} disabled />
                 </div>
                 <div className="form-group">
                   <label>Province:</label>
-                  <input type="text"  value={editbusiness ? businessprovince : activePermitId.business.businessprovince} onChange={(e) => setBusinessProvince(e.target.value)} disabled />
+                  <input type="text"  value={activePermitId.business.businessprovince} disabled />
                 </div>
                 <div className="form-group">
                   <label>City/Municipality:</label>
-                  <input type="text"  value={editbusiness ? businessmunicipality : activePermitId.business.businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
+                  <input type="text"  value={activePermitId.business.businessmunicipality} disabled />
                 </div>
                 <div className="form-group">
                   <label>Barangay:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businessbarangay : activePermitId.business.businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.businessbarangay} />
                 </div>
 
                 <div className="form-group">
                   <label>Zip:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesszip : activePermitId.business.businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.businesszip} />
                 </div>
                 <div className="form-group">
                   <label>Contact Number:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesscontactnumber : activePermitId.business.businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.businesscontactnumber} />
 
 
                 </div>
@@ -1657,29 +1071,11 @@ const handleCancelEdit = () => {
                 <div className="form-group">
                   <label>Ownership Type:</label>
                   <select
-                    value={editbusiness ? ownershiptype : activePermitId.business.ownershiptype}
-                    onChange={(e) => {
-                      setOwnershipType(e.target.value);
-                      if (e.target.value === "COOP") {
-                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
-                        setDTIRegistrationDate('');
-                        setDTIRegistrationExpDate('');
-                        setSECRegistrationNum('');
-                      }
-                      if (e.target.value === "CORP" || e.target.value === "INST" || e.target.value === "PART") {
-                        setDTIRegistrationNum(''); // Clear DTI Registration No for specific types
-                        setDTIRegistrationDate('');
-                        setDTIRegistrationExpDate('');
-                        setBIRRegistrationNum('');
-                      }
-                      if (e.target.value === "SOLE") {
-                        setSECRegistrationNum('');
-                        setBIRRegistrationNum('');
-
-                      }
-                    }}
+                    value={activePermitId.business.ownershiptype}
+                    
+           
                     className="form-control"
-                    disabled={!editbusiness}
+                    disabled
                   >
                     <option value="" disabled>Select Ownership Type</option>
                     <option value="COOP">Cooperative</option>
@@ -1691,41 +1087,38 @@ const handleCancelEdit = () => {
                 </div>
                 <div className="form-group">
                   <label>Agency Registered No:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? agencyregistered : activePermitId.business.agencyregistered} onChange={(e) => setAgencyRegistered(e.target.value)} />
+                  <input type="text" disabled value={activePermitId.business.agencyregistered} />
                 </div>
                 <div className="form-group">
                   <label>DTI Registration No:</label>
                   <input
                     type="text"
-                    value={editbusiness ? dtiregistrationnum : activePermitId.business.dtiregistrationnum}
-                    onChange={(e) => setDTIRegistrationNum(e.target.value)}
-                    placeholder="Enter DTI Registration No"
-                    disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness}
+                    value={activePermitId.business.dtiregistrationnum}
+                    disabled
                   />
                 </div>
                 <div className="form-group">
                   <label>DTI Registration Date:</label>
-                  <input type="date"  value={editbusiness ? dtiregistrationdate : activePermitId.business.dtiregistrationdate} onChange={(e) => setDTIRegistrationDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness} />
+                  <input type="date"  value={activePermitId.business.dtiregistrationdate} disabled />
                 </div>
                 <div className="form-group">
                   <label>DTI Expiration Date:</label>
-                  <input type="date"  value={editbusiness ? dtiregistrationexpdate : activePermitId.business.dtiregistrationexpdate} onChange={(e) => setDTIRegistrationExpDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || !editbusiness} />
+                  <input type="date"  value={activePermitId.business.dtiregistrationexpdate} disabled />
                 </div>
                 <div className="form-group">
                   <label>SEC Registration No:</label>
-                  <input type="text"  value={editbusiness ? secregistrationnum : activePermitId.business.secregistrationnum} onChange={(e) => setSECRegistrationNum(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "SOLE" || !editbusiness} />
+                  <input type="text"  value={activePermitId.business.secregistrationnum} disabled />
                 </div>
                 <div className="form-group">
                   <label>BIR Registration No:</label>
-                  <input type="text" value={editbusiness ? birregistrationnum : activePermitId.business.birregistrationnum} onChange={(e) => setBIRRegistrationNum(e.target.value)} disabled={ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || ownershiptype === "SOLE" || !editbusiness} />
+                  <input type="text" value={activePermitId.business.birregistrationnum} disabled />
                 </div>
                 <div className="form-group">
                   <label>Industry Sector:</label>
                   <select
-                    value={editbusiness ? industrysector : activePermitId.business.industrysector}
-                    onChange={(e) => setIndustrySector(e.target.value)}
+                    value={activePermitId.business.industrysector}
                     className="form-control"
-                    disabled={!editbusiness}
+                    disabled
                   >
                     <option value="EL">Electronic</option>
                     <option value="CN">Construction</option>
@@ -2089,10 +1482,9 @@ const handleCancelEdit = () => {
                 <div className="form-group">
                   <label>Business Operation:</label>
                   <select
-                    value={editbusiness ? businessoperation : activePermitId.business.businessoperation}
-                    onChange={(e) => setBusinessOperation(e.target.value)}
+                    value={activePermitId.business.businessoperation}
                     className="form-control"
-                    disabled={!editbusiness}
+                    disabled
                   >
                     <option value="Daytime">DAYTIME</option>
                     <option value="Nightshift">NIGHTSHIFT</option>
@@ -2102,10 +1494,9 @@ const handleCancelEdit = () => {
                 <div className="form-group">
                   <label>Business Type:</label>
                   <select
-                    value={editbusiness ? typeofbusiness : activePermitId.business.typeofbusiness}
-                    onChange={(e) => setTypeofBusiness(e.target.value)}
+                    value={activePermitId.business.typeofbusiness}
                     className="form-control"
-                    disabled={!editbusiness}
+                    disabled
                   >
                     <option value="Main">MAIN</option>
                     <option value="Franchise">FRANCHISE</option>
@@ -2115,14 +1506,7 @@ const handleCancelEdit = () => {
 
 
   <div>
-  <button onClick={editbusiness ? handlesavebusinessedit : () => setEditBusiness(true)}>
-    {editbusiness ? 'Save' : 'Edit'}
-  </button>
-  {editbusiness && (
-    <button onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
-      Cancel
-    </button>
-  )}
+
           {/* Close Modal Button */}
           <button className="close-modal" onClick={closeViewBusinessDetails}>
           Close
@@ -2132,20 +1516,9 @@ const handleCancelEdit = () => {
 </div>
       )}
 
-{updatesuccess && activePermitId && (
-  <div className="modal-overlay" onClick={closeupdateSuccess}>
-  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-    <p>Updated Business Permit ID:{activePermitId.id}</p>
-    <button className="close-modal" onClick={closeupdateSuccess}>
-          Close
-        </button>
-  </div>
-  </div>
-      )}
-
       </div>
     </section>
   );
 };
 
-export default DataControllerForAssessmentBP;
+export default DataControllerForPaymentBP;

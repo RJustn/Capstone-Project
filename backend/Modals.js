@@ -37,8 +37,12 @@ const businessPermitSchema = new mongoose.Schema({
   businesspermitstatus: { type: String, required: true, },
   businessstatus: {type: String},
   classification: { type: String },
+  totalgrosssales: {type: String},
+  totaltax: {type: String},
   transaction: { type: String },
   amountToPay: {type: String },
+  paymentStatus: {type: String},
+  permitnumber: {type: String},
   permitFile: {type: String},
   permitDateIssued: {type: String},
   permitExpiryDate: {type:String},
@@ -124,7 +128,8 @@ typeofbusiness: String,
       businessNature: { type: String,},
       businessType: { type: String,},
       capitalInvestment: { type: Number,},
-      lastYearGross: { type: Number,}
+      lastYearGross: { type: Number,},
+      tax: { type: Number,}
     },
   ],
   files: {
@@ -147,6 +152,21 @@ typeofbusiness: String,
     OffBldOfcl: String,
     CtyHlthOff: String,
     BreuFrPrt: String,
+  },
+  statementofaccount:{
+    permitassessed: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Store a single user ID
+    dateassessed: { type: String }, // You can change this to Date if you prefer
+    mayorspermit: { type: String },
+    sanitary: { type: String },
+    health: { type: String },
+    businessplate: { type: String },
+    zoningclearance: { type: String },
+    annualInspection: { type: String },
+    environmental: { type: String }, // Add this if it's part of the schema
+    miscfee: { type: String },
+    liquortobaco: { type: String },
+    liquorplate: { type: String },
+    statementofaccountfile: { type: String }
   },
   receipt: {
     receiptId: String, //Generated
@@ -172,6 +192,7 @@ const workPermitSchema = new mongoose.Schema({
   classification: { type: String, required: true },
   transaction: { type: String },
   amountToPay: { type: String },
+  paymentStatus: {type: String},
   permitFile: { type: String },
   permitDateIssued: { type: String },
   permitExpiryDate: { type: String },

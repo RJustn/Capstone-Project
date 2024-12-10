@@ -396,14 +396,14 @@ const handleLogout = async () => {
 
   const handleOpenPermitPDF = () => {
     // Assuming the PDFs are served from the '/permits' route
-    const pdfUrl = `http://localhost:3000/permits/${latestPermitFile}`;
+    const pdfUrl = `http://localhost:3000/client/permits/${latestPermitFile}`;
     
     // Open the PDF in a new tab
     window.open(pdfUrl, '_blank');
   };
 
   const handleOpenReceiptPDF = () => {
-    const pdfUrl = `http://localhost:3000/receipts/${latestReceiptFile}`;
+    const pdfUrl = `http://localhost:3000/client/receipts/${latestReceiptFile}`;
     
     // Open the PDF in a new tab
     window.open(pdfUrl, '_blank');

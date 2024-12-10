@@ -134,6 +134,8 @@ const WorkPermit: React.FC = () => {
   return dateB - dateA; // Sort in descending order
 });
 
+
+
 // Set the latest work permit if there are any permits
 if (WorkPermitData.length > 0) {
   setLatestWorkPermit(WorkPermitData[0]);
@@ -143,12 +145,17 @@ if (WorkPermitData.length > 0) {
       }
     };
     
+
+
+    
   useEffect(() => {
 
  
   console.log('Repeating');
     fetchWorkPermits();
   }, [navigate]); 
+
+  
 
   useEffect(() => {
     if (latestWorkPermit) {
@@ -404,11 +411,11 @@ if (WorkPermitData.length > 0) {
               <div className="form-row">
               <div className="form-group">
               <label>HEIGHT:</label>
-              <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Enter Height in cm"  />
+              <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Enter Height"  />
               </div>
               <div className="form-group">
               <label>WEIGHT:</label>
-              <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter Weight in kg"  />
+              <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter Weight"  />
             </div>
           </div>
           <div className="form-row">
@@ -483,20 +490,23 @@ if (WorkPermitData.length > 0) {
     <label>Upload Cedula:</label>
     <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
   </div>
-  
-  <div className="upload-item">
-    <label>Upload Referral Letter:</label>
-    <input type="file" onChange={(e) => handleFileChange(e, 'document3')} disabled={currentlyResiding} />
-  </div>
-  
-  <div className="upload-item">
-    <label>Upload FTJS Cert.:</label>
-    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workpermitclassification === "Renewal"} />
-  </div>
-
+  {!currentlyResiding &&(
+      <div className="upload-item">
+      <label>Upload Referral Letter:</label>
+      <input type="file" onChange={(e) => handleFileChange(e, 'document3')} disabled={currentlyResiding} />
+    </div>
+  )}
+  {
+  workPermits.length === 0 ? (
+    <div className="upload-item">
+      <label>Upload FTJS Cert.:</label>
+      <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workPermits.length === 0} />
+    </div>
+  ) : null // Optionally, render something else when the condition is not met
+}
 <div>
   <button type="button" onClick={goToPreviousStep} className="back-button">Back</button>
-  <button type="submit" className="nextbutton">Submit</button>
+  <button type="submit" className="upload-button">Submit</button>
   </div>
 </div>
 

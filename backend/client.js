@@ -14,6 +14,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
 
 router.use(cors({
     origin: 'http://localhost:5173', // Update to your frontend URL
@@ -193,6 +196,20 @@ router.post('/signup', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
   });
+
+  router.get('/check-auth-admin', authenticateToken, (req, res) => {
+    // Assuming the user role is stored in req.user after token verification
+    const userRole = req.user.userrole; // Adjust this if the role key is different
+    console.log(userRole);
+    if (userRole === 'Admin') {
+      // If the user's role is 'client', respond with a 204 No Content status
+      return res.sendStatus(204);
+    } else {
+      console.log('Access denied: user is not Admin');
+      // If the user's role is not 'client', respond with a 401 Unauthorized status
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  });
   
   
   router.post('/logout', authenticateToken, async (req, res) => {
@@ -352,6 +369,52 @@ router.post('/signup', async (req, res) => {
   });
   
 
+  //Compute Tax
+const computeTax = (businessNature, capitalInvestment, classification) => {
+  const conditions = [
+    {
+      category: 'BNK',
+      check: (businessNature ) => businessNature.startsWith('BNK'),
+      taxCalculation: (capitalInvestment, classification) => {
+        if (classification === '') {
+          return 0; // No tax for new businesses
+        }
+        // Bank-specific tax rules for renew businesses
+        if (capitalInvestment <= 1000000) {
+          return capitalInvestment * 0.00605; // 60.5% of 1%
+        } else {
+          return capitalInvestment * 0.005808; // 58.08% of 1%
+        }
+      }
+    },
+    {
+      category: 'CNT',
+      check: (businessNature) => businessNature.startsWith('CNT'),
+      taxCalculation: (capitalInvestment, classification) => {
+        if (classification === 'New') {
+          return 0; // No tax for new businesses
+        }
+        // Contractor-specific tax rules for renew businesses
+        if (capitalInvestment >= 200000 && capitalInvestment <= 300000) {
+          return 400; // Fixed tax for this range
+        } else if (capitalInvestment > 500000) {
+          return 500; // Another fixed tax for larger investments
+        } else {
+          return 0; // Default tax for other cases
+        }
+      }
+    }
+  ];
+
+  // Iterate over conditions to find the matching category
+  for (const condition of conditions) {
+    if (condition.check(businessNature)) {
+      return condition.taxCalculation(capitalInvestment, classification);
+    }
+  }
+  return 0; // Default case if no conditions match
+};
+
   // Route to get all business permit applications
 router.post('/businesspermitpage', upload.fields([
   { name: 'document1', maxCount: 1 },
@@ -443,7 +506,6 @@ router.post('/businesspermitpage', upload.fields([
     lng,
  
     //Step 5
-    newBusiness,
     businesses,
 
 
@@ -456,11 +518,23 @@ router.post('/businesspermitpage', upload.fields([
      const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
      console.log('Decoded token:', decoded);
 
-     const parsedNewBusiness = JSON.parse(newBusiness);
      const parsedBusinesses = JSON.parse(businesses);
      const userId = decoded.userId;
      const permitID = await generateBusinessPermitID('BP');
      const status = "Pending";
+
+   // Iterate over parsed businesses and compute tax for each
+   const updatedBusinesses = parsedBusinesses.map((business) => {
+    const tax = computeTax(business.businessNature, business.capitalInvestment, business.businessType);
+    return {
+      ...business,
+      tax: tax, // Add computed tax to the business object
+    };
+  });
+
+  const totalCapitalInvestment = updatedBusinesses.reduce((total, business) => total + parseFloat(business.capitalInvestment || 0), 0);
+
+const totalTax = updatedBusinesses.reduce((total, business) => total + parseFloat(business.tax || 0), 0);
 
      const newBusinessPermit = new BusinessPermit({
        id: permitID,
@@ -468,8 +542,12 @@ router.post('/businesspermitpage', upload.fields([
        businesspermitstatus: status,
        businessstatus: 'On Process',
        classification: 'NewBusiness',
+       totalgrosssales: totalCapitalInvestment,
+       totaltax: totalTax,
        transaction: null,
        amountToPay: null,
+       paymentStatus: null,
+       permitnumber: null,
        permitFile: null,
        permitDateIssued: null,
        permitExpiryDate: null,
@@ -549,7 +627,7 @@ router.post('/businesspermitpage', upload.fields([
       lat,
       lng,
       },
-      businesses: parsedBusinesses, // Save businesses as an array
+      businesses: updatedBusinesses, // Save businesses as an array
       files: {
         document1: files.document1 ? files.document1[0].filename : null,
         document2: files.document2 ? files.document2[0].filename : null,
@@ -569,6 +647,21 @@ router.post('/businesspermitpage', upload.fields([
         OffBldOfcl:'Office of the Building Official',
         CtyHlthOff:'Ctiy Health Office',
         BreuFrPrt: 'Bureau of Fire Protection',
+      },
+      statementofaccount:{
+        permitassessed: null,
+        dateassessed: null,
+        mayorspermit: null,
+        sanitary: null,
+        health: null,
+        businessplate: null,
+        zoningclearance: null,
+        annualInspection: null,
+        environmental: null,
+        miscfee: null,
+        liquortobaco: null,
+        liquorplate: null,
+        statementofaccountfile: null
       },
        receipt: {
        receiptId: null, //Generated
@@ -1066,5 +1159,177 @@ router.post('/businesspermitpage', upload.fields([
 
   // Apptest Codes @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   router.use('/uploads', express.static('uploads'));
+
+    // Ensure the receipts directory exists
+    const receiptsDir = path.join(__dirname, 'receipts');
+    if (!fs.existsSync(receiptsDir)) {
+        fs.mkdirSync(receiptsDir);
+    }
+    // Serve static files from the receipts directory
+    router.use('/receipts', express.static(receiptsDir));
+  
+     // Ensure the receipts directory exists
+     const uploadsDir = path.join(__dirname, 'uploads');
+     if (!fs.existsSync(uploadsDir)) {
+         fs.mkdirSync(uploadsDir);
+     }
+     // Serve static files from the receipts directory
+     router.use('/uploads', express.static(uploadsDir));
+    
+    
+    
+    // Define and create the workPermitsDir
+    const workPermitsDir = path.join(__dirname, 'permits'); 
+    if (!fs.existsSync(workPermitsDir)) {
+      fs.mkdirSync(workPermitsDir);
+    }
+
+
+
+    // Serve the 'workpermits' directory as static files
+    router.use('/permits', express.static(workPermitsDir));
+
+
+// Fetch and group user's business permits by 'id'
+router.get('/business-permits', async (req, res) => {
+  const token = req.cookies.authToken; // Extract token from the cookie
+
+  try {
+    // Decode the JWT token to get the user ID
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Fetch all business permits associated with the user
+    const user = await User.findById(userId).populate('businessPermits');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const userBusinessPermits = user.businessPermits;
+
+    // Group business permits by 'id' field (not _id)
+    const groupedBusinessPermits = userBusinessPermits.reduce((acc, permit) => {
+      const permitId = permit.id; // Use the `id` field for grouping
+      if (!acc[permitId]) {
+        acc[permitId] = [];
+      }
+      acc[permitId].push(permit);
+      return acc;
+    }, {});
+
+    // Convert grouped data to an array for frontend consumption
+    const groupedArray = Object.entries(groupedBusinessPermits).map(([id, permits]) => ({
+      id,
+      permits,
+    }));
+
+    // Respond with grouped permits
+    res.json(groupedArray);
+  } catch (error) {
+    console.error('Error fetching or grouping business permits:', error);
+    res.status(500).json({ message: 'Error retrieving business permits', error });
+  }
+});
+
+const generatePermitNumber = async (year) => {
+  // Get the count of paid permits for the current year
+  const paidPermitsThisYear = await BusinessPermit.find({
+    createdAt: { 
+      $gte: new Date(`${year}-01-01`),
+      $lt: new Date(`${year + 1}-01-01`),
+    },
+    paymentStatus: 'Paid',  // Filter by payment status
+  }).countDocuments(); // Get the count of paid permits only
+
+  // Permit number is the count of paid permits + 1
+  return paidPermitsThisYear + 1;
+};
+
+const generateBusinessPermitPDF = async (ContentData, permitNumber) => {
+  const doc = new PDFDocument();
+  const businessPermitFileName = `businessPermit_${ContentData}.pdf`; // File name based on the ID
+  const businessPermitPath = path.join(workPermitsDir, businessPermitFileName);
+
+  try {
+    // Fetch the business permit data by ID
+    const businessPermit = await BusinessPermit.findById(ContentData);
+console.log(ContentData);
+    if (!businessPermit) {
+      throw new Error('Work permit not found');
+    }
+
+    // Ensure the output directory exists
+    if (!fs.existsSync(workPermitsDir)) {
+      fs.mkdirSync(workPermitsDir, { recursive: true });
+    }
+
+    const writeStream = fs.createWriteStream(businessPermitPath);
+    doc.pipe(writeStream);
+
+    // Add content to the PDF
+    doc.fontSize(20).text('Work Permit', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(12).text(`BusinessPermit Permit ID: ${businessPermit.id}`);
+    doc.text(`Issued To: ${businessPermit.owner?.lastname || 'Unknown'}`);
+    doc.text(`Classification: ${businessPermit.classification || 'Not Specified'}`);
+    doc.text(`Permit Number: ${permitNumber}`);
+    doc.text(`Permit Status: Released`);
+    doc.text(`Issue Date: ${new Date().toISOString().split('T')[0]}`); // ISO format for consistency
+    doc.text(
+      `Expiration Date: ${new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1)
+      ).toISOString().split('T')[0]}`
+    );
+
+    doc.end();
+
+    console.log(`Work Permit PDF created at ${businessPermitPath}`);
+
+    return businessPermitFileName; // Return the file name
+  } catch (error) {
+    console.error('Error generating work permit PDF:', error);
+    throw error;
+  }
+};
+
+// PUT route to update payments and assign permit number
+router.put('/updatepayments/:id', async (req, res) => {
+  const { id } = req.params; // Get the permit ID from the URL
+  const { paymentStatus, businesspermitstatus } = req.body; // Get the payment status from the request body
+
+  try {
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+
+    // Generate the permit number
+    const permitNumber = await generatePermitNumber(currentYear);
+    const businessPermitFile = await generateBusinessPermitPDF(id,permitNumber);
+    // Find the permit by ID and update it
+    const permit = await BusinessPermit.findByIdAndUpdate(
+      id,
+      {
+        paymentStatus,
+        businesspermitstatus,
+        permitnumber: permitNumber, // Assign the generated permit number
+        permitDateIssued: new Date().toISOString(),
+        permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
+        expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
+        permitFile: businessPermitFile,
+        businessstatus: 'Active',
+      },
+      { new: true }
+    );
+
+    // Check if permit was found and updated
+    if (!permit) {
+      return res.status(404).json({ message: 'Permit not found' });
+    }
+
+    res.status(200).json({ message: 'Payment status and permit number updated', permit });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating payment status' });
+  }
+});
 
   module.exports = router;
