@@ -82,8 +82,8 @@ const DAdashboard: React.FC = () => {
     ],
   });
 
-
-  const [dashboardData, setDashboardData] = useState({
+  //setDashboardData
+  const [dashboardData,] = useState({
     totalPermitApplications: '',
     totalRenewalApplications: '',
     totalCollections: '',
@@ -238,28 +238,35 @@ const DAdashboard: React.FC = () => {
           });
 
         
-          const dashboardResponse = await fetch('/dashboard/data', { method: 'GET', credentials: 'include' });
-          if (dashboardResponse.ok) {
-            const WorkdashboardData = await dashboardResponse.json();
-            setDashboardData({
-              totalPermitApplications: dashboardData.totalPermitApplications,
-              totalRenewalApplications: dashboardData.totalRenewalApplications,
-              totalCollections: dashboardData.totalCollections,
-              totalReleased: dashboardData.totalReleased,
-            });
-          } else {
-            console.error('Error fetching dashboard data');
-          }
-        } else {
-          console.error('Error fetching permit data');
-        }
-      } catch (error) {
-        console.error('Error fetching permit data:', error);
+        } 
+      } catch(error) {
+        console.error("Error fetching data:", error);
       }
-    };
+    }; 
 
     fetchData();
   }, []);
+    // add later to get the number of permits
+      //       const dashboardResponse = await fetch('/dashboard/data', { method: 'GET', credentials: 'include' });
+    //       if (dashboardResponse.ok) {
+    //         const WorkdashboardData = await dashboardResponse.json();
+    //         setDashboardData({
+    //           totalPermitApplications: dashboardData.totalPermitApplications,
+    //           totalRenewalApplications: dashboardData.totalRenewalApplications,
+    //           totalCollections: dashboardData.totalCollections,
+    //           totalReleased: dashboardData.totalReleased,
+    //         });
+    //       } else {
+    //         console.error('Error fetching dashboard data');
+    //       }
+    //     } else {
+    //       console.error('Error fetching permit data');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching permit data:', error);
+    //   }
+    // };
+
 
   const handleLogout = async () => {
     try {

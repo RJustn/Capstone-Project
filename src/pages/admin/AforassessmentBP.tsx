@@ -585,11 +585,11 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     {currentItems.map((permit) => (
       <React.Fragment key={permit._id}>
       <tr key={permit._id}>
-        <th>Business Name:{permit.business.businessname}<br />
+        <td>Business Name:{permit.business.businessname}<br />
             Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
-            Address:</th>
+            Address:</td>
         <td>{permit.id}</td>
-        <th>{permit.businesspermitstatus}</th>
+        <td>{permit.businesspermitstatus}</td>
         <td>{permit.businessstatus}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
         <td>

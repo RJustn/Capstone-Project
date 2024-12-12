@@ -3067,7 +3067,7 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
-                <button type="button" onClick={goToNextStep}>Next</button>
+                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
               </div>
             </div>
           )}
@@ -3075,7 +3075,6 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 2 */}
               <div className="businesspermit-form">
-                <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
                 <h2>Step 2 Business Information</h2>
                 <div className="form-group">
                   <label>Business Name:</label>
@@ -3145,17 +3144,20 @@ const handleRemoveBusiness = (index: number) => {
                 <div className="form-group">
                   <label>Contact Number:</label>
                   <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
-                  Check if Same as Owner Info
+                  <label className="checkbox-label">
                   <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setBusinessContactNumber(mobilenumber); // Set the value when checked
-    } else {
-      setBusinessContactNumber(''); // Clear the value when unchecked
-    }
-  }}
-/>
+                    type="checkbox"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                      setBusinessContactNumber(mobilenumber); // Set the value when checked
+                      } else {
+                      setBusinessContactNumber(''); // Clear the value when unchecked
+                      }
+                    }}
+                  />
+                  Check if Same as Owner Info
+                  </label>
+
 
                 </div>
                 <h2>Necessities Information</h2>
@@ -3613,7 +3615,8 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="Branch">BRANCH</option>
                   </select>
                 </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
+                <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
+                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
 
               </div>
             </div>
@@ -3622,38 +3625,44 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 3 */}
               <div className="businesspermit-form">
-                <button type="button" onClick={goToPreviousStep}>Backe</button>
                 <h2>Step 3 Other Information</h2>
                 <h2>Other Business Information</h2>
                 <div className="form-group">
                   <label>Date Established:</label>
                   <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
-                  <label>Check if Same as DTI</label>
-                  <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setDateEstablished(dtiregistrationdate); // Set the value when checked
-    } else {
-      setDateEstablished(''); // Clear the value when unchecked
-    }
-  }}
-/>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                      if (e.target.checked) {
+                      setDateEstablished(dtiregistrationdate); // Set the value when checked
+                      } else {
+                      setDateEstablished(''); // Clear the value when unchecked
+                      }
+                    }}
+                    />
+                      Check if Same as DTI
+                  </label>
+
+
                 </div>
                 <div className="form-group">
                   <label>Start Date:</label>
                   <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
-                  <label>Check if Same as DTI</label>
-                  <input
-  type="checkbox"
-  onChange={(e) => {
-    if (e.target.checked) {
-      setStartDate(dtiregistrationdate); // Set the value when checked
-    } else {
-      setStartDate(''); // Clear the value when unchecked
-    }
-  }}
-/>
+                  <label className="checkbox-label">
+  <input
+    type="checkbox"
+    onChange={(e) => {
+      if (e.target.checked) {
+        setStartDate(dtiregistrationdate); // Set the value when checked
+      } else {
+        setStartDate(''); // Clear the value when unchecked
+      }
+    }}
+  />
+  Check if Same as DTI
+</label>
+
                 </div>
                 <div className="form-group">
                   <label>Occupancy:</label>
@@ -3728,7 +3737,8 @@ const handleRemoveBusiness = (index: number) => {
                   <label>Email Address:</label>
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
+                <button type="button" onClick={goToPreviousStep} className="back-button">Back</button>
+                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
               </div>
             </div>
           )}
@@ -3736,7 +3746,6 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 4 */}
               <div className="businesspermit-form">
-                <button type="button" onClick={goToPreviousStep}>Backd</button>
                 <h2>Step 4 Map Location</h2>
                 <h4>Map Location</h4>
 
@@ -3753,7 +3762,8 @@ const handleRemoveBusiness = (index: number) => {
                     <input type="text" value={lng} readOnly />
                   </label>
                 </div>
-                <button type="button" onClick={goToNextStep}>Next</button>
+                <button type="button" onClick={goToPreviousStep}className="back-button">Back</button>
+                <button type="button" onClick={goToNextStep}className="nextbutton">Next</button>
               </div>
             </div>
           )}
@@ -3761,7 +3771,7 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               <div className="businesspermit-form">
                 {/* Content for Step 5 */}
-                <button type="button" onClick={goToPreviousStep}>Backc</button>
+                
                 <h2>Step 5 Business Nature</h2>
                 Business Nature:
                 <Select
@@ -3802,7 +3812,7 @@ const handleRemoveBusiness = (index: number) => {
       <button onClick={(e) => {
                              e.preventDefault(); // Prevents default form submission or button behavior
                              handleAddBusiness(); // Calls your custom function
-                            }}>Add Business</button>
+                            }}className="addbusiness">Add Business</button>
 
       <h2>Businesses to Add</h2>
 
@@ -3823,43 +3833,55 @@ const handleRemoveBusiness = (index: number) => {
               <td>{business.businessType}</td>
               <td>{business.capitalInvestment}</td>
               <td>
-                <button onClick={(e) => {handleRemoveBusiness(index); e.preventDefault();}}>Remove</button>
+                <button onClick={(e) => {handleRemoveBusiness(index); e.preventDefault();}} className="removebutton">Remove</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-                <button className="nextbutton" type="button" onClick={goToNextStep}>Next</button>
+                <button type="button" onClick={goToPreviousStep}className="back-button">Back</button>
+                <button type="button" onClick={goToNextStep} className="nextbutton" >Next</button>
 
               </div>
             </div>
           )}
           {step === 6 && (
-            <div>
-              <div className="businesspermit-form">
-                {/* Content for Step 6 */}
-                <button className="back-button"type="button" onClick={goToPreviousStep}>Back</button>
-                <label>Upload DTI / SEC / CDA:</label>
+            <div className="upload-section">
+                <label>
+                  Upload DTI / SEC / CDA:
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
-                <label>Occupancy Permit (Optional)</label>
+                <label>
+                  Occupancy Permit (Optional):
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
-                <label>Lease Contract (if rented) / Tax Declaration (If Owned)</label>
+                <label>
+                  Lease Contract (if rented) / Tax Declaration (If Owned):
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
-                <label>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)</label>
+                <label>
+                  Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative):
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
-                <label>No file chosen Owner's ID</label>
+                <label>
+                  No file chosen Owner's ID:
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
-                <label>Picture of Establishment (Perspective View)</label>
+                <label>
+                  Picture of Establishment (Perspective View):
+                </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
-                <button type="submit">Submit</button>
+              <div>
+              <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
+              <button className="nextbutton" type="submit">Submit</button>
               </div>
-            </div>
+          </div>
           )}
         </form>
       </div>
     </section>
   );
 };
+
 
 export default BusinessPermit;

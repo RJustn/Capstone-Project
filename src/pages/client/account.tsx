@@ -220,31 +220,24 @@ const handleVerifyOtp = async () => {
       <h1>Online Business and Work Permit Licensing System</h1>
     </header>
 
-    <div className="account-page">
-      {error && <p className="error">{error}</p>}
-      {userDetails ? (
-        <div className="user-details">
-          <div className="profile-info">
-            <div className="profile-picture">
-              <img src="/profileicon.svg" alt="Profile Icon" />
-            </div>
-            <h2>{userDetails.firstName} {userDetails.middleName} {userDetails.lastName}</h2>
-          </div>
+  <div className="account-page">
+  {error && <p className="error">{error}</p>}
+  {userDetails ? (
+    <div className="user-details">
+      <div className="profile-info">
+        <div className="profile-picture">
+          <img src="/profileicon.svg" alt="Profile Icon" />
         </div>
-      ) : (
-        <p>Loading user details...</p>
-      )}
-    </div>
- User Details: <h3>{userDetails?.email}</h3>
- Contact Number: <h3>{userDetails?.contactNumber}</h3>
- Address: <h3>{userDetails?.address}</h3>
+        <h2>{userDetails.firstName} {userDetails.middleName} {userDetails.lastName}</h2>
+      </div>
 
+      <div className="user-info">
+        <p>User Details: <span>{userDetails?.email}</span></p>
+        <p>Contact Number: <span>{userDetails?.contactNumber}</span></p>
+        <p>Address: <span>{userDetails?.address}</span></p>
+      </div>
 
-
- 
-
- {/* Forget Password Section */}
- <div>
+      <div>
       {/* Step 3: Render a button to toggle the form */}
       <button className='viewpermitbutton' onClick={handleButtonClick}>
         {isFormVisible ? 'Close' : 'Change Password?'}
@@ -331,6 +324,13 @@ const handleVerifyOtp = async () => {
     </div>
       )}
     </div>
+    </div>
+  ) : (
+    <p>Loading user details...</p>
+  )}
+</div>
+ {/* Forget Password Section */}
+ 
 
 
 

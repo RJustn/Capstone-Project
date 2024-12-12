@@ -979,11 +979,11 @@ const handleCancelEdit = () => {
     {currentItems.map((permit) => (
       <React.Fragment key={permit._id}>
       <tr key={permit._id}>
-        <th>Business Name:{permit.business.businessname}<br />
+        <td>Business Name:{permit.business.businessname}<br />
             Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
-            Address:</th>
+            Address:</td>
         <td>{permit.id}</td>
-        <th>{permit.businesspermitstatus}</th>
+        <td>{permit.businesspermitstatus}</td>
         <td>{permit.businessstatus}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
         <td>
@@ -1088,7 +1088,7 @@ const handleCancelEdit = () => {
     required
     disabled={!isEditing || corporation} // Disable if not editing or is corporation
   />
-</div>
+
 <div className="form-group">
   <label>MIDDLE INITIAL:</label>
   <input
@@ -1098,6 +1098,8 @@ const handleCancelEdit = () => {
     required
     disabled={!isEditing || corporation} // Disable if not editing or is corporation
   />
+  </div>
+
 </div>
 <div className="form-group">
   <label>COMPANY NAME:</label>
@@ -1558,16 +1560,16 @@ const handleCancelEdit = () => {
 
 
 
-        <button onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
+        <button className="modal-button"onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
     {isEditingAttach ? 'Save' : 'Edit'}
   </button>
   {isEditingAttach && (
-    <button onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+    <button className="cancel-button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
         {/* Close Modal Button */}
-        <button className="close-modal" onClick={closeViewAttachmentsModal}>
+        <button className="cancel-button" onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>
@@ -2142,7 +2144,6 @@ const handleCancelEdit = () => {
   </div>
   </div>
       )}
-
       </div>
     </section>
   );

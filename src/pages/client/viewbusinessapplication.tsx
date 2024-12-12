@@ -354,7 +354,10 @@ const ViewBusinessApplication: React.FC = () => {
                 <header>
                     <h1>View Business Permit Applications</h1>
                 </header>
-                <h1>Business Permits</h1>
+                
+
+                <div className='businesspermittable'>
+                <p>Business Permits</p>
       <table className="permit-table">
         <thead>
           <tr>
@@ -383,7 +386,7 @@ const ViewBusinessApplication: React.FC = () => {
                   </td>
                   <td>{group.permits[0].businessstatus || 'N/A'}</td>
                   <td>
-                    <button onClick={() => toggleRowExpansion(group.id)}>
+                    <button className="table-button" onClick={() => toggleRowExpansion(group.id)}>
                       {isExpanded ? 'Hide Past Permits' : 'Show Past Permits'}
                     </button>
                   </td>
@@ -438,8 +441,7 @@ const ViewBusinessApplication: React.FC = () => {
           })}
         </tbody>
       </table>
-             
-             {viewpayment && activePermitId &&(
+            {viewpayment && activePermitId &&(
               <div className="modal-overlay" onClick={closeviewpayment}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                   <label>{activePermitId._id}</label>
@@ -452,7 +454,8 @@ const ViewBusinessApplication: React.FC = () => {
       <button onClick={handlePayment}>Pay</button> {/* Add the handler for Pay button */}
           </div>
         </div>
-             )}
+            )}
+            </div>
 
 
             </div>

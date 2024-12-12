@@ -521,10 +521,18 @@ const handleAction = (action: string, permit: WorkPermit) => {
         
         <div className="applicationcontainer">
           <div>
-            <a href="/businesspermitpage" className='businesspermitbutton'>
-              Apply for Business Permit
+
+            
+            <a href="/businesspermitpage" className="businesspermitbutton">
+              <img 
+                src="applicationslogo.svg" 
+                alt="Logo" 
+                className="button-logo" 
+              />
+            <span>Apply for Business Permit</span>
             </a>
           </div>
+          
           <div>
           <a 
           href={!(latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') ? "/workpermitpage" : "#"} 
@@ -535,10 +543,17 @@ const handleAction = (action: string, permit: WorkPermit) => {
           }
           }}
             >
-          Apply for Work Permit
+              <img 
+                src="applicationslogo.svg" 
+                alt="Logo" 
+                className="button-logo" 
+              />
+          <span>Apply for Work Permit</span>
           </a>
           </div>
         </div>
+
+
         
         <div className='workpermittable'>
   <p>Work Permit Applications</p>
@@ -629,8 +644,8 @@ const handleAction = (action: string, permit: WorkPermit) => {
     {currentItemsBP.map((permit) => (
       <tr key={permit._id}>
         <td>{permit.id}</td>
-        <th>{permit.business.businessname}</th>
-        <th>{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinital}</th>
+        <td>{permit.business.businessname}</td>
+        <td>{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinital}</td>
         <td>{permit.businesspermitstatus}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
         <td>

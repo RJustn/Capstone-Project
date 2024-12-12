@@ -77,6 +77,7 @@
     justify-content: center; /* Distribute space between buttons */
     width: 100%; /* Ensure the container takes full width */
     gap: 10rem; /* Optional: Space between buttons */
+    margin-top: 2rem;
 }
 
 .DAbusinesspermitbutton, .DAworkpermitbutton {
@@ -291,6 +292,7 @@
 .cancel-button:hover {
     background-color: #c9302c; /* Darker red on hover */
 }
+
  /* ===================================  VIEW APPLICAION DETIALS STYLES =================================== */
 .panel {
     background-color: #fff;
@@ -316,7 +318,7 @@
     background: white;
     padding: 20px;
     border-radius: 10px;
-    max-width: 600px;
+    max-width: 950px;
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1001; 
@@ -410,14 +412,14 @@
     padding: 10px 20px;
     margin: 0 5px;
     border: 1px solid #ccc;
-    background-color: #f0f0f0;
+    background-color: #007bff;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
 .tab-button.active {
-    background-color: #007bff;
+    background-color: #024286;
     color: white;
 }
 
