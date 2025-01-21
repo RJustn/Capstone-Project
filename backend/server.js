@@ -35,6 +35,8 @@ mongoose.connect('mongodb://localhost:27017/obpwlsdatabase', {
   console.log('MongoDB connected');
   seedSuperadmin(); // Seed superadmin on startup
   checkExpired();
+  checkExpiredAndMigrateBusinessPermit();
+  checkBusinessPermitExpiryAndUpdateStatus();
 }).catch(err => console.log(err));
 
 app.use('/client', clientRoutes);
@@ -72,20 +74,32 @@ const checkExpired = async () => {
   console.log(`Current Date (UTC): ${currentDate}`);
 
   try {
+    // Find permits where either 'permitExpiryDate' or 'expiryDate' is expired, and 'workpermitstatus' is not 'Expired'
     const permits = await WorkPermit.find({
-      permitExpiryDate: { $lte: currentDate },
-      workpermitstatus: { $ne: 'Expired' }
+      $or: [
+        { permitExpiryDate: { $lte: currentDate } },
+        { expiryDate: { $lte: currentDate } }
+      ],
+      workpermitstatus: { $ne: 'Expired' },
     });
 
-    permits.forEach(permit => {
+    console.log(`Found ${permits.length} expired permits to update.`);
+
+    permits.forEach((permit) => {
       console.log(`Checking Permit: ${permit._id}`);
-      console.log(`Permit Expiry Date (UTC): ${permit.permitExpiryDate}, Current Date (UTC): ${currentDate}`);
+      console.log(
+        `Permit Expiry Date (UTC): ${permit.permitExpiryDate || 'N/A'}, Expiry Date (UTC): ${permit.expiryDate || 'N/A'}, Current Date (UTC): ${currentDate}`
+      );
     });
 
+    // Update permits to set 'workpermitstatus' as 'Expired' where applicable
     const result = await WorkPermit.updateMany(
       {
-        permitExpiryDate: { $lte: currentDate },
-        workpermitstatus: { $ne: 'Expired' }
+        $or: [
+          { permitExpiryDate: { $lte: currentDate } },
+          { expiryDate: { $lte: currentDate } }
+        ],
+        workpermitstatus: { $ne: 'Expired' },
       },
       { $set: { workpermitstatus: 'Expired' } }
     );
@@ -95,10 +109,100 @@ const checkExpired = async () => {
     console.error('Error updating expired work permits:', error);
   }
 };
+ 
+
+const checkExpiredAndMigrateBusinessPermit = async () => {
+  const currentDate = new Date(Date.now()).toISOString();
+  console.log(`Current Date (UTC): ${currentDate}`);
+
+  try {
+    // Find all permits that have either permitExpiryDate or expiryDate expired
+    const permits = await BusinessPermit.find({
+      $or: [
+        { permitExpiryDate: { $lte: currentDate } },
+        { expiryDate: { $lte: currentDate } },
+      ],
+      businesspermitstatus: { $ne: 'Expired' },
+    });
+
+    console.log(`Found ${permits.length} expired permits to update.`);
+
+    for (const permit of permits) {
+      console.log(`Processing Permit ID: ${permit._id}`);
+      console.log(
+        `Permit Expiry Dates: permitExpiryDate (UTC): ${permit.permitExpiryDate}, expiryDate (UTC): ${permit.expiryDate}, Current Date (UTC): ${currentDate}`
+      );
+
+      // Update businesses array: transfer capitalInvestment to lastYearGross
+      const updatedBusinesses = permit.businesses.map((business) => {
+        if (business.capitalInvestment) {
+          business.lastYearGross = business.capitalInvestment; // Move value
+          business.capitalInvestment = null; // Clear capitalInvestment
+        }
+        business.businessType = 'Renew'; // Update the businessType to 'Renew' for all businesses
+        return business;
+      });
+
+      // Update the permit's businesses and status
+      permit.businesses = updatedBusinesses;
+      permit.businesspermitstatus = 'Expired';
+
+      // Save the changes
+      await permit.save();
+      console.log(`Updated permit with ID: ${permit._id}`);
+    }
+
+    console.log('All expired permits have been updated successfully.');
+  } catch (error) {
+    console.error('Error updating expired permits:', error);
+  }
+};
+
+const checkBusinessPermitExpiryAndUpdateStatus = async () => {
+  const currentDate = new Date();
+  const threeMonthsAgo = new Date(currentDate.setMonth(currentDate.getMonth() - 3)).toISOString(); // 3 months ago
+
+  console.log(`Current Date (UTC): ${new Date().toISOString()}`);
+  console.log(`3 Months Ago Date (UTC): ${threeMonthsAgo}`);
+
+  try {
+    // Find all permits that have an expiryDate older than 3 months
+    const permits = await BusinessPermit.find({
+      expiryDate: { $lte: threeMonthsAgo }, // Check if the expiryDate is older than 3 months
+      businesspermitstatus:  'Expired',
+      businessstatus: { $ne: 'Inactive' }, // Only update businesses that are not already inactive
+    });
+
+    console.log(`Found ${permits.length} expired permits to update.`);
+
+    for (const permit of permits) {
+      console.log(`Processing Permit ID: ${permit._id}`);
+      console.log(
+        `Permit Expiry Date (UTC): ${permit.expiryDate}, 3 Months Ago Date (UTC): ${threeMonthsAgo}`
+      );
+
+      // Update the business status to 'Inactive' if the expiryDate is older than 3 months
+      permit.businessstatus = 'Inactive';
+
+      // Save the changes
+      await permit.save();
+      console.log(`Updated business status to 'Inactive' for permit with ID: ${permit._id}`);
+    }
+
+    console.log('All expired permits with overdue expiryDate have been updated to Inactive.');
+  } catch (error) {
+    console.error('Error updating business status:', error);
+  }
+};
+
+
+
 
 cron.schedule('0 0 * * *', async () => {
-  console.log('Running scheduled job to check for expired work permits.');
+  console.log('Running scheduled job to check for expired Business permits.');
   await checkExpired();
+  await checkExpiredAndMigrateBusinessPermit();
+  await checkBusinessPermitExpiryAndUpdateStatus();
 });
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

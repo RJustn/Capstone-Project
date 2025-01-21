@@ -3032,6 +3032,7 @@ return (
     </div>
   </>
 )}
+
                         <h1>List of Businesses</h1>
           {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -3146,17 +3147,14 @@ return (
   </table>
 ) : (
   <div>No businesses to display.</div>
-)}
-
-      
-
+)}     
 
                         <p>{/* User Info content */}</p>
                     </div>
                 ) : activeTab === 'business' ? (
                     <div className="business-info">
                         <h2>Business Information</h2>
-                        <p>{businessPermit?._id}</p>
+                        <p>{businessPermit?._id}</p>     
                         {/* Add your business information content here */}
 
                         <div className="form-group">

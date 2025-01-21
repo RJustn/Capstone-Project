@@ -72,7 +72,7 @@ const AdminForAssessment: React.FC = () => {
                 </header>
 
                 <div className="button-container"> {/* Centering container */}
-                    <a href="/AforassessmentBP" className="Abusinesspermitbutton">
+                    <a href="/AforassessmentBP/new" className="Abusinesspermitbutton">
                         For Assessment New Business Permit
                     </a>
                     
@@ -82,7 +82,7 @@ const AdminForAssessment: React.FC = () => {
           
             </div>
             <div className="button-container"> {/* Centering container */}
-                    <a href="/AforassessmentBP" className="Abusinesspermitbutton">
+                    <a href="/AforassessmentBP/renew" className="Abusinesspermitbutton">
                         For Assessment Renew Business Permit
                     </a>
                     
@@ -93,7 +93,7 @@ const AdminForAssessment: React.FC = () => {
             </div>
 
             <div className="button-container"> {/* Centering container */}
-                    <a href="/AforassessmentBP" className="Abusinesspermitbutton">
+                    <a href="/AforassessmentBP/" className="Abusinesspermitbutton">
                         View All For Assessment Business Permit
                     </a>
                     

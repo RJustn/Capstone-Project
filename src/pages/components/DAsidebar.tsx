@@ -44,6 +44,11 @@ return (
         </a>
         </li>
         <li>
+        <a href="/DAretirebusiness" className={isActive('/DAretirebusiness') ? "DAsidebar-linkactive" : "DAsidebar-link"}>
+            <img src="/reportsngraphlogo.svg" alt="Reports/Graphs Icon" className="sidebarlogoimage" />Retire Business
+        </a>
+        </li>
+        <li>
             <a href="/account" className="DAsidebar-link">
             <img src="/accountlogo.svg" alt="Logo" className="sidebarlogoimage" />Account
             </a>

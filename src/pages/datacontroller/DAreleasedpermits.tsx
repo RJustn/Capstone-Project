@@ -73,29 +73,29 @@ return (
         </header>
 
         <div className="button-container">
-        <a href="/DAreleasedpermitsBP" className='DAbusinesspermitbutton'>
+        <a href="/DAreleasedpermitsBP/new" className='DAbusinesspermitbutton'>
               Released New Business Permit
             </a>
 
-            <a href="/DAreleasedpermitsBP" className='DAbusinesspermitbutton'>
+            <a href="/DAreleasedpermitsBP/renew" className='DAbusinesspermitbutton'>
               Released Renew Business Permit
             </a>
 
-            <a href="/DAreleasedpermitsBP" className='DAbusinesspermitbutton'>
+            <a href="/DAreleasedpermitsBP/" className='DAbusinesspermitbutton'>
               View All Released  Business Permit
             </a>   
         </div>
       
         <div className="button-container">
-            <a href="/DAreleasedpermitsWP" className='DAworkpermitbutton'>
+            <a href="/DAreleasedpermitsWP/new" className='DAworkpermitbutton'>
               Released New Working Permit
             </a>
 
-            <a href="/DAreleasedpermitsWP" className='DAworkpermitbutton'>
+            <a href="/DAreleasedpermitsWP/renew" className='DAworkpermitbutton'>
               Released Renew Working Permit
             </a>
 
-            <a href="/DAreleasedpermitsWP" className='DAworkpermitbutton'>
+            <a href="/DAreleasedpermitsWP/" className='DAworkpermitbutton'>
               View All Released  Working Permit
             </a>
         </div>

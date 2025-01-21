@@ -1,8 +1,9 @@
 import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
+import axios from 'axios';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -68,24 +69,11 @@ const DataControllerForPaymentWP: React.FC = () => {
   const navigate = useNavigate();
   const [selectedPermit, setSelectedPermit] = useState<WorkPermit | null>(null);
   const [isAttachmentsModalOpen, setIsAttachmentsModalOpen] = useState(false);
-  const [isEditingAttach, setIsEditingAttach] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
-  const [remarksdoc1, setRemarksdoc1] = useState('');
-  const [remarksdoc2, setRemarksdoc2] = useState('');
-  const [remarksdoc3, setRemarksdoc3] = useState('');
-  const [remarksdoc4, setRemarksdoc4] = useState('');
-  const [files, setFiles] = useState<{
-    document1: File | null;
-    document2: File | null;
-    document3: File | null;
-    document4: File | null;
-  }>({
-    document1: null,
-    document2: null,
-    document3: null,
-    document4: null,
-  });
 
+  const [activePermitId, setActivePermitId] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
+
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const customModalStyles = {
     content: {
       width: '50%', // Adjust the width as needed
@@ -165,14 +153,10 @@ const DataControllerForPaymentWP: React.FC = () => {
     }
   };
 
- 
-
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  // Search QUERY @@@@@@@@@@@@@@@@@@@@@
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Track the search query
-  const [inputValue, setInputValue] = useState<string>('');
-  const [classificationFilter, setClassificationFilter] = useState<string>('');
+ 
+
 
   // New state to track sorting
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
@@ -207,70 +191,28 @@ const DataControllerForPaymentWP: React.FC = () => {
 
   // Get current items
   const currentItems = filteredItems.slice(startIndex, endIndex); 
-
-  // Handle the search and classification filter together
-  const applyFilters = (searchValue: string, classification: string) => {
-    const results = workPermits.filter((permit) => {
-      const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.classification.toLowerCase().includes(searchValue.toLowerCase());
-
-      const matchesClassification = classification ? permit.classification === classification : true;
-
-      return matchesSearchQuery && matchesClassification;
-    });
-
-    setFilteredItems(results); // Update filtered items
-    setCurrentPage(0); // Reset to the first page of results
-    console.log('Filtered Results:', results); // Log the filtered results
-  };
-
-  // Handle the search when the button is clicked
-  const handleSearch = () => {
-    const searchValue = inputValue; // Use input value for search
-    setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue, classificationFilter); // Apply both search and classification filters
-  };
-
-  // Handle dropdown selection change (classification filter)
-  const handleClassificationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClassification = event.target.value;
-    setSearchQuery(inputValue); // Keep the current search query
-    setInputValue(inputValue); // Keep the current input value
-    setClassificationFilter(selectedClassification); // Set the classification filter
-    applyFilters(inputValue, selectedClassification); // Apply both search and classification filters
-    console.log('Selected Classification:', selectedClassification); // Log selected classification
-    console.log('Search Query:', searchQuery);
-    console.log('Input Value:', inputValue);
-  };
-
-  const fetchWorkPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforpayments', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const WorkPermitData = await response.json();
-      setWorkPermits(WorkPermitData);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
+  const { type } = useParams<{ type: string }>();
 
   useEffect(() => {
-    const handleTokenCheck = () => {
-      if (!token) {
-          navigate('/'); // Redirect to login if no token
-      } else {
-          fetchWorkPermits(); // Fetch work permits if token is present
+    const fetchWorkPermits = async () => {
+      try {
+        console.log(type);
+        const response = await fetch(`http://localhost:3000/datacontroller/getworkpermitsforpayments/${type}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        const WorkPermitData = await response.json();
+        setWorkPermits(WorkPermitData);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
       }
     };
-
-    handleTokenCheck(); // Call the function to check the token
-  }, [navigate, token]);
+    fetchWorkPermits(); 
+ 
+  }, [type,token]);
 
   useEffect(() => {
     setFilteredItems(workPermits); // Display all work permits by default
@@ -306,10 +248,103 @@ const DataControllerForPaymentWP: React.FC = () => {
         setSelectedPermit(permit);
         setIsAttachmentsModalOpen(true);
         break;
+        case 'pay':
+          setActivePermitId(permit._id);  // Save the permit ID
+          setShowPaymentMethod(true);
+          setModalStep(0);                 // Reset modal to the first step
+           console.log(`Pay for permit: ${permit._id}`);
+          console.log(`Pay for permit: ${permit.id}`);
+          break;
       default:
         console.warn('Unknown action');
     }
   };
+
+//Payment
+//Payment Method
+const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+ const [modalStep, setModalStep] = useState(0);
+ const closePaymentMethod = () => {
+    setShowPaymentMethod(false);
+    setModalStep(0); // Reset when closing
+  };
+
+ // Close modal on overlay click
+ const handleOverlayClick = () => {
+   closePaymentMethod();
+ };
+
+const logFormData = (formData: FormData) => {
+  for (const [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+  }
+};
+
+
+//Payment Submission
+
+ const [confirmpayment, setConfirmPayment] = useState(false);
+
+  const confirmpaymentclose = () => {
+    setConfirmPayment(false);
+    setActivePermitId(null);
+    setShowPaymentMethod(false);
+    window.location.reload();
+  };
+
+  const closeviewpayment = () => {
+    setShowPaymentMethod(false);
+    setActivePermitId(null);
+    setConfirmPayment(false);
+    window.location.reload();
+
+  };
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    if (!receiptFile) {
+      alert('Please upload a receipt.');
+      return; // Prevent further execution
+    }
+  
+    const formData = new FormData();
+    formData.append('document1', receiptFile);
+  
+    logFormData(formData); // For debugging
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/datacontroller/updateworkpermitpayments/${activePermitId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
+      );
+  
+      console.log(response.data);
+      if (response.status === 200) {
+        setConfirmPayment(true);
+        setReceiptFile(null); // Clear the file state
+      } else {
+        const errorMessage = (response.data as { message: string }).message;
+        console.error('Error submitting application:', errorMessage);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data || error.message);
+        alert('Failed to submit work permit payment. Please try again.');
+      } else {
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred. Please contact support.');
+      }
+    }
+  };
+  
 
   const handleViewDocument = (documentKey: 'document1' | 'document2' | 'document3' | 'document4') => {
     const documentUrl = fetchDocumentUrl(selectedPermit?.formData.files[documentKey] ?? null, 'uploads');
@@ -319,111 +354,21 @@ const DataControllerForPaymentWP: React.FC = () => {
     }));
   };
 
-
   const closeAttachmentsModal = () => {
     setIsAttachmentsModalOpen(false);
     setSelectedPermit(null);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4') => {
+
+
+  const handleFileChangeReceipt = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: selectedFiles[0],
-      }));
+      setReceiptFile(selectedFiles[0]);
     } else {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: null, 
-      }));
+      setReceiptFile(null);
     }
   };
-
-  const logFormData = (formData: FormData) => {
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-  };
-
-  const updateAttachments = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // if (!selectedPermit) return;
-
-    const formData = new FormData();
-    
-    formData.append('remarksdoc1', remarksdoc1);
-    formData.append('remarksdoc2', remarksdoc2);
-    formData.append('remarksdoc3', remarksdoc3);
-    formData.append('remarksdoc4', remarksdoc4);
-
-    if (files.document1) formData.append('document1', files.document1);
-    if (files.document2) formData.append('document2', files.document2);
-    if (files.document3) formData.append('document3', files.document3);
-    if (files.document4) formData.append('document4', files.document4);
-
-    logFormData(formData);
-
-    try {
-      if (!selectedPermit) {
-        console.error('No permit selected');
-        return;
-      }
-      const response = await fetch(`http://localhost:3000/datacontroller/updateworkpermitattachments/${selectedPermit._id}`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const updatedPermit = await response.json();
-        setWorkPermits((prevPermits) =>
-          prevPermits.map((permit) =>
-            permit._id === updatedPermit._id ? updatedPermit : permit
-          )
-        );
-        console.log('Attachments updated successfully');
-        setIsEditingAttach(false); 
-        closeAttachmentsModal();
-      } else {
-        console.error('Failed to upload files');
-      }
-    } catch (error) {
-      console.error('Error uploading files:', error);
-    }
-  };
-
-  const handleCancelEditAttach = () => {
-    setRemarksdoc1('');
-    setRemarksdoc2('');
-    setRemarksdoc3('');
-    setRemarksdoc4('');
-    setFiles({
-      document1: null,
-      document2: null,
-      document3: null,
-      document4: null,
-    });
-    setSelectedFiles({});
-    setIsEditingAttach(false); // Add this line to exit edit mode
-  };
-
-  useEffect(() => {
-    const urls: Record<string, string> = {}; // Define a typed object for URLs
-
-    // Iterate through each file key in the `files` object
-    Object.entries(files).forEach(([key, file]) => {
-      if (file) {
-        const fileUrl = URL.createObjectURL(file);
-        urls[key] = fileUrl; // Store the created URL
-        setSelectedFiles((prev) => ({ ...prev, [key]: fileUrl }));
-      }
-    });
-
-    // Cleanup function to revoke URLs
-    return () => {
-      Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [files]); // Watch the `files` object for changes
 
   const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
     if (!fileName) return null;
@@ -452,6 +397,18 @@ const DataControllerForPaymentWP: React.FC = () => {
     }
   };
 
+  let displayTextTitle = 'All Work Permit Applications (For Payments)';
+
+if (type === 'new') {
+  displayTextTitle = 'New Work Permit Applications (For Payments)';
+} else if (type === 'renew') {
+  displayTextTitle = 'Renewal of Work Permit Applications (For Payments)';
+} else if (type === 'all') {
+  displayTextTitle = 'All Work Permit Applications (For Payments)';
+} else {
+  displayTextTitle = 'All Work Permit Applications (For Payments)';
+}
+
   return (
     <section className="DAbody">
       <div className="DAsidebar-container">
@@ -463,27 +420,9 @@ const DataControllerForPaymentWP: React.FC = () => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Work Permit Applications (For Payment)</p>
-          {/* Search Bar */}
-          <div className="search-bar-container">
-            Search:
-            <input
-              type="text"
-              placeholder="Search by ID, Status, or Classification"
-              value={inputValue} // Use inputValue for the input field
-              onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
-              className="search-input" // Add a class for styling
-            />
-            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
-          </div>
+        <p>{displayTextTitle}</p>
 
-          {/* Dropdown for Classification Filter */}
-          Classification:
-          <select value={classificationFilter} onChange={handleClassificationChange}>
-            <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Renew">Renew</option>
-          </select>
+
 
           {/* Date Pickers for Date Range Filter */}
           <div className="date-picker-container">
@@ -532,10 +471,18 @@ const DataControllerForPaymentWP: React.FC = () => {
                   <td>{permit.workpermitstatus}</td>
                   <td>{permit.classification}</td>
                   <td>
-                    <select onChange={(e) => handleAction(e.target.value, permit)}>
+                  <select
+            defaultValue=""
+            onChange={(e) => {
+              handleAction(e.target.value, permit);
+              e.target.value = ""; // Reset dropdown to default
+            }}
+            className="dropdown-button"
+          >
                       <option value="">Select Action</option>
                       <option value="viewApplication">View Application</option>
                       <option value="viewAttachments">View Attachments</option>
+                      <option value="pay">Upload Application Receipt</option>
                     </select>
                   </td>
                 </tr>
@@ -552,6 +499,31 @@ const DataControllerForPaymentWP: React.FC = () => {
             )}
           </div>
         </div>
+        {/* Modal Dumps */}
+        {showPaymentMethod && (
+  <div className="modal-overlay-pay" onClick={handleOverlayClick}>
+    <div className="modal-content-pay" onClick={(e) => e.stopPropagation()}>
+      <button className="close-button-pay" onClick={closePaymentMethod}>✖</button>
+      <h3>Choose an Action for Permit ID: {activePermitId}</h3>
+      {modalStep === 0 && (
+        <div>
+          <h2>Upload Receipt</h2>
+          <input type="file" onChange={handleFileChangeReceipt} />
+          <button onClick={handleSubmit} disabled={!receiptFile}>Upload</button>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+{confirmpayment && activePermitId &&(
+  <div className="modal-overlay" onClick={closeviewpayment}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          Payment Completed for Working Permit Application {activePermitId}
+          <button onClick={confirmpaymentclose}>Okay</button>
+            </div>
+            </div>
+)}
       </div>
       <Modal
         isOpen={isAttachmentsModalOpen}
@@ -559,7 +531,7 @@ const DataControllerForPaymentWP: React.FC = () => {
         contentLabel="View Attachments"
         style={customModalStyles} // Apply custom styles
       >
-        <form onSubmit={updateAttachments}>
+        <form>
           <h2>View Attachments</h2>
           {selectedPermit && (
             <div>
@@ -576,15 +548,11 @@ const DataControllerForPaymentWP: React.FC = () => {
                     {selectedFiles.document1 ? 'Close' : 'View'}
                   </button>
                 )}
-                {isEditingAttach && (
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
-                )}
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={isEditingAttach ? (remarksdoc1 || '') : (selectedPermit.formData.files.remarksdoc1 || '')} 
-                  onChange={(e) => setRemarksdoc1(e.target.value)} 
-                  disabled={!isEditingAttach} 
+                  value={(selectedPermit.formData.files.remarksdoc1 || '')} 
+                  disabled
                 />
               </p>
               {renderFile(selectedFiles.document1)}
@@ -599,15 +567,13 @@ const DataControllerForPaymentWP: React.FC = () => {
                     {selectedFiles.document2 ? 'Close' : 'View'}
                   </button>
                 )}
-                {isEditingAttach && (
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
-                )}
+
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={isEditingAttach ? (remarksdoc2 || '') : (selectedPermit.formData.files.remarksdoc2 || '')} 
-                  onChange={(e) => setRemarksdoc2(e.target.value)} 
-                  disabled={!isEditingAttach} 
+                  value={(selectedPermit.formData.files.remarksdoc2 || '')} 
+   
+                  disabled
                 />
               </p>
               {renderFile(selectedFiles.document2)}
@@ -622,15 +588,12 @@ const DataControllerForPaymentWP: React.FC = () => {
                     {selectedFiles.document3 ? 'Close' : 'View'}
                   </button>
                 )}
-                {isEditingAttach && (
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
-                )}
+                
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={isEditingAttach ? (remarksdoc3 || '') : (selectedPermit.formData.files.remarksdoc3 || '')} 
-                  onChange={(e) => setRemarksdoc3(e.target.value)} 
-                  disabled={!isEditingAttach} 
+                  value={(selectedPermit.formData.files.remarksdoc3 || '')} 
+                  disabled
                 />
               </p>
               {renderFile(selectedFiles.document3)}
@@ -645,32 +608,19 @@ const DataControllerForPaymentWP: React.FC = () => {
                     {selectedFiles.document4 ? 'Close' : 'View'}
                   </button>
                 )}
-                {isEditingAttach && (
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
-                )}
+
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={isEditingAttach ? (remarksdoc4 || '') : (selectedPermit.formData.files.remarksdoc4 || '')} 
-                  onChange={(e) => setRemarksdoc4(e.target.value)} 
-                  disabled={!isEditingAttach} 
+                  value={(selectedPermit.formData.files.remarksdoc4 || '')} 
+                  disabled
                 />
               </p>
               {renderFile(selectedFiles.document4)}
-              {isEditingAttach ? (
-                <>
-                  <button type="submit" style={{ marginLeft: '10px' }}>
-                    Save
-                  </button>
-                  <button type="button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <button type="button" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
-                  Edit Attachments
-                </button>
-              )}
+
+              <button type="button" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+            Close
+          </button>
             </div>
           )}
         </form>

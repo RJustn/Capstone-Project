@@ -61,6 +61,7 @@ export interface PersonalInformation {
     userId?: string; // Can be a string for front end
     permittype?: string; // Default value can be handled in logic
     workpermitstatus: string;
+    classification: string;
     transaction: string;
     transactionstatus: string;
     applicationdateIssued?: Date; // Optional
@@ -237,7 +238,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
           // Check the classification and set the new status accordingly
           if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
               newStatus = 'Released';
-          } else if (workPermit?.formData.personalInformation.workpermitclassification=== 'Renewal') {
+          } else if (workPermit?.formData.personalInformation.workpermitclassification=== 'Renew') {
               newStatus = 'Waiting for Payment';
           }
   
@@ -283,6 +284,9 @@ return (
         />
         <label>Work Permit Status:</label>
         <input type="text" value={workPermit.workpermitstatus || ""} readOnly />
+        <label>Classification:</label>
+        <input type="text" value={workPermit.classification || ""} readOnly />
+        
       <h1>Personal Information Details</h1>
       <div className="grid-container">
           <label>Application ID:</label>
@@ -327,17 +331,22 @@ return (
 
       <h1>Documents</h1>
       <div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
-  {workPermit.formData.files ? (
-    <>
-      <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-      <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-      <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-      <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
-    </>
-  ) : (
-    <p>No documents available.</p>
-  )}
-</div>
+    <p>1x1 Picture: {workPermit.formData.files && renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+
+    <p>Cedula: {workPermit.formData.files && renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+
+    {!workPermit.formData.personalInformation.currentlyResiding && (
+  <p>
+    Referral Letter: 
+    {workPermit.formData.files && renderDocument(workPermit.formData.files.document3, 'uploads')}
+  </p>
+)}
+  
+  {workPermit.classification === 'New' && (
+    <p>FTJS (First Time Job Seeker) Certificate: {workPermit.formData.files && renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+)}
+
+  </div>
 
       <div>
   {workPermit.receipt?.receiptFile && (

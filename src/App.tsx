@@ -42,6 +42,7 @@ import DataControllerReleasedPermit from './pages/datacontroller/DAreleasedpermi
 import DataControllerReleasedPermitWP from './pages/datacontroller/DAreleasedpermitsWP';
 import DataControllerReleasedPermitBP from './pages/datacontroller/DAreleasedpermitsBP';
 import DataControllerReportandGraph from './pages/datacontroller/DAreportsngraph';
+import DataControllerRetireBusiness from './pages/datacontroller/DAretirebusiness';
 import DataControllerViewApplicationDetails from './pages/datacontroller/DAviewapplicationdetails';
 import DataControllerViewBusinessApplicationDetails from './pages/datacontroller/DAviewbusinessapplicationdetails';
 import DataControllerAccount from './pages/datacontroller/DAaccount';
@@ -93,15 +94,16 @@ const App: React.FC = () => {
         {/* Routes for Data Controller */}
         <Route path="/DAdashboard" element={<DataControllerDashboard />} />
         <Route path="/DAforassessment" element={<DataControllerForAssessment />} />
-        <Route path="/DAforassessmentBP" element={<DataControllerForAssessmentBP />} />
-        <Route path="/DAforassessmentWP" element={<DataControllerForAssessmentWP />} />
+        <Route path="/DAforassessmentBP/:type?" element={<DataControllerForAssessmentBP />} />
+        <Route path="/DAforassessmentWP/:type?" element={<DataControllerForAssessmentWP />} />
         <Route path="/DAforpayment" element={<DataControllerForPayment />} />
-        <Route path="/DAforpaymentWP" element={<DataControllerForPaymentWP />} />
-        <Route path="/DAforpaymentBP" element={<DataControllerForPaymentBP />} />
+        <Route path="/DAforpaymentWP/:type?" element={<DataControllerForPaymentWP />} />
+        <Route path="/DAforpaymentBP/:type?" element={<DataControllerForPaymentBP />} />
         <Route path="/DAreleasedpermits" element={<DataControllerReleasedPermit />} />
-        <Route path="/DAreleasedpermitsWP" element={<DataControllerReleasedPermitWP />} />
-        <Route path="/DAreleasedpermitsBP" element={<DataControllerReleasedPermitBP/>} />
+        <Route path="/DAreleasedpermitsWP/:type?" element={<DataControllerReleasedPermitWP />} />
+        <Route path="/DAreleasedpermitsBP/:type?" element={<DataControllerReleasedPermitBP/>} />
         <Route path="/DAreportsngraph" element={<DataControllerReportandGraph />} />
+        <Route path="/DAretirebusiness" element={<DataControllerRetireBusiness />} />
         <Route path="/DAviewapplicationdetails/:id?" element={<DataControllerViewApplicationDetails />} />
         <Route path="/DAviewbusinessapplicationdetails/:id?" element={<DataControllerViewBusinessApplicationDetails />} />
         <Route path="/DAaccount" element={<DataControllerAccount />} />
@@ -120,12 +122,12 @@ const App: React.FC = () => {
           {/* Routes for Admin */}
           <Route path="/Adashboard" element={<AdminDashboard />} />
           <Route path="/Aaccount" element={<AdminAccount />} />
-          <Route path="/AForAssessment" element={<AdminForAssessment />} />
-          <Route path="/AForAssessmentBP" element={<AdminForAssessmentBusinessPermit />} />
-          <Route path="/AForAssessmentWP" element={<AdminForAssessmentWP />} />
+          <Route path="/Aforassessment" element={<AdminForAssessment />} />
+          <Route path="/AforassessmentBP/:type?" element={<AdminForAssessmentBusinessPermit />} />
+          <Route path="/AforassessmentWP/:type?" element={<AdminForAssessmentWP />} />
           <Route path="/Areleasedpermits" element={<AdminReleasedPermits />} />
-          <Route path="/AreleasedpermitsWP" element={<AdminReleasedPermitsWP />} /> 
-          <Route path="/AreleasedpermitsBP" element={<AdminReleasedPermitsBP />} />
+          <Route path="/AreleasedpermitsWP/:type?" element={<AdminReleasedPermitsWP />} /> 
+          <Route path="/AreleasedpermitsBP/:type?" element={<AdminReleasedPermitsBP />} />
           <Route path="/Areportandgraph" element={<AdminReportsAndGraph />} />
           <Route path="/Aviewapplicationdetails" element={<AdminViewApplicationDetails />} />
       </Routes>

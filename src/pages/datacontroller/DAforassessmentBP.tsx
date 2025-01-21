@@ -2,7 +2,7 @@
 import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export interface BusinessPermit {
@@ -137,13 +137,21 @@ document2: string | null; // Optional
 document3: string | null; // Optional
 document4: string | null; // Optional
 document5: string | null; // Optional
-document6: string | null; // Optional
+document6: string | null; // 
+document7: string | null; // Optional
+document8: string | null; // Optional
+document9: string | null; // Optional
+document10: string | null; // Optional
 remarksdoc1: string;
 remarksdoc2: string;
 remarksdoc3: string;
 remarksdoc4: string;
 remarksdoc5: string;
 remarksdoc6: string;
+remarksdoc7: string;
+remarksdoc8: string;
+remarksdoc9: string;
+remarksdoc10: string;
 }
 
 export interface Statement{
@@ -164,13 +172,12 @@ export interface Statement{
 
 
 const DataControllerForAssessmentBP: React.FC = () => {
-  const [businessPermits, setBusinesPermits] = useState<BusinessPermit[]>([]);
+  const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
   const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
   
   const navigate = useNavigate();
 
-//Selected Permit Id
-  const [selectedUserIdDep, setSelectedUserId] = useState<string | null>(null); //For Departments Display
+
   const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
 
   //Modals Owner Edit
@@ -240,6 +247,20 @@ const DataControllerForAssessmentBP: React.FC = () => {
   const [industrysector, setIndustrySector] = useState('');
   const [businessoperation, setBusinessOperation] = useState('');
   const [typeofbusiness, setTypeofBusiness] = useState('');
+
+ // Get current month and quarter
+ const currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
+ const quarter = Math.ceil(currentMonth / 3);
+
+ // Determine applicable payment methods dynamically
+ const getPaymentOptions = () => {
+   if (quarter === 2 || quarter === 4) {
+     return ["Quarterly"];
+   }
+   return ["Annual", "Semi-Annual", "Quarterly"];
+ };
+
+  const paymentOptions = getPaymentOptions();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -353,6 +374,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         // Return the file URL based on the folder specified
         return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
       };
+      
   const renderFile = (fileUrl: string | null) => {
     if (!fileUrl) return <p>No file selected.</p>;
 
@@ -384,6 +406,10 @@ const [remarksdoc3, setRemarksdoc3] = useState('');
 const [remarksdoc4, setRemarksdoc4] = useState('');
 const [remarksdoc5, setRemarksdoc5] = useState('');
 const [remarksdoc6, setRemarksdoc6] = useState('');
+const [remarksdoc7, setRemarksdoc7] = useState('');
+const [remarksdoc8, setRemarksdoc8] = useState('');
+const [remarksdoc9, setRemarksdoc9] = useState('');
+const [remarksdoc10, setRemarksdoc10] = useState('');
 
   
   //Attach
@@ -394,6 +420,10 @@ const [remarksdoc6, setRemarksdoc6] = useState('');
     document4: File | null;
     document5: File | null;
     document6: File | null;
+    document7: File | null;
+    document8: File | null;
+    document9: File | null;
+    document10: File | null;
   }>({
     document1: null,
     document2: null,
@@ -401,9 +431,13 @@ const [remarksdoc6, setRemarksdoc6] = useState('');
     document4: null,
     document5: null,
     document6: null,
+    document7: null,
+    document8: null,
+    document9: null,
+    document10: null,
   });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6') => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7' | 'document8' | 'document9' | 'document10') => {
     const selectedFiles = event.target.files;
   if (selectedFiles && selectedFiles.length > 0) {
     setFiles((prev) => ({
@@ -501,6 +535,10 @@ const logFormData = (formData: FormData) => {
       document4: null,
       document5: null,
       document6: null,
+      document7: null,
+      document8: null,
+      document9: null,
+      document10: null,
     });
   };
 
@@ -514,6 +552,10 @@ const logFormData = (formData: FormData) => {
      document4: null,
      document5: null,
      document6: null,
+     document7: null,
+     document8: null,
+     document9: null,
+     document10: null,
    });
    setSelectedFiles({});
    if (selectedFiles.document1) {
@@ -618,7 +660,6 @@ const logFormData = (formData: FormData) => {
   //Edit Business
 
   const handleActionBP = (action: string, permit: BusinessPermit) => {
-    setSelectedUserId(null);
     setActivePermitId(null);
     switch (action) {
 
@@ -651,9 +692,6 @@ const logFormData = (formData: FormData) => {
             setActivePermitId(permit);
         break;
 
-        case 'department':
-          setSelectedUserId(permit._id);
-          break;
 
       default:
         console.warn('Unknown action');
@@ -738,25 +776,58 @@ const logFormData = (formData: FormData) => {
       Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
     };
   }, [files]); // Watch the `files` object for changes
-  
+
+
+   const { type } = useParams<{ type: string }>();
   const fetchBusinessPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforassessment', {
-        method: 'GET',
-        credentials: 'include', // Ensure cookies (containing the token) are sent
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const businessPermitData = await response.json();
-      setBusinesPermits(businessPermitData);
+      const response = await fetch(
+        `http://localhost:3000/datacontroller/getbusinesspermitsforassessment/${type}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch business permits');
+      }
+
+      const data = await response.json();
+      setBusinessPermits(data);
     } catch (error) {
-      console.error('Error fetching work permits:', error);
+      console.error('Error fetching business permits:', error);
     }
   };
 
   useEffect(() => {
+    const fetchBusinessPermits = async () => {
+      try {
+        console.log(type);
+        const response = await fetch(
+          `http://localhost:3000/datacontroller/getbusinesspermitsforassessment/${type}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch business permits');
+        }
+  
+        const data = await response.json();
+        setBusinessPermits(data);
+      } catch (error) {
+        console.error('Error fetching business permits:', error);
+      }
+    };
           fetchBusinessPermits(); // Fetch work permits if token is present
 
          
@@ -774,7 +845,7 @@ const logFormData = (formData: FormData) => {
           
             setSelectedFiles((prev) => ({ ...prev, ...fileUrls }));
          
-  }, [files]);
+  }, [files, type]);
 
   useEffect(() => {
     setFilteredItems(businessPermits); // Display all work permits by default
@@ -905,6 +976,57 @@ const handleCancelEdit = () => {
   };
 //ModalEditOwner
 
+//Reject Part
+
+  const [rejectpermit, setRejectPermit]=useState(false);
+// Update permit status (approve or reject)
+const updatebusinesspermitstatus = async (action: string, remarks: string) => {
+  if (!activePermitId) return;
+
+  // Validate remarks only if the action is 'reject'
+  if (action === 'rejected' && !remarks) {
+    alert('Please provide remarks for rejection');
+    return;
+  }
+
+  try {
+    // Send the action as part of the request payload
+    const response = await axios.put(
+      `http://localhost:3000/admin/updatebusinesspermitstatus/${activePermitId._id}`,
+      { status: action, remarks }
+    );
+
+    // Assuming fetchBusinessPermits() is a function to refetch the list of permits
+    fetchBusinessPermits();
+
+    console.log('Update successful:', response.data);
+    setRejectPermit(false); // Close the modal after the update
+  } catch (error) {
+    console.error('Update failed:', error);
+    alert('Failed to update permit status. Please try again.');
+  }
+};
+
+ const [remarks, setRemarks] = useState(''); // For storing remarks when the permit is rejected
+  const [isRejecting, setIsRejecting] = useState(false);
+  const closeRejectpermit = () => {
+    setRejectPermit(false);
+    setActivePermitId(null);
+    setIsRejecting(false); // Reset rejection state
+    setRemarks(''); // Clear remarks when modal closes
+  };
+
+  let displayTextTitle = 'All Business Permit Applications (For Assessments)';
+
+  if (type === 'new') {
+    displayTextTitle = 'New Business Permit Applications (For Assessments)';
+  } else if (type === 'renew') {
+    displayTextTitle = 'Renewal of Business Permit Applications (For Assessments)';
+  } else if (type === 'all') {
+    displayTextTitle = 'All Business Permit Applications (For Assessments)';
+  } else {
+    displayTextTitle = 'All Business Permit Applications (For Assessments)';
+  }
 
   return (
     <section className="DAbody">
@@ -917,7 +1039,7 @@ const handleCancelEdit = () => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Business Permit Applications New Business(For Assessments)</p>
+        <p>{displayTextTitle}</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">
@@ -963,6 +1085,9 @@ const handleCancelEdit = () => {
                   ID
                 </th>
                 <th>
+                  Classification
+                </th>
+                <th>
                  Application Status
                 </th>
                 <th>
@@ -983,6 +1108,7 @@ const handleCancelEdit = () => {
             Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
             Address:</td>
         <td>{permit.id}</td>
+        <td>{permit.classification}</td>
         <td>{permit.businesspermitstatus}</td>
         <td>{permit.businessstatus}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
@@ -1001,40 +1127,19 @@ const handleCancelEdit = () => {
               <>
                 <option value="editowner">Edit Owner Details</option>
                 <option value="editbusiness">Edit Business Details</option>
-                <option value="viewApplication">View Application</option>
+                <option value="viewApplication">View Full Application</option>
                 <option value="editnature">Edit Business Nature</option>
                 <option value="assessment">Assessment</option>
                 <option value="viewattatchments">View Attatchments</option>
-                <option value="department">Department</option>
-                <option>Cancel Application</option>
+                {permit.businesspermitstatus === 'Pending' && (
+              <>
+                <option value="viewApplication">Reject Application</option>
+              </>
+            )}
               </>
           </select>
         </td>
       </tr>
-      {selectedUserIdDep === permit._id && (
-  <tr>
-    <td colSpan={6}>
-      <table>
-        <thead>
-          <tr>
-            <th>Departments</th>
-            <th>Status</th>
-            <th>Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(permit.department).map(([, departmentValue], index) => (
-            <tr key={index}>
-              <td>{departmentValue}</td>
-              <td>Approved</td>
-              <td>This is a test statement remarks for other departments</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </td>
-  </tr>
-)}
       </React.Fragment>
     ))}
   </tbody>
@@ -1330,7 +1435,12 @@ const handleCancelEdit = () => {
 
 {/* Document 1 */}
 <p>
-  Document 1: {activePermitId.files.document1 || 'Not uploaded'}
+  {/* Conditional text based on classification */}
+  {activePermitId.classification === 'RenewBusiness' ? (
+    <span>BIR: {activePermitId.files.document1 || 'Not uploaded'}</span>
+  ) : (
+    <span>DTI / SEC / CDA: {activePermitId.files.document1 || 'Not uploaded'}</span>
+  )}
 
   {activePermitId.files.document1 && (
     <button
@@ -1368,7 +1478,13 @@ const handleCancelEdit = () => {
 
 {/* Document 2 */}
 <p>
-  Document 2: {activePermitId.files.document2 || 'Not uploaded'}
+    {/* Conditional text based on classification */}
+    {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Past Business Permit Copy: {activePermitId.files.document2 || 'Not uploaded'}</span>
+  ) : (
+    <span>Occupancy Permit (Optional): {activePermitId.files.document2 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document2 && (
     <button
@@ -1407,7 +1523,13 @@ const handleCancelEdit = () => {
 
 {/* Document 3 */}
 <p>
-  Document 3: {activePermitId.files.document3 || 'Not uploaded'}
+    {/* Conditional text based on classification */}
+    {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Certification of Gross Sales: {activePermitId.files.document3 || 'Not uploaded'}</span>
+  ) : (
+    <span>Lease Contract (if rented) / Tax Declaration (If Owned): {activePermitId.files.document3 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document3 && (
     <button
@@ -1446,7 +1568,12 @@ const handleCancelEdit = () => {
 
 {/* Document 4 */}
 <p>
-  Document 4: {activePermitId.files.document4 || 'Not uploaded'}
+      {/* Conditional text based on classification */}
+      {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Zoning: {activePermitId.files.document4 || 'Not uploaded'}</span>
+  ) : (
+    <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): {activePermitId.files.document4 || 'Not uploaded'}</span>
+  )}
 
   {activePermitId.files.document4 && (
     <button
@@ -1484,7 +1611,13 @@ const handleCancelEdit = () => {
 
 {/* Document 5 */}
 <p>
-  Document 5: {activePermitId.files.document5 || 'Not uploaded'}
+        {/* Conditional text based on classification */}
+        {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Office of the Building Official: {activePermitId.files.document5 || 'Not uploaded'}</span>
+  ) : (
+    <span>Owner's ID: {activePermitId.files.document5 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document5 && (
     <button
@@ -1522,7 +1655,13 @@ const handleCancelEdit = () => {
 
 {/* Document 6 */}
 <p>
-  Document 6: {activePermitId.files.document6 || 'Not uploaded'}
+          {/* Conditional text based on classification */}
+          {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Ctiy Health Office: {activePermitId.files.document6 || 'Not uploaded'}</span>
+  ) : (
+    <span>Picture of Establishment (Perspective View): {activePermitId.files.document6 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document6 && (
     <button
@@ -1556,6 +1695,173 @@ const handleCancelEdit = () => {
 
 {renderFile(
   selectedFiles.document6 || (files.document6 && URL.createObjectURL(files.document6))
+)}
+
+{/* Document 7 */}
+<p>
+            {/* Conditional text based on classification */}
+            {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Bureau of Fire Protection: {activePermitId.files.document7 || 'Not uploaded'}</span>
+  ) : (
+    <span>Zoning: {activePermitId.files.document7 || 'Not uploaded'}</span>
+  )}
+
+  {activePermitId.files.document7 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document7, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document7 === newFileUrl;
+          return {
+            ...prev,
+            document7: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document7 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {isEditingAttach && (
+    <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
+  )}
+
+  <label>Remarks:</label>
+  <input 
+  type="text" 
+  value={isEditingAttach ? (remarksdoc7 || '') : (activePermitId.files.remarksdoc7 || '')} 
+  onChange={(e) => setRemarksdoc7(e.target.value)} 
+  disabled={!isEditingAttach} 
+/>
+</p>
+
+{renderFile(
+  selectedFiles.document7 || (files.document7 && URL.createObjectURL(files.document7))
+)}
+
+
+{/* Conditionally render Document 8 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+    Office of the Building Official: {activePermitId.files.document8 || 'Not uploaded'}
+
+    {activePermitId.files.document8 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document8, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document8 === newFileUrl;
+            return {
+              ...prev,
+              document8: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document8 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {isEditingAttach && (
+      <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
+    )}
+
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={isEditingAttach ? (remarksdoc8 || '') : (activePermitId.files.remarksdoc8 || '')} 
+      onChange={(e) => setRemarksdoc8(e.target.value)} 
+      disabled={!isEditingAttach} 
+    />
+    
+    {renderFile(
+      selectedFiles.document8 || (files.document8 && URL.createObjectURL(files.document8))
+    )}
+  </p>
+)}
+
+
+
+{/* Conditionally render Document 9 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+    City Health Office: {activePermitId.files.document9 || 'Not uploaded'}
+
+    {activePermitId.files.document9 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document9, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document9 === newFileUrl;
+            return {
+              ...prev,
+              document9: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document9 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {isEditingAttach && (
+      <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
+    )}
+
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={isEditingAttach ? (remarksdoc9 || '') : (activePermitId.files.remarksdoc9 || '')} 
+      onChange={(e) => setRemarksdoc9(e.target.value)} 
+      disabled={!isEditingAttach} 
+    />
+    
+    {renderFile(
+      selectedFiles.document9 || (files.document9 && URL.createObjectURL(files.document9))
+    )}
+  </p>
+)}
+
+
+{/* Conditionally render Document 10 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+   Bureau of Fire Protection: {activePermitId.files.document10 || 'Not uploaded'}
+
+    {activePermitId.files.document10 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document10, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document10 === newFileUrl;
+            return {
+              ...prev,
+              document10: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document10 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {isEditingAttach && (
+      <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
+    )}
+
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={isEditingAttach ? (remarksdoc10 || '') : (activePermitId.files.remarksdoc10 || '')} 
+      onChange={(e) => setRemarksdoc10(e.target.value)} 
+      disabled={!isEditingAttach} 
+    />
+
+    {renderFile(
+      selectedFiles.document10 || (files.document10 && URL.createObjectURL(files.document10))
+    )}
+  </p>
 )}
 
 
@@ -1601,20 +1907,24 @@ const handleCancelEdit = () => {
                     <option value="Large">Large (more than 100M or Asset size of more than 100M)</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>Payment Mode:</label>
-                  <select
-                    value={editbusiness ? paymentmethod : activePermitId.business.paymentmethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="form-control"
-                    disabled={true}
-                  >
-                    <option value="" disabled>Select Payment Method</option>
-                    <option value="Annual">Annual</option>
-                    <option value="Semi-Annual">Semi-Annual</option>
-                    <option value="Quarterly">Quarterly</option>
-                  </select>
-                </div>
+<div className="form-group">
+      <label>Payment Mode:</label>
+      <select
+        value={paymentmethod}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+        className="form-control"
+        disabled={!editbusiness}
+      >
+        <option value="" disabled>
+          Select Payment Method
+        </option>
+        {paymentOptions.map((method) => (
+          <option key={method} value={method}>
+            {method}
+          </option>
+        ))}
+      </select>
+    </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>
@@ -2144,6 +2454,42 @@ const handleCancelEdit = () => {
   </div>
   </div>
       )}
+
+{rejectpermit && activePermitId && (
+        <div className="modal-overlay" onClick={closeRejectpermit}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Approve Permit {activePermitId.id}?</h2>
+            <p>Are you sure you want to approve or reject this permit? Please confirm your decision.</p>
+
+            <div className="button-group">
+              <button>Approve</button>
+              <button onClick={() => {
+                setIsRejecting(true); // Show remarks input when rejecting
+              }}>
+                Reject
+              </button>
+            </div>
+
+            {/* Show remarks input if rejecting */}
+            {isRejecting && (
+              <div>
+                <label>Remarks:</label>
+                <textarea
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  placeholder="Enter remarks for rejection"
+                />
+              <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
+              </div>
+            )}
+            <button className="close-modal" onClick={closeRejectpermit}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      
       </div>
     </section>
   );

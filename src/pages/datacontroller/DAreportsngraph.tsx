@@ -2,7 +2,7 @@ import '../Styles/DataControllerStyles.css';
 import DASidebar from '../components/DAsidebar';
 import { useNavigate } from 'react-router-dom';// Import your CSS file
 
-const DataControllerReportandGraph: React.FC = () => {
+const DAreportsngraph: React.FC = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -26,4 +26,4 @@ return (
 
 };
 
-export default DataControllerReportandGraph;
+export default DAreportsngraph;

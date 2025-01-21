@@ -22,14 +22,36 @@ const storage = multer.diskStorage({
   }
 });
 
+const receiptstorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'receipts/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Customize the filename
+  }
+});
 
 const upload = multer({ storage: storage });
+const receipt = multer({ storage: receiptstorage });
 
 
-router.get('/getworkpermitsforassessment', async (req, res) => {
+
+router.get('/getworkpermitsforassessment/:type', async (req, res) => {
     try {
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+      let filters = { workpermitstatus: { $in: ['Pending'] } };
       // Query to find only work permits where workpermitstatus is 'pending'
-      const pendingWorkPermits = await WorkPermit.find({ workpermitstatus: 'Pending' });
+        
+      if (type === 'new') {
+        filters.classification = 'New'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'Renew'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+      const pendingWorkPermits = await WorkPermit.find(filters);
   
       // Send the filtered result as a JSON response
       res.json(pendingWorkPermits);
@@ -39,50 +61,112 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     }
   });
   
-  router.get('/getbusinesspermitsforassessment', async (req, res) => {
+  router.get('/getbusinesspermitsforassessment/:type', async (req, res) => {
     try {
+     
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+  console.log(type);
+      // Define filters for "Pending" or "Assessed" status
+      let filters = { businesspermitstatus: { $in: ['Pending', 'Assessed'] } };
+  
+      if (type === 'new') {
+        filters.classification = 'NewBusiness'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'RenewBusiness'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+  
+      const permits = await BusinessPermit.find(filters);
+  
+      res.json(permits);
+    } catch (error) {
+      console.error('Error fetching business permits:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+  
+  
+  router.get('/getworkpermitsforpayments/:type', async (req, res) => {
+    try {
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+      let filters = { workpermitstatus: { $in: ['Waiting for Payment'] } };
       // Query to find only work permits where workpermitstatus is 'pending'
-      const pendingOrAssessedBusinessPermits = await BusinessPermit.find({ 
-        businesspermitstatus: { $in: ['Pending', 'Assessed'] }
-      });
+        
+      if (type === 'new') {
+        filters.classification = 'New'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'Renew'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+      const forPaymentsWorkPermits = await WorkPermit.find(filters);
   
       // Send the filtered result as a JSON response
-      res.json(pendingOrAssessedBusinessPermits);
+      res.json(forPaymentsWorkPermits);
     } catch (error) {
       console.error('Error fetching work permits:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   });
   
-  router.get('/getworkpermitsforpayments', async (req, res) => {
+
+  router.get('/getbusinesspermitsforpayments/:type', async (req, res) => {
     try {
+     
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+  console.log(type);
+      // Define filters for "Pending" or "Assessed" status
+      let filters = { businesspermitstatus: { $in: ['Waiting for Payment'] } };
+  
+      if (type === 'new') {
+        filters.classification = 'NewBusiness'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'RenewBusiness'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+  
+      const permits = await BusinessPermit.find(filters);
+  
+      res.json(permits);
+    } catch (error) {
+      console.error('Error fetching business permits:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+  
+  router.get('/getworkpermitsrelease/:type', async (req, res) => {
+    try {
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+      let filters = { workpermitstatus: { $in: ['Released', 'Expired'] } };
       // Query to find only work permits where workpermitstatus is 'pending'
-      const pendingWorkPermits = await WorkPermit.find({ workpermitstatus: 'Waiting for Payment' });
+        
+      if (type === 'new') {
+        filters.classification = 'New'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'Renew'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+      const forPaymentsWorkPermits = await WorkPermit.find(filters);
   
       // Send the filtered result as a JSON response
-      res.json(pendingWorkPermits);
+      res.json(forPaymentsWorkPermits);
     } catch (error) {
       console.error('Error fetching work permits:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   });
 
-  router.get('/getbusinesspermitsforpayments', async (req, res) => {
-    try {
-      // Query to find only work permits where workpermitstatus is 'pending'
-      const WatingForPaymentPermits = await BusinessPermit.find({ 
-        businesspermitstatus: { $in: ['Waiting for Payment', 'For Release'] }
-      });
-  
-      // Send the filtered result as a JSON response
-      res.json(WatingForPaymentPermits);
-    } catch (error) {
-      console.error('Error fetching work permits:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
-  
-  
   router.get('/getworkpermitsforrelease', async (req, res) => {
     try {
       // Query to find work permits where workpermitstatus is 'Released' or 'Expired'
@@ -92,6 +176,33 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
       res.json(pendingWorkPermits);
     } catch (error) {
       console.error('Error fetching work permits:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  });
+
+  router.get('/getbusinesspermitsforrelease/:type', async (req, res) => {
+    try {
+     
+      const { type } = req.params;  // Extract the work permit ID from the route parameters
+  console.log(type);
+      // Define filters for "Pending" or "Assessed" status
+      let filters = { businesspermitstatus: { $in: ['Released'] } };
+  
+      if (type === 'new') {
+        filters.classification = 'NewBusiness'; // Filter for New Business classification
+      } else if (type === 'renew') {
+        filters.classification = 'RenewBusiness'; // Filter for Renew Business classification
+      } else if (type === 'all') {
+        // Clear classification filter if "all" is selected
+        delete filters.classification; // Show all classifications
+      }
+      console.log('Filters being applied:', filters);
+  
+      const permits = await BusinessPermit.find(filters);
+  
+      res.json(permits);
+    } catch (error) {
+      console.error('Error fetching business permits:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   });
@@ -114,6 +225,25 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     } catch (error) {
       console.error('Error retrieving work permit:', error);
       res.status(500).json({ message: 'Error retrieving work permit', error });
+    }
+  });
+
+  router.get('/getbusinesspermitsforretire/', async (req, res) => {
+    try {
+     
+  
+
+      // Define filters for "Pending" or "Assessed" status
+      let filters = { forretirement: { $in: ['ForRetire', 'RetiredBusiness'] } };
+  
+      console.log('Filters being applied:', filters);
+  
+      const permits = await BusinessPermit.find(filters);
+  
+      res.json(permits);
+    } catch (error) {
+      console.error('Error fetching business permits:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   });
 
@@ -149,7 +279,7 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
         
         // Check the status and set routerropriate fields
         if (status === 'Released') {
-          const workpermitFileName = await generateWorkPermitPDF(ContentData);
+          const workpermitFileName = await generateWorkPermitPDF(id);
             updateFields = {
                 permitFile: workpermitFileName,
                 transaction: 'First Time Job Seeker',
@@ -162,6 +292,7 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
         } else if (status === 'Waiting for Payment') {
             updateFields = {
                 workpermitstatus: status,
+                transaction: 'Waiting',
                 permitExpiryDate: null, // No expiry date for this status
                 expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
             };
@@ -222,92 +353,6 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
     }
   });
   
-  
-  
-  router.put('/handlepayments/:id', async (req, res) => {
-    
-    console.log('Request params:', req.params); // Log incoming request body
-    console.log('Request body:', req.body); 
-    const { id, }= req.params;
-    const receiptID = uuidv4();
-    const { accountNumber, amount, paymentName, paymentMethod, paymentType } = req.body;
-    const ContentData = {
-      accountNumber: accountNumber, 
-      amount: amount, 
-      paymentName: paymentName, 
-      paymentMethod: paymentMethod, 
-      paymentType: paymentType,
-      receiptID: receiptID,
-      id: id,
-    };
-  
-    try {
-      const receiptFileName = generateReceiptPDF(ContentData);
-      const workpermitFileName = await generateWorkPermitPDF(ContentData);
-      console.log(workpermitFileName);
-      const updatedPermit = await WorkPermit.findByIdAndUpdate(
-        id,
-        { $set: {
-          
-          workpermitstatus: "Released",
-          transaction: paymentMethod,
-          permitFile: workpermitFileName,
-          permitDateIssued: new Date().toISOString(),
-          permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
-          expiryDate: new Date(Date.now() + 31536000000).toISOString(),
-  
-  
-          receipt: {
-          receiptID: receiptID,
-          modeOfPayment: paymentMethod,
-          paymentType: paymentType,
-          paymentNumber: accountNumber,
-          receiptName: paymentName,
-          receiptDate: new Date().toISOString(),
-          amountPaid: amount,
-          receiptFile: receiptFileName,
-        }
-      }
-      }
-      );
-  
-      if (!updatedPermit) {
-        return res.status(404).json({ message: 'Work permit not found' });
-      }
-  
-      res.json(updatedPermit);
-    } catch (error) {
-      console.error('Error updating work permit:', error); // Log error
-      res.status(500).json({ error: 'Error updating work permit' });
-    }
-  });
-  
-  
-  
-  
-  // Function to generate PDF
-  const generateReceiptPDF = (ContentData) => {
-      const doc = new PDFDocument();
-      const receiptFileName = `receipt_${Date.now()}.pdf`;
-      const receiptPath = path.join(receiptsDir, receiptFileName);
-  
-      const writeStream = fs.createWriteStream(receiptPath);
-      doc.pipe(writeStream);
-      doc.fontSize(25).text('Receipt', { align: 'center' });
-      doc.moveDown();
-      doc.fontSize(12).text(`Date: ${new Date().toLocaleDateString()}`);
-      doc.text(`Receipt ID: ${ContentData.receiptID}`);
-      doc.text(`Customer: ${ContentData.paymentName}`);
-      doc.text(`Account Number: ${ContentData.accountNumber}`);
-      doc.text(`Mode of Payment: ${ContentData.paymentMethod}`);
-      doc.moveDown();
-      doc.text(`Total Amount: ₱${ContentData.amount}`, { bold: true });
-      doc.end();
-  
-      return receiptFileName;
-  };
-  
-
     // Function to generate Statement of Account PDF
     const generateStatementofAccount = (ContentData, BusinessPermitContent) => {
       const doc = new PDFDocument();
@@ -316,7 +361,7 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
   
       const writeStream = fs.createWriteStream(receiptPath);
       doc.pipe(writeStream);
-      doc.fontSize(25).text('Receipt', { align: 'center' });
+      doc.fontSize(25).text('Statement of Account', { align: 'center' });
       doc.moveDown();
       doc.fontSize(12).text(`Date: ${new Date().toLocaleDateString()}`);
       doc.text(`Receipt ID: ${uuidv4()}`);
@@ -358,14 +403,14 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
   
   
   // Directory for work permit PDFs
-  const generateWorkPermitPDF = async (ContentData) => {
+  const generateWorkPermitPDF = async (id) => {
     const doc = new PDFDocument();
-    const workPermitFileName = `workpermit_${ContentData.id}.pdf`;  // File name based on the ID
+    const workPermitFileName = `workpermit_${id}.pdf`;  // File name based on the ID
     const workPermitPath = path.join(workPermitsDir, workPermitFileName);
   
     try {
         // Fetch the work permit data by ID
-        const workPermit = await WorkPermit.findById(ContentData.id);
+        const workPermit = await WorkPermit.findById(id);
   
         if (!workPermit) {
             throw new Error('Work permit not found');
@@ -402,6 +447,23 @@ router.get('/getworkpermitsforassessment', async (req, res) => {
   
     try {
       const result = await WorkPermit.deleteOne({ _id: permitId });
+  
+      if (result.deletedCount === 1) {
+        return res.status(200).json({ message: "Permit deleted successfully" });
+      } else {
+        return res.status(404).json({ message: "Permit not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting permit:", error);
+      return res.status(500).json({ message: "Error deleting permit", error });
+    }
+  });
+
+  router.delete('/deletePermitBusiness/:permitId', async (req, res) => {
+    const { permitId } = req.params;
+  
+    try {
+      const result = await BusinessPermit.deleteOne({ _id: permitId });
   
       if (result.deletedCount === 1) {
         return res.status(200).json({ message: "Permit deleted successfully" });
@@ -1471,7 +1533,10 @@ router.put('/SavingAssessment/:id', async (req, res) => {
       {
         $set: {
           // Compute the total amount to pay
-          'amountToPay': updatedStatement.total,
+          'amountToPay': updatedStatement.paymentmethodtotal,
+          'totaltax': updatedStatement.total,
+          'transaction': `${updatedStatement.paymentmethod} Payment`,
+          'business.paymentmethod': updatedStatement.paymentmethod,
           'businesspermitstatus': 'Assessed',
           'statementofaccount.permitassessed': decoded.userId, // Update permitassessed with the userId
           'statementofaccount.dateassessed': updatedStatement.dateassessed,
@@ -1695,5 +1760,133 @@ router.get('/businesspermitsChart', async (req, res) => {
 //     res.status(500).json({ message: 'Error fetching dashboard stats' });
 //   }
 // });
+
+  router.post('/updateworkpermitpayments/:id', receipt.fields([
+    { name: 'document1', maxCount: 1 },
+  ]), async (req, res) => {
+    const token = req.cookies.authToken; // Extract token from the cookie
+   // console.log('Received token:', token);
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const permitId = req.params.id;
+    const files = req.files;
+    console.log(req.files)
+
+
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET); // Decode the JWT to get the userId
+      console.log('Decoded token:', decoded);
+      const workpermitFileName = await generateWorkPermitPDF(permitId);
+      
+
+      const updatedPermit = await WorkPermit.findByIdAndUpdate(
+        permitId,
+        { $set: {
+          
+          workpermitstatus: "Released",
+          transaction: "Complete",
+          permitFile: workpermitFileName,
+          permitDateIssued: new Date().toISOString(),
+          permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
+          expiryDate: new Date(Date.now() + 31536000000).toISOString(),
+  
+  
+          receipt: {
+          receiptDate: new Date().toISOString(),
+          amountPaid: 200,
+          receiptFile: files.document1 ? files.document1[0].filename : null,
+        }
+      }
+      }
+      );
+  
+      if (!updatedPermit) {
+        return res.status(404).json({ message: 'Work permit not found' });
+      }
+  
+  // Send a single response
+  res.status(200).json({
+    message: "Updated Payment",
+    updatedPermit,
+  });
+    } catch (error) {
+      console.error('Error saving application:', error.message); // Log the error message
+      res.status(500).json({ message: 'Error submitting application', error: error.message });
+    }
+  });
+
+  // Endpoint to mark a business permit as expired
+  router.put('/expirebusinesspermit/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Find the business permit to be updated
+      const permit = await BusinessPermit.findById(id);
+  
+      if (!permit) {
+        return res.status(404).json({ message: 'Business permit not found' });
+      }
+  
+      // Update the businesses array: transfer capitalInvestment to lastYearGross and set businessType to 'Renew'
+      const updatedBusinesses = permit.businesses.map((business) => {
+        if (business.capitalInvestment) {
+          business.lastYearGross = business.capitalInvestment; // Move value
+          business.capitalInvestment = null; // Clear capitalInvestment
+        }
+        business.businessType = 'Renew'; // Update the businessType to 'Renew' for all businesses
+        return business;
+      });
+  
+      // Update the permit's businesses array
+      permit.businesses = updatedBusinesses;
+  
+      // Update the permit status to 'Expired'
+      permit.businesspermitstatus = 'Expired';
+  
+      // Save the updated permit
+      const updatedPermit = await permit.save();
+  
+      res.status(200).json({
+        message: 'Business permit updated successfully',
+        updatedPermit,
+      });
+    } catch (error) {
+      console.error('Error updating business permit:', error);
+      res.status(500).json({ message: 'Error updating business permit' });
+    }
+  });
+  
+
+  router.put('/retirebusinesspermits/:id', async (req, res) => {
+    const { id } = req.params;
+    const { classification, businessstatus, forretirement } = req.body;
+  
+    try {
+      // Find and update the business permit
+      const updatedPermit = await BusinessPermit.findByIdAndUpdate(
+        id,
+        {
+          classification,
+          businessstatus,
+          forretirement,
+        },
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedPermit) {
+        return res.status(404).json({ message: 'Business Permit not found' });
+      }
+  
+      res.status(200).json({ message: 'Business Permit updated successfully', updatedPermit });
+    } catch (error) {
+      console.error('Error updating business permit:', error);
+      res.status(500).json({ message: 'Failed to update business permit' });
+    }
+  });
+  
+  
+
 
   module.exports = router;

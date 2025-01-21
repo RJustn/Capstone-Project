@@ -13,10 +13,11 @@ export interface BusinessPermit {
     permittype?: string;
     businesspermitstatus?: string;
     businessstatus?: string;
+    forretirement?: string;
     classification?: string;
     transaction?: string;
     amountToPay?: string;
-    permitFile?: string;
+    permitFile: string;
     permitDateIssued?: string;
     permitExpiryDate?: string;
     expiryDate?: string;
@@ -31,7 +32,7 @@ export interface BusinessPermit {
     files: Files;
     department: Department; // Change to object with key-value pairs
     statementofaccount: Statement;
-  
+    receipt: Receipt;
     createdAt?: string;
   }
   
@@ -65,6 +66,11 @@ export interface BusinessPermit {
   repmobilenumber: string,
   }
   
+  export interface Receipt {
+    receiptId: string,
+    receiptDate: string,
+    receiptFile: string,
+    }
   export interface Business {
   businessname?: string,
   businessscale?: string,
@@ -174,14 +180,11 @@ const ViewBusinessApplication: React.FC = () => {
     const navigate = useNavigate();
     const [businessPermits, setBusinessPermits] = useState<GroupedBusinessPermit[]>([]);
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-
     const [activePermitId, setActivePermitId] = useState<BusinessPermit | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     //Payment Modal
     const [viewpayment, setViewPayment] = useState(false);
-
-
 
     //Logout
     const handleLogout = () => {
@@ -218,6 +221,32 @@ const ViewBusinessApplication: React.FC = () => {
     fetchBusinessPermits();
   }, []);
 
+  //Delete Function
+  const [deleteconfirm, setDeleteConfirm] = useState(false);
+  const closedeleteconfirm = () => {
+    setDeleteConfirm(false);
+    setActivePermitId(null);
+
+  };
+  const handleDeleteBusiness = async (permitId: string) => {
+    console.log(`Delete permit ID: ${permitId}`);
+    try {
+      const response = await fetch(`http://localhost:3000/datacontroller/deletePermitBusiness/${permitId}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        alert("Permit deleted successfully");
+        window.location.reload(); // Reload the page to refresh the data
+      } else {
+        alert("Failed to delete permit");
+      }
+    } catch (error) {
+      console.error("Error deleting permit:", error);
+    }
+  };
+  
+
 
   // Toggle the visibility of past permits for a specific business ID
   const toggleRowExpansion = (businessId: string) => {
@@ -232,12 +261,8 @@ const ViewBusinessApplication: React.FC = () => {
     });
   };
   
-  const closeviewpayment = () => {
-    setViewPayment(false);
-    setActivePermitId(null);
 
-  };
-
+// Statement of Account Print
   const handlePrint = () => {
     if (!activePermitId || !activePermitId.statementofaccount?.statementofaccountfile) {
       console.warn("No active permit or file URL available for printing.");
@@ -280,6 +305,7 @@ const ViewBusinessApplication: React.FC = () => {
 
       if (response.status === 200) {
         console.log('Payment status updated successfully');
+        setConfirmPayment(true);
       } else {
         console.error('Failed to update payment status');
       }
@@ -288,8 +314,41 @@ const ViewBusinessApplication: React.FC = () => {
     }
   };
 
+  const expireBusinessPermit = async (permitId: string) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/datacontroller/expirebusinesspermit/${permitId}`, {
+        status: 'Expired', // Update the status to "Expired"
+      });
+  
+      if (response.status === 200) {
+        console.log('Business permit expired successfully');
+        alert('Business permit expired successfully');
+        window.location.reload();
+        // Optionally refresh permits list or UI state
+      } else {
+        console.error('Failed to expire business permit');
+      }
+    } catch (error) {
+      console.error('Error expiring business permit:', error);
+    }
+  };
+
+  const [confirmpayment, setConfirmPayment] = useState(false);
+
+  const confirmpaymentclose = () => {
+    setConfirmPayment(false);
+    setActivePermitId(null);
+    window.location.reload();
+  };
+
+  const closeviewpayment = () => {
+    setViewPayment(false);
+    setActivePermitId(null);
+
+  };
 
 
+//File Dump
       const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
         if (!fileName) return null;
         
@@ -318,13 +377,155 @@ const ViewBusinessApplication: React.FC = () => {
     }
   };
 
+  const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
+    const fileUrl = fetchDocumentUrl(fileName, folder);
+  
+    if (!fileUrl) return <span>Not uploaded</span>;
+  
+    const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
+  
+    // Automatically open the modal if a valid file is found
+   
+        openModal(fileUrl); // Open the modal automatically
+  
+  
+    return (
+      <span>
+        {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
+      </span>
+    );
+  };
+
+  //Modals
+  const [modalFile, setModalFile] = useState<string | null>(null);
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  const openModal = (filePath: string) => {
+    setModalFile(filePath);
+    setIsModalOpenFile(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpenFile(false);
+    setModalFile(null);
+  };
+
+    const [files, setFiles] = useState<{
+      document1: File | null;
+      document2: File | null;
+      document3: File | null;
+    }>({
+      document1: null,
+      document2: null,
+      document3: null,
+    });
+
+
+  //Retire Business Function
+  const [retireBusinessModal, setRetireBusinessModal] = useState(false);
+  const closeRetireBusinessModal = () => {
+    setRetireBusinessModal(false);
+    setActivePermitId(null);
+  
+  };
+
+  
+  const logFormData = (formData: FormData) => {
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+  };
+
+  const handleRetireBusiness = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    // Append documents to formData if available
+    console.log(activePermitId?._id);
+    if (files.document1) formData.append('document1', files.document1);
+    if (files.document2) formData.append('document2', files.document2);
+    logFormData(formData); // Ensure this logs the formData correctly
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/client/retirebusinessapplication/${activePermitId?._id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log(response.data);
+      if (response.status === 200) {
+        alert('Business Retire Application submitted successfully!');
+        window.location.reload();
+        setFiles({ document1: null, document2: null, document3: null,
+
+        });
+      } else {
+        // Log error response data for debugging
+        const errorMessage = response.data?.message || 'Unknown error';
+        console.error('Error submitting application:', errorMessage);
+        alert(`Error: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while submitting the business retirement application.');
+    }
+};
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' ) => {
+          const selectedFiles = event.target.files;
+        if (selectedFiles && selectedFiles.length > 0) {
+          setFiles((prev) => ({
+            ...prev,
+            [doc]: selectedFiles[0],
+          }));
+        } else {
+          setFiles((prev) => ({
+            ...prev,
+            [doc]: null, 
+          }));
+        }
+      };
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const permitsPerPage = 5; // Number of permits per page
+
+   // Pagination logic
+   const totalPages = Math.ceil(businessPermits.length / permitsPerPage);
+   const startIndex = (currentPage - 1) * permitsPerPage;
+   const currentPermits = businessPermits.slice(startIndex, startIndex + permitsPerPage);
+ 
+   const handleNextPage = () => {
+     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+   };
+ 
+   const handlePreviousPage = () => {
+     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+   };
+ 
+
+  //Action Button Content
   const handleActionBP = (action: string,  permitId: BusinessPermit) => {
     console.log(permitId._id);
     setActivePermitId(null);
-  
+  console.log(currentPermits);
     switch (action) {
-      case 'editowner':
-        setActivePermitId(permitId);  // Set the selected permit
+      case 'viewApplication':
+        navigate(`/viewapplicationdetailsbusiness/${permitId._id}`);
+        break;
+        case 'viewAssessment':
+          renderDocument(permitId.statementofaccount.statementofaccountfile, 'receipts'); // Automatically open modal
+          break;
+      case 'viewReceipt':
+        renderDocument(permitId.receipt.receiptFile, 'receipts'); // Automatically open modal
+        break;
+      case 'viewPermit':
+        renderDocument(permitId.permitFile, 'permits'); // Automatically open modal
         break;
       case 'payment':
         setViewPayment(true);
@@ -333,6 +534,18 @@ const ViewBusinessApplication: React.FC = () => {
       case 'renewbusiness':
         navigate(`/businesspermitrenew/${permitId._id}`);
         break;
+        case 'deletebusinesspermit':
+          setDeleteConfirm(true);
+          setActivePermitId(permitId);
+          break;
+
+          case 'expireBusiness':
+            expireBusinessPermit(permitId._id);
+            break;
+            case 'retireBusiness':
+              setRetireBusinessModal(true);
+              setActivePermitId(permitId);
+              break;
   
   
       default:
@@ -363,6 +576,7 @@ const ViewBusinessApplication: React.FC = () => {
           <tr>
             <th>Business Information</th>
             <th>Business ID</th>
+            <th>Classification</th>
             <th>Status</th>
             <th>Application Date</th>
             <th>Business Status</th>
@@ -371,20 +585,28 @@ const ViewBusinessApplication: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {businessPermits.map((group) => {
+        {currentPermits.map((group) => {
+            // Sort permits by applicationdateIssued (newest first)
+            const sortedPermits = [...group.permits].sort((a, b) => {
+              const dateA = new Date(a.applicationdateIssued || 0);
+              const dateB = new Date(b.applicationdateIssued || 0);
+              return dateB.getTime() - dateA.getTime();
+            });
+
             const isExpanded = expandedRows.has(group.id);
             return (
               <React.Fragment key={group.id}>
                 <tr>
-                  <td>{group.permits[0].business?.businessname || 'N/A'}</td>
+                  <td>{sortedPermits[0].business?.businessname || 'N/A'}</td>
                   <td>{group.id}</td>
-                  <td>{group.permits[0].businesspermitstatus || 'N/A'}</td>
+                  <td>{sortedPermits[0].classification || 'N/A'}</td>
+                  <td>{sortedPermits[0].businesspermitstatus || 'N/A'}</td>
                   <td>
-                    {group.permits[0].applicationdateIssued
-                      ? new Date(group.permits[0].applicationdateIssued).toLocaleDateString()
+                    {sortedPermits[0].applicationdateIssued
+                      ? new Date(sortedPermits[0].applicationdateIssued).toLocaleDateString()
                       : 'N/A'}
                   </td>
-                  <td>{group.permits[0].businessstatus || 'N/A'}</td>
+                  <td>{sortedPermits[0].businessstatus || 'N/A'}</td>
                   <td>
                     <button className="table-button" onClick={() => toggleRowExpansion(group.id)}>
                       {isExpanded ? 'Hide Past Permits' : 'Show Past Permits'}
@@ -402,30 +624,80 @@ const ViewBusinessApplication: React.FC = () => {
             <option value="" disabled>
               Select Action
             </option>
+            {sortedPermits[0].businesspermitstatus === 'Pending' && sortedPermits[0].classification === 'NewBusiness' && (
+                      <>
+                        <option value="viewApplication">View Application</option>
+                        <option value="deletebusinesspermit">Delete</option>
+                      </>
+                    )}
+                    {sortedPermits[0].businesspermitstatus === 'Pending' && sortedPermits[0].classification === 'RenewBusiness' && (
+                      <>
+                        <option value="viewApplication">View Application</option>
+                      </>
+                    )}
+            {sortedPermits[0].businesspermitstatus === 'Assessed' && (
               <>
                 <option value="viewApplication">View Application</option>
-                <option value="assessment">View Assessment</option>
-                <option value="department">Department</option>
-                  {/* Conditionally render the "Payment" option */}
-  {group.permits[0].businesspermitstatus === 'Waiting for Payment' && (
-    <option value="payment">Payment</option>
+                <option value="viewAssessment">View Assessment</option>
+              </>
+            )}
+            {sortedPermits[0].businesspermitstatus === 'Waiting for Payment' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAssessment">View Assessment</option>
+                <option value="payment">Pay</option>
+              </>
+            )}
+            {sortedPermits[0].businesspermitstatus === 'Released' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAssessment">View Assessment</option>
+                <option value="viewReceipt">View Receipt</option>
+                <option value="viewPermit">View Permit</option>
+                <option value="expireBusiness">Expire Business (Developer Option)</option>
+              </>
+            )}
+              <>
+
+              {sortedPermits[0].businessstatus === 'Active' && sortedPermits[0].forretirement !== 'ForRetire' && (
+  <option value="retireBusiness">Retire Business</option>
+)}
+      {sortedPermits[0].businesspermitstatus === 'Expired' && (
+        <>
+        <option value="viewApplication">View Application</option>
+        <option value="viewAssessment">View Assessment</option>
+        <option value="viewReceipt">View Receipt</option>
+        <option value="viewPermit">View Permit</option>
+        {sortedPermits[0].classification !== 'RetiredBusiness' && (
+                <>
+              <option value="renewbusiness">Renew Business</option>
+              </>
+          )}
+      </>
   )}
-    {group.permits[0].businessstatus === 'Active' && (
-    <option>Retire Business</option>
-  )}
-      {group.permits[0].businesspermitstatus === 'Expired' && (
-    <option value="renewbusiness">Renew Business</option>
-  )}
-   <option value="renewbusiness">Renew Business</option>
+
               </>
           </select>
                   </td>
                 </tr>
                 {isExpanded &&
-                  group.permits.slice(1).map((permit, index) => (
+                  sortedPermits.slice(1).map((permit, index) => (
                     <tr key={`${group.id}-${index}`} className="past-permit-row">
-                      <td>{permit.business?.businessname || 'N/A'}</td>
+<td>
+  {permit.business?.businessname ? (
+    <>
+      <div>Business Name: {permit.business.businessname}</div>
+      <div>
+        Owner: {permit.owner?.lastname}, {permit.owner?.firstname}{' '}
+        {permit.owner?.middleinitial || ''}
+      </div>
+    </>
+  ) : (
+    'N/A'
+  )}
+</td>
                       <td>{group.id}</td>
+                      <td>{permit.classification || 'N/A'}</td>
                       <td>{permit.businesspermitstatus || 'N/A'}</td>
                       <td>
                         {permit.applicationdateIssued
@@ -434,6 +706,64 @@ const ViewBusinessApplication: React.FC = () => {
                       </td>
                       <td>{permit.businessstatus || 'N/A'}</td>
                       <td></td>
+                      <td> <select
+            defaultValue=""
+            onChange={(e) => {
+ handleActionBP(e.target.value, group.permits[0]);  // Pass action and permit to handler
+ e.target.value = ""; // Reset dropdown to default after selection
+            }}
+            className="dropdown-button"
+          >
+            <option value="" disabled>
+              Select Action
+            </option>
+            {permit.businesspermitstatus === 'Pending' && permit.classification === 'NewBusiness' && (
+                      <>
+                        <option value="viewApplication">View Application</option>
+                        <option value="deletebusinesspermit">Delete</option>
+                      </>
+                    )}
+                    {permit.businesspermitstatus === 'Pending' && permit.classification === 'RenewBusiness' && (
+                      <>
+                        <option value="viewApplication">View Application</option>
+                      </>
+                    )}
+            {permit.businesspermitstatus === 'Assessed' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAssessment">View Assessment</option>
+              </>
+            )}
+            {permit.businesspermitstatus === 'Waiting for Payment' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAssessment">View Assessment</option>
+                <option value="payment">Pay</option>
+              </>
+            )}
+            {permit.businesspermitstatus === 'Released' && (
+              <>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAssessment">View Assessment</option>
+                <option value="viewReceipt">View Receipt</option>
+                <option value="viewPermit">View Permit</option>
+              </>
+            )}
+              <>
+
+    {permit.businessstatus === 'Active' && (
+    <option>Retire Business</option>
+  )}
+      {permit.businesspermitstatus === 'Expired' && (
+        <>
+        <option value="viewApplication">View Application</option>
+        <option value="viewAssessment">View Assessment</option>
+        <option value="viewReceipt">View Receipt</option>
+        <option value="viewPermit">View Permit</option>
+      </>
+  )}
+              </>
+          </select></td>
                     </tr>
                   ))}
               </React.Fragment>
@@ -441,7 +771,28 @@ const ViewBusinessApplication: React.FC = () => {
           })}
         </tbody>
       </table>
-            {viewpayment && activePermitId &&(
+      <div className="pagination">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className="pagination-button"
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="pagination-button"
+        >
+          Next
+        </button>
+      </div>
+            </div>
+            {/* Modal Dump */}
+{viewpayment && activePermitId &&(
               <div className="modal-overlay" onClick={closeviewpayment}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                   <label>{activePermitId._id}</label>
@@ -454,9 +805,58 @@ const ViewBusinessApplication: React.FC = () => {
       <button onClick={handlePayment}>Pay</button> {/* Add the handler for Pay button */}
           </div>
         </div>
-            )}
-            </div>
+)}
 
+{deleteconfirm && activePermitId &&(
+   <div className="modal-overlay" onClick={closedeleteconfirm}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            Are you sure you want to delete this application? {activePermitId.id}
+            <button onClick={()=> handleDeleteBusiness(activePermitId._id)}>Accept</button>
+            <button onClick={closedeleteconfirm}>Decline</button>
+</div>
+</div>
+)}
+
+{confirmpayment && activePermitId &&(
+  <div className="modal-overlay" onClick={confirmpaymentclose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          Payment Completed for Business Permit Application {activePermitId.id}
+          <button onClick={confirmpaymentclose}>Okay</button>
+            </div>
+            </div>
+)}
+
+{isModalOpenFile && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {modalFile && (
+              <div>
+                {modalFile.endsWith('.pdf') ? (
+                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
+                ) : (
+                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
+                )}
+              </div>
+            )}
+            <button className="back-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
+)}
+
+{retireBusinessModal && activePermitId &&(
+  <div className="modal-overlay" onClick={closeRetireBusinessModal}>
+  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+  Do you want to Retire {activePermitId.id}?
+Please Upload the Documents
+  Business Retire Document
+  <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+  Past Business Permit
+  <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+  <button onClick={handleRetireBusiness}>Retire Business</button> {/* Add the handler for Pay button */}
+  <button onClick={closeRetireBusinessModal}>Close</button>
+    </div>
+    </div>
+)}
 
             </div>
         </section>

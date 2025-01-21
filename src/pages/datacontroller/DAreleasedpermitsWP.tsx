@@ -1,7 +1,7 @@
 import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
@@ -14,6 +14,7 @@ interface WorkPermit {
   createdAt: string;
   permitExpiryDate: string;
   formData: FormDetails;
+  permitFile: string;
 }
 
 interface PersonalInformation {
@@ -172,10 +173,9 @@ const DAreleasedpermitsWP: React.FC = () => {
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   // Search QUERY @@@@@@@@@@@@@@@@@@@@@
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Track the search query
+  const [, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
-  const [classificationFilter, setClassificationFilter] = useState<string>('');
-
+  
   // New state to track sorting
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
     key: '', 
@@ -211,15 +211,15 @@ const DAreleasedpermitsWP: React.FC = () => {
   const currentItems = filteredItems.slice(startIndex, endIndex); 
 
   // Handle the search and classification filter together
-  const applyFilters = (searchValue: string, classification: string) => {
+  const applyFilters = (searchValue: string) => {
     const results = workPermits.filter((permit) => {
       const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.classification.toLowerCase().includes(searchValue.toLowerCase());
 
-      const matchesClassification = classification ? permit.classification === classification : true;
+    
 
-      return matchesSearchQuery && matchesClassification;
+      return matchesSearchQuery;
     });
 
     setFilteredItems(results); // Update filtered items
@@ -231,48 +231,33 @@ const DAreleasedpermitsWP: React.FC = () => {
   const handleSearch = () => {
     const searchValue = inputValue; // Use input value for search
     setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue, classificationFilter); // Apply both search and classification filters
+    applyFilters(searchValue); // Apply both search and classification filters
   };
 
-  // Handle dropdown selection change (classification filter)
-  const handleClassificationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClassification = event.target.value;
-    setSearchQuery(inputValue); // Keep the current search query
-    setInputValue(inputValue); // Keep the current input value
-    setClassificationFilter(selectedClassification); // Set the classification filter
-    applyFilters(inputValue, selectedClassification); // Apply both search and classification filters
-    console.log('Selected Classification:', selectedClassification); // Log selected classification
-    console.log('Search Query:', searchQuery);
-    console.log('Input Value:', inputValue);
-  };
 
-  const fetchWorkPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforrelease', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const WorkPermitData = await response.json();
-      setWorkPermits(WorkPermitData);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
+
+  const { type } = useParams<{ type: string }>();
 
   useEffect(() => {
-    const handleTokenCheck = () => {
-      if (!token) {
-          navigate('/'); // Redirect to login if no token
-      } else {
-          fetchWorkPermits(); // Fetch work permits if token is present
+    const fetchWorkPermits = async () => {
+      try {
+        console.log(type);
+        const response = await fetch(`http://localhost:3000/datacontroller/getworkpermitsrelease/${type}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        const WorkPermitData = await response.json();
+        setWorkPermits(WorkPermitData);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
       }
     };
-
-    handleTokenCheck(); // Call the function to check the token
-  }, [navigate, token]);
+    fetchWorkPermits(); 
+ 
+  }, [type,token]);
 
   useEffect(() => {
     setFilteredItems(workPermits); // Display all work permits by default
@@ -296,7 +281,7 @@ const DAreleasedpermitsWP: React.FC = () => {
   };
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-
+  const [activePermitId, setActivePermitId] = useState<WorkPermit | null>(null);
   const handleAction = (action: string, permit: WorkPermit) => {
     switch (action) {
       case 'viewApplication':
@@ -308,6 +293,12 @@ const DAreleasedpermitsWP: React.FC = () => {
         setSelectedPermit(permit);
         setIsAttachmentsModalOpen(true);
         break;
+
+      case 'viewWorkPermit':
+   renderDocument(permit.permitFile, 'permits');
+   setActivePermitId(permit);
+        break;
+        
       default:
         console.warn('Unknown action');
     }
@@ -321,9 +312,43 @@ const DAreleasedpermitsWP: React.FC = () => {
     }));
   };
 
+  const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
+    const fileUrl = fetchDocumentUrl(fileName, folder);
+  
+    if (!fileUrl) return <span>Not uploaded</span>;
+  
+    const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
+  
+    // Automatically open the modal if a valid file is found
+   
+        openModal(fileUrl); // Open the modal automatically
+  
+  
+    return (
+      <span>
+        {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
+      </span>
+    );
+  };
+  const [modalFile, setModalFile] = useState<string | null>(null);
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  //File Viewing
+  const openModal = (filePath: string) => {
+    setModalFile(filePath);
+    setIsModalOpenFile(true);
+  };
+
+ const closeModal = () => {
+    setIsModalOpenFile(false);
+    setModalFile(null);
+    setActivePermitId(null);
+  };
+
+
   const closeAttachmentsModal = () => {
     setIsAttachmentsModalOpen(false);
     setSelectedPermit(null);
+    setActivePermitId(null);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4') => {
@@ -393,20 +418,7 @@ const DAreleasedpermitsWP: React.FC = () => {
     }
   };
 
-  const handleCancelEditAttach = () => {
-    setRemarksdoc1('');
-    setRemarksdoc2('');
-    setRemarksdoc3('');
-    setRemarksdoc4('');
-    setFiles({
-      document1: null,
-      document2: null,
-      document3: null,
-      document4: null,
-    });
-    setSelectedFiles({});
-    setIsEditingAttach(false); // Add this line to exit edit mode
-  };
+ 
 
   useEffect(() => {
     const urls: Record<string, string> = {}; // Define a typed object for URLs
@@ -477,12 +489,7 @@ const DAreleasedpermitsWP: React.FC = () => {
             <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
           </div>
 
-          {/* Dropdown for Classification Filter */}
-          <select value={classificationFilter} onChange={handleClassificationChange}>
-            <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Renew">Renew</option>
-          </select>
+
 
           {/* Date Pickers for Date Range Filter */}
           <div className="date-picker-container">
@@ -547,6 +554,7 @@ const DAreleasedpermitsWP: React.FC = () => {
             </option>
                 <option value="viewApplication">View Application</option>
                 <option value="viewAttachments">View Attachments</option>
+                <option value="viewWorkPermit">View Work Permit</option>
           </select>
         </td>
       </tr>
@@ -668,24 +676,28 @@ const DAreleasedpermitsWP: React.FC = () => {
                 />
               </p>
               {renderFile(selectedFiles.document4)}
-              {isEditingAttach ? (
-                <>
-                  <button type="submit" style={{ marginLeft: '10px' }}>
-                    Save
-                  </button>
-                  <button type="button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <button type="button" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
-                  Edit Attachments
-                </button>
-              )}
+
             </div>
           )}
         </form>
       </Modal>
+      {isModalOpenFile && activePermitId && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {modalFile && (
+              <div>
+                Viewing Work Permit of {activePermitId.id}
+                {modalFile.endsWith('.pdf') ? (
+                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
+                ) : (
+                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
+                )}
+              </div>
+            )}
+            <button className="back-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
+)}
     </section>
   );
 };

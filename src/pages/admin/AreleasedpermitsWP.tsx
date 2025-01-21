@@ -1,7 +1,10 @@
-import '../Styles/AdminStyles.css'; 
-import ASidebar from '../components/AdminSideBar';
+import '../Styles/DataControllerStyles.css'; 
+import AdminSideBar from '../components/AdminSideBar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root'); // Set the root element for accessibility
 
 interface WorkPermit {
   _id: string;
@@ -10,14 +13,55 @@ interface WorkPermit {
   classification: string;
   createdAt: string;
   permitExpiryDate: string;
-  formData: FormData;
+  formData: FormDetails;
+  permitFile: string;
 }
-interface FormData {
-  personalInformation: PersonalInformation;
-}
+
 interface PersonalInformation {
-  firstName: string;
   lastName: string;
+  firstName: string;
+  middleInitial?: string; // Optional
+  permanentAddress?: string; // Optional
+  currentlyResiding: boolean;
+  temporaryAddress?: string; // Optional
+  dateOfBirth?: Date; // Optional
+  age?: number; // Optional
+  placeOfBirth?: string; // Optional
+  citizenship?: string; // Optional
+  civilStatus?: string; // Optional
+  gender?: string; // Optional
+  height?: string; // Optional
+  weight?: string; // Optional
+  mobileTel?: string; // Optional
+  email?: string; // Optional
+  educationalAttainment?: string; // Optional
+  natureOfWork?: string; // Optional
+  placeOfWork?: string; // Optional
+  companyName?: string; // Optional
+  workpermitclassification?: string;
+}
+
+interface EmergencyContact {
+  name2?: string; // Optional
+  mobileTel2?: string; // Optional
+  address?: string; // Optional
+}
+
+interface FormDetails {
+  personalInformation: PersonalInformation;
+  emergencyContact: EmergencyContact;
+  files: Files;
+}
+
+interface Files {
+  document1: string | null; // Optional
+  document2: string | null; // Optional
+  document3: string | null; // Optional
+  document4: string | null; // Optional
+  remarksdoc1?: string; // Optional
+  remarksdoc2?: string; // Optional
+  remarksdoc3?: string; // Optional
+  remarksdoc4?: string; // Optional
 }
 
 const AreleasedpermitsWP: React.FC = () => {
@@ -25,6 +69,32 @@ const AreleasedpermitsWP: React.FC = () => {
   const [filteredItems, setFilteredItems] = useState<WorkPermit[]>([]);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const [selectedPermit, setSelectedPermit] = useState<WorkPermit | null>(null);
+  const [isAttachmentsModalOpen, setIsAttachmentsModalOpen] = useState(false);
+  const [isEditingAttach, setIsEditingAttach] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
+  const [remarksdoc1, setRemarksdoc1] = useState('');
+  const [remarksdoc2, setRemarksdoc2] = useState('');
+  const [remarksdoc3, setRemarksdoc3] = useState('');
+  const [remarksdoc4, setRemarksdoc4] = useState('');
+  const [files, setFiles] = useState<{
+    document1: File | null;
+    document2: File | null;
+    document3: File | null;
+    document4: File | null;
+  }>({
+    document1: null,
+    document2: null,
+    document3: null,
+    document4: null,
+  });
+
+  const customModalStyles = {
+    content: {
+      width: '50%', // Adjust the width as needed
+      margin: 'auto', // Center the modal horizontally
+    },
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -80,9 +150,10 @@ const AreleasedpermitsWP: React.FC = () => {
     }
   };
 
+  // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(workPermits.length / itemsPerPage);
+  const totalPages = Math.ceil(workPermits.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -97,15 +168,14 @@ const AreleasedpermitsWP: React.FC = () => {
     }
   };
 
-  const handleViewApplication = (permitId: string) => {
-    navigate(`/Aviewapplicationdetails/${permitId}`);
-  };
 
 
+  // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Track the search query
+  // Search QUERY @@@@@@@@@@@@@@@@@@@@@
+  const [, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
-  const [classificationFilter, setClassificationFilter] = useState<string>('');
+
 
   // New state to track sorting
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
@@ -142,15 +212,15 @@ const AreleasedpermitsWP: React.FC = () => {
   const currentItems = filteredItems.slice(startIndex, endIndex); 
 
   // Handle the search and classification filter together
-  const applyFilters = (searchValue: string, classification: string) => {
+  const applyFilters = (searchValue: string ) => {
     const results = workPermits.filter((permit) => {
       const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.classification.toLowerCase().includes(searchValue.toLowerCase());
 
-      const matchesClassification = classification ? permit.classification === classification : true;
 
-      return matchesSearchQuery && matchesClassification;
+
+      return matchesSearchQuery;
     });
 
     setFilteredItems(results); // Update filtered items
@@ -162,48 +232,33 @@ const AreleasedpermitsWP: React.FC = () => {
   const handleSearch = () => {
     const searchValue = inputValue; // Use input value for search
     setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue, classificationFilter); // Apply both search and classification filters
+    applyFilters(searchValue); // Apply both search and classification filters
   };
 
-  // Handle dropdown selection change (classification filter)
-  const handleClassificationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClassification = event.target.value;
-    setSearchQuery(inputValue); // Keep the current search query
-    setInputValue(inputValue); // Keep the current input value
-    setClassificationFilter(selectedClassification); // Set the classification filter
-    applyFilters(inputValue, selectedClassification); // Apply both search and classification filters
-    console.log('Selected Classification:', selectedClassification); // Log selected classification
-    console.log('Search Query:', searchQuery);
-    console.log('Input Value:', inputValue);
-  };
 
-  const fetchWorkPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/admin/getworkpermitsforrelease', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const WorkPermitData = await response.json();
-      setWorkPermits(WorkPermitData);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
+
+  const { type } = useParams<{ type: string }>();
 
   useEffect(() => {
-    const handleTokenCheck = () => {
-      if (!token) {
-          navigate('/'); // Redirect to login if no token
-      } else {
-          fetchWorkPermits(); // Fetch work permits if token is present
+    const fetchWorkPermits = async () => {
+      try {
+        console.log(type);
+        const response = await fetch(`http://localhost:3000/datacontroller/getworkpermitsrelease/${type}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        const WorkPermitData = await response.json();
+        setWorkPermits(WorkPermitData);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
       }
     };
-
-    handleTokenCheck(); // Call the function to check the token
-  }, [navigate, token]);
+    fetchWorkPermits(); 
+ 
+  }, [type,token]);
 
   useEffect(() => {
     setFilteredItems(workPermits); // Display all work permits by default
@@ -227,11 +282,194 @@ const AreleasedpermitsWP: React.FC = () => {
   };
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+  const [activePermitId, setActivePermitId] = useState<WorkPermit | null>(null);
+  const handleAction = (action: string, permit: WorkPermit) => {
+    switch (action) {
+      case 'viewApplication':
+    console.log(`Edit permit ID: ${permit._id}`);
+      navigate(`/DAviewapplicationdetails/${permit._id}`);
+        break;
+      case 'viewAttachments':
+        console.log(`View attachments for permit ID: ${permit._id}`);
+        setSelectedPermit(permit);
+        setIsAttachmentsModalOpen(true);
+        break;
+
+      case 'viewWorkPermit':
+   renderDocument(permit.permitFile, 'permits');
+   setActivePermitId(permit);
+        break;
+        
+      default:
+        console.warn('Unknown action');
+    }
+  };
+
+  const handleViewDocument = (documentKey: 'document1' | 'document2' | 'document3' | 'document4') => {
+    const documentUrl = fetchDocumentUrl(selectedPermit?.formData.files[documentKey] ?? null, 'uploads');
+    setSelectedFiles((prev) => ({
+      ...prev,
+      [documentKey]: prev[documentKey] === documentUrl ? null : documentUrl, // Toggle visibility based on the URL
+    }));
+  };
+
+  const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
+    const fileUrl = fetchDocumentUrl(fileName, folder);
+  
+    if (!fileUrl) return <span>Not uploaded</span>;
+  
+    const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
+  
+    // Automatically open the modal if a valid file is found
+   
+        openModal(fileUrl); // Open the modal automatically
+  
+  
+    return (
+      <span>
+        {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
+      </span>
+    );
+  };
+  const [modalFile, setModalFile] = useState<string | null>(null);
+  const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+  //File Viewing
+  const openModal = (filePath: string) => {
+    setModalFile(filePath);
+    setIsModalOpenFile(true);
+  };
+
+ const closeModal = () => {
+    setIsModalOpenFile(false);
+    setModalFile(null);
+    setActivePermitId(null);
+  };
+
+
+  const closeAttachmentsModal = () => {
+    setIsAttachmentsModalOpen(false);
+    setSelectedPermit(null);
+    setActivePermitId(null);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4') => {
+    const selectedFiles = event.target.files;
+    if (selectedFiles && selectedFiles.length > 0) {
+      setFiles((prev) => ({
+        ...prev,
+        [doc]: selectedFiles[0],
+      }));
+    } else {
+      setFiles((prev) => ({
+        ...prev,
+        [doc]: null, 
+      }));
+    }
+  };
+
+  const logFormData = (formData: FormData) => {
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+  };
+
+  const updateAttachments = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // if (!selectedPermit) return;
+
+    const formData = new FormData();
+    
+    formData.append('remarksdoc1', remarksdoc1);
+    formData.append('remarksdoc2', remarksdoc2);
+    formData.append('remarksdoc3', remarksdoc3);
+    formData.append('remarksdoc4', remarksdoc4);
+
+    if (files.document1) formData.append('document1', files.document1);
+    if (files.document2) formData.append('document2', files.document2);
+    if (files.document3) formData.append('document3', files.document3);
+    if (files.document4) formData.append('document4', files.document4);
+
+    logFormData(formData);
+
+    try {
+      if (!selectedPermit) {
+        console.error('No permit selected');
+        return;
+      }
+      const response = await fetch(`http://localhost:3000/datacontroller/updateworkpermitattachments/${selectedPermit._id}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const updatedPermit = await response.json();
+        setWorkPermits((prevPermits) =>
+          prevPermits.map((permit) =>
+            permit._id === updatedPermit._id ? updatedPermit : permit
+          )
+        );
+        console.log('Attachments updated successfully');
+        setIsEditingAttach(false); 
+        closeAttachmentsModal();
+      } else {
+        console.error('Failed to upload files');
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  };
+
+ 
+
+  useEffect(() => {
+    const urls: Record<string, string> = {}; // Define a typed object for URLs
+
+    // Iterate through each file key in the `files` object
+    Object.entries(files).forEach(([key, file]) => {
+      if (file) {
+        const fileUrl = URL.createObjectURL(file);
+        urls[key] = fileUrl; // Store the created URL
+        setSelectedFiles((prev) => ({ ...prev, [key]: fileUrl }));
+      }
+    });
+
+    // Cleanup function to revoke URLs
+    return () => {
+      Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [files]); // Watch the `files` object for changes
+
+  const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
+    if (!fileName) return null;
+    return `http://localhost:3000/datacontroller/${folder}/${fileName}`;
+  };
+
+  const renderFile = (fileUrl: string | null) => {
+    if (!fileUrl) return <p>No file selected.</p>;
+
+    if (fileUrl.endsWith('.pdf')) {
+      return (
+        <iframe
+          src={fileUrl}
+          style={{ width: '100%', height: '400px', marginTop: '10px' }}
+          title="PDF Viewer"
+        />
+      );
+    } else {
+      return (
+        <img
+          src={fileUrl}
+          alt="Document"
+          style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+        />
+      );
+    }
+  };
 
   return (
     <section className="Abody">
       <div className="Asidebar-container">
-        <ASidebar handleLogout={handleLogout} /> Pass handleLogout to ASidebar
+        <AdminSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to DASidebar */}
       </div>
 
       <div className="Acontent">
@@ -251,13 +489,6 @@ const AreleasedpermitsWP: React.FC = () => {
             />
             <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
           </div>
-
-          {/* Dropdown for Classification Filter */}
-          <select value={classificationFilter} onChange={handleClassificationChange}>
-            <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Renew">Renew</option>
-          </select>
 
           {/* Date Pickers for Date Range Filter */}
           <div className="date-picker-container">
@@ -300,25 +531,34 @@ const AreleasedpermitsWP: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((permit) => (
-                <tr key={permit._id}>
-                  <td>{permit.id}</td>
-                  <td>{permit.formData.personalInformation.lastName} {permit.formData.personalInformation.firstName}</td>
-                  <td>{permit.workpermitstatus}</td>
-                  <td>{permit.classification}</td>
-                  <td>
-                    <input 
-                      type="date" 
-                      value={new Date(permit.createdAt).toISOString().split('T')[0]} 
-                      readOnly 
-                    />
-                  </td>
-                  <td>
-                    <button className="modal-button" onClick={() => handleViewApplication(permit._id)}>View Application</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+    {currentItems.map((permit) => (
+      <tr key={permit._id}>
+        <td>{permit.id}</td>
+        <td>{permit.formData.personalInformation.lastName}, {permit.formData.personalInformation.firstName} {permit.formData.personalInformation.middleInitial}</td>
+        <td>{permit.workpermitstatus}</td>
+        
+        <td>{permit.classification}</td>
+        <td>{new Date(permit.createdAt).toLocaleDateString()}</td>
+        <td>
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              handleAction(e.target.value, permit);
+              e.target.value = ""; // Reset dropdown to default
+            }}
+            className="dropdown-button"
+          >
+            <option value="" disabled>
+              Select Action
+            </option>
+                <option value="viewApplication">View Application</option>
+                <option value="viewAttachments">View Attachments</option>
+                <option value="viewWorkPermit">View Work Permit</option>
+          </select>
+        </td>
+      </tr>
+    ))}
+  </tbody>
           </table>
 
           <div className="pagination-buttons">
@@ -331,6 +571,132 @@ const AreleasedpermitsWP: React.FC = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isAttachmentsModalOpen}
+        onRequestClose={closeAttachmentsModal}
+        contentLabel="View Attachments"
+        style={customModalStyles} // Apply custom styles
+      >
+        <form onSubmit={updateAttachments}>
+          <h2>View Attachments</h2>
+          {selectedPermit && (
+            <div>
+              <label>Attachments:</label>
+              <p>Permit ID: {selectedPermit?._id}</p>
+              {/* Document 1 */}
+              <p>
+                Document 1: {selectedPermit.formData.files.document1 || 'Not uploaded'}
+                {selectedPermit.formData.files.document1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleViewDocument('document1')}
+                  >
+                    {selectedFiles.document1 ? 'Close' : 'View'}
+                  </button>
+                )}
+                {isEditingAttach && (
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+                )}
+                <label>Remarks:</label>
+                <input 
+                  type="text" 
+                  value={isEditingAttach ? (remarksdoc1 || '') : (selectedPermit.formData.files.remarksdoc1 || '')} 
+                  onChange={(e) => setRemarksdoc1(e.target.value)} 
+                  disabled={!isEditingAttach} 
+                />
+              </p>
+              {renderFile(selectedFiles.document1)}
+              {/* Document 2 */}
+              <p>
+                Document 2: {selectedPermit.formData.files.document2 || 'Not uploaded'}
+                {selectedPermit.formData.files.document2 && (
+                  <button
+                    type="button"
+                    onClick={() => handleViewDocument('document2')}
+                  >
+                    {selectedFiles.document2 ? 'Close' : 'View'}
+                  </button>
+                )}
+                {isEditingAttach && (
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+                )}
+                <label>Remarks:</label>
+                <input 
+                  type="text" 
+                  value={isEditingAttach ? (remarksdoc2 || '') : (selectedPermit.formData.files.remarksdoc2 || '')} 
+                  onChange={(e) => setRemarksdoc2(e.target.value)} 
+                  disabled={!isEditingAttach} 
+                />
+              </p>
+              {renderFile(selectedFiles.document2)}
+              {/* Document 3 */}
+              <p>
+                Document 3: {selectedPermit.formData.files.document3 || 'Not uploaded'}
+                {selectedPermit.formData.files.document3 && (
+                  <button
+                    type="button"
+                    onClick={() => handleViewDocument('document3')}
+                  >
+                    {selectedFiles.document3 ? 'Close' : 'View'}
+                  </button>
+                )}
+                {isEditingAttach && (
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+                )}
+                <label>Remarks:</label>
+                <input 
+                  type="text" 
+                  value={isEditingAttach ? (remarksdoc3 || '') : (selectedPermit.formData.files.remarksdoc3 || '')} 
+                  onChange={(e) => setRemarksdoc3(e.target.value)} 
+                  disabled={!isEditingAttach} 
+                />
+              </p>
+              {renderFile(selectedFiles.document3)}
+              {/* Document 4 */}
+              <p>
+                Document 4: {selectedPermit.formData.files.document4 || 'Not uploaded'}
+                {selectedPermit.formData.files.document4 && (
+                  <button
+                    type="button"
+                    onClick={() => handleViewDocument('document4')}
+                  >
+                    {selectedFiles.document4 ? 'Close' : 'View'}
+                  </button>
+                )}
+                {isEditingAttach && (
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                )}
+                <label>Remarks:</label>
+                <input 
+                  type="text" 
+                  value={isEditingAttach ? (remarksdoc4 || '') : (selectedPermit.formData.files.remarksdoc4 || '')} 
+                  onChange={(e) => setRemarksdoc4(e.target.value)} 
+                  disabled={!isEditingAttach} 
+                />
+              </p>
+              {renderFile(selectedFiles.document4)}
+
+            </div>
+          )}
+        </form>
+      </Modal>
+      {isModalOpenFile && activePermitId && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {modalFile && (
+              <div>
+                Viewing Work Permit of {activePermitId.id}
+                {modalFile.endsWith('.pdf') ? (
+                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
+                ) : (
+                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
+                )}
+              </div>
+            )}
+            <button className="back-button" onClick={closeModal}>Close</button>
+          </div>
+        </div>
+)}
     </section>
   );
 };

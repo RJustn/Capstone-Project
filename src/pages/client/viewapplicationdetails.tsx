@@ -61,6 +61,7 @@ export interface PersonalInformation {
     id: string;
     userId?: string; // Can be a string for front end
     permittype?: string; // Default value can be handled in logic
+    classification: string;
     workpermitstatus: string;
     transaction: string;
     transactionstatus: string;
@@ -213,6 +214,7 @@ useEffect(() => {
           <> 
             <p> Date Issued: {workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
             <p> Work Permit Status: {workPermit.workpermitstatus}</p>
+            <p> Classification: {workPermit.classification}</p>
 
             <h1>Personal Information Details</h1>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', textAlign: 'left'}}>
@@ -247,10 +249,21 @@ useEffect(() => {
             <div>
 
   <div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
-    <p>Document 1: {workPermit.formData.files && renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-    <p>Document 2: {workPermit.formData.files && renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-    <p>Document 3: {workPermit.formData.files && renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-    <p>Document 4: {workPermit.formData.files && renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+    <p>1x1 Picture: {workPermit.formData.files && renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
+
+    <p>Cedula: {workPermit.formData.files && renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
+
+    {!workPermit.formData.personalInformation.currentlyResiding && (
+  <p>
+    Referral Letter: 
+    {workPermit.formData.files && renderDocument(workPermit.formData.files.document3, 'uploads')}
+  </p>
+)}
+  
+  {workPermit.classification === 'New' && (
+    <p>FTJS (First Time Job Seeker) Certificate: {workPermit.formData.files && renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
+)}
+
   </div>
               
   {workPermit.receipt?.receiptFile && (

@@ -1,7 +1,7 @@
 import '../styles/DataControllerStyles.css'; 
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
@@ -153,9 +153,9 @@ const DataControllerForAssessmentWP: React.FC = () => {
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   // Search QUERY @@@@@@@@@@@@@@@@@@@@@
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Track the search query
+  const [, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
-  const [classificationFilter, setClassificationFilter] = useState<string>('');
+ 
 
   // New state to track sorting
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
@@ -195,15 +195,15 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const currentItems = filteredItems.slice(startIndex, endIndex); 
 
   // Handle the search and classification filter together
-  const applyFilters = (searchValue: string, classification: string) => {
+  const applyFilters = (searchValue: string,) => {
     const results = workPermits.filter((permit) => {
       const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
         permit.classification.toLowerCase().includes(searchValue.toLowerCase());
 
-      const matchesClassification = classification ? permit.classification === classification : true;
+     
 
-      return matchesSearchQuery && matchesClassification;
+      return matchesSearchQuery;
     });
 
     setFilteredItems(results); // Update filtered items
@@ -215,48 +215,49 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const handleSearch = () => {
     const searchValue = inputValue; // Use input value for search
     setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue, classificationFilter); // Apply both search and classification filters
+    applyFilters(searchValue); // Apply both search and classification filters
   };
 
-  // Handle dropdown selection change (classification filter)
-  const handleClassificationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedClassification = event.target.value;
-    setSearchQuery(inputValue); // Keep the current search query
-    setInputValue(inputValue); // Keep the current input value
-    setClassificationFilter(selectedClassification); // Set the classification filter
-    applyFilters(inputValue, selectedClassification); // Apply both search and classification filters
-    console.log('Selected Classification:', selectedClassification); // Log selected classification
-    console.log('Search Query:', searchQuery);
-    console.log('Input Value:', inputValue);
-  };
 
-  const fetchWorkPermits = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitsforassessment', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const WorkPermitData = await response.json();
-      setWorkPermits(WorkPermitData);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
+     const { type } = useParams<{ type: string }>();
+ 
+
 
   useEffect(() => {
     const handleTokenCheck = () => {
       if (!token) {
           navigate('/'); // Redirect to login if no token
       } else {
+        const fetchWorkPermits = async () => {
+          try {
+            console.log(type);
+            const response = await fetch(
+              `http://localhost:3000/datacontroller/getworkpermitsforassessment/${type}`,
+              {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+      
+            if (!response.ok) {
+              throw new Error('Failed to fetch business permits');
+            }
+      
+            const data = await response.json();
+            setWorkPermits(data);
+          } catch (error) {
+            console.error('Error fetching business permits:', error);
+          }
+        };
           fetchWorkPermits(); // Fetch work permits if token is present
       }
     };
 
     handleTokenCheck(); // Call the function to check the token
-  }, [navigate, token]);
+  }, [navigate,type,token]);
 
   useEffect(() => {
     setFilteredItems(workPermits); // Display all work permits by default
@@ -523,6 +524,18 @@ useEffect(() => {
   };
 }, [files]); // Watch the `files` object for changes
 
+let displayTextTitle = 'All Work Permit Applications (For Assessments)';
+
+if (type === 'new') {
+  displayTextTitle = 'New Work Permit Applications (For Assessments)';
+} else if (type === 'renew') {
+  displayTextTitle = 'Renewal of Work Permit Applications (For Assessments)';
+} else if (type === 'all') {
+  displayTextTitle = 'All Work Permit Applications (For Assessments)';
+} else {
+  displayTextTitle = 'All Work Permit Applications (For Assessments)';
+}
+
   return (
     <section className="DAbody">
       <div className="DAsidebar-container">
@@ -534,7 +547,7 @@ useEffect(() => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Work Permit Applications (For Assessments)</p>
+        <p>{displayTextTitle}</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">
@@ -548,13 +561,6 @@ useEffect(() => {
             <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
           </div>
 
-          {/* Dropdown for Classification Filter */}
-          Classification:
-          <select value={classificationFilter} onChange={handleClassificationChange}>
-            <option value="">All</option>
-            <option value="New">New</option>
-            <option value="Renew">Renew</option>
-          </select>
 
           {/* Date Pickers for Date Range Filter */}
           Start Date:
@@ -619,7 +625,7 @@ useEffect(() => {
             <option value="" disabled>
               Select Action
             </option>
-                <option value="viewApplication">View Application</option>
+                <option value="viewApplication">View Application (Assess Permit)</option>
                 <option value="viewAttachments">View Attachments</option>
                 <option value="editFormDetails">Edit Form Details</option>
           </select>
@@ -1142,8 +1148,14 @@ useEffect(() => {
           <button type="button" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
             Edit Attachments
           </button>
+
+          
         )}
+        <button type="button" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+            Close
+          </button>
       </div>
+
     )}
   </form>
 </Modal>

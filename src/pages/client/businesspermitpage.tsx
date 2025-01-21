@@ -44,6 +44,19 @@ const BusinessPermit: React.FC = () => {
   const [businessname, setBusinessName] = useState('');
   const [businessscale, setBusinessScale] = useState('');
   const [paymentmethod, setPaymentMethod] = useState('');
+    // Get current month and quarter
+    const currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
+    const quarter = Math.ceil(currentMonth / 3);
+  
+    // Determine applicable payment methods dynamically
+    const getPaymentOptions = () => {
+      if (quarter === 2 || quarter === 4) {
+        return ["Quarterly"];
+      }
+      return ["Annual", "Semi-Annual", "Quarterly"];
+    };
+  
+    const paymentOptions = getPaymentOptions();
   const [businessbuildingblocklot, setBusinessBuildingBlockLot] = useState('');
   const [businessbuildingname, setBusinessBuildingName] = useState('');
   const [businesssubcompname, setBusinessSubCompName] = useState('');
@@ -93,6 +106,10 @@ const BusinessPermit: React.FC = () => {
     document4: File | null;
     document5: File | null;
     document6: File | null;
+    document7: File | null;
+    document8: File | null;
+    document9: File | null;
+    document10: File | null;
   }>({
     document1: null,
     document2: null,
@@ -100,6 +117,10 @@ const BusinessPermit: React.FC = () => {
     document4: null,
     document5: null,
     document6: null,
+    document7: null,
+    document8: null,
+    document9: null,
+    document10: null,
   });
 
   const logFormData = (formData: FormData) => {
@@ -108,7 +129,7 @@ const BusinessPermit: React.FC = () => {
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6') => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10') => {
     const selectedFiles = event.target.files;
     if (selectedFiles && selectedFiles.length > 0) {
       setFiles((prev) => ({
@@ -212,6 +233,11 @@ const BusinessPermit: React.FC = () => {
     if (files.document4) formData.append('document4', files.document4);
     if (files.document5) formData.append('document5', files.document5);
     if (files.document6) formData.append('document6', files.document6);
+
+    if (files.document7) formData.append('document7', files.document7);
+    if (files.document8) formData.append('document8', files.document8);
+    if (files.document9) formData.append('document9', files.document9);
+    if (files.document10) formData.append('document10', files.document10);
     logFormData(formData);
 
 
@@ -224,7 +250,7 @@ const BusinessPermit: React.FC = () => {
       });
       console.log(response.data);
       if (response.status === 200) {
-        alert('Work Permit Application submitted successfully!');
+        alert('Business Permit Application submitted successfully!');
         navigate('/dashboard');
       } else {
         const errorMessage = (response.data as { message: string }).message;
@@ -2963,6 +2989,7 @@ const handleRemoveBusiness = (index: number) => {
                 <select
                   value={civilstatus}
                   onChange={(e) => setCivilStatus(e.target.value)}
+                  disabled={corporation}
                   className="form-control"
                 >
                   <option value="" disabled>Select Civil Status</option>
@@ -2978,6 +3005,7 @@ const handleRemoveBusiness = (index: number) => {
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
+                  disabled={corporation}
                   className="form-control"
                 >
                   <option value="" disabled>Select Gender</option>
@@ -3094,19 +3122,23 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="Large">Large (more than 100M or Asset size of more than 100M)</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>Payment Mode:</label>
-                  <select
-                    value={paymentmethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="form-control"
-                  >
-                    <option value="" disabled>Select Payment Method</option>
-                    <option value="Annual">Annual</option>
-                    <option value="Semi-Annual">Semi-Annual</option>
-                    <option value="Quarterly">Quarterly</option>
-                  </select>
-                </div>
+<div className="form-group">
+      <label>Payment Mode:</label>
+      <select
+        value={paymentmethod}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+        className="form-control"
+      >
+        <option value="" disabled>
+          Select Payment Method
+        </option>
+        {paymentOptions.map((method) => (
+          <option key={method} value={method}>
+            {method}
+          </option>
+        ))}
+      </select>
+    </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>
@@ -3864,13 +3896,30 @@ const handleRemoveBusiness = (index: number) => {
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
                 <label>
-                  No file chosen Owner's ID:
+                 Owner's ID:
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
                 <label>
                   Picture of Establishment (Perspective View):
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
+                <label>
+                Zoning:
+                </label>
+                <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
+                <label>
+                Office of the Building Official:
+                </label>
+                <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
+                <label>
+                Ctiy Health Office:
+                </label>
+                <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
+                <label>
+                Bureau of Fire Protection:
+                </label>
+                <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
+                
               <div>
               <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
               <button className="nextbutton" type="submit">Submit</button>

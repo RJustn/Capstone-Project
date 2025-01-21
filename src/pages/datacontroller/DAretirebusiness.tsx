@@ -2,8 +2,9 @@
 import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 
 export interface BusinessPermit {
   _id: string;
@@ -12,10 +13,11 @@ export interface BusinessPermit {
   permittype?: string;
   businesspermitstatus?: string;
   businessstatus?: string;
+  forretirement?: string;
   classification?: string;
   transaction?: string;
   amountToPay?: string;
-  permitFile?: string;
+  permitFile: string;
   permitDateIssued?: string;
   permitExpiryDate?: string;
   expiryDate?: string;
@@ -30,8 +32,16 @@ export interface BusinessPermit {
   files: Files;
   department: Department; // Change to object with key-value pairs
   statementofaccount: Statement;
-
+receipt: Receipt;
   createdAt?: string;
+}
+
+export interface Receipt {
+  receiptId?: string; // Optional
+  modeOfPayment?: string; // Optional
+  receiptDate?: string; // Optional
+  amountPaid?: string; // Optional
+  receiptFile: string;
 }
 
 export interface Owner {
@@ -144,6 +154,8 @@ document7: string | null; // Optional
 document8: string | null; // Optional
 document9: string | null; // Optional
 document10: string | null; // Optional
+document11: string | null; // Optional
+document12: string | null; // Optional
 remarksdoc1: string;
 remarksdoc2: string;
 remarksdoc3: string;
@@ -173,7 +185,7 @@ export interface Statement{
 }
 
 
-const DataControllerForPaymentBP: React.FC = () => {
+const DAretirebusiness: React.FC = () => {
 
   const navigate = useNavigate();
 
@@ -234,7 +246,6 @@ const DataControllerForPaymentBP: React.FC = () => {
   const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
   const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
   const maxDate = new Date().toISOString().split("T")[0]; 
-  const { type } = useParams<{ type: string }>();
 
 
   
@@ -299,84 +310,20 @@ const closeModal = () => {
   setModalFile(null);
 };
 
-// Statement of Account Print
-const handlePrint = () => {
-  if (!activePermitId || !activePermitId.statementofaccount?.statementofaccountfile) {
-    console.warn("No active permit or file URL available for printing.");
-    return; // Exit if there is no active permit or file URL
-  }
 
-  const fileUrl = fetchDocumentUrl(activePermitId.statementofaccount.statementofaccountfile, 'receipts');
-  
-  // Open a new window
-  const newWindow = window.open('', '', 'height=500,width=800');
-  
-  if (newWindow) {
-  
-    
-    // Embed the PDF file using iframe
-    newWindow.document.write(`
-      <iframe
-        src="${fileUrl}"
-        style="width: 100%; height: 100%; border: none;"
-        title="PDF Viewer"
-      ></iframe>
-    `);
-    newWindow.document.close();  // Ensure the document is fully loaded
-
-    // Wait for the content to load, then print
-    newWindow.onload = () => {
-      newWindow.print();  // Open the print dialog
-    };
-  }
-};
-
-// Function to handle the payment update
-const handlePayment = async () => {
-  try {
-    // Call the API to update the payment status
-    const response = await axios.put(`http://localhost:3000/client/updatepayments/${activePermitId?._id}`, {
-      paymentStatus: 'Paid',
-      businesspermitstatus: 'Released'
-    });
-
-    if (response.status === 200) {
-      console.log('Payment status updated successfully');
-      setConfirmPayment(true);
-    } else {
-      console.error('Failed to update payment status');
-    }
-  } catch (error) {
-    console.error('Error updating payment status:', error);
-  }
-};
-
-const [confirmpayment, setConfirmPayment] = useState(false);
-
-const confirmpaymentclose = () => {
-  setConfirmPayment(false);
-  setActivePermitId(null);
-  window.location.reload();
-};
-
-const closeviewpayment = () => {
-  setViewPayment(false);
-  setActivePermitId(null);
-
-};
 
 //File
-  useEffect(() => {
+useEffect(() => {
     const fetchBusinessPermits = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/datacontroller/getbusinesspermitsforpayments/${type}`, {
+        const response = await fetch(`http://localhost:3000/datacontroller/getbusinesspermitsforretire`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies (containing the token) are sent
           headers: {
             'Content-Type': 'application/json',
           },
         });
-        
+  
         const businessPermitData = await response.json();
         setBusinessPermits(businessPermitData);
         console.log(businessPermitData);
@@ -385,8 +332,8 @@ const closeviewpayment = () => {
       }
     };
     fetchBusinessPermits();
-         
-  }, [type]);
+  }, []); 
+  
 
   //Table Code
   const [currentPage, setCurrentPage] = useState(0);
@@ -454,9 +401,43 @@ const [viewbusinessdetails, setViewBusinessDetails] = useState(false);
 //Modals View Business Nature
 const [viewBusinessNature, setViewbusinessNature] = useState(false);
 
-    //Payment Modal
-const [viewpayment, setViewPayment] = useState(false);
+//Modal For Checking
+  const [ retireBusinessPermit, setRetireBusinessPermit]=useState(false);
 
+  const closeRetireBusinessModal = () => {
+    setRetireBusinessPermit(false);
+    setActivePermitId(null);
+  
+  };
+
+  // Update permit status (approve or reject)
+  const handleRetireBusiness = async (action: string,) => {
+    if (!activePermitId) return;
+  
+    try {
+        const response = await axios.put(
+          `http://localhost:3000/datacontroller/retirebusinesspermits/${activePermitId._id}`,
+          {
+            classification: action === 'accept' ? 'RetiredBusiness' : activePermitId.classification, // Update classification only if accepted
+            businessstatus: action === 'accept' ? 'Retired' : activePermitId.businessstatus, // Update businessstatus if accepted
+            forretirement: action === 'accept' 
+              ? 'RetiredBusiness' // Set forretirement to 'Retired Business' if accepted
+              : action === 'reject' 
+              ? null // Set forretirement to null if rejected
+              : activePermitId.forretirement, // Otherwise, retain the current value
+          }
+        );
+  
+      console.log('Update successful:', response.data);
+      alert('Business Permit Updated'); // Notify the user of the update
+      window.location.reload();
+    } catch (error) {
+      console.error('Update failed:', error);
+      alert('Failed to update permit status. Please try again.');
+    }
+  };
+  
+  
 
 const handleActionBP = (action: string, permit: BusinessPermit) => {
   setActivePermitId(null);
@@ -493,10 +474,22 @@ const handleActionBP = (action: string, permit: BusinessPermit) => {
         setActivePermitId(permit);
         break;
 
-        case 'payment':
-          setViewPayment(true);
+        case 'viewReceipt':
+          renderDocument(permit.receipt.receiptFile, 'receipts'); // Automatically open modal
           setActivePermitId(permit);
           break;
+
+          case 'viewBusinessPermit':
+            renderDocument(permit.permitFile, 'permits'); // Automatically open modal
+            setActivePermitId(permit);
+            break;
+        
+            case 'retireBusiness':
+                setRetireBusinessPermit(true);
+                setActivePermitId(permit);
+                break;
+
+
 
 
     default:
@@ -1813,17 +1806,6 @@ const businessNatureMap = {
   "WHE_FLR": "Wholesaler-Essential - Distributor - Flour",
 };
 
-let displayTextTitle = 'All Business Permit Applications (For Payments)';
-
-if (type === 'new') {
-  displayTextTitle = 'New Business Permit Applications (For Payments)';
-} else if (type === 'renew') {
-  displayTextTitle = 'Renewal of Business Permit Applications (For Payments)';
-} else if (type === 'all') {
-  displayTextTitle = 'All Business Permit Applications (For Payments)';
-} else {
-  displayTextTitle = 'All Business Permit Applications (For Payments)';
-}
 
   return (
     <section className="DAbody">
@@ -1836,7 +1818,7 @@ if (type === 'new') {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
   <div className='workpermittable'>
-  <p>{displayTextTitle}</p>
+  <p>Retire Business</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">
@@ -1903,11 +1885,11 @@ if (type === 'new') {
       <tr key={permit._id}>
         <td>Business Name:{permit.business.businessname}<br />
             Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
-            Address:{permit.business.businessbuildingblocklot}</td>
+            Address:</td>
         <td>{permit.id}</td>
         <td>{permit.classification}</td>
         <td>{permit.businesspermitstatus}</td>
-        <td>{permit.businessstatus}</td>
+        <td>{permit.forretirement}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
         <td>
           <select
@@ -1922,13 +1904,17 @@ if (type === 'new') {
               Select Action
             </option>
               <>
+              {permit.forretirement === 'ForRetire' && (
+    <option value="retireBusiness">Retire Business</option>
+  )}
                 <option value="viewOwner">View Owner Details</option>
                 <option value="viewBusiness">View Business Details</option>
                 <option value="viewApplication">View Full Application</option>
                 <option value="viewBusinessNature">View Business Nature</option>
                 <option value="viewAssessment">View Assessment</option>
                 <option value="viewAttatchment">View Attatchments</option>
-                <option value="payment">Handle Application Payment</option>
+                <option value="viewReceipt">View Receipt</option>
+                <option value="viewBusinessPermit">View Business Permit</option>
               </>
           </select>
         </td>
@@ -3103,6 +3089,7 @@ if (type === 'new') {
       <p>Owner's Name: {activePermitId.owner.lastname}, {activePermitId.owner.firstname}</p>
       <p>Business Name: {activePermitId.business.businessname}</p>
       <p>Business Address: {activePermitId.business.businessbuildingblocklot}</p>
+
       <h1>List of Businesses</h1>
       {activePermitId.businesses?.length > 0 ? (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -3142,31 +3129,6 @@ if (type === 'new') {
   </div>
 )}
 
-{viewpayment && activePermitId &&(
-              <div className="modal-overlay" onClick={closeviewpayment}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                  <label>{activePermitId._id}</label>
-                  <label>Are you sure you want to handle the payment of permit {activePermitId.id}?</label>
-                  <label>{activePermitId.statementofaccount.statementofaccountfile}</label>
-
-                        {/* Render the PDF or image file */}
-      {renderFile(fetchDocumentUrl(activePermitId.statementofaccount?.statementofaccountfile, 'receipts'))}
-
-      <button onClick={handlePrint}>Print</button>
-      <button onClick={handlePayment}>Update Payment</button> {/* Add the handler for Pay button */}
-          </div>
-        </div>
-)}
-
-{confirmpayment && activePermitId &&(
-  <div className="modal-overlay" onClick={confirmpaymentclose}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          Payment Completed for Business Permit Application {activePermitId.id}
-          <button onClick={confirmpaymentclose}>Okay</button>
-            </div>
-            </div>
-)}
-
 {isModalOpenFile && activePermitId && (
   <div className="modal-overlay" onClick={closeModal}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -3198,9 +3160,80 @@ if (type === 'new') {
   </div>
 )}
 
+{retireBusinessPermit && activePermitId &&(
+  <div className="modal-overlay" onClick={closeRetireBusinessModal}>
+  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+  Do you want to Retire {activePermitId._id}?
+
+
+  <p>
+    Business Retirement Document: {activePermitId.files.document11 || 'Not uploaded'}
+
+    {activePermitId.files.document11 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document11, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document11 === newFileUrl;
+            return {
+              ...prev,
+              document11: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document11 ? 'Close' : 'View'}
+      </button>
+    )}
+
+
+    {/* Render Document */}
+    {renderFile(
+      selectedFiles.document11 || (activePermitId.files.document11)
+    )}
+  </p>
+
+  <p>
+    Past Business Permit Copy: {activePermitId.files.document12 || 'Not uploaded'}
+
+    {activePermitId.files.document12 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document12, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document12 === newFileUrl;
+            return {
+              ...prev,
+              document12: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document12 ? 'Close' : 'View'}
+      </button>
+    )}
+
+
+    {/* Render Document */}
+    {renderFile(
+      selectedFiles.document12 || (activePermitId.files.document12)
+    )}
+  </p>
+
+
+  <button onClick={() => handleRetireBusiness('accept')}> Retire Business </button>
+  <button onClick={() => handleRetireBusiness('reject')}> Cancel Retirement</button>
+  <button onClick={closeRetireBusinessModal}>Close</button>
+    </div>
+    </div>
+)}
+
+
+
+
       </div>
     </section>
   );
 };
 
-export default DataControllerForPaymentBP;
+export default DAretirebusiness;

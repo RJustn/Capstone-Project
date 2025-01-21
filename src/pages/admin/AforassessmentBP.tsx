@@ -2,7 +2,7 @@
 import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/AdminSideBar';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -132,22 +132,29 @@ export interface Department{
 }
 
 export interface Files {
-document1: string | null; // Optional
-document2: string | null; // Optional
-document3: string | null; // Optional
-document4: string | null; // Optional
-document5: string | null; // Optional
-document6: string | null; // Optional
-remarksdoc1: string;
-remarksdoc2: string;
-remarksdoc3: string;
-remarksdoc4: string;
-remarksdoc5: string;
-remarksdoc6: string;
-}
-
+  document1: string | null; // Optional
+  document2: string | null; // Optional
+  document3: string | null; // Optional
+  document4: string | null; // Optional
+  document5: string | null; // Optional
+  document6: string | null; // 
+  document7: string | null; // Optional
+  document8: string | null; // Optional
+  document9: string | null; // Optional
+  document10: string | null; // Optional
+  remarksdoc1: string;
+  remarksdoc2: string;
+  remarksdoc3: string;
+  remarksdoc4: string;
+  remarksdoc5: string;
+  remarksdoc6: string;
+  remarksdoc7: string;
+  remarksdoc8: string;
+  remarksdoc9: string;
+  remarksdoc10: string;
+  }
 const AdminForAssessmentBusinessPermit: React.FC = () => {
-  const [businessPermits, setBusinesPermits] = useState<BusinessPermit[]>([]);
+  const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
   const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
   
   const navigate = useNavigate();
@@ -173,7 +180,7 @@ const AdminForAssessmentBusinessPermit: React.FC = () => {
 
   //Step2
 
-
+  const { type } = useParams<{ type: string }>();
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -191,6 +198,7 @@ const AdminForAssessmentBusinessPermit: React.FC = () => {
 
         if (response.status === 204) {
           console.log('Access Success');
+          console.log(type);
           return;
         }
 
@@ -202,7 +210,7 @@ const AdminForAssessmentBusinessPermit: React.FC = () => {
     };
 
     checkAuth();
-  }, [navigate]); // Only depend on navigate, which is necessary for the redirection
+  }, [navigate, type]); // Only depend on navigate, which is necessary for the redirection
 
   const handleLogout = async () => {
     try {
@@ -413,24 +421,56 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
 
 //Use Effect
   
+
   const fetchBusinessPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/getbusinesspermitsforassessment', {
-        method: 'GET',
-        credentials: 'include', // Ensure cookies (containing the token) are sent
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const businessPermitData = await response.json();
-      setBusinesPermits(businessPermitData);
+      const response = await fetch(
+        `http://localhost:3000/datacontroller/getbusinesspermitsforassessment/${type}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch business permits');
+      }
+
+      const data = await response.json();
+      setBusinessPermits(data);
     } catch (error) {
-      console.error('Error fetching work permits:', error);
+      console.error('Error fetching business permits:', error);
     }
   };
 
   useEffect(() => {
+    const fetchBusinessPermits = async () => {
+      try {
+        console.log(type);
+        const response = await fetch(
+          `http://localhost:3000/datacontroller/getbusinesspermitsforassessment/${type}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch business permits');
+        }
+  
+        const data = await response.json();
+        setBusinessPermits(data);
+      } catch (error) {
+        console.error('Error fetching business permits:', error);
+      }
+    };
           fetchBusinessPermits(); // Fetch work permits if token is present
 
          
@@ -448,7 +488,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
           
             setSelectedFiles((prev) => ({ ...prev, ...fileUrls }));
          
-  }, [files]);
+  }, [files, type]);
 
   useEffect(() => {
     setFilteredItems(businessPermits); // Display all work permits by default
@@ -569,6 +609,9 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                   ID
                 </th>
                 <th>
+                  Classification
+                </th>
+                <th>
                  Application Status
                 </th>
                 <th>
@@ -589,6 +632,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
             Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
             Address:</td>
         <td>{permit.id}</td>
+        <td>{permit.classification}</td>
         <td>{permit.businesspermitstatus}</td>
         <td>{permit.businessstatus}</td>
         <td>{new Date(permit.applicationdateIssued).toLocaleDateString()}</td>
@@ -881,7 +925,13 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 1 */}
 <p>
-  Document 1: {activePermitId.files.document1 || 'Not uploaded'}
+ {/* Conditional text based on classification */}
+ {activePermitId.classification === 'RenewBusiness' ? (
+    <span>BIR: {activePermitId.files.document1 || 'Not uploaded'}</span>
+  ) : (
+    <span>DTI / SEC / CDA: {activePermitId.files.document1 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document1 && (
     <button
@@ -916,7 +966,12 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 2 */}
 <p>
-  Document 2: {activePermitId.files.document2 || 'Not uploaded'}
+    {/* Conditional text based on classification */}
+    {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Past Business Permit Copy: {activePermitId.files.document2 || 'Not uploaded'}</span>
+  ) : (
+    <span>Occupancy Permit (Optional): {activePermitId.files.document2 || 'Not uploaded'}</span>
+  )}
 
   {activePermitId.files.document2 && (
     <button
@@ -952,8 +1007,12 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 3 */}
 <p>
-  Document 3: {activePermitId.files.document3 || 'Not uploaded'}
-
+     {/* Conditional text based on classification */}
+     {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Certification of Gross Sales: {activePermitId.files.document3 || 'Not uploaded'}</span>
+  ) : (
+    <span>Lease Contract (if rented) / Tax Declaration (If Owned): {activePermitId.files.document3 || 'Not uploaded'}</span>
+  )}
   {activePermitId.files.document3 && (
     <button
       onClick={() => {
@@ -987,7 +1046,12 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 4 */}
 <p>
-  Document 4: {activePermitId.files.document4 || 'Not uploaded'}
+      {/* Conditional text based on classification */}
+      {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Zoning: {activePermitId.files.document4 || 'Not uploaded'}</span>
+  ) : (
+    <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): {activePermitId.files.document4 || 'Not uploaded'}</span>
+  )}
 
   {activePermitId.files.document4 && (
     <button
@@ -1022,7 +1086,13 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 5 */}
 <p>
-  Document 5: {activePermitId.files.document5 || 'Not uploaded'}
+        {/* Conditional text based on classification */}
+        {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Office of the Building Official: {activePermitId.files.document5 || 'Not uploaded'}</span>
+  ) : (
+    <span>Owner's ID: {activePermitId.files.document5 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document5 && (
     <button
@@ -1057,7 +1127,13 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 {/* Document 6 */}
 <p>
-  Document 6: {activePermitId.files.document6 || 'Not uploaded'}
+            {/* Conditional text based on classification */}
+            {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Ctiy Health Office: {activePermitId.files.document6 || 'Not uploaded'}</span>
+  ) : (
+    <span>Picture of Establishment (Perspective View): {activePermitId.files.document6 || 'Not uploaded'}</span>
+  )}
+
 
   {activePermitId.files.document6 && (
     <button
@@ -1090,13 +1166,164 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   selectedFiles.document6 || (activePermitId.files.document6)
 )}
 
+{/* Document 7 */}
+<p>
+            {/* Conditional text based on classification */}
+            {activePermitId.classification === 'RenewBusiness' ? (
+    <span>Bureau of Fire Protection: {activePermitId.files.document7 || 'Not uploaded'}</span>
+  ) : (
+    <span>Zoning: {activePermitId.files.document7 || 'Not uploaded'}</span>
+  )}
+
+
+  {activePermitId.files.document7 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(activePermitId.files.document7, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document7 === newFileUrl;
+          return {
+            ...prev,
+            document7: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document7 ? 'Close' : 'View'}
+    </button>
+  )}
+
+  {/* Remarks Section - Disabled for view only */}
+  <label>Remarks:</label>
+  <input 
+    type="text" 
+    value={activePermitId.files.remarksdoc7 || ''} 
+    disabled 
+  />
+</p>
+
+{/* Render Document */}
+{renderFile(
+  selectedFiles.document7 || (activePermitId.files.document7)
+)}
+
+{/* Conditionally render Document 8 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+    Office of the Building Official: {activePermitId.files.document8 || 'Not uploaded'}
+
+    {activePermitId.files.document8 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document8, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document8 === newFileUrl;
+            return {
+              ...prev,
+              document8: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document8 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {/* Remarks Section - Disabled for view only */}
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={activePermitId.files.remarksdoc8 || ''} 
+      disabled 
+    />
+
+    {/* Render Document */}
+    {renderFile(
+      selectedFiles.document8 || (activePermitId.files.document8)
+    )}
+  </p>
+)}
+
+{/* Conditionally render Document 9 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+    City Health Office: {activePermitId.files.document9 || 'Not uploaded'}
+
+    {activePermitId.files.document9 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document9, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document9 === newFileUrl;
+            return {
+              ...prev,
+              document9: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document9 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {/* Remarks Section - Disabled for view only */}
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={activePermitId.files.remarksdoc9 || ''} 
+      disabled 
+    />
+
+    {/* Render Document */}
+    {renderFile(
+      selectedFiles.document9 || (activePermitId.files.document9)
+    )}
+  </p>
+)}
+
+{/* Conditionally render Document 10 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <p>
+    Bureau of Fire Protection: {activePermitId.files.document10 || 'Not uploaded'}
+
+    {activePermitId.files.document10 && (
+      <button
+        onClick={() => {
+          const newFileUrl = fetchDocumentUrl(activePermitId.files.document10, 'uploads');
+          setSelectedFiles((prev) => {
+            const isFileSelected = prev.document10 === newFileUrl;
+            return {
+              ...prev,
+              document10: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+            };
+          });
+        }}
+      >
+        {selectedFiles.document10 ? 'Close' : 'View'}
+      </button>
+    )}
+
+    {/* Remarks Section - Disabled for view only */}
+    <label>Remarks:</label>
+    <input 
+      type="text" 
+      value={activePermitId.files.remarksdoc10 || ''} 
+      disabled 
+    />
+
+    {/* Render Document */}
+    {renderFile(
+      selectedFiles.document10 || (activePermitId.files.document10)
+    )}
+  </p>
+)}
         {/* Close Modal Button */}
         <button className="close-modal" onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>
     </div>
-      )}
+)}
 
 {viewbusinessdetails && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessDetails}>

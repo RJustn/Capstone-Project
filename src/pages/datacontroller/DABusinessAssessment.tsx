@@ -233,6 +233,22 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
     }
   };
 
+  //Payment Method
+  const [paymentmethod, setPaymentMethod] = useState<string | undefined>(undefined);
+   // Get current month and quarter
+   const currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
+   const quarter = Math.ceil(currentMonth / 3);
+ 
+   // Determine applicable payment methods dynamically
+   const getPaymentOptions = () => {
+     if (quarter === 2 || quarter === 4) {
+       return ["Quarterly"];
+     }
+     return ["Annual", "Semi-Annual", "Quarterly"];
+   };
+ 
+   const paymentOptions = getPaymentOptions();
+
 
 //Assessment
 const [totalGross, setTotalGross] = useState(0);
@@ -256,6 +272,19 @@ useEffect(() => {
   }, [businessPermit]);
 
 //Assessment
+
+//Modal For Checking
+  const [checkpermit, setCheckPermit]=useState(false);
+  const [finishpopup, setfinishpopup]=useState(false);
+
+    const closePermitChecker = () => {
+      setCheckPermit(false);
+    };
+
+    const finishpopupclose = () => {
+      setfinishpopup(false);
+      window.location.reload(); // Reload the page to refresh the data
+    }
 
 
 
@@ -1555,6 +1584,13 @@ const [miscfee, ] = useState(500); //Fixed
 const [liquortobaco, setLiquorTobaco ] = useState(0);
 const [liquorplate, setLiquorPlate ] = useState(0);
 const [dateassessed, setDateAssessed ] = useState('');
+const [paymentmethodtotal, setPaymentMethodTotal] = useState(0);
+
+useEffect(() => {
+  if (businessPermit?.otherbusinessinfo?.numofworkertotal != null) {
+    setHealthPermit(businessPermit.otherbusinessinfo.numofworkertotal * 100);
+  }
+}, [businessPermit?.otherbusinessinfo?.numofworkertotal]);
 
 useEffect(() => {
   if (businessPermit) {
@@ -1566,10 +1602,16 @@ useEffect(() => {
   }
 }, [businessPermit]);
 
+
+
 const [total, setTotal] = useState(0); // State for the total computation
 
 useEffect(() => {
-  // Compute the total whenever the dependent variables change
+  if (!paymentmethod) {
+    return; // Exit if payment method is not available
+  }
+
+  // Compute the total amount
   const computedTotal =
     mayorspermit +
     sanitary +
@@ -1583,7 +1625,26 @@ useEffect(() => {
     liquortobaco +
     liquorplate;
 
-  setTotal(computedTotal); // Update the total state
+  // Determine payment distribution based on payment method
+  let paymentDue = 0;
+
+  switch (paymentmethod) {
+    case 'Annual':
+      paymentDue = computedTotal; // Full amount for annual payment
+      break;
+    case 'Semi-Annual':
+      paymentDue = computedTotal / 2; // Divide the total into 2 payments
+      break;
+    case 'Quarterly':
+      paymentDue = computedTotal / 4; // Divide the total into 4 payments
+      break;
+    default:
+      console.warn('Unknown payment method:', paymentmethod);
+      paymentDue = computedTotal; // Fallback to full amount
+  }
+
+  setTotal(computedTotal); // Update the total state based on the payment method
+  setPaymentMethodTotal(paymentDue);
 }, [
   mayorspermit,
   sanitary,
@@ -1596,14 +1657,21 @@ useEffect(() => {
   health,
   liquortobaco,
   liquorplate,
+  paymentmethod, // Include payment method in dependencies
 ]);
+
 
 useEffect(() => {
   // Set the date to today in YYYY-MM-DD format
   const today = new Date();
   const formattedDate = today.toISOString().split('T')[0]; // Formats to 'YYYY-MM-DD'
   setDateAssessed(formattedDate); // Set the state with today's date
-}, []);
+  if (businessPermit?.business?.paymentmethod) {
+    setPaymentMethod(businessPermit.business.paymentmethod);
+  } else {
+    setPaymentMethod(undefined); // Or set a default value if needed
+  }
+}, [businessPermit?.business.paymentmethod]);
 
 
 
@@ -1620,7 +1688,9 @@ const handlesaveassessment = async () => {
     miscfee,
     liquortobaco,
     liquorplate,
-    total
+    total,
+    paymentmethodtotal,
+    paymentmethod,
   };
 
   try {
@@ -1634,6 +1704,8 @@ const handlesaveassessment = async () => {
     );
 
     console.log('Update successful:', response.data);
+    setfinishpopup(true);
+    setCheckPermit(false);
   } catch (error) {
     console.error('Update failed:', error);
   }
@@ -1716,6 +1788,7 @@ return (
                     <div className="user-info">
                         <h2>Edit Business Nature</h2>
                         {/* Add your user information content here */}
+                      <p> Assessing Permit ID: <strong>{businessPermit?.id}</strong></p> 
                         <label>
         Date Assessed:
         <input
@@ -1732,6 +1805,7 @@ return (
         />
       </label>
       <label>Classification: <strong>{businessPermit?.classification}</strong></label>
+
       
 <h1>List of Businesses</h1>
 {businessPermit && businessPermit.businesses && businessPermit.businesses.length > 0 ? (
@@ -1826,22 +1900,14 @@ return (
         <tr>
           <td style={{ padding: '8px' }}>Health Permit Fee</td>
           <td style={{ padding: '8px' }}>
-          <input
-          type="number"
-          placeholder='---'
-          onChange={(e) => {
-            const value = e.target.value ? parseFloat(e.target.value) : 0;
-            setHealthPermit(value * 100); // Multiply by 100
-          }}
-          style={{ width: '70%', padding: '4px', boxSizing: 'border-box' }}
-           />
-          </td>
+  {(businessPermit?.otherbusinessinfo?.numofworkertotal ?? 0)} (No. of Workers)
+</td>
           <td style={{ padding: '8px' }}>₱{health}</td>
         </tr>
 
         <tr>
           <td style={{ padding: '8px' }}>Business Plate / Sticker</td>
-          <td style={{ padding: '8px' }}>₱{totalGross.toLocaleString()}</td>
+          <td style={{ padding: '8px' }}>Fixed</td>
           <td style={{ padding: '8px' }}>₱500</td>
         </tr>
 
@@ -1908,15 +1974,32 @@ return (
           </td>
           <td style={{ padding: '8px' }}>₱{liquorplate}</td>
         </tr>
-
         <tr>
-          <td style={{ padding: '8px' }}>Total Computation</td>
+        <td style={{ padding: '8px' }}>Total Computation</td>
           <td style={{ padding: '8px' }}> </td>
           <td style={{ padding: '8px' }}>₱{total.toLocaleString()}</td>
         </tr>
+        <tr>
+          <td style={{ padding: '8px', fontWeight: 'bold'}}>Payment Method</td>
+          <td style={{ padding: '8px', fontWeight: 'bold'}}><select
+        value={paymentmethod}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+        className="form-control"
+      >
+        <option value="" disabled>
+          Select Payment Method
+        </option>
+        {paymentOptions.map((method) => (
+          <option key={method} value={method}>
+            {method}
+          </option>
+        ))}
+      </select></td>
+          <td style={{ padding: '8px', fontWeight: 'bold' }}>₱{paymentmethodtotal.toLocaleString()}</td>
+        </tr>
       </tbody>
     </table>
-  <button onClick={handlesaveassessment}>Assess</button>
+    <button onClick={() => setCheckPermit(true)}>Assess</button>
   <button onClick={() => { window.location.href = `/DAEditBusinessNature/${businessPermit?._id}`;}}>Edit Business Nature</button>
   {businessPermit && businessPermit.statementofaccount && businessPermit.businesspermitstatus === 'Assessed' ? (
   // If the business permit is available and its status is "Assessed", render the PDF component
@@ -1927,6 +2010,31 @@ return (
 )}
 </div>
 
+{checkpermit && (
+        <div className="modal-overlay" onClick={closePermitChecker}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Assess Permit {businessPermit?.id}?</h2>
+            <p>Do you want to Assess this applcation? Please confirm the details carefully.</p>
+
+            <div className="button-group">
+              <button onClick={() => handlesaveassessment()}>Yes</button>
+              <button className="close-modal" onClick={closePermitChecker}>
+              No
+            </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {finishpopup && (
+        <div className="modal-overlay" onClick={finishpopupclose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Successfully Assessed Permit {businessPermit?.id}?</h2>
+            <div className="button-group">
+              <button onClick={() => finishpopupclose()}>Okay</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       
 
@@ -1962,18 +2070,22 @@ return (
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Payment Mode:</label>
-                  <select
-                    value={businessPermit?.business.paymentmethod}
-                    className="form-control"
-                    disabled
-                  >
-                    <option value="" disabled>Select Payment Method</option>
-                    <option value="Annual">Annual</option>
-                    <option value="Semi-Annual">Semi-Annual</option>
-                    <option value="Quarterly">Quarterly</option>
-                  </select>
-                </div>
+      <label>Payment Mode:</label>
+      <select
+        value={paymentmethod}
+        className="form-control"
+        disabled
+      >
+        <option value="" disabled>
+          Select Payment Method
+        </option>
+        {paymentOptions.map((method) => (
+          <option key={method} value={method}>
+            {method}
+          </option>
+        ))}
+      </select>
+    </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>

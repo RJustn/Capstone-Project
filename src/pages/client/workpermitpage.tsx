@@ -499,7 +499,7 @@ if (WorkPermitData.length > 0) {
   {
   workPermits.length === 0 ? (
     <div className="upload-item">
-      <label>Upload FTJS Cert.:</label>
+      <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
       <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workPermits.length === 0} />
     </div>
   ) : null // Optionally, render something else when the condition is not met
