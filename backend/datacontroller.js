@@ -1673,10 +1673,13 @@ router.post('/updateworkpermitattachments/:id', upload.fields([
   }
 });
 
+//#region Dashboard
+
 // Endpoint for fetching the count of new working permits
 router.get('/newWorkingpermits', async (req, res) => {
   try {
     const newPermitsCount = await WorkPermit.countDocuments({ classification: 'New' });
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ count: newPermitsCount });
   } catch (error) {
     console.error('Error fetching new working permits data:', error);
@@ -1688,6 +1691,7 @@ router.get('/newWorkingpermits', async (req, res) => {
 router.get('/renewalWorkingpermits', async (req, res) => {
   try {
     const renewalPermitsCount = await WorkPermit.countDocuments({ classification: 'Renewal' });
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ count: renewalPermitsCount });
   } catch (error) {
     console.error('Error fetching renewal working permits data:', error);
@@ -1699,6 +1703,7 @@ router.get('/renewalWorkingpermits', async (req, res) => {
 router.get('/newBusinesspermits', async (req, res) => {
   try {
     const newBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'New' });
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ count: newBusinessPermitsCount });
   } catch (error) {
     console.error('Error fetching new business permits data:', error);
@@ -1710,6 +1715,7 @@ router.get('/newBusinesspermits', async (req, res) => {
 router.get('/renewalBusinesspermits', async (req, res) => {
   try {
     const renewalBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'Renewal' });
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ count: renewalBusinessPermitsCount });
   } catch (error) {
     console.error('Error fetching renewal business permits data:', error);
@@ -1717,10 +1723,12 @@ router.get('/renewalBusinesspermits', async (req, res) => {
   }
 });
 
+
 // Endpoint for fetching the count of working permits
 router.get('/workingpermitsChart', async (req, res) => {
   try {
     const workingPermits = await WorkPermit.countDocuments();
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ label: 'Working Permit', count: workingPermits });
   } catch (error) {
     console.error('Error fetching working permit data:', error);
@@ -1732,6 +1740,7 @@ router.get('/workingpermitsChart', async (req, res) => {
 router.get('/businesspermitsChart', async (req, res) => {
   try {
     const businessPermits = await BusinessPermit.countDocuments();
+    const month = new Date().toLocaleString('default', { month: 'long' });
     res.json({ label: 'Business Permit', count: businessPermits });
   } catch (error) {
     console.error('Error fetching business permit data:', error);
@@ -1740,26 +1749,82 @@ router.get('/businesspermitsChart', async (req, res) => {
 });
 
 // For the Dashboard
-// router.get('/dashboard/workpermitdata', async (req, res) => {
-//   try {
-//     const totalPermitApplications = await WorkPermit.countDocuments();
-//     const totalRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renewal' });
-//     const totalCollections = await WorkPermit.aggregate([
-//       { $group: { _id: null, total: { $sum: "$amountPaid" } } }
-//     ]);
-//     const totalReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
+router.get('/workpermitdatastats', async (req, res) => {
+  try {
+    const totalPermitApplications = await WorkPermit.countDocuments();
+    const totalRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renewal' });
+    const totalCollections = await WorkPermit.aggregate([
+      { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+    ]);
+    const totalReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
 
-//     res.json({
-//       totalPermitApplications,
-//       totalRenewalApplications,
-//       totalCollections: totalCollections[0]?.total || 0,
-//       totalReleased
-//     });
-//   } catch (error) {
-//     console.error('Error fetching dashboard stats:', error);
-//     res.status(500).json({ message: 'Error fetching dashboard stats' });
-//   }
-// });
+    res.json({
+      totalPermitApplications,
+      totalRenewalApplications,
+      totalCollections: totalCollections[0]?.total || 0,
+      totalReleased
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    res.status(500).json({ message: 'Error fetching dashboard stats' });
+  }
+});
+
+// Endpoint to fetch dashboard data
+router.get('/dashboardData', async (req, res) => {
+  try {
+    const totalWorkPermitApplications = await WorkPermit.countDocuments();
+    const totalWorkRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renewal' });
+    const totalWorkCollections = await WorkPermit.aggregate([
+      { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+    ]);
+    const totalWorkReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
+
+    const totalBusinessPermitApplications = await BusinessPermit.countDocuments();
+    const totalBusinessRenewalApplications = await BusinessPermit.countDocuments({ classification: 'Renewal' });
+    const totalBusinessCollections = await BusinessPermit.aggregate([
+      { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+    ]);
+    const totalBusinessReleased = await BusinessPermit.countDocuments({ businesspermitstatus: 'Released' });
+
+    res.json({
+      totalWorkPermitApplications,
+      totalWorkRenewalApplications,
+      totalWorkCollections: totalWorkCollections[0]?.total || 0,
+      totalWorkReleased,
+      totalBusinessPermitApplications,
+      totalBusinessRenewalApplications,
+      totalBusinessCollections: totalBusinessCollections[0]?.total || 0,
+      totalBusinessReleased
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    res.status(500).json({ message: 'Error fetching dashboard data' });
+  }
+});
+
+// Endpoint to fetch permit applications by category
+router.get('/permitApplicationsByCategory', async (req, res) => {
+  try {
+    const workPermitCategories = await WorkPermit.aggregate([
+      { $group: { _id: "$classification", count: { $sum: 1 } } }
+    ]);
+
+    const businessPermitCategories = await BusinessPermit.aggregate([
+      { $group: { _id: "$classification", count: { $sum: 1 } } }
+    ]);
+
+    res.json({
+      workPermitCategories,
+      businessPermitCategories
+    });
+  } catch (error) {
+    console.error('Error fetching permit applications by category:', error);
+    res.status(500).json({ message: 'Error fetching permit applications by category' });
+  }
+});
+
+//#endregion dashboard
 
   router.post('/updateworkpermitpayments/:id', receipt.fields([
     { name: 'document1', maxCount: 1 },
@@ -1885,6 +1950,70 @@ router.get('/businesspermitsChart', async (req, res) => {
       res.status(500).json({ message: 'Failed to update business permit' });
     }
   });
+  
+
+  router.get('/businessPermitLocations', async (req, res) => {
+    try {
+      const locations = await BusinessPermit.aggregate([
+        { $group: { _id: "$business.businessbarangay", count: { $sum: 1 } } }
+      ]);
+      res.json(locations);
+    } catch (error) {
+      console.error('Error fetching business permit locations:', error);
+      res.status(500).json({ message: 'Error fetching business permit locations' });
+    }
+  });
+  
+  router.get('/monthlyPaymentStatus', async (req, res) => {
+    try {
+      const monthlyData = await WorkPermit.aggregate([
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" }
+            },
+            paid: {
+              $sum: {
+                $cond: [{ $eq: ["$workpermitstatus", "Paid"] }, 1, 0]
+              }
+            },
+            unpaid: {
+              $sum: {
+                $cond: [{ $eq: ["$workpermitstatus", "Unpaid"] }, 1, 0]
+              }
+            }
+          }
+        },
+        {
+          $sort: {
+            "_id.year": 1,
+            "_id.month": 1
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            month: {
+              $concat: [
+                { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+                " ",
+                { $toString: "$_id.year" }
+              ]
+            },
+            paid: 1,
+            unpaid: 1
+          }
+        }
+      ]);
+  
+      res.json(monthlyData);
+    } catch (error) {
+      console.error('Error fetching monthly payment status:', error);
+      res.status(500).json({ message: 'Error fetching monthly payment status' });
+    }
+  });
+
   
   
 

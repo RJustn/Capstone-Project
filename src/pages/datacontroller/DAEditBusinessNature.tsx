@@ -167,6 +167,34 @@ const DataControllerEditBusinessNature: React.FC = () => {
         navigate('/'); // Redirect to home page
     };
 
+     useEffect(() => {
+        const checkAuth = async () => {
+          try {
+            const response = await fetch('http://localhost:3000/client/check-auth-datacontroller', {
+              method: 'GET',
+              credentials: 'include',
+            });
+    
+            if (response.status === 401) {
+              console.error('Access denied: No token');
+              navigate('/login');
+              return;
+            }
+    
+            if (response.status === 204) {
+              console.log('Access Success');
+              return;
+            }
+    
+            console.error('Unexpected response status:', response.status);
+          } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+          }
+        };
+    
+        checkAuth();
+      }, [navigate]);
+
     useEffect(() => {
         const fetchBusinessPermitDetails = async () => {
             if (!token) {

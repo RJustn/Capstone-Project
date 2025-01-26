@@ -62,11 +62,21 @@ const generateYearlyData = () => {
   });
 
   const [dashboardData, setDashboardData] = useState({
-    totalPermitApplications: '',
-    totalRenewalApplications: '',
-    totalCollections: '',
-    totalReleased: '',
+    totalWorkPermitApplications: '',
+    totalWorkRenewalApplications: '',
+    totalWorkCollections: '',
+    totalWorkReleased: '',
+    totalBusinessPermitApplications: '',
+    totalBusinessRenewalApplications: '',
+    totalBusinessCollections: '',
+    totalBusinessReleased: '',
   });
+
+  const [showWorkPermit, setShowWorkPermit] = useState(true);
+
+  const handleToggle = () => {
+    setShowWorkPermit(!showWorkPermit);
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -137,10 +147,14 @@ const generateYearlyData = () => {
           if (dashboardResponse.ok) {
             const dashboardData = await dashboardResponse.json();
             setDashboardData({
-              totalPermitApplications: dashboardData.totalPermitApplications,
-              totalRenewalApplications: dashboardData.totalRenewalApplications,
-              totalCollections: dashboardData.totalCollections,
-              totalReleased: dashboardData.totalReleased,
+              totalWorkPermitApplications: dashboardData.totalWorkPermitApplications,
+              totalWorkRenewalApplications: dashboardData.totalWorkRenewalApplications,
+              totalWorkCollections: dashboardData.totalWorkCollections,
+              totalWorkReleased: dashboardData.totalWorkReleased,
+              totalBusinessPermitApplications: dashboardData.totalBusinessPermitApplications,
+              totalBusinessRenewalApplications: dashboardData.totalBusinessRenewalApplications,
+              totalBusinessCollections: dashboardData.totalBusinessCollections,
+              totalBusinessReleased: dashboardData.totalBusinessReleased,
             });
           } else {
             console.error('Error fetching dashboard data');
@@ -188,47 +202,56 @@ console.error('Logout error:', errorData.message);
         </header>
 
         <div>
-          <h2>Work Permit</h2>
+          <button onClick={handleToggle}>
+            {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
+          </button>
         </div>
 
-        <div className="Astats-chart-container">
-          <div className="Astats">
-            <div>{`Total Permit Applications for 2024: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications for 2024: ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections 2024: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
-          </div>
-          
-          <div className="AChartcontainer">
-          <div className="Achart">
-              <Line data={totalPermitsData} />
+        {showWorkPermit ? (
+          <>
+            <div>
+              <h2>Work Permit</h2>
             </div>
-            <div className="Achart">
-              <Line data={lineChartData} />
+            <div className="Astats-chart-container">
+              <div className="Astats">
+                <div>{`Total Permit Applications for 2024: ${dashboardData.totalWorkPermitApplications}`}</div>
+                <div>{`Total Renewal Applications for 2024: ${dashboardData.totalWorkRenewalApplications}`}</div>
+                <div>{`Total Collections 2024: ${dashboardData.totalWorkCollections}`}</div>
+                <div>{`Total Released 2024: ${dashboardData.totalWorkReleased}`}</div>
+              </div>
+              <div className="AChartcontainer">
+                <div className="Achart">
+                  <Line data={totalPermitsData} />
+                </div>
+                <div className="Achart">
+                  <Line data={lineChartData} />
+                </div>
+              </div>
             </div>
-        </div>
-
-        <div>
-          <h2>Business Permit</h2>
-        </div>
-        <div className="DAstats-chart-container">
-          <div className="DAstats">
-            <div>{`Total Permit Applications for 2024: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications for 2024: ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections 2024: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released 2024: ${dashboardData.totalReleased}`}</div>
-          </div>
-          
-          <div className="DaChartcontainer">
-          <div className="DAchart">
-              <Line data={totalPermitsData} />
+          </>
+        ) : (
+          <>
+            <div>
+              <h2>Business Permit</h2>
             </div>
-            <div className="DAchart">
-              <Line data={lineChartData} />
+            <div className="DAstats-chart-container">
+              <div className="DAstats">
+                <div>{`Total Permit Applications for 2024: ${dashboardData.totalBusinessPermitApplications}`}</div>
+                <div>{`Total Renewal Applications for 2024: ${dashboardData.totalBusinessRenewalApplications}`}</div>
+                <div>{`Total Collections 2024: ${dashboardData.totalBusinessCollections}`}</div>
+                <div>{`Total Released 2024: ${dashboardData.totalBusinessReleased}`}</div>
+              </div>
+              <div className="DaChartcontainer">
+                <div className="DAchart">
+                  <Line data={totalPermitsData} />
+                </div>
+                <div className="DAchart">
+                  <Line data={lineChartData} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </>
+        )}
       </div>
     </section>
   );

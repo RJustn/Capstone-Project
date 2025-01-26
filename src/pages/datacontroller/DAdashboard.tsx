@@ -10,6 +10,8 @@ ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, Linear
 const DAdashboard: React.FC = () => {
   const navigate = useNavigate();
 
+  const month = new Date().toLocaleString('default', { month: 'long' });
+
   const [WorkingPermitChart, setWorkingpermitchart] = useState({
     labels: [] as string[],
     datasets: [
@@ -72,7 +74,7 @@ const DAdashboard: React.FC = () => {
     labels: [] as string[],
     datasets: [
       {
-        label: 'Total Working Permits Released',
+        label: 'Total Business Permits Released',
         data: [] as number[],
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -82,13 +84,22 @@ const DAdashboard: React.FC = () => {
     ],
   });
 
-  //setDashboardData
-  const [dashboardData,] = useState({
-    totalPermitApplications: '',
-    totalRenewalApplications: '',
-    totalCollections: '',
-    totalReleased: '',
+  const [dashboardData, setDashboardData] = useState({
+    totalWorkPermitApplications: '',
+    totalWorkRenewalApplications: '',
+    totalWorkCollections: '',
+    totalWorkReleased: '',
+    totalBusinessPermitApplications: '',
+    totalBusinessRenewalApplications: '',
+    totalBusinessCollections: '',
+    totalBusinessReleased: '',
   });
+
+  const [showWorkPermit, setShowWorkPermit] = useState(true);
+
+  const handleToggle = () => {
+    setShowWorkPermit(!showWorkPermit);
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -118,7 +129,6 @@ const DAdashboard: React.FC = () => {
     checkAuth();
   }, [navigate]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -128,14 +138,16 @@ const DAdashboard: React.FC = () => {
           workingPermitsResponse,
           businessPermitsResponse,
           newBusinessPermitsResponse,
-          renewalBusinessPermitsResponse
+          renewalBusinessPermitsResponse,
+          dashboardDataResponse
         ] = await Promise.all([
           fetch('http://localhost:3000/datacontroller/newWorkingpermits', { method: 'GET', credentials: 'include' }),
           fetch('http://localhost:3000/datacontroller/renewalWorkingpermits', { method: 'GET', credentials: 'include' }),
           fetch('http://localhost:3000/datacontroller/workingpermitsChart', { method: 'GET', credentials: 'include' }),
           fetch('http://localhost:3000/datacontroller/businesspermitsChart', { method: 'GET', credentials: 'include' }),
           fetch('http://localhost:3000/datacontroller/newBusinesspermits', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' })
+          fetch('http://localhost:3000/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' }),
+          fetch('http://localhost:3000/datacontroller/dashboardData', { method: 'GET', credentials: 'include' })
         ]);
 
         if (!newPermitsResponse.ok) {
@@ -166,7 +178,7 @@ const DAdashboard: React.FC = () => {
           const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json();
 
           setWorkingpermitchart({
-            labels: ['Permits'],
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [
               {
                 label: 'New Permits',
@@ -188,7 +200,7 @@ const DAdashboard: React.FC = () => {
           });
 
           setBusinessPermitChart({
-            labels: ['Permits'],
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [
               {
                 label: 'New Business Permits',
@@ -210,7 +222,7 @@ const DAdashboard: React.FC = () => {
           });
 
           setTotalWorkingPermitsData({
-            labels: ['Permits'],
+            labels: [month],
             datasets: [
               {
                 label: 'Total Permits Released',
@@ -224,7 +236,7 @@ const DAdashboard: React.FC = () => {
           });
 
           settotalBusinessPermit({
-            labels: ['Permits'],
+            labels: [month],
             datasets: [
               {
                 label: 'Total Business Permits Released',
@@ -239,6 +251,22 @@ const DAdashboard: React.FC = () => {
 
         
         } 
+
+        if (dashboardDataResponse.ok) {
+          const dashboardData = await dashboardDataResponse.json();
+          setDashboardData({
+            totalWorkPermitApplications: dashboardData.totalWorkPermitApplications,
+            totalWorkRenewalApplications: dashboardData.totalWorkRenewalApplications,
+            totalWorkCollections: dashboardData.totalWorkCollections,
+            totalWorkReleased: dashboardData.totalWorkReleased,
+            totalBusinessPermitApplications: dashboardData.totalBusinessPermitApplications,
+            totalBusinessRenewalApplications: dashboardData.totalBusinessRenewalApplications,
+            totalBusinessCollections: dashboardData.totalBusinessCollections,
+            totalBusinessReleased: dashboardData.totalBusinessReleased,
+          });
+        } else {
+          console.error('Error fetching dashboard data:', dashboardDataResponse.statusText);
+        }
       } catch(error) {
         console.error("Error fetching data:", error);
       }
@@ -246,27 +274,6 @@ const DAdashboard: React.FC = () => {
 
     fetchData();
   }, []);
-    // add later to get the number of permits
-      //       const dashboardResponse = await fetch('/dashboard/data', { method: 'GET', credentials: 'include' });
-    //       if (dashboardResponse.ok) {
-    //         const WorkdashboardData = await dashboardResponse.json();
-    //         setDashboardData({
-    //           totalPermitApplications: dashboardData.totalPermitApplications,
-    //           totalRenewalApplications: dashboardData.totalRenewalApplications,
-    //           totalCollections: dashboardData.totalCollections,
-    //           totalReleased: dashboardData.totalReleased,
-    //         });
-    //       } else {
-    //         console.error('Error fetching dashboard data');
-    //       }
-    //     } else {
-    //       console.error('Error fetching permit data');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching permit data:', error);
-    //   }
-    // };
-
 
   const handleLogout = async () => {
     try {
@@ -300,48 +307,56 @@ const DAdashboard: React.FC = () => {
         </header>
 
         <div>
-          <h2>Work Permit</h2>
+          <button onClick={handleToggle}>
+            {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
+          </button>
         </div>
 
-        <div className="DAstats-chart-container">
-          <div className="DAstats">
-            <div>{`Total Permit Applications: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications : ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released: ${dashboardData.totalReleased}`}</div>
-          </div>
-          
-          <div className="DaChartcontainer">
-          <div className="DAchart">
-              <Line data={totalWorkingPermitsData} />
+        {showWorkPermit ? (
+          <>
+            <div>
+              <h2>Work Permit</h2>
             </div>
-            <div className="DAchart">
-              <Line data={WorkingPermitChart} />
+            <div className="DAstats-chart-container">
+              <div className="DAstats">
+                <div>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
+                <div>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
+                <div>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
+                <div>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
+              </div>
+              <div className="DaChartcontainer">
+                <div className="DAchart">
+                  <Line data={totalWorkingPermitsData} />
+                </div>
+                <div className="DAchart">
+                  <Line data={WorkingPermitChart} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div>
-          <h2>Business Permit</h2>
-        </div>
-        <div className="DAstats-chart-container">
-          <div className="DAstats">
-            <div>{`Total Permit Applications: ${dashboardData.totalPermitApplications}`}</div>
-            <div>{`Total Renewal Applications: ${dashboardData.totalRenewalApplications}`}</div>
-            <div>{`Total Collections: ${dashboardData.totalCollections}`}</div>
-            <div>{`Total Released: ${dashboardData.totalReleased}`}</div>
-          </div>
-          
-          <div className="DaChartcontainer">
-          <div className="DAchart">
-              <Line data={totalBusinessPermitsData} />
+          </>
+        ) : (
+          <>
+            <div>
+              <h2>Business Permit</h2>
             </div>
-            <div className="DAchart">
-              <Line data={BusinessPermitChart} />
+            <div className="DAstats-chart-container">
+              <div className="DAstats">
+                <div>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
+                <div>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
+                <div>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
+                <div>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
+              </div>
+              <div className="DaChartcontainer">
+                <div className="DAchart">
+                  <Line data={totalBusinessPermitsData} />
+                </div>
+                <div className="DAchart">
+                  <Line data={BusinessPermitChart} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
+          </>
+        )}
       </div>
     </section>
   );
