@@ -1,4 +1,4 @@
-/* GENERAL STYLES */
+/* --------------- GENERAL STYLES START --------------- */
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.6;
@@ -7,92 +7,78 @@ body {
   color: #000000;
   background-color: #f4f4f4;
 }
+/* --------------- GENERAL STYLES END --------------- */
 
-/* NAVBAR */
-.homeheader {
-  background: #00712D;
-  color: #ffffff;
-  padding: 1rem 2rem; /* Add padding on the sides */
-  display: flex;
-  justify-content: space-between; /* Space between title and navigation */
-  align-items: center; /* Vertically center content */
+/* --------------- BODY STYLES START --------------- */
+.bodylandingpage {
+  background-image: url('/landingpagebackground.svg'); 
+  background-size: cover;       /* Ensures the image covers the entire area */
+  background-position: center;  /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  height: 100vh;               /* Ensures the background covers the full viewport height */
+  width: 100%;                 /* Ensures the width is 100% of the viewport */
+  display: flex;               /* Enable Flexbox */
+    flex-direction: column;      /* Stack children vertically */
+    justify-content: center;      /* Center children vertically */
+    align-items: center;         /* Center children horizontally */
+    text-align: center;          /* Center text */
+}
+/* --------------- BODY STYLES END --------------- */
+
+
+/* --------------- NAVBAR STYLES START --------------- */
+.navbar-custom {
+  background-color: #00712D; 
+  height: 80px;
+  margin: 20px;
+  border-radius: 16px;
+  padding: 0.5rem;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 1.5rem; 
+.nav-link:hover {
+  background-color: #02c650; 
+  color: white; 
 }
 
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex; /* Flexbox for horizontal layout */
+.offcanvas-custom {
+  background-color: #00712D;
 }
 
-nav ul li {
-  margin-left: 15px; /* Changed to margin-left to ensure spacing works correctly */
+.navbar-toggler {
+  border:none;
+  font-size:c1.25rem;
 }
 
-nav ul li a {
-  background-color: #00712D; /* Button background color */
-  color: #D5ED9F; /* Button text color */
-  padding: 0.5rem 1rem; /* Padding inside the button */
-  border-radius: 4px; /* Rounded corners */
-  text-decoration: none; /* Remove underline from links */
-  font-weight: bold; /* Bold text */
-  display: inline-block; /* Ensure proper spacing and alignment */
-  text-align: center; /* Center the text */
+.navbar-toggler:hover{
+  background-color: #00712D;
+  border:solid 1px;
 }
 
-nav ul li a:hover {
-  background-color: #005a1a; /* Darker background on hover */
-  color: #e0f5b2; /* Lighter text color on hover */
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: none;
+}
+/* --------------- NAVBAR STYLES END --------------- */
+
+/* --------------- CONTENT STYLES START --------------- */
+.title, .subtitle {
+  margin-top: 0;               
+}
+.title h2, .subtitle h2 {
+  color: #ffffff;              
+  font-weight: bold;           
+  line-height: 1.4;            
+  margin: 0;                   
 }
 
-/* NAVBAR BUTTON CONTAINER STYLE */
-.button {
-  background: #00712D;
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  text-align: center;
-}
-
-.button:hover {
-  background: #399918;
-}
-
-/* CONTENTS */
-
-.bodylandingpage{
-background-image: url('/landingpagebackground.svg'); 
-background-size: cover;       /* Ensures the image covers the entire area */
-background-position: center;  /* Centers the image */
-background-repeat: no-repeat; /* Prevents the image from repeating */
-height: 100vh;                /* Ensures the background covers the full viewport height */
-width: 100%;         
-}
-
+/* Default styles for larger screens */
 .title h2 {
-  font-size: 2rem;     
-  color: #ffffff;      /* Set the text color to white */
-  text-align: center;    /* Center the text */
-  font-weight: bold;     /* Make the text bold */
-  line-height: 1.4;      /* Adjust the line height for better readability */
-  margin-top: 5rem;
-  margin-left: 5rem;
+  font-size: 2rem;             
 }
 
 .subtitle h2 {
-  font-size: 1.8rem;     
-  color: #ffffff;      /* Set the text color to white */
-  text-align: center;    /* Center the text */
-  font-weight: bold;     /* Make the text bold */
-  line-height: 1.4;      /* Adjust the line height for better readability */
-  margin-top: 12rem;
-  margin-left: 5rem;
+  margin-top: 15rem;
+  font-size: 1.8rem;           
 }
 
 .highlight {
@@ -101,16 +87,17 @@ width: 100%;
 }
 
 .applybuttoncontainer{
+  margin-top: 2rem;  
   display: flex;            /* Use flexbox for centering */
   justify-content: center;  /* Center horizontally */
   align-items: center;      /* Center vertically */
 }
 
-.applybutton {
-  background: #28a745;    
+.btn-apply-custom {
+  background: #00712D;    
   color: #ffffff;         
-  padding: 0.75rem 1.5rem;
-  margin-left: 3rem;
+  padding: 0.5rem 1.5rem; 
+  border-radius: 0.25rem;      
   border: none;
   border-radius: 4px;
   text-decoration: none;
@@ -119,12 +106,15 @@ width: 100%;
   font-size: 1rem;
 }
 
-.applybutton:hover {
-  background: #6cc251;    /* Keep the hover background */
+.btn-apply-custom:hover {
+  background: #02c650;/* Keep the hover background */
+  color:white;
 }
 
+/* --------------- CONTENT STYLES START --------------- */
 
-/* FOOTER */
+
+/* --------------- FOOTER STYLES START --------------- */
 footer {
   background: #00712D;
   color: #D5ED9F;
@@ -134,3 +124,49 @@ footer {
   bottom: 0;            /* Align it to the bottom of the viewport */
   width: 100%;          /* Make sure it spans the full width of the page */
 }
+
+/* --------------- FOOTER STYLES END --------------- */
+
+
+/* --------------- MEDIA QUESRY START --------------- */
+@media (max-width: 992px) { /* Adjust the breakpoint as needed */
+  .navbar-brand .d-none {
+    display: none !important; /* Hide the long brand name */
+  }
+  .navbar-brand .d-lg-none {
+    display: inline !important; /* Show the short brand name */
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-brand .d-lg-none {
+    display: none !important; /* Hide the short brand name */
+  }
+  .navbar-brand .d-none {
+    display: inline !important; /* Show the long brand name */
+  }
+}
+
+@media (max-width: 380px) { /* Targeting iPhone SE and similar devices */
+  .title h2 {
+      font-size: 1.5rem;        /* Smaller font size for title */
+  }
+
+  .subtitle h2 {
+      font-size: 1rem;        /* Smaller font size for subtitle */
+  }
+
+  .applybuttoncontainer {
+      margin-top: 1rem;         /* Adjust margin for button */
+  }
+
+  .btn-apply-custom {
+      padding: 0.4rem 1rem;     /* Adjust padding for button */
+      font-size: 0.9rem;         /* Smaller font size for button */
+  }
+
+  footer {
+      font-size: 6px;         /* Smaller font size for footer */
+  }
+}
+/* --------------- MEDIA QUERY END --------------- */

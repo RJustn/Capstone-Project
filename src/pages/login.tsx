@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Styles/login.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -70,47 +72,64 @@ const Login: React.FC = () => {
   return (
     <div className="bodylogin">
       <div className="login-container">
-        <h2>Log In</h2>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="button-group">
-            <button type="button" className="cancellogin" onClick={handleCancel}>
-              Cancel
-            </button>
-            <a href="/signup" className="signup-link">
-              Don't have an account? <br /> Click here to Sign up
-            </a>
-            <a href="/forgotpassword" className="signup-link">
-              Forgot Password?
-            </a>
-            <button className="loginbutton" type="submit">
-              Log In
-            </button>
-          </div>
-        </form>
-      </div>
+      <h2 className="text-center mb-4">Log In</h2>
+      {error && <p className="text-danger text-center">{error}</p>}
+      {success && <p className="text-success text-center">{success}</p>}
+      <form onSubmit={handleSubmit}>
+        {/* Email Input */}
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-control"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        
+        {/* Password Input */}
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-control"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        
+        {/* Buttons and Links */}
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-success">
+            Log In
+          </button>
+        </div>
+        
+        {/* Links */}
+        <div className="text-center">
+          <a href="/signup" className="d-block text-decoration-none mb-2">
+            Don't have an account? <strong>Sign up</strong>
+          </a>
+          <a href="/forgotpassword" className="text-decoration-none">
+            Forgot Password?
+          </a>
+        </div>
+      </form>
     </div>
+  </div>
   );
 };
 

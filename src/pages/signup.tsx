@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Styles/signup.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -67,113 +69,142 @@ const Signup: React.FC = () => {
   return (
     <>
       <div className="body">
-        <div className="signup-container">
-          <h2>Sign Up</h2>
-          {error && <p className="error">{error}</p>}
-          {success && <p className="success">{success}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="input-row">
-              <div className="form-group">
-                <label htmlFor="firstName">First Name:</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="middleName">Middle Name:</label>
-                <input
-                  type="text"
-                  id="middleName"
-                  value={middleName}
-                  onChange={(e) => setMiddleName(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="lastName">Last Name:</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="input-row">
-              <div className="form-group">
-                <label htmlFor="contactNumber">Contact Number:</label>
-                <input
-                  type="text"
-                  id="contactNumber"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="address">Address:</label>
-                <input
-                  type="text"
-                  id="address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="input-row">
-              <div className="form-group">
-                <label htmlFor="email">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Password:</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="confirmpassword">Confirm Password:</label>
-                <input
-                  type="password"
-                  id="confirmpassword"
-                  value={confirmpassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="button-group">
-              <button
-                type="button"
-                className="cancelsignup"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-              <a href="/login" className="login-link">
-                Already have an account? <br /> Click here to Log in
-              </a>
-              <button type="submit" className="signupbutton">
-                Sign Up
-              </button>
-            </div>
-          </form>
+      <div className="signup-container">  
+              <h2 className="text-center mb-4">Sign Up</h2>
+              {error && <p className="text-danger text-center">{error}</p>}
+              {success && <p className="text-success text-center">{success}</p>}
+                <form onSubmit={handleSubmit}>
+                  <div className="row mb-3">
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label htmlFor="firstName" className="form-label">First Name</label>
+                          <input
+                          type="text"
+                          id="firstName"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          className="form-control"
+                          required
+                          />
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label htmlFor="middleName" className="form-label">Middle Name</label>
+                          <input
+                          type="text"
+                          id="middleName"
+                          value={middleName}
+                          onChange={(e) => setMiddleName(e.target.value)}
+                          className="form-control"
+                          />
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label htmlFor="lastName" className="form-label">Last Name</label>
+                          <input
+                          type="text"
+                          id="lastName"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="form-control"
+                          required
+                          />
+                      </div>
+                    </div>
+                  </div>
+
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <div className="mb-3">
+            <label htmlFor="contactNumber" className="form-label">Contact Number</label>
+            <input
+              type="text"
+              id="contactNumber"
+              value={contactNumber}
+              onChange={(e) => setContactNumber(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
         </div>
+        <div className="col-md-6">
+          <div className="mb-3">
+            <label htmlFor="address" className="form-label">Address</label>
+            <input
+              type="text"
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <div className="col-md-4">
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="mb-3">
+            <label htmlFor="confirmpassword" className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmpassword"
+              value={confirmpassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex justify-content-between align-items-center">
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleCancel}
+        >
+          Cancel
+        </button>
+        <a href="/login" className="text-primary">
+          Already have an account? <br></br> Click here to Log in
+        </a>
+        <button type="submit" className="btn btn-success">
+          Sign Up
+        </button>
+      </div>
+    </form>
+    </div>
+
+
       </div>
     </>
   );
