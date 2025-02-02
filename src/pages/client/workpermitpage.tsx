@@ -1,7 +1,7 @@
 import React, {  useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css';
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 import axios from 'axios';
 
 export interface PersonalInformation {
@@ -297,6 +297,37 @@ if (WorkPermitData.length > 0) {
         console.error('Error:', error);
       }
   };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/client/check-auth-client', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
+  
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+  
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+    
+      } 
+    };
+  
+    checkAuth();
+  }, [navigate]);
   
 
 
@@ -326,9 +357,8 @@ if (WorkPermitData.length > 0) {
 
   return (
     <section className="dashboard-container">
-      <div className="sidebar-container">
-      <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
-      </div>
+          {/* Navbar */}
+          <ClientNavbar handleLogout={handleLogout}/>
 
       <div className="content">
         <header>

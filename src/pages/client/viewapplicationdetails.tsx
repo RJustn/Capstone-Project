@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../Styles/ClientStyles.css';
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 
 export interface PersonalInformation {
     lastName: string;
@@ -198,9 +198,8 @@ useEffect(() => {
 
   return (
     <section className="dashboard-container">
-      <div className="sidebar-container">
-      <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
-      </div>
+          {/* Navbar */}
+          <ClientNavbar handleLogout={handleLogout}/>
   
       <div className="content">
         <header>

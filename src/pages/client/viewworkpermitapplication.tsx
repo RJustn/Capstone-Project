@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css';
 import WorkPermit from './workpermitpage';
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 import axios from 'axios';
 
 // Define the WorkPermit interface
@@ -359,9 +359,8 @@ const handleLogout = async () => {
 
     return (
         <section className="dashboard-container">
-            <div className="sidebar-container">
-            <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
-            </div>
+                {/* Navbar */}
+      <ClientNavbar handleLogout={handleLogout}/>
 
             <div className="content">
                 <header>

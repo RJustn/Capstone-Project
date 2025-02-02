@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css';
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 import MapLocation from '../components/MapLocation';
 import axios from 'axios';
 import Select from 'react-select';
@@ -2928,9 +2928,8 @@ const handleRemoveBusiness = (index: number) => {
 
   return (
     <section className="dashboard-container">
-      <div className="sidebar-container">
-        <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
-      </div>
+          {/* Navbar */}
+          <ClientNavbar handleLogout={handleLogout}/>
 
       <div className="content">
         <header>

@@ -44,12 +44,13 @@ const DataControllerAccount: React.FC = () => {
             },
           });
 
-          const data = await response.json();
           if (response.ok) {
+            const data = await response.json();
             setUserDetails(data.user);
             setError(null);
           } else {
-            setError(data.error || 'Error fetching user details.');
+            const errorData = await response.json();
+            setError(errorData.error || 'Error fetching user details.');
           }
         } catch (error) {
           console.error('Error fetching user details:', error);
@@ -91,11 +92,11 @@ const DataControllerAccount: React.FC = () => {
     checkAuth();
   }, [navigate]);
 
-  const handleVerifyOtp = async () => {
+  const handleChangePassword = async () => {
     if (!userDetails?.email) return;
 
-    if (confirmpassword !== userDetails?.password) {
-      setError('Password Not Match.');
+    if (confirmpassword !== password) {
+      setError('Passwords do not match.');
       return;
     }
 
@@ -105,19 +106,19 @@ const DataControllerAccount: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: userDetails?.email, password: userDetails?.password }),
+        body: JSON.stringify({ email: userDetails.email, password }),
       });
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Password Changed');
+        setSuccess('Password changed successfully.');
         navigate('/login');
         setError(null);
       } else {
         setError(data.error);
       }
     } catch (error) {
-      console.error('Error verifying OTP, please try again.', error);
-      setError('Error verifying OTP, please try again.');
+      console.error('Error changing password:', error);
+      setError('Error changing password, please try again.');
     }
   };
 
@@ -164,9 +165,9 @@ const DataControllerAccount: React.FC = () => {
                 </button>
 
                 {isFormVisible && (
-                  <div className="modal-overlay">
-                    <div className="modal">
-                      <h1>Forgot Password</h1>
+                  <div className="modal-overlay" style={{ display: 'block' }}>
+                    <div className="modal" style={{ display: 'block' }}>
+                      <h1>Change Password</h1>
                       {error && <p className="error">{error}</p>}
                       {success && <p className="success">{success}</p>}
                       <div className="input-row">
@@ -178,30 +179,33 @@ const DataControllerAccount: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                           />
                         </div>
                       </div>
                       <div className="input-row">
                         <div className="form-group">
-                          <label htmlFor="otp">Password:</label>
+                          <label htmlFor="password">Password:</label>
                           <input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            autoComplete="new-password"
                           />
                         </div>
                       </div>
                       <div className="input-row">
                         <div className="form-group">
-                          <label htmlFor="otp">Confirm Password:</label>
+                          <label htmlFor="confirmpassword">Confirm Password:</label>
                           <input
                             type="password"
                             id="confirmpassword"
                             value={confirmpassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
+                            autoComplete="new-password"
                           />
                         </div>
                       </div>
@@ -209,7 +213,7 @@ const DataControllerAccount: React.FC = () => {
                         <button type="button" className="cancelForgotPassword" onClick={handleButtonClick}>
                           Cancel
                         </button>
-                        <button type="button" className="verifyemail" onClick={handleVerifyOtp}>
+                        <button type="button" className="verifyemail" onClick={handleChangePassword}>
                           Change Password
                         </button>
                       </div>

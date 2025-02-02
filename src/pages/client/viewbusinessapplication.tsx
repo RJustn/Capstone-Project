@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import '../Styles/ClientStyles.css';
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 import React from 'react';
 import axios from 'axios';
 
@@ -559,10 +559,9 @@ const ViewBusinessApplication: React.FC = () => {
 
     return (
         <section className="dashboard-container">
-            <div className="sidebar-container">
-            <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
-            </div>
-
+               {/* Navbar */}
+      <ClientNavbar handleLogout={handleLogout}/>
+      
             <div className="content">
                 <header>
                     <h1>View Business Permit Applications</h1>

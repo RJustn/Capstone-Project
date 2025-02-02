@@ -19,7 +19,6 @@ import BusinessPermitRenew from './pages/client/businesspermitrenew';
 import WorkPermit from './pages/client/workpermitpage';
 import ViewWorkPermitApplication from './pages/client/viewworkpermitapplication';
 import ViewBusinessApplication from './pages/client/viewbusinessapplication';
-import ViewAllApplication from './pages/client/viewallapplication';
 import ViewApplicationDetails from './pages/client/viewapplicationdetails';
 import ViewApplicationDetailsBusiness from './pages/client/viewapplicationdetailsbusiness';
 
@@ -84,7 +83,6 @@ const App: React.FC = () => {
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/viewbusinessapplication" element={<ViewBusinessApplication />} />
         <Route path="/viewworkpermitapplication" element={<ViewWorkPermitApplication />} />
-        <Route path="/viewallapplication" element={<ViewAllApplication />} />
         <Route path="/viewapplicationdetails/:id?" element={<ViewApplicationDetails />} />
         <Route path="/viewapplicationdetailsbusiness/:id?" element={<ViewApplicationDetailsBusiness />} />
 

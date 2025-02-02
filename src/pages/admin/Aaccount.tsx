@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Styles/AdminStyles.css';
-import Sidebar from '../components/AdminSideBar';
+import '../Styles/DataControllerStyles.css';
+import ASidebar from '../components/AdminSideBar';
 
 interface User {
   _id: string;
@@ -36,20 +36,22 @@ const AdminAccount: React.FC = () => {
       }
       const fetchUserDetails = async () => {
         try {
-          const response = await fetch('http://localhost:3000/admin/profile', {
+          const response = await fetch('http://localhost:3000/datacontroller/profile', {
             method: 'GET',
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
           });
 
-          const data = await response.json();
           if (response.ok) {
+            const data = await response.json();
             setUserDetails(data.user);
             setError(null);
           } else {
-            setError(data.error || 'Error fetching user details.');
+            const errorData = await response.json();
+            setError(errorData.error || 'Error fetching user details.');
           }
         } catch (error) {
           console.error('Error fetching user details:', error);
@@ -105,18 +107,18 @@ const AdminAccount: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: userDetails?.email, password }),
+        body: JSON.stringify({ email: userDetails.email, password }),
       });
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Password Changed');
+        setSuccess('Password changed successfully.');
         navigate('/login');
         setError(null);
       } else {
         setError(data.error);
       }
     } catch (error) {
-      console.error('Error changing password, please try again.', error);
+      console.error('Error changing password:', error);
       setError('Error changing password, please try again.');
     }
   };
@@ -131,13 +133,13 @@ const AdminAccount: React.FC = () => {
   };
 
   return (
-    <section className="AdminBody">
-      <div className="Sidebar-container">
-        <Sidebar handleLogout={handleLogout} /> {/* Pass handleLogout to Sidebar */}
+    <section className="DAbody">
+      <div className="DAsidebar-container">
+        <ASidebar handleLogout={handleLogout} /> {/* Pass handleLogout to DASidebar */}
       </div>
 
-      <div className="AdminContent">
-        <header className="AdminHeader">
+      <div className="DAcontent">
+        <header className="DAheader">
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
 
@@ -164,8 +166,8 @@ const AdminAccount: React.FC = () => {
                 </button>
 
                 {isFormVisible && (
-                  <div className="modal-overlay">
-                    <div className="modal">
+                  <div className="modal-overlay" style={{ display: 'block' }}>
+                    <div className="modal" style={{ display: 'block' }}>
                       <h1>Change Password</h1>
                       {error && <p className="error">{error}</p>}
                       {success && <p className="success">{success}</p>}
@@ -178,6 +180,7 @@ const AdminAccount: React.FC = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                           />
                         </div>
                       </div>
@@ -190,6 +193,7 @@ const AdminAccount: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            autoComplete="new-password"
                           />
                         </div>
                       </div>
@@ -202,6 +206,7 @@ const AdminAccount: React.FC = () => {
                             value={confirmpassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
+                            autoComplete="new-password"
                           />
                         </div>
                       </div>

@@ -49,7 +49,7 @@ return (
         </a>
         </li>
         <li>
-            <a href="/account" className="DAsidebar-link">
+            <a href="/DAaccount" className="DAsidebar-link">
             <img src="/accountlogo.svg" alt="Logo" className="sidebarlogoimage" />Account
             </a>
             </li>

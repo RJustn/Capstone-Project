@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css'; // Import CSS file
-import ClientSideBar from '../components/ClientSideBar';
+import ClientNavbar from '../components/clientnavbar';
 
 
 interface User {
@@ -211,9 +211,8 @@ const handleVerifyOtp = async () => {
 
   return (
     <section className="dashboard-container">
-  <div className="sidebar-container">
-    <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSidebar */}
-  </div>
+  <ClientNavbar handleLogout={handleLogout}/>
+
 
   <div className="content">
     <header>

@@ -7,6 +7,34 @@ import 'chart.js/auto'; // Import Chart.js
 import * as XLSX from 'xlsx';
 
 const DataControllerReportandGraph: React.FC = () => {
+
+    interface BusinessPermitLocation {
+        _id: string;
+        count: number;
+    }
+    
+    interface MonthlyPaymentStatus {
+        month: string;
+        paid: number;
+        unpaid: number;
+    }
+    
+    interface CategoryData {
+        _id: string;
+        count: number;
+        labels: string[];
+        workPermitCounts: number[];
+        businessPermitCounts: number[];
+    }
+
+    interface ExcelData {
+        [key: string]: string | number; 
+    }
+        
+        
+    
+    
+
     const navigate = useNavigate();
     const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
     const [monthlyData, setMonthlyData] = useState<{ labels: string[], paid: number[], unpaid: number[] }>({ labels: [], paid: [], unpaid: [] });
@@ -80,16 +108,17 @@ const DataControllerReportandGraph: React.FC = () => {
             "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII", 
             "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
         ];
-    //     mock data for testing dounut chart
-    //     const mockData = barangays.map(barangay => ({
-    //       _id: barangay,
-    //       count: Math.floor(Math.random() * 100) // Random count between 0 and 99
-    //   }));
 
-    //   const filteredData = mockData.filter((item: any) => barangays.includes(item._id));
-    //   const labels = filteredData.map((item: any) => item._id);
-    //   const counts = filteredData.map((item: any) => item.count);
-    //   setLocationData({ labels, data: counts });
+    //     mock data for testing dounut chart
+        const mockData = barangays.map(barangay => ({
+          _id: barangay,
+          count: Math.floor(Math.random() * 100) // Random count between 0 and 99
+      }));
+
+      const filteredData = mockData.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
+      const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
+      const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
+      setLocationData({ labels, data: counts });
 
     //   mock data for testing bar chart
     //   const mockMonthlyData = {
@@ -99,22 +128,22 @@ const DataControllerReportandGraph: React.FC = () => {
     // };
     // setMonthlyData(mockMonthlyData);
 
-        fetch('http://localhost:3000/datacontroller/businessPermitLocations')
-            .then(response => response.json())
-            .then(data => {
-                const filteredData = data.filter((item: any) => barangays.includes(item._id));
-                const labels = filteredData.map((item: any) => item._id);
-                const counts = filteredData.map((item: any) => item.count);
-                setLocationData({ labels, data: counts });
-            })
-            .catch(error => console.error('Error fetching location data:', error));
+        // fetch('http://localhost:3000/datacontroller/businessPermitLocations')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         const filteredData = data.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
+        //         const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
+        //         const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
+        //         setLocationData({ labels, data: counts });
+        //     })
+        //     .catch(error => console.error('Error fetching location data:', error));
             
         fetch('http://localhost:3000/datacontroller/monthlyPaymentStatus')
             .then(response => response.json())
             .then(data => {
-                const labels = data.map((item: any) => item.month);
-                const paid = data.map((item: any) => item.paid);
-                const unpaid = data.map((item: any) => item.unpaid);
+                const labels = data.map((item: MonthlyPaymentStatus) => item.month);
+                const paid = data.map((item: MonthlyPaymentStatus) => item.paid);
+                const unpaid = data.map((item: MonthlyPaymentStatus) => item.unpaid);
                 setMonthlyData({ labels, paid, unpaid });
             })
             .catch(error => console.error('Error fetching monthly payment data:', error));
@@ -122,10 +151,10 @@ const DataControllerReportandGraph: React.FC = () => {
         fetch('http://localhost:3000/datacontroller/permitApplicationsByCategory')
             .then(response => response.json())
             .then(data => {
-                const workPermitLabels = data.workPermitCategories.map((item: any) => item._id);
-                const workPermitCounts = data.workPermitCategories.map((item: any) => item.count);
-                const businessPermitLabels = data.businessPermitCategories.map((item: any) => item._id);
-                const businessPermitCounts = data.businessPermitCategories.map((item: any) => item.count);
+                const workPermitLabels = data.workPermitCategories.map((item: CategoryData) => item._id);
+                const workPermitCounts = data.workPermitCategories.map((item: CategoryData) => item.count);
+                const businessPermitLabels = data.businessPermitCategories.map((item: CategoryData) => item._id);
+                const businessPermitCounts = data.businessPermitCategories.map((item: CategoryData) => item.count);
 
                 const labels = Array.from(new Set([...workPermitLabels, ...businessPermitLabels]));
 
@@ -134,7 +163,7 @@ const DataControllerReportandGraph: React.FC = () => {
             .catch(error => console.error('Error fetching permit applications by category:', error));
     }, []);
 
-    const downloadExcel = (data: any, filename: string) => {
+    const downloadExcel = (data:    ExcelData[], filename: string) => {
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -239,7 +268,7 @@ const DataControllerReportandGraph: React.FC = () => {
                     <div className="DAChart-Bar">
                     <h2>Monthly Payment Status</h2>
                     <div className="DABarChartMonthly" onClick={handleBarClick}> {/* Add onClick handler */}
-                         <Bar data={barData} />
+                        <Bar data={barData} />
                     </div>
                 </div> 
                 <div className="DAChart-Bar">

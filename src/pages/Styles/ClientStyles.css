@@ -22,6 +22,14 @@
     text-align: center; /* Center-align the header text */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for depth */
   }
+
+  /* Remove blue background on hover for carousel control buttons */
+.carousel-control-prev:hover, 
+.carousel-control-next:hover {
+  background-color: transparent; /* Removes the background color */
+  border: none; /* Removes any border */
+}
+
   
 
   .error {
@@ -323,6 +331,13 @@ width: 100%; /* Occupy most of the container's width */
     margin-bottom: 1rem;
 }
 
+/* .workpermittablecontainer{
+  text-align: center;
+  background-color: #ffffff;
+  padding: 1rem;  
+  border-radius: 20px;
+} */
+
 .application-history-table {
     width: 100%;
     border-collapse: collapse;
@@ -544,11 +559,10 @@ width: 100%; /* Occupy most of the container's width */
   font-size: 22px;
 }
 
-.permit-table thead th {
+.permittabletheadcolor {
   background-color: #ffd231; /* Header background color */
   color: #191919; /* White text color */
   padding: 12px; /* Padding for header cells */
-  font-weight: bold; /* Bold header text */
   border-bottom: 2px solid #ffffff; /* Bottom border for separation */
 }
 

@@ -1,0 +1,35 @@
+/* --------------- NAVBAR STYLES START --------------- */
+.cnavbar-custom {
+    background-color: #00712D; 
+    height: 80px;
+    padding: 0.5rem;
+  }
+  
+  .nav-link:hover {
+    background-color: #02c650; 
+    color: white; 
+  }
+  
+  .offcanvas-custom {
+    background-color: #00712D;
+  }
+  
+  .navbar-toggler {
+    border:none;
+    font-size:c1.25rem;
+  }
+  
+  .navbar-toggler:hover{
+    background-color: #00712D;
+    border:solid 1px;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+  }
+
+  .content{
+    padding-top: 100px;
+  }
+  /* --------------- NAVBAR STYLES END --------------- */
