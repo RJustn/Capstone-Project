@@ -3095,7 +3095,7 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
-                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
+                <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
               </div>
             </div>
           )}
@@ -3647,8 +3647,8 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="Branch">BRANCH</option>
                   </select>
                 </div>
-                <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
-                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
+                <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>Back</button>
+                <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
 
               </div>
             </div>
@@ -3769,8 +3769,8 @@ const handleRemoveBusiness = (index: number) => {
                   <label>Email Address:</label>
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
-                <button type="button" onClick={goToPreviousStep} className="back-button">Back</button>
-                <button type="button" onClick={goToNextStep} className="nextbutton">Next</button>
+                <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
+                <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
               </div>
             </div>
           )}
@@ -3794,8 +3794,8 @@ const handleRemoveBusiness = (index: number) => {
                     <input type="text" value={lng} readOnly />
                   </label>
                 </div>
-                <button type="button" onClick={goToPreviousStep}className="back-button">Back</button>
-                <button type="button" onClick={goToNextStep}className="nextbutton">Next</button>
+                <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
+                <button type="button" onClick={goToNextStep}className="btn btn-success">Next</button>
               </div>
             </div>
           )}
@@ -3871,8 +3871,8 @@ const handleRemoveBusiness = (index: number) => {
           ))}
         </tbody>
       </table>
-                <button type="button" onClick={goToPreviousStep}className="back-button">Back</button>
-                <button type="button" onClick={goToNextStep} className="nextbutton" >Next</button>
+                <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
+                <button type="button" onClick={goToNextStep} className="btn btn-success" >Next</button>
 
               </div>
             </div>
@@ -3921,8 +3921,8 @@ const handleRemoveBusiness = (index: number) => {
                 <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
                 
               <div>
-              <button className="back-button" type="button" onClick={goToPreviousStep}>Back</button>
-              <button className="nextbutton" type="submit">Submit</button>
+              <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>Back</button>
+              <button className="btn btn-success" type="submit">Submit</button>
               </div>
           </div>
           )}

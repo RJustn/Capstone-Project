@@ -4,6 +4,8 @@ import AdminSideBar from '../components/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 export interface BusinessPermit {
@@ -1855,15 +1857,16 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
         <div className="modal-overlay" onClick={closePermitChecker}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Approve Permit {activePermitId.id}?</h2>
-            <p>Are you sure you want to approve or reject this permit? Please confirm your decision.</p>
+            <p>Aapprove or Reject this permit? Please confirm your decision.</p>
 
             <div className="button-group">
-              <button onClick={() => updatebusinesspermitstatus('approved', 'N/A')}>Approve</button>
-              <button onClick={() => {
+              
+              <button  className="btn btn-danger" onClick={() => {
                 setIsRejecting(true); // Show remarks input when rejecting
               }}>
                 Reject
               </button>
+              <button className="btn btn-success"onClick={() => updatebusinesspermitstatus('approved', 'N/A')}>Approve</button>
             </div>
 
             {/* Show remarks input if rejecting */}
@@ -1878,7 +1881,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
               <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
               </div>
             )}
-            <button className="close-modal" onClick={closePermitChecker}>
+            <button className="btn btn-danger" onClick={closePermitChecker}>
               Close
             </button>
           </div>

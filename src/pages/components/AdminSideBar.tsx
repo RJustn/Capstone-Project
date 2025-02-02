@@ -2,11 +2,11 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import '../Styles/AdminSideBarStyles.css';
 
-interface DASidebarProps {
+interface ASidebarProps {
 handleLogout: (event: React.MouseEvent) => void;
 }
 
-const DASidebar: React.FC<DASidebarProps> = ({ handleLogout }) => {
+const DASidebar: React.FC<ASidebarProps> = ({ handleLogout }) => {
 const location = useLocation();
 
   // Helper function to determine if the current link is active

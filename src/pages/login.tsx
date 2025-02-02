@@ -120,10 +120,10 @@ const Login: React.FC = () => {
         
         {/* Links */}
         <div className="text-center">
-          <a href="/signup" className="d-block text-decoration-none mb-2">
+          <a href="/signup" className="d-block text-decoration-none mb-2" style={{ fontSize: '12px' }}>
             Don't have an account? <strong>Sign up</strong>
           </a>
-          <a href="/forgotpassword" className="text-decoration-none">
+          <a href="/forgotpassword" className="text-decoration-none" style={{ fontSize: '12px' }}>
             Forgot Password?
           </a>
         </div>

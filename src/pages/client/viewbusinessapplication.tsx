@@ -775,7 +775,7 @@ const ViewBusinessApplication: React.FC = () => {
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="pagination-button"
+          className="btn btn-danger"
         >
           Previous
         </button>
@@ -785,7 +785,7 @@ const ViewBusinessApplication: React.FC = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="pagination-button"
+          className="btn btn-success"
         >
           Next
         </button>

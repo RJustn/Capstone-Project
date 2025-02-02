@@ -194,7 +194,7 @@ const Signup: React.FC = () => {
         >
           Cancel
         </button>
-        <a href="/login" className="text-primary">
+        <a href="/login" className="text-primary" style={{ fontSize: '12px' }}>
           Already have an account? <br></br> Click here to Log in
         </a>
         <button type="submit" className="btn btn-success">

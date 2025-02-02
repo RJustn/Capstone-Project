@@ -80,18 +80,18 @@ const DataControllerReportandGraph: React.FC = () => {
             "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII", 
             "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
         ];
-        // mock data for testing dounut chart
-      //   const mockData = barangays.map(barangay => ({
-      //     _id: barangay,
-      //     count: Math.floor(Math.random() * 100) // Random count between 0 and 99
-      // }));
+    //     mock data for testing dounut chart
+    //     const mockData = barangays.map(barangay => ({
+    //       _id: barangay,
+    //       count: Math.floor(Math.random() * 100) // Random count between 0 and 99
+    //   }));
 
-      // const filteredData = mockData.filter((item: any) => barangays.includes(item._id));
-      // const labels = filteredData.map((item: any) => item._id);
-      // const counts = filteredData.map((item: any) => item.count);
-      // setLocationData({ labels, data: counts });
+    //   const filteredData = mockData.filter((item: any) => barangays.includes(item._id));
+    //   const labels = filteredData.map((item: any) => item._id);
+    //   const counts = filteredData.map((item: any) => item.count);
+    //   setLocationData({ labels, data: counts });
 
-      // mock data for testing bar chart
+    //   mock data for testing bar chart
     //   const mockMonthlyData = {
     //     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     //     paid: Array.from({ length: 12 }, () => Math.floor(Math.random() * 100)), // Random data for 12 months

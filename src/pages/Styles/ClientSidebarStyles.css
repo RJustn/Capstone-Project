@@ -1,68 +1,94 @@
-/* SIDEBAR CONTAINER STYLE */
-.sidebar-container {
-    width: 225px; /* Fixed width for the sidebar */
-    z-index: 1000; /* Ensure it's above other content */
-}
-
-  /* SIDEBAR STYLE */
+/* SIDEBAR STYLE */
 .sidebar {
-    width: 100%; /* Full width within its container */
-    height: 100vh; /* Full height */
-    background-color: #00712D; /* Dark background color */
-    padding-top: 20px;
-    position: relative; /* Relative positioning within its container */
-    overflow-y: auto; /* Add vertical scrolling if necessary */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%; /* Full width within its container */
+  height: 100vh; /* Full height */
+  background-color: #00712D; /* Dark background color */
+  padding-top: 20px;
+  position: relative; /* Relative positioning within its container */
+  overflow-y: auto; /* Add vertical scrolling if necessary */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-  /* LOGO STYLE */
+/* LOGO STYLE */
 .sidebar-logo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .logo-image {
-    width: 150px; /* Adjust the width as needed */
-    height: 150px; /* Adjust the height as needed */
+  width: 150px; /* Adjust the width as needed */
+  height: 150px; /* Adjust the height as needed */
 }
 
-  /* SIDEBAR LOGO STYLES */
+/* SIDEBAR LOGO STYLES */
 .sidebarlogoimage {
-    width: 24px; /* Adjust the size of the logo */
-    height: auto; /* Maintain aspect ratio */
-    margin-right: 8px; /* Space between logo and text */
-    vertical-align: middle; /* Align with the text */
+  width: 24px; /* Adjust the size of the logo */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 8px; /* Space between logo and text */
+  vertical-align: middle; /* Align with the text */
 }
 
-  /* SIDEBAR LIST STYLE */
+/* SIDEBAR LIST STYLE */
 .sidebar-list {
-    list-style-type: none; /* Remove bullets */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-    width: 100%; /* Full width for sidebar links */
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  width: 100%; /* Full width for sidebar links */
 }
 
-  /* SIDEBAR LINK STYLE */
+/* SIDEBAR LINK STYLE */
 .sidebar-link {
-    display: flex; /* Use flexbox to align items */
-    align-items: center; /* Vertically center the text and logo */
-    padding: 15px 20px;
-    color: #ffffff; /* White text color */
-    text-decoration: none; /* Remove underline */
-    transition: background-color 0.3s; /* Smooth hover effect */
-    white-space: nowrap; /* Prevent text from wrapping */
+  display: flex; /* Use flexbox to align items */
+  align-items: center; /* Vertically center the text and logo */
+  padding: 15px 20px;
+  color: #ffffff; /* White text color */
+  text-decoration: none; /* Remove underline */
+  transition: background-color 0.3s; /* Smooth hover effect */
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .sidebar-linkactive{
-    display: block;
-    padding: 15px 20px;
-    color: #ffffff; /* White text color */
-    text-decoration: none; /* Remove underline */
-    background-color: #399918;
-    font-size: 15px;
+  display: block;
+  padding: 15px 20px;
+  color: #ffffff; /* White text color */
+  text-decoration: none; /* Remove underline */
+  background-color: #399918;
+  font-size: 15px;
 }
 
 .sidebar-link:hover {
-    background-color: #399918; /* Darker background on hover */
+  background-color: #399918; /* Darker background on hover */
+}
+
+
+/* Media Query for Mobile SIDEBAR*/
+@media screen and (max-width: 768px) {
+  .sidebar-container {
+    width: 100%; /* Full width on smaller screens */
+    position: fixed;
+    z-index: 999;
+  }
+
+  .sidebar {
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .sidebar-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .sidebar-link {
+    padding: 10px;
+  }
+
+  .sidebar-logo {
+    display: none; /* Hide the logo for mobile */
+  }
 }

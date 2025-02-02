@@ -199,10 +199,8 @@
   /* upload documents section */
 
   .upload-section {
-    display: flex;
-    align-items: center; /* Center align items vertically */
-    gap: 16px; /* Add space between items */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    border-radius: 20px;
+    padding: 2rem;
   }
   
   .upload-item {
@@ -222,36 +220,11 @@
     border-radius: 4px;
   }
   
-  .upload-button {
-    padding: 8px 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  .buttoncontainer {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
   }
-  
-  .upload-button:hover {
-    background-color: #6cc251;
-  }
-
-.back-button{
-  border: none;
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer;
-  padding: 0.5rem;
-  width: 7rem;
-  margin-right: 6px;
-  font-size: 0.875rem; /* Smaller font size for buttons */
-  font-weight: bold; /* Bold text */
-  background-color: #d9534f; /* Green background */
-  color: white;
-}
-
-.back-button:hover{
-  background-color: #c9302c; /* Darker red on hover */
-}
 
   
 
@@ -377,27 +350,61 @@ width: 100%; /* Occupy most of the container's width */
 }
 
 /* MODAL STYLES */
+
 /* Modal Overlay */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Darker backdrop for better focus */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
 /* Modal Content */
 .modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 90%;
-    max-height: 80vh; /* Adjust height as needed */
-    overflow-y: auto; /* Enables vertical scrolling if needed */
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh; /* Optimized height for readability */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* PDF Viewer Style */
+.modal-content iframe {
+  width: 100%;
+  height: 70vh; /* Dedicated space for PDF */
+  border: none;
+  border-radius: 8px;
+}
+
+/* Close Button */
+.back-button {
+  align-self: flex-end;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #003c80;
 }
 
 .paymentbuttons p{

@@ -284,21 +284,31 @@ useEffect(() => {
         )}
 
 {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {modalFile && (
-              <div>
-                {modalFile.endsWith('.pdf') ? (
-                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
-                ) : (
-                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
-                )}
-              </div>
-            )}
-            <button className="back-button"onClick={closeModal}>Close</button>
-          </div>
-        </div>
-      )}
+  <div
+  className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  onClick={closeModal}
+>
+  <div
+    className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
+    onClick={(e) => e.stopPropagation()}
+  >
+    {modalFile && modalFile.endsWith('.pdf') && (
+      <iframe
+        src={modalFile}
+        className="w-full h-[80vh] rounded-md border mb-4"
+        title="PDF Viewer"
+      />
+    )}
+    <button
+      className="btn btn-danger self-end bg-[#0056b3] hover:bg-[#003c80] text-white font-semibold py-2 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+      onClick={closeModal}
+    >
+      Close
+    </button>
+  </div>
+</div>
+      )
+      }
         </div>
         
     

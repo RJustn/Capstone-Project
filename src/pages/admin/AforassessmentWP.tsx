@@ -1,8 +1,8 @@
 import '../styles/AdminStyles.css';
-// import ASidebar from '../components/ASidebar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
+import AdminSideBar from '../components/AdminSideBar';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -108,29 +108,29 @@ const AdminForAssessmentWP: React.FC = () => {
     checkAuth();
   }, [navigate]); // Only depend on navigate, which is necessary for the redirection
 
-//   const handleLogout = async () => {
-//     try {
-//       const response = await fetch('http://localhost:3000/client/logout', {
-//         method: 'POST',
-//         credentials: 'include', // Include cookies in the request
-//       });
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/client/logout', {
+        method: 'POST',
+        credentials: 'include', // Include cookies in the request
+      });
 
-//       if (response.ok) {
-//         // Clear any local storage data (if applicable)
-//         localStorage.removeItem('profile');
-//         localStorage.removeItem('userId');
+      if (response.ok) {
+        // Clear any local storage data (if applicable)
+        localStorage.removeItem('profile');
+        localStorage.removeItem('userId');
 
-//         // Redirect to the login page
-//         navigate('/');
-//       } else {
-//         // Handle any errors from the server
-//         const errorData = await response.json();
-//         console.error('Logout error:', errorData.message);
-//       }
-//     } catch (error) {
-//       console.error('Error logging out:', error);
-//     }
-//   };
+        // Redirect to the login page
+        navigate('/');
+      } else {
+        // Handle any errors from the server
+        const errorData = await response.json();
+        console.error('Logout error:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [currentPage, setCurrentPage] = useState(0);
@@ -528,7 +528,7 @@ useEffect(() => {
   return (
     <section className="Abody">
       <div className="Asidebar-container">
-        {/* <ASidebar handleLogout={handleLogout} /> Pass handleLogout to ASidebar */}
+        <AdminSideBar handleLogout={handleLogout} /> 
       </div>
 
       <div className="Acontent">

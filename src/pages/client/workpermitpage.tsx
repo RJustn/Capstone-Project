@@ -411,11 +411,11 @@ if (WorkPermitData.length > 0) {
               <div className="form-row">
               <div className="form-group">
               <label>HEIGHT:</label>
-              <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Enter Height"  />
+              <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Enter Height in cm"  />
               </div>
               <div className="form-group">
               <label>WEIGHT:</label>
-              <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter Weight"  />
+              <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Enter Weight in kg "  />
             </div>
           </div>
           <div className="form-row">
@@ -504,9 +504,9 @@ if (WorkPermitData.length > 0) {
     </div>
   ) : null // Optionally, render something else when the condition is not met
 }
-<div>
-  <button type="button" onClick={goToPreviousStep} className="back-button">Back</button>
-  <button type="submit" className="upload-button">Submit</button>
+  <div className="buttoncontainer">
+  <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
+  <button type="submit" className="btn btn-success">Submit</button>
   </div>
 </div>
 

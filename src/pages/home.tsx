@@ -41,7 +41,8 @@ const Home: React.FC = () => {
             </button>
         </div>
       </nav>
-  
+
+  <div className="contenttitles">
       <div className='title'>
         <h2>
           THE CITY OF DASMARIÑAS BUSINESS PERMITS <br></br> AND LICENSING OFFICE
@@ -57,6 +58,7 @@ const Home: React.FC = () => {
       <div className="applybuttoncontainer">
         <button className='btn btn-apply-custom' onClick={handleApplyNowClick}>Apply Now</button>
       </div>
+  </div>
 
 
       <footer>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import '../Styles/ClientSidebarStyles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 interface ClientSidebarProps {
 handleLogout: (event: React.MouseEvent) => void;

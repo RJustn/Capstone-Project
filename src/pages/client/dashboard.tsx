@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css'; //  CSS file
 import ClientSideBar from '../components/ClientSideBar'
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // Define the WorkPermit interface
 interface WorkPermit {
@@ -868,13 +870,13 @@ const handleAction = (action: string, permit: WorkPermit) => {
       <div className="sidebar-container">
       <ClientSideBar handleLogout={handleLogout} /> {/* Pass handleLogout to ClientSideBar */}
       </div>
-  
+
       <div className="content">
         <header>
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div>
-        <img src="/public/instructions.svg" alt="Instruction Icon" width="1375" height="300" />
+        <img src="/public/instructions.svg" alt="Instruction Icon" width="1200" height="300" />
         </div>
   
         {error && <p className="error">{error}</p>}
@@ -976,7 +978,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
               <>
                 <option value="viewApplication">View Application</option>
                 {permit.classification === 'Renew' && (
-                       <option value="viewReceipt">View Receipt</option>
+                      <option value="viewReceipt">View Receipt</option>
                 )}
                 <option value="viewPermit">View Permit</option>
               </>
@@ -985,7 +987,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
               <>
                 <option value="viewApplication">View Application</option>
                 {permit.classification === 'Renew' && (
-                       <option value="viewReceipt">View Receipt</option>
+                      <option value="viewReceipt">View Receipt</option>
                 )}
                 <option value="viewPermit">View Permit</option>
               </>
@@ -998,10 +1000,10 @@ const handleAction = (action: string, permit: WorkPermit) => {
 </table>
           <div className="pagination-buttons">
             {currentPage > 0 && (
-              <button onClick={handlePreviousPage}>Back</button>
+              <button className="btn btn-success" onClick={handlePreviousPage}>Back</button>
             )}
             {currentPage < totalPages - 1 && (
-              <button onClick={handleNextPage}>Next</button>
+              <button className="btn btn-success" onClick={handleNextPage}>Next</button>
             )}
           </div>
 
@@ -1214,7 +1216,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
                 <button
                   onClick={handlePreviousPageBP}
                   disabled={currentPageBP === 1}
-                  className="pagination-button"
+                  className="btn btn-success"
                 >
                   Previous
                 </button>
@@ -1224,7 +1226,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
                 <button
                   onClick={handleNextPageBP}
                   disabled={currentPageBP === totalPagesBP}
-                  className="pagination-button"
+                  className="btn btn-success"
                 >
                   Next
                 </button>

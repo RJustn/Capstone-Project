@@ -76,8 +76,12 @@ body {
   font-size: 2rem;             
 }
 
+.contenttitles{
+  margin-top: 3rem;
+}
+
 .subtitle h2 {
-  margin-top: 15rem;
+  margin-top: 10rem;
   font-size: 1.8rem;           
 }
 
@@ -111,7 +115,7 @@ body {
   color:white;
 }
 
-/* --------------- CONTENT STYLES START --------------- */
+/* --------------- CONTENT STYLES END --------------- */
 
 
 /* --------------- FOOTER STYLES START --------------- */

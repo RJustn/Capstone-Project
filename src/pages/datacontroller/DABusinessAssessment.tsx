@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import GenerateStatementofAccountPDF from '../components/GenerateStatementofAccountPDF';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 export interface BusinessPermit {
@@ -2015,12 +2017,11 @@ return (
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Assess Permit {businessPermit?.id}?</h2>
             <p>Do you want to Assess this applcation? Please confirm the details carefully.</p>
-
             <div className="button-group">
-              <button onClick={() => handlesaveassessment()}>Yes</button>
-              <button className="close-modal" onClick={closePermitChecker}>
+              <button className="btn btn-danger" onClick={closePermitChecker}>
               No
-            </button>
+              </button>
+              <button className="btn btn-primary"onClick={() => handlesaveassessment()}>Yes</button>
             </div>
           </div>
         </div>
@@ -2030,7 +2031,7 @@ return (
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Successfully Assessed Permit {businessPermit?.id}?</h2>
             <div className="button-group">
-              <button onClick={() => finishpopupclose()}>Okay</button>
+              <button className="btn btn-primary" onClick={() => finishpopupclose()}>Okay</button>
             </div>
           </div>
         </div>
@@ -2176,7 +2177,7 @@ return (
                   <select
                     disabled 
                     value={businessPermit?.business.industrysector}
-                   
+                  
                     className="form-control"
                     
                   >
@@ -2543,8 +2544,8 @@ return (
                   <label>Business Operation:</label>
                   <select
                     disabled
-                     value={businessPermit?.business.businessoperation}
-                   
+                    value={businessPermit?.business.businessoperation}
+                  
                     className="form-control"
                 
                   >
