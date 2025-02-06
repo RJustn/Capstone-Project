@@ -5,6 +5,8 @@ import '../Styles/ClientStyles.css';
 import ClientNavbar from '../components/clientnavbar';
 import React from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export interface BusinessPermit {
     _id: string;
@@ -791,72 +793,229 @@ const ViewBusinessApplication: React.FC = () => {
       </div>
             </div>
             {/* Modal Dump */}
-{viewpayment && activePermitId &&(
-              <div className="modal-overlay" onClick={closeviewpayment}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                  <label>{activePermitId._id}</label>
-                  <label>{activePermitId.statementofaccount.statementofaccountfile}</label>
-
-                        {/* Render the PDF or image file */}
-      {renderFile(fetchDocumentUrl(activePermitId.statementofaccount?.statementofaccountfile, 'receipts'))}
-
-      <button onClick={handlePrint}>Print</button>
-      <button onClick={handlePayment}>Pay</button> {/* Add the handler for Pay button */}
-          </div>
+            {viewpayment && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeviewpayment}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "600px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="mb-3">
+        <h5 className="text-center mb-3">
+          Payment Information for Permit Application
+        </h5>
+        <div className="mb-2">
+          <label><strong>Permit ID:</strong> {activePermitId._id}</label>
         </div>
+        <div className="mb-3">
+          <label>
+            <strong>Statement of Account File:</strong> {activePermitId.statementofaccount?.statementofaccountfile}
+          </label>
+        </div>
+        <div className="mb-3">
+          {/* Render the PDF or image file */}
+          {renderFile(fetchDocumentUrl(activePermitId.statementofaccount?.statementofaccountfile, "receipts"))}
+        </div>
+      </div>
+
+      <div className="d-flex justify-content-end gap-2">
+        <button type="button" className="btn btn-success" onClick={handlePrint}>
+          Print
+        </button>
+        <button type="button" className="btn btn-success" onClick={handlePayment}>
+          Pay
+        </button>
+      </div>
+    </div>
+  </div>
 )}
 
-{deleteconfirm && activePermitId &&(
-   <div className="modal-overlay" onClick={closedeleteconfirm}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            Are you sure you want to delete this application? {activePermitId.id}
-            <button onClick={()=> handleDeleteBusiness(activePermitId._id)}>Accept</button>
-            <button onClick={closedeleteconfirm}>Decline</button>
-</div>
-</div>
+{deleteconfirm && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closedeleteconfirm}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h5 className="text-center mb-4">
+        Are you sure you want to delete this application?  
+        <span className="text-danger"> {activePermitId.id}</span>
+      </h5>
+
+      <div className="d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={() => handleDeleteBusiness(activePermitId._id)}
+        >
+          Accept
+        </button>
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={closedeleteconfirm}
+        >
+          Decline
+        </button>
+      </div>
+    </div>
+  </div>
 )}
 
-{confirmpayment && activePermitId &&(
-  <div className="modal-overlay" onClick={confirmpaymentclose}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          Payment Completed for Business Permit Application {activePermitId.id}
-          <button onClick={confirmpaymentclose}>Okay</button>
-            </div>
-            </div>
+{confirmpayment && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={confirmpaymentclose}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h5 className="text-center mb-4">
+        Payment Completed for Business Permit Application{" "}
+        <span className="text-primary">{activePermitId.id}</span>
+      </h5>
+
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={confirmpaymentclose}
+        >
+          Okay
+        </button>
+      </div>
+    </div>
+  </div>
 )}
 
 {isModalOpenFile && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {modalFile && (
-              <div>
-                {modalFile.endsWith('.pdf') ? (
-                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
-                ) : (
-                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
-                )}
-              </div>
-            )}
-            <button className="back-button" onClick={closeModal}>Close</button>
-          </div>
-        </div>
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeModal}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "600px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="mb-4">
+        {modalFile ? (
+          modalFile.endsWith(".pdf") ? (
+            <iframe
+              src={modalFile}
+              style={{ width: "100%", height: "500px", border: "none" }}
+              title="PDF Viewer"
+            />
+          ) : (
+            <img
+              src={modalFile}
+              alt="Document"
+              style={{ width: "100%", maxHeight: "500px", objectFit: "contain" }}
+            />
+          )
+        ) : (
+          <p className="text-muted text-center">No file selected</p>
+        )}
+      </div>
+
+      <div className="d-flex justify-content-end">
+        <button className="btn btn-danger" onClick={closeModal}>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 )}
 
-{retireBusinessModal && activePermitId &&(
-  <div className="modal-overlay" onClick={closeRetireBusinessModal}>
-  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-  Do you want to Retire {activePermitId.id}?
-Please Upload the Documents
-  Business Retire Document
-  <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
-  Past Business Permit
-  <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
-  <button onClick={handleRetireBusiness}>Retire Business</button> {/* Add the handler for Pay button */}
-  <button onClick={closeRetireBusinessModal}>Close</button>
-    </div>
-    </div>
-)}
+{retireBusinessModal && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeRetireBusinessModal}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "500px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h5 className="text-center mb-3">
+        Do you want to retire business permit ID{" "}
+        <span className="text-primary">{activePermitId.id}</span>?
+      </h5>
 
+      <p className="mb-3 text-muted">Please upload the required documents:</p>
+
+      <div className="mb-3">
+        <label className="form-label">Business Retire Document</label>
+        <input
+          type="file"
+          className="form-control"
+          onChange={(e) => handleFileChange(e, "document1")}
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="form-label">Past Business Permit</label>
+        <input
+          type="file"
+          className="form-control"
+          onChange={(e) => handleFileChange(e, "document2")}
+        />
+      </div>
+
+      <div className="d-flex justify-content-end gap-2">
+        <button className="btn btn-success" onClick={handleRetireBusiness}>
+          Retire Business
+        </button>
+        <button className="btn btn-danger" onClick={closeRetireBusinessModal}>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
             </div>
         </section>
     );

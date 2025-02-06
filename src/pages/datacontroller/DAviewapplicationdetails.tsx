@@ -3,6 +3,8 @@ import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 export interface PersonalInformation {
     lastName: string;
     firstName: string;
@@ -365,8 +367,8 @@ return (
 
             {workPermit.workpermitstatus === 'Pending' && (
               <p>
-        <button className="DAactionbutton" onClick={handleUpdate}>Accept Application</button>
-        <button className="actionreject-button" onClick={openRejectModal}>Reject Application</button>
+        <button className="btn btn-success" onClick={handleUpdate}>Accept Application</button>
+        <button className="btn btn-danger" onClick={openRejectModal}>Reject Application</button>
         </p>
       )}
     

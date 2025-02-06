@@ -1625,20 +1625,61 @@ console.log(ContentData);
     const writeStream = fs.createWriteStream(businessPermitPath);
     doc.pipe(writeStream);
 
-    // Add content to the PDF
-    doc.fontSize(20).text('Work Permit', { align: 'center' });
+    // Header Content
+    doc.fontSize(14).text('Republic of the Philippines', { align: 'center' });
+    doc.text('Province of Cavite', { align: 'center' });
+    doc.text('CITY OF DASMARIÑAS', { align: 'center' });
     doc.moveDown();
-    doc.fontSize(12).text(`BusinessPermit Permit ID: ${businessPermit.id}`);
-    doc.text(`Issued To: ${businessPermit.owner?.lastname || 'Unknown'}`);
-    doc.text(`Classification: ${businessPermit.classification || 'Not Specified'}`);
-    doc.text(`Permit Number: ${permitNumber}`);
-    doc.text(`Permit Status: Released`);
-    doc.text(`Issue Date: ${new Date().toISOString().split('T')[0]}`); // ISO format for consistency
-    doc.text(
-      `Expiration Date: ${new Date(
-        new Date().setFullYear(new Date().getFullYear() + 1)
-      ).toISOString().split('T')[0]}`
+    doc.fontSize(12).text('Business Permit and Licensing Office', { align: 'center', underline: true });
+    doc.fontSize(18).text('BUSINESS PERMIT', { align: 'center' });
+
+    doc.moveDown(2);
+
+    // Body Content
+    doc.fontSize(10).text(
+      `In accordance with the provision of the City Ordinance No. 1 Series of 2024 as amended 
+under the provisions of RA 7160 of the City of Dasmariñas, Cavite and after having 
+satisfied the requirements provided therein, Business Permit to operate is hereby granted 
+to the name listed below, in the City of Dasmariñas, Cavite, subject to the Rules and 
+Regulation prescribed in said Ordinance and in all existing laws applicable thereto.`
     );
+
+    doc.moveDown(2);
+
+    // Business Details
+    doc.text(`Business Name: ${businessPermit.name || 'N/A'}`);
+    doc.text(`Location: ${businessPermit.location || 'N/A'}`);
+    doc.text(`Taxpayer Name: ${businessPermit.owner?.fullname || 'N/A'}`);
+    doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
+    doc.moveDown(2);
+
+    // Table Headers
+    const tableHeaders = [
+      'Description', 'Tax Base', 'Amount', 'Surcharge',
+      '1st Qtr.', '2nd Qtr.', '3rd Qtr.', '4th Qtr.'
+    ];
+
+    const rowData = ['Sample Desc', '1000', '500', '50', '125', '125', '125', '125'];
+    const columnWidth = 60;
+
+    // Render Table Headers
+    tableHeaders.forEach((header, index) => {
+      doc.text(header, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
+    });
+
+    doc.moveDown(1);
+
+    // Render Table Data
+    rowData.forEach((data, index) => {
+      doc.text(data, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
+    });
+
+    doc.moveDown(3);
+
+    // Footer (City Mayor Signature)
+    doc.text('___________________________________', { align: 'left' });
+    doc.text('Jennifer Austria - Barzaga', { align: 'left' });
+    doc.text('City Mayor', { align: 'left' });
 
     doc.end();
 

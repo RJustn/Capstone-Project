@@ -7,7 +7,7 @@
   align-items: center;
   min-height: 100vh; /* Full viewport height */
   margin: 0;
-  background: url('/loginbackground.svg') no-repeat center center;
+  background: url('/landingpagebackground.svg') no-repeat center center;
   background-size: cover; /* Ensure the entire image is visible */
   background-attachment: fixed; /* Make the background fixed as you scroll */
 }
@@ -19,7 +19,6 @@
   max-width: 500px;
   width: 100%;
   padding: 20px;
-  margin-right: 50rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #e5e5e5;

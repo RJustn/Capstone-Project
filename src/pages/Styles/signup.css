@@ -5,7 +5,7 @@
   align-items: center;
   min-height: 100vh; /* Full viewport height */
   margin: 0;
-  background: url('/signupbackground.svg') no-repeat center center;
+  background: url('public/landingpagebackground.svg') no-repeat center center;
   background-size: cover ;
   background-attachment: fixed; /* Make the background fixed as you scroll */
   background-color: #f0f0f0; /* Fallback color in case the image doesn't load */
@@ -54,7 +54,6 @@ nav ul li a:hover {
   max-width: 600px; /* Maximum width for larger screens */
   padding: 1rem; /* Reduced padding */
   box-sizing: border-box; /* Include padding in width calculations */
-  margin-left: 50rem; /* Center the container horizontally */
 }
 
 .signup-container h2 {

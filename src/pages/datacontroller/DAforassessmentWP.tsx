@@ -3,6 +3,8 @@ import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -1024,10 +1026,10 @@ if (type === 'new') {
                 }
               />
             </label>
-            <button type="submit">Save</button>
-            <button type="button" onClick={closeModal}>
+            <button type="button" className="btn btn-secondary" onClick={closeModal}>
               Cancel
             </button>
+            <button type="submit" className="btn btn-success">Save</button>
           </form>
         )}
       </Modal>
@@ -1137,21 +1139,20 @@ if (type === 'new') {
         {renderFile(selectedFiles.document4)}
         {isEditingAttach ? (
           <>
-            <button type="button" onClick={updateAttachments} style={{ marginLeft: '10px' }}>
-              Save
-            </button>
-            <button type="button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+            <button type="button" className="btn btn-secondary" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
               Cancel
+            </button>
+            <button type="button" className="btn btn-success" onClick={updateAttachments} style={{ marginLeft: '10px' }}>
+              Save
             </button>
           </>
         ) : (
-          <button type="button" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
+          <button type="button" className="btn btn-success" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
             Edit Attachments
           </button>
 
-          
         )}
-        <button type="button" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+        <button type="button" className="btn btn-secondary" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
             Close
           </button>
       </div>

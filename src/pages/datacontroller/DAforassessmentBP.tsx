@@ -4,6 +4,8 @@ import DASidebar from '../components/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export interface BusinessPermit {
   _id: string;
@@ -1414,15 +1416,15 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 </div>
           {/* Additional fields */}
           <div>
-  <button className="editbutton"onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
+  <button className="btn btn-success "onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
-    <button className="cancel-button" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-secondary" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
-            <button className="cancel-button" onClick={editcloseModal}>Close</button>
+            <button className="btn btn-danger" onClick={editcloseModal}>Close</button>
           </div>
         </div>
       </div>
@@ -1864,18 +1866,16 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   </p>
 )}
 
-
-
         <button className="modal-button"onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
     {isEditingAttach ? 'Save' : 'Edit'}
   </button>
   {isEditingAttach && (
-    <button className="cancel-button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-secondary" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
         {/* Close Modal Button */}
-        <button className="cancel-button" onClick={closeViewAttachmentsModal}>
+        <button className="btn btn-danger" onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>
@@ -2431,12 +2431,12 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     {editbusiness ? 'Save' : 'Edit'}
   </button>
   {editbusiness && (
-    <button onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-secondary"onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
           {/* Close Modal Button */}
-          <button className="close-modal" onClick={closeViewBusinessDetails}>
+          <button className="btn btn-danger"onClick={closeViewBusinessDetails}>
           Close
         </button>
     </div>
@@ -2448,7 +2448,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   <div className="modal-overlay" onClick={closeupdateSuccess}>
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
     <p>Updated Business Permit ID:{activePermitId.id}</p>
-    <button className="close-modal" onClick={closeupdateSuccess}>
+    <button className="btn btn-danger" onClick={closeupdateSuccess}>
           Close
         </button>
   </div>
@@ -2462,8 +2462,8 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
             <p>Are you sure you want to approve or reject this permit? Please confirm your decision.</p>
 
             <div className="button-group">
-              <button>Approve</button>
-              <button onClick={() => {
+              <button className="btn btn-success">Approve</button>
+              <button className="btn btn-danger" onClick={() => {
                 setIsRejecting(true); // Show remarks input when rejecting
               }}>
                 Reject
@@ -2482,7 +2482,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
               <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
               </div>
             )}
-            <button className="close-modal" onClick={closeRejectpermit}>
+            <button className="btn btn-danger" onClick={closeRejectpermit}>
               Close
             </button>
           </div>

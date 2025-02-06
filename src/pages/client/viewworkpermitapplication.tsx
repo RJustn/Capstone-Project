@@ -4,6 +4,8 @@ import '../Styles/ClientStyles.css';
 import WorkPermit from './workpermitpage';
 import ClientNavbar from '../components/clientnavbar';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // Define the WorkPermit interface
 export interface WorkPermit {
@@ -452,50 +454,147 @@ const handleLogout = async () => {
 </div>
 {/* Modal Dumps */}
 {showPaymentMethod && (
-        <div className="modal-overlay-pay" onClick={handleOverlayClick}>
-          <div className="modal-content-pay" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button-pay" onClick={closePaymentMethod}>✖</button>
-            <h3>Choose an Action for Permit ID: {activePermitId}</h3> {/* Display the permit ID */}
-            {modalStep === 0 && (
-              <div>
-                <h2>Upload Receipt</h2>
-            
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={handleOverlayClick}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)", 
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5 className="modal-title mb-0">
+          Choose an Action for Permit ID: {activePermitId}
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          aria-label="Close"
+          onClick={closePaymentMethod}
+        ></button>
+      </div>
 
-                <button onClick={handleSubmit} disabled={!files}>Upload</button>
-              </div>
-            )}
-
-
+      {modalStep === 0 && (
+        <div>
+          <h6>Upload Receipt</h6>
+          <div className="mb-3">
+            <label className="form-label">Select File</label>
+            <input
+              type="file"
+              className="form-control"
+              onChange={(e) => handleFileChange(e, "document1")}
+            />
           </div>
         </div>
       )}
+
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={handleSubmit}
+          disabled={!files}
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
 {isModalOpenFile && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {modalFile && (
-              <div>
-                {modalFile.endsWith('.pdf') ? (
-                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
-                ) : (
-                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
-                )}
-              </div>
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeModal}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "600px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="mb-3">
+        {modalFile && (
+          <div>
+            {modalFile.endsWith(".pdf") ? (
+              <iframe
+                src={modalFile}
+                style={{ width: "100%", height: "600px", border: "none" }}
+                title="PDF Viewer"
+              />
+            ) : (
+              <img
+                src={modalFile}
+                alt="Document"
+                style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+              />
             )}
-            <button className="back-button" onClick={closeModal}>Close</button>
           </div>
-        </div>
-      )}
-
-{confirmpayment && activePermitId &&(
-  <div className="modal-overlay" onClick={closeviewpayment}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          Payment Completed for Working Permit Application {activePermitId}
-          <button onClick={confirmpaymentclose}>Okay</button>
-            </div>
-            </div>
+        )}
+      </div>
+      
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={closeModal}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 )}
+
+{confirmpayment && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeviewpayment}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h5 className="text-center mb-4">
+        Payment Completed for Working Permit Application {activePermitId}
+      </h5>
+
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={confirmpaymentclose}
+        >
+          Okay
+        </button>
+      </div>  
+    </div>
+  </div>
+)}
+
+
             </div>
         </section>
     );

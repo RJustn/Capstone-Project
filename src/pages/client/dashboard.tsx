@@ -312,7 +312,7 @@ const currentItems = sortedWorkPermits.slice(startIndex, endIndex);
       setIsModalOpenFile(true);
     };
   
-   const closeModal = () => {
+  const closeModal = () => {
       setIsModalOpenFile(false);
       setModalFile(null);
     };
@@ -320,18 +320,18 @@ const currentItems = sortedWorkPermits.slice(startIndex, endIndex);
   
 
  //MODAL TESTING FOR PAYMENT  WORK PERMIT
- const [showPaymentMethod, setShowPaymentMethod] = useState(false);
- const [modalStep, setModalStep] = useState(0);
- const closePaymentMethod = () => {
+const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+const [modalStep, setModalStep] = useState(0);
+const closePaymentMethod = () => {
     setShowPaymentMethod(false);
     setModalStep(0); // Reset when closing
   };
  // Close modal on overlay click
- const handleOverlayClick = () => {
-   closePaymentMethod();
- };
+//  const handleOverlayClick = () => {
+//    closePaymentMethod();
+//  };
 
- const [confirmpayment, setConfirmPayment] = useState(false);
+const [confirmpayment, setConfirmPayment] = useState(false);
   const confirmpaymentclose = () => {
     setConfirmPayment(false);
     setActivePermitId(null);
@@ -380,7 +380,7 @@ else{
         setFiles({ document1: null, document2: null, document3: null,
 
          }); // Clear uploaded file (if applicable)
-   
+
         // Optionally update state/UI instead of reloading
       } else {
         const errorMessage = (response.data as { message: string }).message;
@@ -451,7 +451,7 @@ const fetchWorkPermits = async () => {
         'Content-Type': 'application/json',
       },
     });
-    
+
     const workPermitData = await response.json();
     setWorkPermits(workPermitData);
   } catch (error) {
@@ -496,7 +496,6 @@ useEffect(() => {
 
   checkAuth();
 }, [navigate]); // Only depend on navigate, which is necessary for the redirection
-
 
 useEffect(() => {
   if (workPermits.length > 0) {
@@ -548,7 +547,7 @@ const handleAction = (action: string, permit: WorkPermit) => {
         setActivePermitId(permit._id);  // Save the permit ID
         setShowPaymentMethod(true);
         setModalStep(0);                 // Reset modal to the first step
-         console.log(`Pay for permit: ${permit._id}`);
+        console.log(`Pay for permit: ${permit._id}`);
         console.log(`Pay for permit: ${permit.id}`);
         break;
       case 'viewReceipt':
@@ -560,7 +559,6 @@ const handleAction = (action: string, permit: WorkPermit) => {
           }
         break;
       case 'viewPermit':
-     
         renderDocument(permit.permitFile, 'permits');
 
         console.log(`View permit: ${permit.permitFile}`);
@@ -578,18 +576,24 @@ const handleAction = (action: string, permit: WorkPermit) => {
       <ClientNavbar handleLogout={handleLogout}/>
 
       <div className="content">
-      <div id="carouselExampleFade" className="carousel slide carousel-fade">
+      <div id="carouselExampleFade" className="carousel slide carousel-fade" style={{ width: '60%', margin: 'auto' }} >
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <img src="/public/landingpagebackground.svg" className="d-block w-100" alt="..."></img>
+            <img src="/public/step1.svg"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/loginbackground.svg" className="d-block w-100" alt="..."></img>
+            <img src="/public/step2.svg"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/landingpagebackground.svg" className="d-block w-100" alt="..."></img>
+            <img src="/public/step3.svg"  className="d-block w-100" alt="..."></img>
           </div>
-        </div>
+          <div className="carousel-item">
+            <img src="/public/step4.svg"  className="d-block w-100" alt="..."></img>
+          </div>
+          <div className="carousel-item">
+            <img src="/public/step5.svg"  className="d-block w-100" alt="..."></img>
+          </div>
+        </div> 
         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Previous</span>
@@ -621,7 +625,6 @@ const handleAction = (action: string, permit: WorkPermit) => {
             <span>Apply for Business Permit</span>
             </a>
           </div>
-          
           <div>
           <a 
           href={!(latestStatus === 'Pending' || latestStatus === 'Waiting for Payment' || latestStatus === 'Released') ? "/workpermitpage" : "#"} 
@@ -640,47 +643,13 @@ const handleAction = (action: string, permit: WorkPermit) => {
           <span>Apply for Work Permit</span>
           </a>
           </div>
-          <div>
-            <a href="/businesspermitpage" className="businesspermitbutton">
-              <img 
-                src="applicationslogo.svg" 
-                alt="Logo" 
-                className="button-logo" 
-              />
-            <span>Apply for Business Permit</span>
-            </a>
-          </div>
-
-          <div>
-            <a href="/businesspermitpage" className="businesspermitbutton">
-              <img 
-                src="applicationslogo.svg" 
-                alt="Logo" 
-                className="button-logo" 
-              />
-            <span>Apply for Business Permit</span>
-            </a>
-          </div>
-
-          <div>
-            <a href="/businesspermitpage" className="businesspermitbutton">
-              <img 
-                src="applicationslogo.svg" 
-                alt="Logo" 
-                className="button-logo" 
-              />
-            <span>Apply for Business Permit</span>
-            </a>
-          </div>
         </div>
-
-
 
         <div className="workpermittable">
           <p> Work Permit Applications</p>
         <table className="table table-striped table-hover ">
           <thead style={{ backgroundColor: '#ffd23' }}>
- 
+
             <tr>
     <th style={{ backgroundColor: "#ffff00", color: "black" }}>ID</th>
     <th style={{ backgroundColor: "#ffff00", color: "black" }}>Status</th>
@@ -761,61 +730,147 @@ const handleAction = (action: string, permit: WorkPermit) => {
           </div>
       </div>
 
-                     
 
 {/* Modal Dump */}
 
 
 
 {showPaymentMethod && (
-        <div className="modal-overlay-pay" onClick={handleOverlayClick}>
-          <div className="modal-content-pay" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button-pay" onClick={closePaymentMethod}>✖</button>
-            <h3>Choose an Action for Permit ID: {activePermitId}</h3> {/* Display the permit ID */}
-            {modalStep === 0 && (
-              <div>
-                <h2>Upload Receipt</h2>
-            
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)", // Transparent effect
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+    >
+      <div className="modal-header">
+        <h5 className="modal-title">
+          Choose an Action for Permit ID: {activePermitId}
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          aria-label="Close"
+          onClick={closePaymentMethod}
+        ></button>
+      </div>
 
-                <button onClick={handleSubmit} disabled={!files}>Upload</button>
-              </div>
-            )}
-
-
+      <div className="modal-body">
+        {modalStep === 0 && (
+          <div>
+            <h6>Upload Receipt</h6>
+            <div className="mb-3">
+              <label className="form-label">Select File</label>
+              <input
+                type="file"
+                className="form-control"
+                onChange={(e) => handleFileChange(e, "document1")}
+              />
+            </div>
           </div>
-        </div>
+        )}
+      </div>
+      <div className="modal-footer">
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={handleSubmit}
+          disabled={!files}
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
 )}
-
-
-
 
 {/* Confirm Payment for Working Permit */}
-{confirmpayment && activePermitId &&(
-  <div className="modal-overlay" onClick={closeviewpayment}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+{confirmpayment && activePermitId && (
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeviewpayment}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "400px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="modal-header">
+        <h5 className="modal-title">
           Payment Completed for Working Permit Application {activePermitId}
-          <button onClick={confirmpaymentclose}>Okay</button>
-            </div>
-            </div>
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          aria-label="Close"
+          onClick={confirmpaymentclose}
+        ></button>
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-success" onClick={confirmpaymentclose}>
+          Okay
+        </button>
+      </div>
+    </div>
+  </div>
 )}
 
+
 {isModalOpenFile && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {modalFile && (
-              <div>
-                {modalFile.endsWith('.pdf') ? (
-                  <iframe src={modalFile} style={{ width: '500px', height: '600px' }} title="PDF Viewer" />
-                ) : (
-                  <img src={modalFile} alt="Document" style={{ maxWidth: '100%', height: 'auto' }} />
-                )}
-              </div>
-            )}
-            <button className="back-button" onClick={closeModal}>Close</button>
-          </div>
+  <div
+    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
+    onClick={closeModal}
+  >
+    <div
+      className="modal-content p-4"
+      style={{
+        maxWidth: "900px",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: "10px",
+        backdropFilter: "blur(5px)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {modalFile && (
+        <div>
+          {modalFile.endsWith('.pdf') ? (
+            <iframe
+              src={modalFile}
+              style={{ width: '800px', height: '400px' }}
+              title="PDF Viewer"
+            />
+          ) : (
+            <img
+              src={modalFile}
+              alt="Document"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          )}
         </div>
+      )}
+      <div className="modal-footer mt-3">
+        <button className="btn btn-success" onClick={closeModal}>Close</button>
+      </div>
+    </div>
+  </div>
 )}
+
 {/* End Modal Dump */}
       </div>
     </section>
