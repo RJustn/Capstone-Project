@@ -31,9 +31,7 @@ const DataControllerReportandGraph: React.FC = () => {
         [key: string]: string | number; 
     }
         
-        
-    
-    
+    const currentYear = new Date().getFullYear(); // Add this line to get the current year
 
     const navigate = useNavigate();
     const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
@@ -110,15 +108,15 @@ const DataControllerReportandGraph: React.FC = () => {
         ];
 
     //     mock data for testing dounut chart
-        const mockData = barangays.map(barangay => ({
-          _id: barangay,
-          count: Math.floor(Math.random() * 100) // Random count between 0 and 99
-      }));
+    //     const mockData = barangays.map(barangay => ({
+    //       _id: barangay,
+    //       count: Math.floor(Math.random() * 100) // Random count between 0 and 99
+    //   }));
 
-      const filteredData = mockData.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
-      const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
-      const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
-      setLocationData({ labels, data: counts });
+    //   const filteredData = mockData.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
+    //   const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
+    //   const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
+    //   setLocationData({ labels, data: counts });
 
     //   mock data for testing bar chart
     //   const mockMonthlyData = {
@@ -128,15 +126,15 @@ const DataControllerReportandGraph: React.FC = () => {
     // };
     // setMonthlyData(mockMonthlyData);
 
-        // fetch('http://localhost:3000/datacontroller/businessPermitLocations')
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         const filteredData = data.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
-        //         const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
-        //         const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
-        //         setLocationData({ labels, data: counts });
-        //     })
-        //     .catch(error => console.error('Error fetching location data:', error));
+        fetch('http://localhost:3000/datacontroller/businessPermitLocations')
+            .then(response => response.json())
+            .then(data => {
+                const filteredData = data.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
+                const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
+                const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
+                setLocationData({ labels, data: counts });
+            })
+            .catch(error => console.error('Error fetching location data:', error));
             
         fetch('http://localhost:3000/datacontroller/monthlyPaymentStatus')
             .then(response => response.json())
@@ -196,7 +194,7 @@ const DataControllerReportandGraph: React.FC = () => {
         downloadExcel(data, 'PermitApplicationsByCategory');
     };
 
-    const pieData = {
+    const doughnutData = {
         labels: locationData.labels,
         datasets: [
             {
@@ -257,24 +255,33 @@ const DataControllerReportandGraph: React.FC = () => {
                 <header className='DAheader'>
                     <h1>Online Business and Work Permit Licensing System</h1>
                 </header>
-                <div className='DApanel-Header'>
-                        <h2>Business Permit Locations</h2>
-                        </div>
-                    <div className="DAChart-Pie">
-                        <div className="DApieChartBarangay" onClick={handlePieClick}> {/* Add onClick handler */}
-                            <Doughnut data={pieData} />
-                        </div>
+
+                 <div className="DAchart-container">
+                    <div className="DAchart" onClick={handlePieClick}>
+                        <h2>Business Permit Locations - {currentYear}</h2>
+                        {doughnutData.datasets[0].data.length > 0 ? (
+                            <Doughnut data={doughnutData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
-                    <div className="DAChart-Bar">
-                    <h2>Monthly Payment Status</h2>
-                    <div className="DABarChartMonthly" onClick={handleBarClick}> {/* Add onClick handler */}
-                        <Bar data={barData} />
+
+                    <div className="DAchart" onClick={handleBarClick}>
+                        <h2>Monthly Payment Status - {currentYear}</h2>
+                        {barData.datasets[0].data.length > 0 ? (
+                            <Bar data={barData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
-                </div> 
-                <div className="DAChart-Bar">
-                    <h2>Permit Applications by Category</h2>
-                    <div className="DABarChartCategory" onClick={handleCategoryClick}>
-                        <Bar data={categoryDataForChart} />
+
+                    <div className="DAchart" onClick={handleCategoryClick}>
+                        <h2>Permit Applications by Category - {currentYear}</h2>
+                        {categoryDataForChart.datasets[0].data.length > 0 ? (
+                            <Bar data={categoryDataForChart} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
                 </div>
             </div>

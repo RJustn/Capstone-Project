@@ -39,7 +39,7 @@ return (
         </a>
         </li>
         <li>
-            <a href="/account" className="Asidebar-link">
+            <a href="/Aaccount" className="Asidebar-link">
             <img src="/accountlogo.svg" alt="Logo" className="sidebarlogoimage" />Account
             </a>
             </li>

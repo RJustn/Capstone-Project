@@ -102,7 +102,7 @@ const AdminAccount: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/client/update-password', {
+      const response = await fetch('http://localhost:3000/admin/updatePassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,8 +166,8 @@ const AdminAccount: React.FC = () => {
                 </button>
 
                 {isFormVisible && (
-                  <div className="modal-overlay" style={{ display: 'block' }}>
-                    <div className="modal" style={{ display: 'block' }}>
+                  <div className="modal-overlay" style={{ display: 'block', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1000 }}>
+                    <div className="modal centered-modal" style={{ display: 'block', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', maxHeight: '45%' }}>
                       <h1>Change Password</h1>
                       {error && <p className="error">{error}</p>}
                       {success && <p className="success">{success}</p>}

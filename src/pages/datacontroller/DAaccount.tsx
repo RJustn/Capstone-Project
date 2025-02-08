@@ -101,14 +101,21 @@ const DataControllerAccount: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/client/update-password', {
+      const response = await fetch('http://localhost:3000/datacontroller/updatePassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: userDetails.email, password }),
       });
-      const data = await response.json();
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        throw new Error('Invalid JSON response');
+      }
+
       if (response.ok) {
         setSuccess('Password changed successfully.');
         navigate('/login');
@@ -165,8 +172,8 @@ const DataControllerAccount: React.FC = () => {
                 </button>
 
                 {isFormVisible && (
-                  <div className="modal-overlay" style={{ display: 'block' }}>
-                    <div className="modal" style={{ display: 'block' }}>
+                  <div className="modal-overlay" style={{ display: 'block', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1000 }}>
+                    <div className="modal centered-modal" style={{ display: 'block', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', margin: '10px', maxHeight: '45%' }}>
                       <h1>Change Password</h1>
                       {error && <p className="error">{error}</p>}
                       {success && <p className="success">{success}</p>}

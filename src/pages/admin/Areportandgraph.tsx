@@ -1,3 +1,4 @@
+import '../Styles/AdminStyles.css';
 import React, { useEffect, useState } from 'react';
 import ASidebar from '../components/AdminSideBar';
 import { useNavigate } from 'react-router-dom';
@@ -209,33 +210,43 @@ const AdminReportsAndGraph: React.FC = () => {
                 <ASidebar handleLogout={handleLogout} />
             </div>
             <div className="Acontent">
-                <header className='Aheader'>
+                <header className='DAheader'>
                     <h1>Online Business and Work Permit Licensing System</h1>
                 </header>
-                <div className='Apanel-Header'>
-                    <h2>Business Permit Locations</h2>
-                </div>
-                <div className="AChart-Pie">
-                    <div className="ApieChartBarangay" onClick={handlePieClick}>
-                        <Doughnut data={pieData} />
+                <div className="DAchart-container">
+                    <div className="DAchart" onClick={handlePieClick}>
+                        <h2>Business Permit Locations</h2>
+                        {pieData.datasets[0].data.length > 0 ? (
+                            <Doughnut data={pieData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
-                </div>
-                <div className="AChart-Bar">
-                    <h2>Monthly Payment Status</h2>
-                    <div className="ABarChartMonthly" onClick={handleBarClick}>
-                        <Bar data={barData} />
+                    <div className="DAchart" onClick={handleBarClick}>
+                        <h2>Monthly Payment Status</h2>
+                        {barData.datasets[0].data.length > 0 ? (
+                            <Bar data={barData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
-                </div>
-                <div className="AChart-Line">
-                    <h2>Monthly Applications Trend</h2>
-                    <div className="ALineChartApplications">
-                        <Line data={workPermitChartData} />
+                    <div className="DAchart">
+                        <h2>Monthly Applications Trend Business</h2>
+                        {businessPermitChartData.datasets[0].data.length > 0 ? (
+                            <Line data={businessPermitChartData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
                     </div>
-                    <div className="ALineChartApplications">
-                        <Line data={businessPermitChartData} />
-                    </div>
+                    <div className="DAchart">
+                        <h2>Monthly Applications Trend Work</h2>    
+                        {workPermitChartData.datasets[0].data.length > 0 ? (
+                            <Line data={workPermitChartData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
+                        </div>
                 </div>
-
             </div>
         </section>
     );

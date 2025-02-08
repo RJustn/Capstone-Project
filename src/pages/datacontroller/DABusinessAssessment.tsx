@@ -289,7 +289,7 @@ useEffect(() => {
     }
 
 
-
+  //#region nature of business
 // Map for business nature for display purposes
 const businessNatureMap = {
   "BNK_IC": "Bank - Other Financial Institutions - Investment Company",
@@ -1571,7 +1571,7 @@ const businessNatureMap = {
   "WHE_SFD": "Wholesaler-Essential - Dealer - Seafoods",
   "WHE_FLR": "Wholesaler-Essential - Distributor - Flour",
 };
-
+//#endregion
 
 
 //Data Table
