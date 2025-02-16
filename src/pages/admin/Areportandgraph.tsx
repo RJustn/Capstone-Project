@@ -1,6 +1,6 @@
 import '../Styles/AdminStyles.css';
 import React, { useEffect, useState } from 'react';
-import ASidebar from '../components/AdminSideBar';
+import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import { useNavigate } from 'react-router-dom';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import 'chart.js/auto'; // Import Chart.js
@@ -36,6 +36,11 @@ const AdminReportsAndGraph: React.FC = () => {
     month: string;
   }
 
+  interface ExcelData {
+    [key: string]: string | number;
+
+  }
+
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   const [monthlyData, setMonthlyData] = useState<{ labels: string[], paid: number[], unpaid: number[] }>({ labels: [], paid: [], unpaid: [] });
@@ -45,7 +50,7 @@ const AdminReportsAndGraph: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/client/check-auth-admin', {
+        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -85,7 +90,7 @@ const AdminReportsAndGraph: React.FC = () => {
       "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
     ];
 
-    fetch('http://localhost:3000/datacontroller/businessPermitLocations')
+    fetch('http://localhost:3000/datacontroller/graphbusinesspermitlocation')
       .then(response => response.json())
       .then(data => {
         const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
@@ -95,7 +100,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching location data:', error));
 
-    fetch('http://localhost:3000/admin/BusinessmonthlyPaymentStatus')
+    fetch('http://localhost:3000/datacontroller/graphmonthlypaymentstatus')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: MonthlyData) => item.month);
@@ -105,7 +110,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching monthly payment data:', error));
 
-    fetch('http://localhost:3000/admin/work-permits/monthly-applications')
+    fetch('http://localhost:3000/datacontroller/graphpermitapplicationcategory')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: WorkPermitData) => item.month);
@@ -114,7 +119,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching work permit data:', error));
 
-    fetch('http://localhost:3000/admin/business-permits/monthly-applications')
+    fetch('http://localhost:3000/datacontroller/businesspermitmonthlyappication')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: BusinessPermitData) => item.month);
@@ -124,31 +129,7 @@ const AdminReportsAndGraph: React.FC = () => {
       .catch(error => console.error('Error fetching business permit data:', error));
   }, [navigate]);
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/client/logout', {
-        method: 'POST',
-        credentials: 'include', // Include cookies in the request
-      });
-
-      if (response.ok) {
-        // Clear any local storage data (if applicable)
-        localStorage.removeItem('profile');
-        localStorage.removeItem('userId');
-
-        // Redirect to the login page
-        navigate('/');
-      } else {
-        // Handle any errors from the server
-        const errorData = await response.json();
-        console.error('Logout error:', errorData.message);
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
-  const downloadExcel = (data: any, filename: string) => {
+  const downloadExcel = (data: ExcelData[], filename: string) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -236,7 +217,7 @@ const AdminReportsAndGraph: React.FC = () => {
     return (
         <section className="Abody">
             <div className="Asidebar-container">
-                <ASidebar handleLogout={handleLogout} />
+                <AdminSideBar />
             </div>
             <div className="Acontent">
                 <header className='DAheader'>
