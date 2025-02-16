@@ -546,6 +546,12 @@ width: 100%; /* Occupy most of the container's width */
   width: 100%; /* Full width */
   border-collapse: collapse; /* Remove gaps between cells */
   text-align: left; /* Align text to the left */
+  margin: 20px 0; /* Space above and below the table */
+  padding: 20px; /* Padding around the table */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff; /* White background for contrast */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  overflow-x: auto; /* Horizontal scrolling for smaller screens */
 }
 
 /* TABLE HEADER STYLE */
@@ -758,9 +764,53 @@ width: 100%; /* Occupy most of the container's width */
 
 /* Mobile Responsive Styles for Client */
 @media (max-width: 768px) {
-  .clientmodal-button, .clientcancel-button {
+  .clientmodal-button, .clientcancel-button  {
     width: 100%; 
     margin: 5px 0; 
     padding: 15px; 
+  }
+  .businesspermit-form {
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 10px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    margin-bottom: 5px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .businesspermit-form {
+    padding-bottom: 10px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
   }
 }

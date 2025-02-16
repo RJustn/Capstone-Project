@@ -3848,7 +3848,8 @@ const handleRemoveBusiness = (index: number) => {
       <h2>Businesses to Add</h2>
 
       {/* Table to display added businesses */}
-      <table className="permit-table">
+      <div className="permit-table">
+      <table className="permit-table ">
         <thead>
           <tr>
             <th>Business Nature</th>
@@ -3870,6 +3871,7 @@ const handleRemoveBusiness = (index: number) => {
           ))}
         </tbody>
       </table>
+      </div>
                 <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
                 <button type="button" onClick={goToNextStep} className="btn btn-success" >Next</button>
 
