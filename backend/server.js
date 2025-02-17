@@ -30,26 +30,36 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
-module.exports = (req, res) => {
-  // Allow cross-origin requests
-  res.setHeader('Access-Control-Allow-Origin', 'https://capstone-project-teal-three.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Handle preflight request (OPTIONS)
+
+
+const allowCors = fn => async (req, res) => {
+  const allowedOrigin = 'https://capstone-project-teal-three.vercel.app'; // Your frontend URL
+
+  // Handle CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin); // Use specific origin instead of '*'
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
   if (req.method === 'OPTIONS') {
+    // Preflight request handling
     res.status(200).end();
     return;
   }
 
-  // Handle actual API request
-  if (req.method === 'POST') {
-    // Your login logic here
-    res.status(200).json({ message: 'Logged in successfully!' });
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
-  }
+  return await fn(req, res);
 };
+
+const handler = (req, res) => {
+  const d = new Date();
+  res.end(d.toString());
+};
+
+module.exports = allowCors(handler);
 
 // Use CORS middleware
 app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
