@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 const { User } = require('./models/user');
 const { BusinessPermit } = require('./models/businesspermit');
 const { WorkPermit } = require('./models/workpermit');
-const session = require('express-session');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -50,44 +50,12 @@ const superadminRoutes = require('./routes/superadmin');
 
 
 
-// Session middleware
-app.use(session({
-  secret: 'your_session_secret', // Replace with a strong secret in production
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } // Set to true in production with HTTPS
-}));
+
 
 
 const { handler } = require('./hello'); // Destructure { handler }
 
 app.get('/api/hello', handler);
-
-
-
-mongoose.connect('mongodb+srv://jstnrfl:rjricasata@obpwlsdatabase.kqhov.mongodb.net/?retryWrites=true&w=majority&appName=obpwlsdatabase', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('MongoDB connected');
-  seedSuperadmin(); // Seed superadmin on startup
-  checkExpired();
-  checkExpiredAndMigrateBusinessPermit();
-  checkBusinessPermitExpiryAndUpdateStatus();
-}).catch(err => console.log(err));
-
-// Serve static files from the receipts directory
-app.use('/receipts', express.static(receiptsDir));
-app.use('/permits', express.static(permitsDir));
-app.use('/uploads', express.static(uploadsDir));
-
-
-app.use('/auth', authRoutes); // Base route
-app.use('/client', clientRoutes); //Sample Moving
-app.use('/datacontroller', datacontrollerRoutes); //Sample Moving
-app.use('/admin', adminRoutes); //Sample Moving
-app.use('/superadmin', superadminRoutes); //Sample Moving
-
 const seedSuperadmin = async () => {
   const SuperAdmin_Email = process.env.SUPERADMIN_EMAIL;
   const SuperAdmin_Password = process.env.SUPERADMIN_PASSWORD;
@@ -112,6 +80,25 @@ const seedSuperadmin = async () => {
     console.error('Error seeding superadmin user:', error);
   }
 };
+
+
+mongoose.connect('mongodb+srv://jstnrfl:rjricasata@obpwlsdatabase.kqhov.mongodb.net/?retryWrites=true&w=majority&appName=obpwlsdatabase').then(() => {
+  console.log('MongoDB connected');
+  seedSuperadmin(); // Seed superadmin on startup
+  checkExpired();
+  checkExpiredAndMigrateBusinessPermit();
+  checkBusinessPermitExpiryAndUpdateStatus();
+}).catch(err => console.log(err));
+
+
+
+app.use('/auth', authRoutes); // Base route
+app.use('/client', clientRoutes); //Sample Moving
+app.use('/datacontroller', datacontrollerRoutes); //Sample Moving
+app.use('/admin', adminRoutes); //Sample Moving
+app.use('/superadmin', superadminRoutes); //Sample Moving
+
+
 
 const checkExpired = async () => {
   const currentDate = new Date(Date.now()).toISOString();
