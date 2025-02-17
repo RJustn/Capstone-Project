@@ -66,6 +66,10 @@ const Signup: React.FC = () => {
     navigate('/'); // Redirect to home page
   };
 
+  const navigateLogin = () => {
+    navigate('/login'); // Redirect to the login page
+  };
+
   return (
     <>
       <div className="body">
@@ -194,7 +198,7 @@ const Signup: React.FC = () => {
         >
           Cancel
         </button>
-        <a href="/login" className="text-primary" style={{ fontSize: '12px' }}>
+        <a onClick={navigateLogin} className="text-primary" style={{ fontSize: '12px' }}>
           Already have an account? <br></br> Click here to Log in
         </a>
         <button type="submit" className="btn btn-success">

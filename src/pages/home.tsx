@@ -12,6 +12,10 @@ const Home: React.FC = () => {
     navigate('/login'); // Redirect to the login page
   };
 
+  const handlesignup = () => {
+    navigate('/signup'); // Redirect to the login page
+  };
+
   return (
     <section className="bodylandingpage">
       <nav className="navbar navbar-custom navbar-expand-lg fixed-top py-3"> 
@@ -28,10 +32,10 @@ const Home: React.FC = () => {
             <div className="offcanvas-body offcanvas-custom">
               <ul className="navbar-nav justify-content-end flex-grow-1">
               <li className="nav-item">
-                <a className="nav-link text-white " href="signup"> Sign Up</a>
+                <a className="nav-link text-white " onClick={handlesignup}> Sign Up</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white " href="login"> Log In</a>
+                <a className="nav-link text-white " onClick={handleApplyNowClick}> Log In</a>
               </li>
             </ul>
             </div>

@@ -19,6 +19,22 @@ const socketIo = require('socket.io');
 
 
 
+
+// Define CORS options
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://capstone-project-43dt4h5it-rjs-projects-7210df14.vercel.app'], // Add your frontend URLs
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  credentials: true // Allow credentials (cookies, authorization headers)
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
+
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(cookieParser());
+
+
 // Define the new receipts directory
 const receiptsDir = path.join(__dirname, 'documents/receipts');
 
@@ -45,6 +61,8 @@ if (!fs.existsSync(uploadsDir)) {
 
 
 
+
+
 const authRoutes = require('./routes/authRoutes');
 const clientRoutes = require('./routes/client');
 const datacontrollerRoutes = require('./routes/datacontroller');
@@ -57,14 +75,7 @@ const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
 const server = http.createServer(app);
 const io = socketIo(server);
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Update to your frontend URL
-  credentials: true // Allow credentials (cookies, authorization headers)
-}));
 
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(cookieParser());
 
 // Session middleware
 app.use(session({
@@ -72,10 +83,16 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false } // Set to true in production with HTTPS
-}))
+}));
 
 
-mongoose.connect('mongodb://localhost:27017/obpwlsdatabase', {
+const { handler } = require('./hello'); // Destructure { handler }
+
+app.get('/api/hello', handler);
+
+
+
+mongoose.connect('mongodb+srv://jstnrfl:rjricasata@obpwlsdatabase.kqhov.mongodb.net/?retryWrites=true&w=majority&appName=obpwlsdatabase', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {

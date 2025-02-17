@@ -362,4 +362,6 @@ const superadminlogin = async (req, res) => {
 };
 
 
+
+
 module.exports = { loginUser, superadminlogin, signup, logout, checkauthclient, checkauthdatacontroller, checkauthadmin, checkauthsuperadmin, sendOTP, verifyemailotp, updatepassword };

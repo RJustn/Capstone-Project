@@ -69,6 +69,14 @@ const Login: React.FC = () => {
     navigate('/'); // Redirect to home page
   };
 
+  const navigateForgotpassword = () => {
+    navigate('/login'); // Redirect to the login page
+  };
+
+  const navigateSignup = () => {
+    navigate('/signup'); // Redirect to the login page
+  };
+
   return (
     <div className="bodylogin">
       <div className="login-container">
@@ -120,10 +128,10 @@ const Login: React.FC = () => {
         
         {/* Links */}
         <div className="text-center">
-          <a href="/signup" className="d-block text-decoration-none mb-2" style={{ fontSize: '12px' }}>
+          <a onClick={navigateSignup} className="d-block text-decoration-none mb-2" style={{ fontSize: '12px' }}>
             Don't have an account? <strong>Sign up</strong>
           </a>
-          <a href="/forgotpassword" className="text-decoration-none" style={{ fontSize: '12px' }}>
+          <a onClick={navigateForgotpassword} className="text-decoration-none" style={{ fontSize: '12px' }}>
             Forgot Password?
           </a>
         </div>
