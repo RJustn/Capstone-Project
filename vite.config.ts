@@ -8,6 +8,7 @@ export default defineConfig({
     exclude: ['bcrypt', '@mapbox/node-pre-gyp']
   },
   build: {
+    outDir: 'build',  // Change this if needed
     rollupOptions: {
       external: ['path', 'fs', 'events', 'util']
     }
