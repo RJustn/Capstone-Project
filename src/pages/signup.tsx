@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './Styles/signup.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import axios from 'axios';
+
 
 const Signup: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -29,7 +31,7 @@ const Signup: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3000/auth/signup', {
+      const response = await axios.post('http://localhost:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,8 +47,8 @@ const Signup: React.FC = () => {
           isVerified: false,
         }),
       });
-      const data = await response.json();
-      if (response.ok) {
+      const data = await response.data();
+      if (response) {
         setSuccess(data.message);
         setError(null);
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page
