@@ -26,7 +26,7 @@ const io = socketIo(server);
 
 // Define CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173'], // Add your frontend URLs
+  origin: ['http://localhost:5173', 'http://capstone-project-teal-three.vercel.app'], // Add your frontend URLs
   credentials: true // Allow credentials (cookies, authorization headers)
 };
 
