@@ -27,7 +27,6 @@ const io = socketIo(server);
 // Define CORS options
 const corsOptions = {
   origin: ['http://localhost:5173'], // Add your frontend URLs
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true // Allow credentials (cookies, authorization headers)
 };
 
