@@ -35,22 +35,23 @@ const corsOptions = {
 
 const allowCors = fn => async (req, res) => {
   const allowedOrigin = 'https://capstone-project-teal-three.vercel.app'; // Your frontend URL
-
-  // Handle CORS headers
+  
+  // Set headers for CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', allowedOrigin); // Use specific origin instead of '*'
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin); // Specify your frontend domain
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
+  // Handle preflight request (OPTIONS)
   if (req.method === 'OPTIONS') {
-    // Preflight request handling
     res.status(200).end();
     return;
   }
 
+  // Handle the actual request
   return await fn(req, res);
 };
 
