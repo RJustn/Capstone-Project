@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     }
   
     try {
-      const response = await axios.post('http://capstone-project-phi-navy.vercel.app/auth/login', {
+      const response = await axios.post('http://localhost:3000/auth/login', {
         email, 
         password,
       }, {
