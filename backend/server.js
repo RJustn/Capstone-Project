@@ -30,7 +30,26 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
+module.exports = (req, res) => {
+  // Allow cross-origin requests
+  res.setHeader('Access-Control-Allow-Origin', 'https://capstone-project-teal-three.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+  // Handle preflight request (OPTIONS)
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  // Handle actual API request
+  if (req.method === 'POST') {
+    // Your login logic here
+    res.status(200).json({ message: 'Logged in successfully!' });
+  } else {
+    res.status(405).json({ message: 'Method not allowed' });
+  }
+};
 
 // Use CORS middleware
 app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
