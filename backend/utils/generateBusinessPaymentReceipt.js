@@ -4,18 +4,11 @@ const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const { v4: uuidv4 } = require('uuid');
 
-// Define the directory where work permit PDFs will be stored
-const businessReceiptsDir = path.join(__dirname, '../documents/receipts');
-
-// Ensure the directory exists
-if (!fs.existsSync(businessReceiptsDir)) {
-    fs.mkdirSync(businessReceiptsDir, { recursive: true });
-}
 
 const generateBusinessPaymentReceipt = async (id) => {
     const doc = new PDFDocument();
     const receiptFileName = `businesspermit_receipt_${id}.pdf`;
-    const receiptPath = path.join(businessReceiptsDir, receiptFileName);
+    const receiptPath = path.join('../documents/receipts', receiptFileName);
 
         try {
             // Fetch the work permit data by ID
