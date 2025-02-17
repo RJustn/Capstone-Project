@@ -35,7 +35,7 @@ const Signup: React.FC = () => {
   
     try {
       // Sending request using axios
-      const response = await axios.post('http://localhost:3000/auth/signup', {
+      const response = await axios.post('https://capstone-project-backend-nu.vercel.app/auth/signup', {
         firstName,
         middleName,
         lastName,
