@@ -85,9 +85,9 @@ const superadminRoutes = require('./routes/superadmin');
 
 
 
-const { handler } = require('./hello'); // Destructure { handler }
+const { helloworld } = require('./hello'); // Destructure { handler }
 
-app.get('/api/hello', handler);
+app.get('/api/hello', helloworld);
 const seedSuperadmin = async () => {
   const SuperAdmin_Email = process.env.SUPERADMIN_EMAIL;
   const SuperAdmin_Password = process.env.SUPERADMIN_PASSWORD;

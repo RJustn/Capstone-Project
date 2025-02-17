@@ -1,5 +1,5 @@
-const handler = async (req, res) => {
+const helloworld = async (req, res) => {
     res.json({ message: "Hello from API!" });
 }
 
-module.exports = {handler};
+module.exports = {helloworld};
