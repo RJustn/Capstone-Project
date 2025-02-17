@@ -61,11 +61,6 @@ import AdminReleasedPermitsBP from './pages/admin/AreleasedpermitsBP';
 import AdminReportsAndGraph from './pages/admin/Areportandgraph';
 import AdminViewApplicationDetails from './pages/admin/Aviewapplicationdetails';
 
-import AppTest from './pages/apptest';
-import AppTest2 from './pages/apptest2';
-import AppTest3 from './pages/apptest3';
-import AppTest4 from './pages/apptest4';
-
 const App: React.FC = () => {
   return (
     <Router>
@@ -85,11 +80,6 @@ const App: React.FC = () => {
         <Route path="/viewworkpermitapplication" element={<ViewWorkPermitApplication />} />
         <Route path="/viewapplicationdetails/:id?" element={<ViewApplicationDetails />} />
         <Route path="/viewapplicationdetailsbusiness/:id?" element={<ViewApplicationDetailsBusiness />} />
-
-        <Route path="/apptest" element={<AppTest />} />
-        <Route path="/apptest2" element={<AppTest2 />} />
-        <Route path="/apptest3" element={<AppTest3 />} />
-        <Route path="/apptest4" element={<AppTest4 />} />
 
         {/* Routes for Data Controller */}
         <Route path="/DAdashboard" element={<DataControllerDashboard />} />

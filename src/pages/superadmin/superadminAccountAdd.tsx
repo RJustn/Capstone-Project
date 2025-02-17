@@ -12,7 +12,6 @@ const [formData, setFormData] = useState({
   contactNumber: '',
   email: '',
   password: '',
-  address: '',
   userrole: ''
 });
 
@@ -79,59 +78,55 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   return (
     <div>
       <h1 className='SAaccountaddH1'>Create New User</h1>
-      <form className="SaAccountAddForm" onSubmit={handleSubmit}>
-        <div className="flex-row">
-          <label>
-            First Name:
-            <input type="text" value={formData.firstName} onChange={handleChange} required />
-          </label>
-          <label>
-            Middle Initial:
-            <input type="text" value={formData.middleName} onChange={handleChange} />
-          </label>
-          <label>
-            Last Name:
-            <input type="text" value={formData.lastName} onChange={handleChange} required />
-          </label>
-        </div>
+<form className="SaAccountAddForm" onSubmit={handleSubmit}>
+  <div className="flex-row">
+    <label>
+      First Name:
+      <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+    </label>
+    <label>
+      Middle Initial:
+      <input type="text" name="middleName" value={formData.middleName} onChange={handleChange} />
+    </label>
+    <label>
+      Last Name:
+      <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+    </label>
+  </div>
 
-        <div className="flex-row">
-          <label>
-            Contact Number:
-            <input type="text" value={formData.contactNumber} onChange={handleChange} required />
-          </label>
-          <label>
-            Email:
-            <input type="email" value={formData.email} onChange={handleChange} required />
-          </label>
-        </div>
+  <div className="flex-row">
+    <label>
+      Contact Number:
+      <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleChange} pattern="\d*" required />
+    </label>
+    <label>
+      Email:
+      <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+    </label>
+  </div>
 
-        <div className="flex-row">
-          <label>
-            Address:
-            <input type="text" value={formData.address} onChange={handleChange} required />
-          </label>
-          <label>
-            Password:
-            <input type="password" value={formData.password} onChange={handleChange} required />
-          </label>
-        </div>
+  <div className="flex-row">
+    <label>
+      Password:
+      <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+    </label>
+  </div>
 
-        <label>
-          Role:
-          <select value={formData.userrole} onChange={handleChange} required>
-            <option value="" disabled>Select a role</option>
-            <option value="CL">Client</option>
-            <option value="ADM">Admin</option>
-            <option value="DC">Data Controller</option>
-          </select>
-        </label>
+  <label>
+    Role:
+    <select name="userrole" value={formData.userrole} onChange={handleChange} required>
+      <option value="" disabled>Select a role</option>
+      <option value="CL">Client</option>
+      <option value="ADM">Admin</option>
+      <option value="DC">Data Controller</option>
+    </select>
+  </label>
 
-        <div className="button-group">
-          <button type="button" onClick={handleBack} className="SAbackButton">Back</button>
-          <button type="submit" className="SAcreateAccountButton" >Create User</button>
-        </div>
-      </form>
+  <div className="button-group">
+    <button type="button" onClick={handleBack} className="SAbackButton">Back</button>
+    <button type="submit" className="SAcreateAccountButton">Create User</button>
+  </div>
+</form>
     </div>
   );
 };

@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const http = require('http');
 const cron = require('node-cron');
 const bcrypt = require('bcrypt');
-const {Person } = require('./Modals');
 const { User } = require('./models/user');
 const { BusinessPermit } = require('./models/businesspermit');
 const { WorkPermit } = require('./models/workpermit');
