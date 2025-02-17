@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Styles/login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -17,18 +18,17 @@ const Login: React.FC = () => {
       setError('All fields are required.');
       return;
     }
-
+  
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, }),
-        credentials: 'include', // Include credentials to send cookies
+      const response = await axios.post('http://localhost:3000/auth/login', {
+        email, 
+        password,
+      }, {
+        withCredentials: true, // Send cookies with the request
       });
-      const data = await response.json();
-      if (response.ok) {
+  
+      const data = response.data;  // Axios automatically parses JSON
+      if (response.status === 200) {
         // Store the JWT token
         localStorage.setItem('token', data.token);
         setSuccess(data.message);
