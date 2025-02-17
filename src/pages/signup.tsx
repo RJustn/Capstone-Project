@@ -21,34 +21,33 @@ const Signup: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    
     // Validate form
     if (!firstName || !middleName || !lastName || !email || !password || !contactNumber || !address) {
       setError('All required fields must be filled out.');
       return;
     }
+    
     if (confirmpassword !== password) {
-      setError('Password Not Match.');
+      setError('Password does not match.');
       return;
     }
+  
     try {
+      // Sending request using axios
       const response = await axios.post('http://localhost:3000/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName,
-          middleName,
-          lastName,
-          contactNumber,
-          address,
-          email,
-          password,
-          isVerified: false,
-        }),
+        firstName,
+        middleName,
+        lastName,
+        contactNumber,
+        address,
+        email,
+        password,
+        isVerified: false,  // You might want to adjust this logic later
       });
-      const data = await response.data();
-      if (response) {
+  
+      const data = response.data; // Accessing the response data directly
+      if (response.status === 200) { // Check the response status
         setSuccess(data.message);
         setError(null);
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page
@@ -59,10 +58,11 @@ const Signup: React.FC = () => {
         }, 3000);
       }
     } catch (error) {
-        console.error('Error signing up please try again', error);
-      setError('Error signing up please try again');
+      console.error('Error signing up, please try again', error);
+      setError('Error signing up, please try again');
     }
   };
+  
 
   const handleCancel = () => {
     navigate('/'); // Redirect to home page
