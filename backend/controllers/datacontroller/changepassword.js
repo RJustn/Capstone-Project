@@ -1,5 +1,5 @@
 const { User } = require('../../index/models');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 // Route to update user password
 const changepassword = async (req, res) => {

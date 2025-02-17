@@ -1,4 +1,4 @@
-import '../styles/DataControllerStyles.css'; 
+import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/NavigationBars/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
