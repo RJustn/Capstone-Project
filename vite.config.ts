@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['path', 'crypto', 'fs', 'events', 'util']
+      external: ['path', 'fs', 'events', 'util']
     }
   }
 });
