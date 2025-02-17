@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import '../Styles/SuperAdminStyles.css';
 
 const SuperadminAccountEdit = () => {
