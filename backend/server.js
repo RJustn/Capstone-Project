@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 
 // Define the new receipts directory
-const receiptsDir = path.join(__dirname, 'documents/receipts');
+const receiptsDir = path.join('/tmp', 'documents/receipts');
 
 // Ensure the receipts directory exists
 if (!fs.existsSync(receiptsDir)) {
@@ -47,7 +47,7 @@ if (!fs.existsSync(receiptsDir)) {
 }
 
 // Define the new receipts directory
-const permitsDir = path.join(__dirname, 'documents/permits');
+const permitsDir = path.join('/tmp', 'documents/permits');
 
 // Ensure the receipts directory exists
 if (!fs.existsSync(permitsDir)) {
@@ -55,7 +55,7 @@ if (!fs.existsSync(permitsDir)) {
 }
 
 // Define the new receipts directory
-const uploadsDir = path.join(__dirname, 'documents/uploads');
+const uploadsDir = path.join('/tmp', 'documents/uploads');
 
 // Ensure the receipts directory exists
 if (!fs.existsSync(uploadsDir)) {
