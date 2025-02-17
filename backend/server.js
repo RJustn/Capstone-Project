@@ -26,7 +26,7 @@ const io = socketIo(server);
 
 // Define CORS options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://capstone-project-43dt4h5it-rjs-projects-7210df14.vercel.app'], // Add your frontend URLs
+  origin: ['http://localhost:5173'], // Add your frontend URLs
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true // Allow credentials (cookies, authorization headers)
 };
