@@ -32,36 +32,6 @@ const corsOptions = {
 };
 
 
-
-const allowCors = fn => async (req, res) => {
-  const allowedOrigin = 'https://capstone-project-teal-three.vercel.app'; // Your frontend URL
-  
-  // Set headers for CORS
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', allowedOrigin); // Specify your frontend domain
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-
-  // Handle preflight request (OPTIONS)
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  // Handle the actual request
-  return await fn(req, res);
-};
-
-const handler = (req, res) => {
-  const d = new Date();
-  res.end(d.toString());
-};
-
-module.exports = allowCors(handler);
-
 // Use CORS middleware
 app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
 
