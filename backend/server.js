@@ -16,7 +16,7 @@ const fs = require('fs');
 
 const socketIo = require('socket.io');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
 const server = http.createServer(app);
 const io = socketIo(server);
