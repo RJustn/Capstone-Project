@@ -38,30 +38,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-// Define the new receipts directory
-const receiptsDir = path.join('/tmp', 'documents/receipts');
-
-// Ensure the receipts directory exists
-if (!fs.existsSync(receiptsDir)) {
-    fs.mkdirSync(receiptsDir, { recursive: true });
-}
-
-// Define the new receipts directory
-const permitsDir = path.join('/tmp', 'documents/permits');
-
-// Ensure the receipts directory exists
-if (!fs.existsSync(permitsDir)) {
-    fs.mkdirSync(permitsDir, { recursive: true });
-}
-
-// Define the new receipts directory
-const uploadsDir = path.join('/tmp', 'documents/uploads');
-
-// Ensure the receipts directory exists
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
 
 
 
