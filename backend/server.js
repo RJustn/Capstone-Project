@@ -15,7 +15,11 @@ const path = require('path');
 const fs = require('fs');
 
 const socketIo = require('socket.io');
-
+const app = express();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
+const server = http.createServer(app);
+const io = socketIo(server);
 
 
 
@@ -68,12 +72,6 @@ const clientRoutes = require('./routes/client');
 const datacontrollerRoutes = require('./routes/datacontroller');
 const adminRoutes = require('./routes/admin');
 const superadminRoutes = require('./routes/superadmin');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = 'your_jwt_secret'; // Use a strong secret key in production
-const server = http.createServer(app);
-const io = socketIo(server);
 
 
 
