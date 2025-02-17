@@ -4,19 +4,13 @@
     const PDFDocument = require('pdfkit');
     const { v4: uuidv4 } = require('uuid');
     
-    // Define the directory where work permit PDFs will be stored
-    const receiptsDir = path.join(__dirname, '../documents/receipts');
-    
-    // Ensure the directory exists
-    if (!fs.existsSync(receiptsDir)) {
-        fs.mkdirSync(receiptsDir, { recursive: true });
-    }
+
     
     // Function to generate Statement of Account PDF
     const generateStatementofAccount = (ContentData, BusinessPermitContent) => {
         const doc = new PDFDocument();
         const receiptFileName = `statementofaccount_${Date.now()}.pdf`;
-        const receiptPath = path.join(receiptsDir, receiptFileName);
+        const receiptPath = path.join('../documents/receipts', receiptFileName);
     
         const writeStream = fs.createWriteStream(receiptPath);
         doc.pipe(writeStream);

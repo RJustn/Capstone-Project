@@ -3,18 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 
-// Define the directory where work permit PDFs will be stored
-const businessPermitsDir = path.join(__dirname, '../documents/permits');
-
-// Ensure the directory exists
-if (!fs.existsSync(businessPermitsDir)) {
-    fs.mkdirSync(businessPermitsDir, { recursive: true });
-}
 
 const generateBusinessPermitPDF = async (ContentData, permitNumber) => {
     const doc = new PDFDocument();
     const businessPermitFileName = `businessPermit_${ContentData}.pdf`; // File name based on the ID
-    const businessPermitPath = path.join(businessPermitsDir, businessPermitFileName);
+    const businessPermitPath = path.join('../documents/permits', businessPermitFileName);
   
     try {
       // Fetch the business permit data by ID

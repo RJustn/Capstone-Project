@@ -3,19 +3,12 @@ const path = require('path');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 
-// Define the directory where work permit PDFs will be stored
-const workPermitsDir = path.join(__dirname, '../documents/permits');
-
-// Ensure the directory exists
-if (!fs.existsSync(workPermitsDir)) {
-    fs.mkdirSync(workPermitsDir, { recursive: true });
-}
 
 const generateWorkPermitPDF = async (id) => {
     const doc = new PDFDocument({ size: 'A4', layout: 'landscape' });
     
     const workPermitFileName = `workpermit_${id}.pdf`;
-    const workPermitPath = path.join(workPermitsDir, workPermitFileName);
+    const workPermitPath = path.join('../documents/permits', workPermitFileName);
     const workPermit = await WorkPermit.findById(id);
 
 
