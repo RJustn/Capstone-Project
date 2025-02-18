@@ -28,6 +28,7 @@ const io = socketIo(server);
 // Define CORS options
 const allowedOrigins = [
   'https://capstone-project-teal-three.vercel.app', // Main frontend domain
+  'https://capstone-project-71ibb1c8m-rjs-projects-7210df14.vercel.app',
 ];
 
 app.use(cors({

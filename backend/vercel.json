@@ -12,11 +12,18 @@
       "dest": "server.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://capstone-project-teal-three.vercel.app",
+        "Access-Control-Allow-Origin": "https://capstone-project-71ibb1c8m-rjs-projects-7210df14.vercel.app",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       }
     }
-  ]
+    
+  ],
+  "functions": {
+    "api/*": {
+      "timeout": 30 
+    }
+  }
+  
 }
