@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const http = require('http');
@@ -24,6 +24,18 @@ const io = socketIo(server);
 
 
 
+
+// Define CORS options
+const corsOptions = {
+  origin: 'https://capstone-project-teal-three.vercel.app', // Allow your frontend domain
+  credentials: true,
+  methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.options('*', cors()); // Handle preflight requests
+// Use CORS middleware
+app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
 
 
 app.use(bodyParser.json());

@@ -1,12 +1,11 @@
 const express = require('express');
 const { loginUser, signup, logout, checkauthclient, sendOTP, verifyemailotp, updatepassword, checkauthdatacontroller, checkauthadmin, superadminlogin, checkauthsuperadmin } = require('../index/auth');
 const { authenticateToken, authenticatesuperadmin }= require('../index/middleware');
-const { allowCors } = require('../middleware/cors');
 
 const router = express.Router();
 
 // Homepage routes
-router.post('/login', allowCors(loginUser));
+router.post('/login', (loginUser));
 
 router.post('/signup', signup);
 
