@@ -33,8 +33,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.options('*', cors()); // Handle preflight requests
-// Use CORS middleware
 app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
 
 
