@@ -26,14 +26,22 @@ const io = socketIo(server);
 
 
 // Define CORS options
-const corsOptions = {
-  origin: 'https://capstone-project-teal-three.vercel.app', // Allow your frontend domain
-  credentials: true,
-  methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+const allowedOrigins = [
+  'https://capstone-project-teal-three.vercel.app', // Your main frontend domain
+];
 
-app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, origin); // Allow requests from your main domain & Vercel previews
+    } else {
+      callback(new Error('Not allowed by CORS')); // Block other origins
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 
 app.use(bodyParser.json());
