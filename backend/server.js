@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 const { User } = require('./models/user');
 const { BusinessPermit } = require('./models/businesspermit');
 const { WorkPermit } = require('./models/workpermit');
-
+const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 
@@ -42,7 +42,13 @@ app.use(cookieParser());
 
 
 
-
+// Session middleware
+app.use(session({
+  secret: 'your_session_secret', // Replace with a strong secret in production
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false,  sameSite: 'None' } // Set to true in production with HTTPS
+}))
 
 
 const authRoutes = require('./routes/authRoutes');
