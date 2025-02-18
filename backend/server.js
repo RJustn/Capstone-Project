@@ -26,7 +26,9 @@ const io = socketIo(server);
 
 // Define CORS options
 const corsOptions = {
-  origin: 'https://capstone-project-teal-three.vercel.app', // Allow your frontend domain
+  origin: 'https://capstone-project-teal-three.vercel.app', 
+  credentials: true,
+methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],// Allow your frontend domain
 };
 
 
