@@ -62,11 +62,20 @@ const superadminRoutes = require('./routes/superadmin');
 
 
 
+// Example of a simple POST route to test data sending and receiving
+app.post('/test', (req, res) => {
+  const { message } = req.body;
+  console.log('Received message:', message);
+  
+  // Respond with a message
+  res.status(200).json({ response: `Server received your message: ${message}` });
+});
 
 
 const { helloworld } = require('./hello'); // Destructure { handler }
 
 app.get('/api/hello', helloworld);
+
 const seedSuperadmin = async () => {
   const SuperAdmin_Email = process.env.SUPERADMIN_EMAIL;
   const SuperAdmin_Password = process.env.SUPERADMIN_PASSWORD;
