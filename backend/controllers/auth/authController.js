@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../../index/models');
-const generateUserId = require('../../index/utils');
+const {generateUserId} = require('../../index/utils');
 const nodemailer = require('nodemailer');
 const JWT_SECRET = 'your_jwt_secret'; 
 

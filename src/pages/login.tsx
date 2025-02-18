@@ -51,14 +51,15 @@ const Login: React.FC = () => {
       
       if (data.error === 'Email is not verified') {
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page if email not verified
-      } else {
+      } 
+      else {
         setError(data.error);
         setTimeout(() => {
           setError(null);
         }, 5000);
       }
     } catch (error) {
-      setError('Error logging in');
+      setError(`Error logging in ${error}`);
       console.error('Error logging in', error);
     }
   };
