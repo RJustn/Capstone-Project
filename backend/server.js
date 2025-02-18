@@ -25,16 +25,11 @@ const io = socketIo(server);
 
 
 
-// Define CORS options
-const corsOptions = {
-  origin: 'https://capstone-project-teal-three.vercel.app', // Allow your frontend domain
+// Use CORS middleware
+app.use(cors({  origin: 'https://capstone-project-teal-three.vercel.app', // Allow your frontend domain
   credentials: true,
   methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-// Use CORS middleware
-app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
+  allowedHeaders: ['Content-Type', 'Authorization'],}));  // This line applies the CORS policy globally to all routes
 
 app.options('*', cors()); // Handle preflight requests
 
