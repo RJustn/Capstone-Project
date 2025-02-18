@@ -47,10 +47,13 @@ const Signup: React.FC = () => {
       });
   
       const data = response.data; // Accessing the response data directly
-      if (response.status === 200) { // Check the response status
+      if (response.status === 201) { // Check the response status
         setSuccess(data.message);
         setError(null);
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page
+      }
+      if (response.status === 400) { // Check the response status
+        setError('User already exists.');
       } else {
         setError(data.error);
         setTimeout(() => {
