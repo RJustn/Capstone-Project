@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const http = require('http');
@@ -25,13 +25,6 @@ const io = socketIo(server);
 
 
 
-// Use CORS middleware
-app.use(cors({  origin: '*', // Allow your frontend domain
-  credentials: true,
-  methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],}));  // This line applies the CORS policy globally to all routes
-
-app.options('*', cors()); // Handle preflight requests
 
 app.use(bodyParser.json());
 app.use(express.json());
