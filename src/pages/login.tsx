@@ -11,6 +11,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -23,9 +24,7 @@ const Login: React.FC = () => {
       const response = await axios.post('https://capstone-project-backend-nu.vercel.app/auth/login', {
         email, 
         password,
-      }, {
-        withCredentials: true, // Send cookies with the request
-      });
+      },);
   
       const data = response.data;  // Axios automatically parses JSON
       if (response.status === 200) {
