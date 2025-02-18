@@ -29,9 +29,10 @@ const corsOptions = {
   origin: 'https://capstone-project-teal-three.vercel.app', 
   credentials: true,
 methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],// Allow your frontend domain
+  allowedHeaders: 'Content-Type,Authorization',
 };
 
-
+app.options('*', cors()); // Handle preflight requests
 // Use CORS middleware
 app.use(cors(corsOptions));  // This line applies the CORS policy globally to all routes
 
