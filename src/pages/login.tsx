@@ -63,7 +63,19 @@ const Login: React.FC = () => {
       console.error('Error logging in', error);
     }
   };
+
   
+  fetch('https://capstone-project-backend-nu.vercel.app/auth/login', {
+    method: 'POST',
+    credentials: 'include', // Important for sending cookies
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email: "test@example.com", password: "password123" })
+  })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Fetch error:', error));
 
   const handleCancel = () => {
     navigate('/'); // Redirect to home page
