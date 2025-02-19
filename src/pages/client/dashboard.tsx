@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css'; //  CSS file
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
-
+import axios from 'axios';
 import { WorkPermit, GroupedBusinessPermit } from "../components/Interface(Front-end)/Types";
 import WorkPermitTable from "../components/Tables/WorkPermitTable-Client";
 import BusinessPermitTable from "../components/Tables/BusinessPermitTable-Client";
@@ -111,10 +111,12 @@ useEffect(() => {
 useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
-        method: 'GET',
-        credentials: 'include', // This ensures cookies are sent with the request
-      });
+
+
+      const response = await axios.get(
+        'https://capstone-project-backend-nu.vercel.app/auth/check-auth-client',
+        { withCredentials: true }
+      );
 
       if (response.status === 401) {
         // If unauthorized, redirect to login

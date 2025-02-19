@@ -16,7 +16,7 @@ const loginUser = async (req, res) => {
     console.log(user);
     if (!user) {
       console.log("User not found!");
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not Found.' });
     }
 
     // Check if the account is locked
@@ -70,7 +70,7 @@ const loginUser = async (req, res) => {
     res.cookie('authToken', token, { 
       httpOnly: true, 
       path: '/',       // Ensure it's sent with all requests
-      secure: false, // Change to `true` in production
+      secure: true, // Change to `true` in production
       sameSite: 'none', // Required for cross-origin requests
       maxAge: 3 * 60 * 60 * 1000 // 3 hours in milliseconds
     });
