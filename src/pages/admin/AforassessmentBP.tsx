@@ -186,7 +186,7 @@ const AdminForAssessmentBusinessPermit: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -272,7 +272,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
   const renderFile = (fileUrl: string | null) => {
     if (!fileUrl) return <p>No file selected.</p>;
@@ -405,7 +405,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
   const fetchBusinessPermits = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/datacontroller/getbusinesspermitforassessment/${type}`,
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforassessment/${type}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -431,7 +431,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
       try {
         console.log(type);
         const response = await fetch(
-          `http://localhost:3000/datacontroller/getbusinesspermitforassessment/${type}`,
+          `https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforassessment/${type}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -513,7 +513,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     try {
       // Send the action as part of the request payload
       const response = await axios.put(
-        `http://localhost:3000/admin/updatebusinesspermitstatus/${activePermitId._id}`,
+        `https://capstone-project-backend-nu.vercel.app/admin/updatebusinesspermitstatus/${activePermitId._id}`,
         { status: action, remarks }
       );
   

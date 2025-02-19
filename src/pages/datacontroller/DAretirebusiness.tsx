@@ -192,7 +192,7 @@ const DAretirebusiness: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -235,7 +235,7 @@ const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits'
   if (!fileName) return null;
   
   // Return the file URL based on the folder specified
-  return `http://localhost:3000/${folder}/${fileName}`;
+  return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
 };
 const renderFile = (fileUrl: string | null) => {
 if (!fileUrl) return <p>No file selected.</p>;
@@ -293,7 +293,7 @@ const closeModal = () => {
 useEffect(() => {
     const fetchBusinessPermits = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/datacontroller/getbusinesspermitforretire`, {
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforretire`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies (containing the token) are sent
           headers: {
@@ -393,7 +393,7 @@ const [viewBusinessNature, setViewbusinessNature] = useState(false);
   
     try {
         const response = await axios.put(
-          `http://localhost:3000/datacontroller/retirebusinesspermit/${activePermitId._id}`,
+          `https://capstone-project-backend-nu.vercel.app/datacontroller/retirebusinesspermit/${activePermitId._id}`,
           {
             classification: action === 'accept' ? 'RetiredBusiness' : activePermitId.classification, // Update classification only if accepted
             businessstatus: action === 'accept' ? 'Retired' : activePermitId.businessstatus, // Update businessstatus if accepted

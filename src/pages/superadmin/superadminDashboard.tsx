@@ -48,7 +48,7 @@ const SuperAdminDashboard: React.FC = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/superadmin/getadminuser');
+        const response = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getadminuser');
         setAdmins(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -57,7 +57,7 @@ const SuperAdminDashboard: React.FC = () => {
 
     const fetchDataControllers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/superadmin/getdatacontrolleruser');
+        const response = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getdatacontrolleruser');
         setDataControllers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -71,8 +71,8 @@ const SuperAdminDashboard: React.FC = () => {
   useEffect(() => {
     const fetchUserLogs = async () => {
       try {
-        const adminResponse = await axios.get('http://localhost:3000/superadmin/getadminuser');
-        const datacontrollerResponse = await axios.get('http://localhost:3000/superadmin/getdatacontrolleruser');
+        const adminResponse = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getadminuser');
+        const datacontrollerResponse = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getdatacontrolleruser');
         setUserLogs([...adminResponse.data, ...datacontrollerResponse.data]);
       } catch (error) {
         console.error('Error fetching user logs:', error);
@@ -107,7 +107,7 @@ const SuperAdminDashboard: React.FC = () => {
  
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/logout', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -133,7 +133,7 @@ const SuperAdminDashboard: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-superadmin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-superadmin', {
           method: 'GET',
           credentials: 'include',
         });

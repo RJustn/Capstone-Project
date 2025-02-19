@@ -104,7 +104,7 @@ const Adashboard: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -143,13 +143,13 @@ const Adashboard: React.FC = () => {
           renewalBusinessPermitsResponse,
           dashboardDataResponse
         ] = await Promise.all([
-          fetch('http://localhost:3000/datacontroller/newWorkingpermits', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/renewalWorkingpermits', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/workingpermitsChart', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/businesspermitsChart', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/newBusinesspermits', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' }),
-          fetch('http://localhost:3000/datacontroller/dashboardData', { method: 'GET', credentials: 'include' })
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/newWorkingpermits', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/renewalWorkingpermits', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/workingpermitsChart', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitsChart', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/newBusinesspermits', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' }),
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/dashboardData', { method: 'GET', credentials: 'include' })
         ]);
 
         if (!newPermitsResponse.ok) {

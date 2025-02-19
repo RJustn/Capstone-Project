@@ -37,7 +37,7 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
   const handleDeleteBusiness = async (permitId: string) => {
     console.log(`Delete permit ID: ${permitId}`);
     try {
-      const response = await fetch(`http://localhost:3000/client/deletebusinesspermit/${permitId}`, {
+      const response = await fetch(`https://capstone-project-backend-nu.vercel.app/client/deletebusinesspermit/${permitId}`, {
         method: 'DELETE',
       });
   
@@ -72,7 +72,7 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/client/retirebusinessapplication/${activePermitId?._id}`,
+        `https://capstone-project-backend-nu.vercel.app/client/retirebusinessapplication/${activePermitId?._id}`,
         formData,
         {
           headers: {
@@ -143,7 +143,7 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
   const handlePayment = async () => {
     try {
       // Call the API to update the payment status
-      const response = await axios.put(`http://localhost:3000/client/businesspermithandlepayment/${activePermitId?._id}`, {
+      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`, {
         paymentStatus: 'Paid',
         businesspermitstatus: 'Released'
       });
@@ -161,7 +161,7 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
 
   const expireBusinessPermit = async (permitId: string) => {
     try {
-      const response = await axios.put(`http://localhost:3000/client/expirebusinesspermit/${permitId}`, {
+      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/expirebusinesspermit/${permitId}`, {
         status: 'Expired', // Update the status to "Expired"
       });
   
@@ -195,7 +195,7 @@ const [files, setFiles] = useState<{
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
   };
 
   const renderFile = (fileUrl: string | null) => {

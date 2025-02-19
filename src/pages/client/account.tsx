@@ -34,7 +34,7 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
 
 
       try {
-        const response = await fetch('http://localhost:3000/client/profile', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -79,7 +79,7 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-client', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -125,7 +125,7 @@ const handleSendOtp = async () => {
 
 
   try {
-      const response = await fetch('http://localhost:3000/auth/sendOTP', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ const handleVerifyOtp = async () => {
   }
 
   try {
-      const response = await fetch('http://localhost:3000/auth/updatepassword', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',

@@ -243,7 +243,7 @@ const BusinessPermit: React.FC = () => {
 
 
     try {
-      const response = await axios.post('http://localhost:3000/client/businesspermitapplication', formData, {
+      const response = await axios.post('https://capstone-project-backend-nu.vercel.app/client/businesspermitapplication', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -188,7 +188,7 @@ const DAreleasedpermitsBP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -233,7 +233,7 @@ const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits'
   if (!fileName) return null;
   
   // Return the file URL based on the folder specified
-  return `http://localhost:3000/${folder}/${fileName}`;
+  return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
 };
 const renderFile = (fileUrl: string | null) => {
 if (!fileUrl) return <p>No file selected.</p>;
@@ -291,7 +291,7 @@ const closeModal = () => {
   useEffect(() => {
     const fetchBusinessPermits = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/datacontroller/getbusinesspermitrelease/${type}`, {
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitrelease/${type}`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies (containing the token) are sent
           headers: {

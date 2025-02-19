@@ -27,7 +27,7 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
           } 
       try {
         console.log(id);
-        const response = await axios.get(`http://localhost:3000/client/fetchbusinesspermitdetails/${id}`, {
+        const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/client/fetchbusinesspermitdetails/${id}`, {
           headers: { },
           withCredentials: true, 
 
@@ -75,7 +75,7 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
     if (!fileName) return null;
     
     // Return the file URL based on the folder specified
-    return `http://localhost:3000/${folder}/${fileName}`;
+    return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
   };
   
 const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
@@ -94,7 +94,7 @@ const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' |
 useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/check-auth-client', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
         method: 'GET',
         credentials: 'include', // This ensures cookies are sent with the request
       });

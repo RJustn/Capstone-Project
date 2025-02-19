@@ -21,7 +21,7 @@ const ForgotPassword: React.FC = () => {
 
 
         try {
-            const response = await fetch('http://localhost:3000/auth/sendOTP', {
+            const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const ForgotPassword: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/auth/updatepassword', {
+            const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -150,7 +150,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
             method: 'GET',
             credentials: 'include', // This ensures cookies are sent with the request
           });
@@ -185,7 +185,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
             } 
         try {
           console.log(id);
-          const response = await axios.get(`http://localhost:3000/datacontroller/businesspermitdetails/${id}`, {
+          const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitdetails/${id}`, {
 
           });
           setBusinessPermit(response.data as BusinessPermit); // Set the work permit details to state
@@ -214,7 +214,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
       
     const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {

@@ -36,7 +36,7 @@ const loginUser = async (req, res) => {
 
     // Check if email is verified
     if (!user.isVerified) {
-      return res.status(400).json({ error: 'Email is not verified' });
+      return res.status(401).json({ error: 'Email is not verified' });
     }
 
     // Validate password
@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
       }
 
       await user.save();
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(402).json({ error: 'Invalid credentials' });
     }
 
     // Successful login: reset login attempts
@@ -95,7 +95,7 @@ const signup = async (req, res) => {
       // Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ error: 'User already exists.' });
+        return res.status(409).json({ error: 'User already exists.' });
       }
       const userID = await generateUserId('CL');
       // Hash the password before saving it to the database 

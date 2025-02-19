@@ -142,7 +142,7 @@ else{
 
 
   try {
-    const response = await axios.post(`http://localhost:3000/client/workpermithandlepayment/${activePermitId}`, formData, {
+    const response = await axios.post(`https://capstone-project-backend-nu.vercel.app/client/workpermithandlepayment/${activePermitId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -197,7 +197,7 @@ else{
     if (!fileName) return null;
     
     // Return the file URL based on the folder specified
-    return `http://localhost:3000/${folder}/${fileName}`;
+    return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
   };
   
   const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
@@ -241,7 +241,7 @@ const openModal = (filePath: string) => {
   const handleDelete = async (permitId: string) => {
     console.log(`Delete permit ID: ${permitId}`);
     try {
-      const response = await fetch(`http://localhost:3000/client/deleteworkpermit/${permitId}`, {
+      const response = await fetch(`https://capstone-project-backend-nu.vercel.app/client/deleteworkpermit/${permitId}`, {
         method: 'DELETE',
       });
   
@@ -258,7 +258,7 @@ const openModal = (filePath: string) => {
 
   const expireWorkPermit = async (permitId: string) => {
     try {
-      const response = await axios.put(`http://localhost:3000/client/expireworkpermit/${permitId}`, {
+      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/expireworkpermit/${permitId}`, {
         status: 'Expired', // Update the status to "Expired"
       });
   

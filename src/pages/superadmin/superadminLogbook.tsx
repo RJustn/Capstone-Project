@@ -49,7 +49,7 @@ const Logbook: React.FC = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/superadmin/getadminuser');
+        const response = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getadminuser');
         setAdmins(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -58,7 +58,7 @@ const Logbook: React.FC = () => {
 
     const fetchDataControllers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/superadmin/getdatacontrolleruser');
+        const response = await axios.get('https://capstone-project-backend-nu.vercel.app/superadmin/getdatacontrolleruser');
         setDataControllers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -73,8 +73,8 @@ const Logbook: React.FC = () => {
     const fetchData = async () => {
       try {
         // Fetching data from the API
-        const adminLogsResponse = await fetch('http://localhost:3000/superadmin/getadminuser');
-        const dataControllerLogsResponse = await fetch('http://localhost:3000/superadmin/getdatacontrolleruser');
+        const adminLogsResponse = await fetch('https://capstone-project-backend-nu.vercel.app/superadmin/getadminuser');
+        const dataControllerLogsResponse = await fetch('https://capstone-project-backend-nu.vercel.app/superadmin/getdatacontrolleruser');
       
         // Check if any of the responses were not OK
         if (!adminLogsResponse.ok || !dataControllerLogsResponse.ok) {
@@ -122,7 +122,7 @@ const Logbook: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/logout', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -148,7 +148,7 @@ const Logbook: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-superadmin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-superadmin', {
           method: 'GET',
           credentials: 'include',
         });

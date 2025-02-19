@@ -19,8 +19,8 @@ const Accounts: React.FC = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const adminResponse = await fetch('http://localhost:3000/superadmin/getadminuser');
-        const dataControllerResponse = await fetch('http://localhost:3000/superadmin/getdatacontrolleruser');
+        const adminResponse = await fetch('https://capstone-project-backend-nu.vercel.app/superadmin/getadminuser');
+        const dataControllerResponse = await fetch('https://capstone-project-backend-nu.vercel.app/superadmin/getdatacontrolleruser');
 
         if (!adminResponse.ok) {
           const errorText = await adminResponse.text();
@@ -52,7 +52,7 @@ const Accounts: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-superadmin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-superadmin', {
           method: 'GET',
           credentials: 'include',
         });
@@ -79,7 +79,7 @@ const Accounts: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/logout', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -112,7 +112,7 @@ const Accounts: React.FC = () => {
 
   const handleRemove = async (account: Account) => {
     try {
-      const response = await fetch(`http://localhost:3000/superadmin/handleremoveuser/${account.userId}`, {
+      const response = await fetch(`https://capstone-project-backend-nu.vercel.app/superadmin/handleremoveuser/${account.userId}`, {
         method: 'DELETE',
       });
   

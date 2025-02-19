@@ -49,7 +49,7 @@ const WorkPermit: React.FC = () => {
   
   const fetchWorkPermits = async () => {
       try {
-        const response = await fetch('http://localhost:3000/client/fetchuserworkpermits', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/fetchuserworkpermits', {
           method: 'GET',
           credentials: 'include', 
           headers: {
@@ -208,7 +208,7 @@ if (WorkPermitData.length > 0) {
 
   
     try {
-      const response = await axios.post('http://localhost:3000/client/workpermitapplication', formData, {
+      const response = await axios.post('https://capstone-project-backend-nu.vercel.app/client/workpermitapplication', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -230,7 +230,7 @@ if (WorkPermitData.length > 0) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-client', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });

@@ -23,7 +23,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     e.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:3000/superadmin/adduser', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/superadmin/adduser', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-superadmin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-superadmin', {
           method: 'GET',
           credentials: 'include',
         });

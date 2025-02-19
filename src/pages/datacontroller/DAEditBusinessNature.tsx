@@ -166,7 +166,7 @@ const DataControllerEditBusinessNature: React.FC = () => {
      useEffect(() => {
         const checkAuth = async () => {
           try {
-            const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+            const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
               method: 'GET',
               credentials: 'include',
             });
@@ -199,7 +199,7 @@ const DataControllerEditBusinessNature: React.FC = () => {
               } 
           try {
             console.log(id);
-            const response = await axios.get(`http://localhost:3000/datacontroller/businesspermitdetails/${id}`, {
+            const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitdetails/${id}`, {
   
             });
             setBusinessPermit(response.data as BusinessPermit); // Set the work permit details to state
@@ -225,7 +225,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
   const renderFile = (fileUrl: string | null) => {
     if (!fileUrl) return <p>No file selected.</p>;
@@ -2909,7 +2909,7 @@ const handleDropdownChange = (selectedOption: BusinessNatureOption | null) => {
   
     try {
       const response = await axios.post(
-        `http://localhost:3000/datacontroller/updatebusinessnature/${businessPermit._id}`,
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessnature/${businessPermit._id}`,
         updatedData,
         {
           headers: {

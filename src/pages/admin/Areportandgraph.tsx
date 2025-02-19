@@ -50,7 +50,7 @@ const AdminReportsAndGraph: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -90,7 +90,7 @@ const AdminReportsAndGraph: React.FC = () => {
       "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
     ];
 
-    fetch('http://localhost:3000/datacontroller/graphbusinesspermitlocation')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
       .then(response => response.json())
       .then(data => {
         const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
@@ -100,7 +100,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching location data:', error));
 
-    fetch('http://localhost:3000/datacontroller/graphmonthlypaymentstatus')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: MonthlyData) => item.month);
@@ -110,7 +110,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching monthly payment data:', error));
 
-    fetch('http://localhost:3000/datacontroller/graphpermitapplicationcategory')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphpermitapplicationcategory')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: WorkPermitData) => item.month);
@@ -119,7 +119,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching work permit data:', error));
 
-    fetch('http://localhost:3000/datacontroller/businesspermitmonthlyappication')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitmonthlyappication')
       .then(response => response.json())
       .then(data => {
         const labels = data.map((item: BusinessPermitData) => item.month);

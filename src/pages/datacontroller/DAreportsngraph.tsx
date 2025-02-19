@@ -41,7 +41,7 @@ const DataControllerReportandGraph: React.FC = () => {
     useEffect(() => {
         const checkAuth = async () => {
           try {
-            const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+            const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
               method: 'GET',
               credentials: 'include', // This ensures cookies are sent with the request
             });
@@ -104,7 +104,7 @@ const DataControllerReportandGraph: React.FC = () => {
     // };
     // setMonthlyData(mockMonthlyData);
 
-        fetch('http://localhost:3000/datacontroller/graphbusinesspermitlocation')
+        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
             .then(response => response.json())
             .then(data => {
                 const filteredData = data.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
@@ -114,7 +114,7 @@ const DataControllerReportandGraph: React.FC = () => {
             })
             .catch(error => console.error('Error fetching location data:', error));
             
-        fetch('http://localhost:3000/datacontroller/graphmonthlypaymentstatus')
+        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
             .then(response => response.json())
             .then(data => {
                 const labels = data.map((item: MonthlyPaymentStatus) => item.month);
@@ -124,7 +124,7 @@ const DataControllerReportandGraph: React.FC = () => {
             })
             .catch(error => console.error('Error fetching monthly payment data:', error));
 
-        fetch('http://localhost:3000/datacontroller/graphpermitapplicationcategory')
+        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphpermitapplicationcategory')
             .then(response => response.json())
             .then(data => {
                 const workPermitLabels = data.workPermitCategories.map((item: CategoryData) => item._id);

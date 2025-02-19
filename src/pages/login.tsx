@@ -49,8 +49,15 @@ const Login: React.FC = () => {
         }
       } 
       
-      if (data.error === 'Email is not verified') {
+      if (response.status === 401) { // Check the response status
+        setError('User not Verified.');
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page if email not verified
+      } 
+      else if (response.status === 404) { // Check the response status
+        setError('User not Found.');
+      } 
+      else if (response.status === 402) { // Check the response status
+        setError('Invalid Credentials.');
       } 
       else {
         setError(data.error);

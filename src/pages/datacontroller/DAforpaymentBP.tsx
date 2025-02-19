@@ -180,7 +180,7 @@ const DataControllerForPaymentBP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -224,7 +224,7 @@ const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits'
   if (!fileName) return null;
   
   // Return the file URL based on the folder specified
-  return `http://localhost:3000/${folder}/${fileName}`;
+  return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
 };
 const renderFile = (fileUrl: string | null) => {
 if (!fileUrl) return <p>No file selected.</p>;
@@ -312,7 +312,7 @@ const handlePrint = () => {
 const handlePayment = async () => {
   try {
     // Call the API to update the payment status
-    const response = await axios.put(`http://localhost:3000/client/businesspermithandlepayment/${activePermitId?._id}`, {
+    const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`, {
       paymentStatus: 'Paid',
       businesspermitstatus: 'Released'
     });
@@ -346,7 +346,7 @@ const closeviewpayment = () => {
   useEffect(() => {
     const fetchBusinessPermits = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/datacontroller/getbusinesspermitforpayment/${type}`, {
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforpayment/${type}`, {
           method: 'GET',
           credentials: 'include', // Ensure cookies (containing the token) are sent
           headers: {

@@ -84,7 +84,7 @@ const DataControllerForPaymentWP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -175,7 +175,7 @@ const DataControllerForPaymentWP: React.FC = () => {
     const fetchWorkPermits = async () => {
       try {
         console.log(type);
-        const response = await fetch(`http://localhost:3000/datacontroller/getworkpermitforpayment/${type}`, {
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/getworkpermitforpayment/${type}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -294,7 +294,7 @@ const logFormData = (formData: FormData) => {
   
     try {
       const response = await axios.post(
-        `http://localhost:3000/client/workpermithandlepayment/${activePermitId}`,
+        `https://capstone-project-backend-nu.vercel.app/client/workpermithandlepayment/${activePermitId}`,
         formData,
         {
           headers: {
@@ -350,7 +350,7 @@ const logFormData = (formData: FormData) => {
 
   const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
     if (!fileName) return null;
-    return `http://localhost:3000/${folder}/${fileName}`;
+    return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
   };
 
   const renderFile = (fileUrl: string | null) => {

@@ -84,7 +84,7 @@ const AdminViewApplicationDetails: React.FC = () => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
             method: 'GET',
             credentials: 'include', // This ensures cookies are sent with the request
           });
@@ -121,7 +121,7 @@ const AdminViewApplicationDetails: React.FC = () => {
               } 
           try {
             console.log(id);
-            const response = await axios.get(`http://localhost:3000/datacontroller/workpermitdetails/${id}`, {
+            const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitdetails/${id}`, {
 
             });
             setWorkPermit(response.data as WorkPermit); // Set the work permit details to state
@@ -158,7 +158,7 @@ const AdminViewApplicationDetails: React.FC = () => {
         console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
       
         try {
-          const response = await axios.put(`http://localhost:3000/datacontroller/workpermitreject/${workPermit?._id}`, {
+          const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${workPermit?._id}`, {
             status: 'Rejected',
             comments: comments,
           });
@@ -191,7 +191,7 @@ const AdminViewApplicationDetails: React.FC = () => {
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
       
     const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
@@ -222,7 +222,7 @@ const AdminViewApplicationDetails: React.FC = () => {
   
           // If newStatus is set, proceed with the update
           if (newStatus) {
-              const response = await axios.put(`http://localhost:3000/datacontroller/workpermithandleupdate/${workPermit?._id}`, {
+              const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermithandleupdate/${workPermit?._id}`, {
                   status: newStatus,
               });
   

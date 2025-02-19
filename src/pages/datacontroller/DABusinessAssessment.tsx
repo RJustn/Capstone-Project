@@ -189,7 +189,7 @@ const DataControllerBusinessAssessment: React.FC = () => {
               } 
           try {
             console.log(id);
-            const response = await axios.get(`http://localhost:3000/datacontroller/businesspermitdetails/${id}`, {
+            const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitdetails/${id}`, {
   
             });
             setBusinessPermit(response.data as BusinessPermit); // Set the work permit details to state
@@ -208,7 +208,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
   const renderFile = (fileUrl: string | null) => {
     if (!fileUrl) return <p>No file selected.</p>;
@@ -1682,7 +1682,7 @@ useEffect(() => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include',
         });
@@ -1743,7 +1743,7 @@ const handlesaveassessment = async () => {
   try {
     // Make the PUT request with credentials included
     const response = await axios.put(
-      `http://localhost:3000/datacontroller/savingassessment/${id}`,
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/savingassessment/${id}`,
       updatedData,
       {
         withCredentials: true, // Ensures cookies are sent along with the request
@@ -1765,7 +1765,7 @@ const [userNameDisplay, setUserNameDisplay] = useState<string>('');
 useEffect(() => {
   const fetchPermitData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/datacontroller/getassessedperson/${id}`);
+      const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/datacontroller/getassessedperson/${id}`);
 
       // Access the populated user in permitassessed
       const user = response.data;

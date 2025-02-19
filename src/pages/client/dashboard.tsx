@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
 
 const checkForPending = async () => {
   try {
-    const response = await fetch('http://localhost:3000/client/checkpermitlatest', {
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/checkpermitlatest', {
       method: 'GET',
       credentials: 'include', // Include cookies in the request
     });
@@ -67,7 +67,7 @@ const checkForPending = async () => {
 
 const fetchProfile = async () => {
   try {
-    const response = await fetch('http://localhost:3000/client/profile', {
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
       method: 'GET',
       credentials: 'include', // Ensure cookies (containing the token) are sent
       headers: {
@@ -86,7 +86,7 @@ const fetchProfile = async () => {
 
 const fetchWorkPermits = async () => {
   try {
-    const response = await fetch('http://localhost:3000/client/fetchuserworkpermits', {
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/fetchuserworkpermits', {
       method: 'GET',
       credentials: 'include', // Ensure cookies (containing the token) are sent
       headers: {
@@ -111,7 +111,7 @@ useEffect(() => {
 useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/check-auth-client', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
         method: 'GET',
         credentials: 'include', // This ensures cookies are sent with the request
       });
@@ -177,7 +177,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchBusinessPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/client/fetchuserbusinesspermits', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/fetchuserbusinesspermits', {
         method: 'GET',
         credentials: 'include', // Ensure cookies (containing the token) are sent
         headers: {

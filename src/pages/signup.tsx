@@ -52,7 +52,7 @@ const Signup: React.FC = () => {
         setError(null);
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page
       }
-      if (response.status === 400) { // Check the response status
+      else if (response.status === 409) { // Check the response status
         setError('User already exists.');
       } else {
         setError(data.error);

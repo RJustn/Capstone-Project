@@ -9,7 +9,7 @@ const AdminForAssessment: React.FC = () => {
     useEffect(() => {
         const checkAuth = async () => {
           try {
-            const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+            const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
               method: 'GET',
               credentials: 'include', // This ensures cookies are sent with the request
             });

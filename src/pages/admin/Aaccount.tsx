@@ -36,7 +36,7 @@ const AdminAccount: React.FC = () => {
       }
       const fetchUserDetails = async () => {
         try {
-          const response = await fetch('http://localhost:3000/client/profile', {
+          const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -67,7 +67,7 @@ const AdminAccount: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include',
         });
@@ -102,7 +102,7 @@ const AdminAccount: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/changepassword', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/changepassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

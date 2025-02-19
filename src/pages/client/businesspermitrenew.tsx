@@ -26,7 +26,7 @@ const BusinessPermitRenew: React.FC = () => {
           } 
       try {
         console.log(id);
-        const response = await axios.get(`http://localhost:3000/client/fetchbusinesspermitdetails/${id}`, {
+        const response = await axios.get(`https://capstone-project-backend-nu.vercel.app/client/fetchbusinesspermitdetails/${id}`, {
           headers: { },
           withCredentials: true, 
 
@@ -51,7 +51,7 @@ const BusinessPermitRenew: React.FC = () => {
 useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/check-auth-client', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
         method: 'GET',
         credentials: 'include', // This ensures cookies are sent with the request
       });
@@ -305,7 +305,7 @@ useEffect(() => {
   
   
       try {
-        const response = await axios.post('http://localhost:3000/client/businesspermitrenewal', formData, {
+        const response = await axios.post('https://capstone-project-backend-nu.vercel.app/client/businesspermitrenewal', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

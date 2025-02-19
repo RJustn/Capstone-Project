@@ -267,7 +267,7 @@ const DataControllerForAssessmentBP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-datacontroller', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -352,7 +352,7 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         if (!fileName) return null;
         
         // Return the file URL based on the folder specified
-        return `http://localhost:3000/${folder}/${fileName}`;
+        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
       };
       
   const renderFile = (fileUrl: string | null) => {
@@ -464,7 +464,7 @@ const logFormData = (formData: FormData) => {
   
     try {
       const response = await axios.post(
-        `http://localhost:3000/datacontroller/updatebusinessattachment/${activePermitId._id}`,
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessattachment/${activePermitId._id}`,
         formData,
         {
         headers: {
@@ -627,7 +627,7 @@ const logFormData = (formData: FormData) => {
     };
   
     try {
-      const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessinfopermit/${activePermitId._id}`, updatedData);
+      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessinfopermit/${activePermitId._id}`, updatedData);
   
       fetchBusinessPermits(); // Fetch work permits if token is present
       console.log('Update successful:', response.data);
@@ -766,7 +766,7 @@ const logFormData = (formData: FormData) => {
   const fetchBusinessPermits = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/datacontroller/getbusinesspermitforassessment/${type}`,
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforassessment/${type}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -792,7 +792,7 @@ const logFormData = (formData: FormData) => {
       try {
         console.log(type);
         const response = await fetch(
-          `http://localhost:3000/datacontroller/getbusinesspermitforassessment/${type}`,
+          `https://capstone-project-backend-nu.vercel.app/datacontroller/getbusinesspermitforassessment/${type}`,
           {
             method: 'GET',
             credentials: 'include',
@@ -876,7 +876,7 @@ const handleeditsave = async () => {
   };
 
   try {
-    const response = await axios.put(`http://localhost:3000/datacontroller/updatebusinessownerpermit/${activePermitId._id}`, updatedData);
+    const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessownerpermit/${activePermitId._id}`, updatedData);
 
     fetchBusinessPermits(); // Fetch work permits if token is present
     editcloseModal();
@@ -976,7 +976,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   try {
     // Send the action as part of the request payload
     const response = await axios.put(
-      `http://localhost:3000/datacontroller/rejectbusinesspermit/${activePermitId._id}`,
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/rejectbusinesspermit/${activePermitId._id}`,
       { status: action, remarks }
     );
 

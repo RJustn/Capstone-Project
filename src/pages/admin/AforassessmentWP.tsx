@@ -81,7 +81,7 @@ const AdminForAssessmentWP: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-admin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
           method: 'GET',
           credentials: 'include', // This ensures cookies are sent with the request
         });
@@ -211,7 +211,7 @@ const AdminForAssessmentWP: React.FC = () => {
 
   const fetchWorkPermits = async () => {
     try {
-      const response = await fetch('http://localhost:3000/datacontroller/getworkpermitforassessment', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/getworkpermitforassessment', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -303,7 +303,7 @@ const AdminForAssessmentWP: React.FC = () => {
     e.preventDefault();
     if (selectedPermit) {
       try {
-        const response = await fetch(`http://localhost:3000/datacontroller/updateworkpermit/${selectedPermit._id}`, {
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/updateworkpermit/${selectedPermit._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -360,7 +360,7 @@ const AdminForAssessmentWP: React.FC = () => {
 
 const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
   if (!fileName) return null;
-  return `http://localhost:3000/${folder}/${fileName}`;
+  return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
 };
 
 const renderFile = (fileUrl: string | null) => {
@@ -446,7 +446,7 @@ const updateAttachments = async (e: React.FormEvent) => {
       console.error('No permit selected');
       return;
     }
-    const response = await fetch(`http://localhost:3000/datacontroller/updateworkpermitattachment/${selectedPermit._id}`, {
+    const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/updateworkpermitattachment/${selectedPermit._id}`, {
       method: 'POST',
       body: formData,
     });

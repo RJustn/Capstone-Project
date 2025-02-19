@@ -24,7 +24,7 @@ const SuperadminAccountEdit = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/superadmin/getuser/${id}`);
+        const response = await fetch(`https://capstone-project-backend-nu.vercel.app/superadmin/getuser/${id}`);
         if (!response.ok) {
           throw new Error('Error fetching user data');
         }
@@ -62,7 +62,7 @@ const SuperadminAccountEdit = () => {
       const hashedPassword = bcrypt.hashSync(formData.password, 10);
       const updatedFormData = { ...formData, password: hashedPassword };
 
-      const response = await fetch(`http://localhost:3000/superadmin/updateuser/${id}`, {
+      const response = await fetch(`https://capstone-project-backend-nu.vercel.app/superadmin/updateuser/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const SuperadminAccountEdit = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/check-auth-superadmin', {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-superadmin', {
           method: 'GET',
           credentials: 'include',
         });

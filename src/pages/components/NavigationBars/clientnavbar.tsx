@@ -16,7 +16,7 @@ const ClientNavbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/logout', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -41,7 +41,7 @@ const ClientNavbar: React.FC = () => {
 
   const checkForPending = async () => {
     try {
-      const response = await fetch('http://localhost:3000/client/checkpermitlatest', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/checkpermitlatest', {
         method: 'GET',
         credentials: 'include', // Include cookies in the request
       });
