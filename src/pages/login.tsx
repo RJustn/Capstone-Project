@@ -71,39 +71,6 @@ const Login: React.FC = () => {
     }
   };
 
-  
-  fetch('https://capstone-project-backend-nu.vercel.app/auth/login', {
-    method: 'POST',
-    credentials: 'include', // Important for sending cookies
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email: "test@example.com", password: "password123" })
-  })
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Fetch error:', error));
-
-
-const sendTestData = async () => {
-  try {
-    const response = await axios.post(
-      'https://capstone-project-backend-nu.vercel.app/test',  // Replace with your backend URL
-      { message: 'Hello from frontend!' },
-      { withCredentials: true }  // Send cookies along with the request (if needed)
-    );
-
-    // Handle the response
-    console.log('Server Response:', response.data);
-  } catch (error) {
-    console.error('Error sending data to the server:', error);
-  }
-};
-
-// Call the function to send data
-sendTestData();
-
-
   const handleCancel = () => {
     navigate('/'); // Redirect to home page
   };
