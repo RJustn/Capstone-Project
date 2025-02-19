@@ -69,7 +69,9 @@ const loginUser = async (req, res) => {
     // Set JWT in cookie
     res.cookie('authToken', token, { 
       httpOnly: true, 
-      secure: true, // Change to `true` in production
+      path: '/',       // Ensure it's sent with all requests
+      secure: false, // Change to `true` in production
+      sameSite: 'none', // Required for cross-origin requests
       maxAge: 3 * 60 * 60 * 1000 // 3 hours in milliseconds
     });
 

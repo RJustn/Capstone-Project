@@ -28,7 +28,6 @@ const io = socketIo(server);
 // Define CORS options
 const allowedOrigins = [
   'https://capstone-project-teal-three.vercel.app', // Main frontend domain
-  'https://capstone-project-71ibb1c8m-rjs-projects-7210df14.vercel.app',
 ];
 
 app.use(cors({
@@ -56,7 +55,7 @@ app.use(session({
   secret: 'your_session_secret', // Replace with a strong secret in production
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false,  sameSite: 'None' } // Set to true in production with HTTPS
+  cookie: { secure: false,  sameSite: 'None' }, // Set to true in production with HTTPS
 }))
 
 

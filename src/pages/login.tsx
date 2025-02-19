@@ -21,56 +21,58 @@ const Login: React.FC = () => {
     }
   
     try {
-      const response = await axios.post('https://capstone-project-backend-nu.vercel.app/auth/login', {
-        email, 
-        password,
-      },{ withCredentials: true });
+      const response = await axios.post(
+        'https://capstone-project-backend-nu.vercel.app/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
   
-      const data = response.data;  // Axios automatically parses JSON
-      if (response.status === 200) {
-        // Store the JWT token
-        localStorage.setItem('token', data.token);
-        setSuccess(data.message);
-        setError(null);
-        
-        // Check the user's role and navigate accordingly
-        switch (data.role) {
-          case 'Admin':
-            navigate('/Adashboard'); // Redirect to admin dashboard
-            break;
-          case 'Client':
-            navigate('/dashboard'); // Redirect to client dashboard
-            break;
-          case 'Data Controller':
-            navigate('/DAdashboard'); // Redirect to data controller dashboard
-            break;
-          default:
-            navigate('/'); // Fallback dashboard
+      const data = response.data;
+  
+      // Store the JWT token
+      localStorage.setItem('token', data.token);
+      setSuccess(data.message);
+      setError(null);
+  
+      // Navigate based on user role
+      switch (data.role) {
+        case 'Admin':
+          navigate('/Adashboard');
+          break;
+        case 'Client':
+          navigate('/dashboard');
+          break;
+        case 'Data Controller':
+          navigate('/DAdashboard');
+          break;
+        default:
+          navigate('/');
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+       // Axios error
+       const status = error.response?.status;
+       const errorMessage = error.response?.data?.error || 'Something went wrong';
+ 
+       setError(errorMessage);
+ 
+  
+        // Handle email verification redirection
+        if (status === 401) {
+          navigate('/emailverification', { state: { email } });
         }
-      } 
-      
-      if (response.status === 401) { // Check the response status
-        setError('User not Verified.');
-        navigate('/emailverification', { state: { email } }); // Redirect to email verification page if email not verified
-      } 
-      else if (response.status === 404) { // Check the response status
-        setError('User not Found.');
-      } 
-      else if (response.status === 402) { // Check the response status
-        setError('Invalid Credentials.');
-      } 
-      else {
-        setError(data.error);
+  
         setTimeout(() => {
           setError(null);
         }, 5000);
+      } else {
+        setError('Network error, please try again.');
       }
-    } catch (error) {
-      setError(`Error logging in ${error}`);
+  
       console.error('Error logging in', error);
     }
   };
-
+  
   const handleCancel = () => {
     navigate('/'); // Redirect to home page
   };

@@ -5,7 +5,7 @@ const authenticateToken = (req, res, next) => {
   const token = req.cookies.authToken;
 
   if (!token) {
-    console.error('No token provided');
+    console.error('No token provided:', token); // Log the token received
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
