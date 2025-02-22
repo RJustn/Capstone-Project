@@ -350,12 +350,20 @@ const superadminlogin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id, userrole: user.userrole }, JWT_SECRET, { expiresIn: '3h' });
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user._id, userrole: user.userrole },
+      JWT_SECRET,
+      { expiresIn: '3h' }
+    );
 
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: false, // Set to true in production
-      maxAge: 10800000 // 3 hours in milliseconds
+    // Set JWT in cookie
+    res.cookie('authToken', token, { 
+      httpOnly: true, 
+      path: '/',       // Ensure it's sent with all requests
+      secure: true, // Change to `true` in production
+      sameSite: 'none', // Required for cross-origin requests
+      maxAge: 3 * 60 * 60 * 1000 // 3 hours in milliseconds
     });
 
     res.status(200).json({
