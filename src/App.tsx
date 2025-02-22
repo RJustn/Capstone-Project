@@ -61,6 +61,7 @@ import AdminReleasedPermitsBP from './pages/admin/AreleasedpermitsBP';
 import AdminReportsAndGraph from './pages/admin/Areportandgraph';
 import AdminViewApplicationDetails from './pages/admin/Aviewapplicationdetails';
 
+
 const App: React.FC = () => {
   return (
     <Router>

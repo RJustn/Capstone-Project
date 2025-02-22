@@ -1372,7 +1372,7 @@ const handleRemoveBusiness = (index: number) => {
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
                 <label>
-                Ctiy Health Office:
+                City Health Office:
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
                 <label>

@@ -34,14 +34,14 @@ const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
       case "viewReceipt":
         if (permit.receipt?.receiptFile) {
 
-          renderDocument(permit.receipt.receiptFile, "receipts");
+          renderDocument(permit.receipt.receiptFile);
         } else {
           console.log(`No receipt file found for permit: ${permit.id}`);
         }
         break;
       case "viewPermit":
 
-        renderDocument(permit.permitFile || "", "permits");
+        renderDocument(permit.permitFile);
         break;
       case "expirePermit":
         expireWorkPermit(permit._id);
@@ -193,15 +193,10 @@ else{
       }
     };
 
-  const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
-    if (!fileName) return null;
-    
-    // Return the file URL based on the folder specified
-    return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
-  };
+
   
-  const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
-    const fileUrl = fetchDocumentUrl(fileName, folder);
+  const renderDocument = (fileName: string | null) => {
+    const fileUrl = fileName;
   
     if (!fileUrl) return <span>Not uploaded</span>;
   

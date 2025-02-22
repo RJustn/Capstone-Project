@@ -89,7 +89,7 @@ const SuperadminAccountEdit = () => {
           credentials: 'include',
         });
 
-        if (response.status === 401) {
+        if (response.status === 403) {
           console.error('Access denied: No token');
           navigate('/superadmin/login');
           return;

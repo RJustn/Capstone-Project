@@ -16,7 +16,7 @@ const loginUser = async (req, res) => {
     console.log(user);
     if (!user) {
       console.log("User not found!");
-      return res.status(404).json({ message: 'User not Found.' });
+      return res.status(408).json({ message: 'User not Found.' });
     }
 
     // Check if the account is locked
@@ -128,24 +128,31 @@ const signup = async (req, res) => {
   };
 
 
-const logout = async (req, res) => {
+  const logout = async (req, res) => {
     try {
-      const user = await User.findById(req.user.userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      user.isOnline = false;
-      user.lastLogoutDate = new Date(); // Set the last logout date
-      await user.save();
-  
-  
-      res.clearCookie('authToken');
-      res.status(200).json({ message: 'Logout successful' });
+        const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        user.isOnline = false;
+        user.lastLogoutDate = new Date();
+        await user.save();
+
+        // Clear cookie with matching options
+        res.clearCookie("authToken", {
+            httpOnly: true,
+            secure: true, // Ensure HTTPS is used
+            sameSite: "lax",
+            path: "/",
+        });
+
+        res.status(200).json({ message: "Logout successful" });
     } catch (error) {
-      res.status(500).json({ error: 'Error logging out' });
+        res.status(500).json({ error: "Error logging out" });
     }
 };
+
 
 
     // Authentication

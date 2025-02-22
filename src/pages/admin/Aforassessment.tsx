@@ -36,29 +36,6 @@ const AdminForAssessment: React.FC = () => {
         checkAuth();
       }, [navigate]); // Only depend on navigate, which is necessary for the redirection
 
-      const navigateNewWorkpermit= () => {
-        navigate('/AforassessmentWP/new'); // Redirect to the login page
-      };
-
-      const navigateRenewWorkpermit = () => {
-        navigate('/AforassessmentWP/renew'); // Redirect to the login page
-      };
-
-      const navigateAllWorkpermit = () => {
-        navigate('/AforassessmentWP/'); // Redirect to the login page
-      };
-
-      const navigateNewBusinesspermit= () => {
-        navigate('/AforassessmentBP/new'); // Redirect to the login page
-      };
-
-      const navigateRenewBusinesspermit = () => {
-        navigate('/AforassessmentBP/renew'); // Redirect to the login page
-      };
-
-      const navigateAllBusinesspermit = () => {
-        navigate('/AforassessmentBP/'); // Redirect to the login page
-      };
 
       return (
         <section className="Abody">
@@ -72,28 +49,28 @@ const AdminForAssessment: React.FC = () => {
                 </header>
 
                 <div className="button-container"> {/* Centering container */}
-                    <a onClick={navigateNewWorkpermit} className="DAworkpermitbutton">
+                    <a href="/AforassessmentWP/new" className="DAworkpermitbutton">
                         For Assessment New Working Permit
                     </a>
 
-                    <a onClick={navigateRenewWorkpermit} className="DAworkpermitbutton">
+                    <a href="/AforassessmentWP/renew" className="DAworkpermitbutton">
                         For Assessment Renew Working Permit
                     </a>
 
-                    <a onClick={navigateAllWorkpermit} className="DAworkpermitbutton">
+                    <a href="/AforassessmentWP/" className="DAworkpermitbutton">
                         View All For Assessment Working Permit
                     </a>
           
             </div>
             <div className="button-container"> {/* Centering container */}
-                    <a onClick={navigateNewBusinesspermit} className="DAbusinesspermitbutton">
-                        For Assessment New Business Permit
-                    </a>
-                    <a onClick={navigateRenewBusinesspermit} className="DAbusinesspermitbutton">
+                    <a href="/AforassessmentBP/renew" className="DAbusinesspermitbutton">
                         For Assessment Renew Business Permit
                     </a>
+                    <a href="/AforassessmentBP/new" className="DAbusinesspermitbutton">
+                        For Assessment New Business Permit
+                    </a>
 
-                    <a onClick={navigateAllBusinesspermit} className="DAbusinesspermitbutton">
+                    <a href="/AforassessmentBP/" className="DAbusinesspermitbutton">
                         View All For Assessment Business Permit
                     </a>          
             </div>
