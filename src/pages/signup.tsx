@@ -82,7 +82,7 @@ const Signup: React.FC = () => {
               <h2 className="text-center mb-4">Sign Up</h2>
               {error && <p className="text-danger text-center">{error}</p>}
               {success && <p className="text-success text-center">{success}</p>}
-                <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit}>
                   <div className="row mb-3">
                     <div className="col-md-4">
                       <div className="mb-3">
@@ -123,6 +123,22 @@ const Signup: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                  
+                   <div className="row mb-3">
+        <div className="col-md-12">
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-control"
+              required
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="row mb-3">
         <div className="col-md-6">
@@ -138,7 +154,7 @@ const Signup: React.FC = () => {
             />
           </div>
         </div>
-        <div className="col-md-6">
+      	<div className="col-md-6">
           <div className="mb-3">
             <label htmlFor="address" className="form-label">Address</label>
             <input
@@ -152,22 +168,9 @@ const Signup: React.FC = () => {
           </div>
         </div>
       </div>
-
+      
       <div className="row mb-3">
-        <div className="col-md-4">
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              required
-            />
-          </div>
-        </div>
-        <div className="col-md-4">
+      <div className="col-md-12">
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Password</label>
             <input
@@ -180,7 +183,10 @@ const Signup: React.FC = () => {
             />
           </div>
         </div>
-        <div className="col-md-4">
+        </div>
+        
+         <div className="row mb-3">
+        <div className="col-md-12">
           <div className="mb-3">
             <label htmlFor="confirmpassword" className="form-label">Confirm Password</label>
             <input
@@ -193,7 +199,7 @@ const Signup: React.FC = () => {
             />
           </div>
         </div>
-      </div>
+        </div>
 
       <div className="d-flex justify-content-between align-items-center">
         <button
