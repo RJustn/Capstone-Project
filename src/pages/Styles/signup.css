@@ -52,9 +52,12 @@ nav ul li a:hover {
   position: relative;
   width: 90vw; /* Responsive width */
   max-width: 600px; /* Maximum width for larger screens */
-  padding: 1rem; /* Reduced padding */
-  box-sizing: border-box; /* Include padding in width calculations */
+  min-width: 280px; /* Ensures usability on very small screens */
+  box-sizing: border-box;
+  margin: 20px auto 30px; /* Centers horizontally */
+  padding: 25px;
 }
+
 
 .signup-container h2 {
   margin-bottom: 0.5rem; /* Reduced space below the heading */

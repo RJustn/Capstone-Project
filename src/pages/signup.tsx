@@ -78,7 +78,7 @@ const Signup: React.FC = () => {
   return (
     <>
       <div className="body">
-      <div className="signup-container">  
+      <div className="signup-container" >
               <h2 className="text-center mb-4">Sign Up</h2>
               {error && <p className="text-danger text-center">{error}</p>}
               {success && <p className="text-success text-center">{success}</p>}

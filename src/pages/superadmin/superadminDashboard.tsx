@@ -90,7 +90,7 @@ const SuperAdminDashboard: React.FC = () => {
 
   useEffect(() => {
     // Set up socket.io client
-    const socket = io('http://localhost:5173');
+    const socket = io('capstone-project-teal-three.vercel.app');
 
     socket.on('statusUpdate', (data: { userId: string; isOnline: boolean }) => {
       setOnlineUsers((prev) => {

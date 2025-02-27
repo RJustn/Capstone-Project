@@ -10,6 +10,7 @@
   background: url('/landingpagebackground.svg') no-repeat center center;
   background-size: cover; /* Ensure the entire image is visible */
   background-attachment: fixed; /* Make the background fixed as you scroll */
+  padding: 20px;
 }
 
 /* Login Container Styling */
