@@ -57,7 +57,7 @@ nav ul li a:hover {
   margin-top: 35px;
   margin-bottom: 40px;
   
-  min-height: 500px; /* Ensures content doesn't overflow */
+  min-height: 300px; /* Ensures content doesn't overflow */
 }
 
 .emailverification-container h2 {
