@@ -50,6 +50,7 @@
     "react-toastify": "^11.0.3",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "sweetalert2": "^11.17.2",
     "uuid": "^10.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
   },
