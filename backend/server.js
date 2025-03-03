@@ -55,7 +55,7 @@ app.use(session({
   secret: 'your_session_secret', // Replace with a strong secret in production
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false,  sameSite: 'None' }, // Set to true in production with HTTPS
+  cookie: { secure: true,  sameSite: 'None' }, // Set to true in production with HTTPS
 }))
 
 

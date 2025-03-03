@@ -142,11 +142,12 @@ const signup = async (req, res) => {
         // Clear cookie with matching options
         res.clearCookie("authToken", {
           httpOnly: true,
-          secure: false,  // Match session settings
+          secure: true,  // Match session settings
           sameSite: "None", // Match session settings
           path: "/",
         });
-        
+         // Explicitly set an expired cookie to remove it
+         res.setHeader("Set-Cookie", "authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None");
 
         res.status(200).json({ message: "Logout successful" });
     } catch (error) {
