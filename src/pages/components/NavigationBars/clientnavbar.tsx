@@ -41,7 +41,7 @@ const ClientNavbar: React.FC = () => {
     });
   
     try {
-      const response = await fetch('https://capstone-project-backend-nu.vercel.app/logout', {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
