@@ -51,38 +51,40 @@ const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
     }
   };
 
-//Pageination Code
-const [currentPage, setCurrentPage] = useState(0);
+// Pagination Code
+const [currentPage, setCurrentPage] = useState(1); // Start from 1
 const itemsPerPage = 5;
-const totalPages = Math.ceil(workPermits.length / itemsPerPage)
-const startIndex = currentPage * itemsPerPage;
+const totalPages = Math.ceil(workPermits.length / itemsPerPage);
+const startIndex = (currentPage - 1) * itemsPerPage; // Adjust for 1-based index
 const endIndex = startIndex + itemsPerPage;
+
 const sortedWorkPermits = workPermits
-  .slice() // Make a copy of the array to avoid modifying the original
+  .slice()
   .sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
-
-    // Check if both dates are valid
+    
     if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-      return 0; // If either date is invalid, keep their order (or handle as needed)
+      return 0;
     }
 
-    return dateB.getTime() - dateA.getTime(); // Sort in descending order
+    return dateB.getTime() - dateA.getTime();
   });
 
-// Now slice the sorted array to get the current items
 const currentItems = sortedWorkPermits.slice(startIndex, endIndex);
+
 const handleNextPage = () => {
-  if (currentPage < totalPages - 1) {
-    setCurrentPage(currentPage + 1);
+  if (currentPage < totalPages) {
+    setCurrentPage((prev) => prev + 1);
   }
 };
+
 const handlePreviousPage = () => {
-  if (currentPage > 0) {
-    setCurrentPage(currentPage - 1);
+  if (currentPage > 1) {
+    setCurrentPage((prev) => prev - 1);
   }
 };
+  
 
   //Modal
   const [modalFile, setModalFile] = useState<string | null>(null);
