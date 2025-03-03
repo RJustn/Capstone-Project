@@ -233,19 +233,19 @@ useEffect(() => {
       <div id="carouselExampleFade" className="carousel slide carousel-fade" style={{ width: '60%', margin: 'auto' }} >
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <img src="/public/step1.svg"  className="d-block w-100" alt="..."></img>
+            <img src="https://res.cloudinary.com/dqbobmeyb/image/upload/v1741007084/step1_lipali.png"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/step2.svg"  className="d-block w-100" alt="..."></img>
+            <img src="https://res.cloudinary.com/dqbobmeyb/image/upload/v1741007084/step2_cms6zl.png"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/step3.svg"  className="d-block w-100" alt="..."></img>
+            <img src="https://res.cloudinary.com/dqbobmeyb/image/upload/v1741007084/step3_zr6co0.png"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/step4.svg"  className="d-block w-100" alt="..."></img>
+            <img src="https://res.cloudinary.com/dqbobmeyb/image/upload/v1741007085/step4_anzkoi.png"  className="d-block w-100" alt="..."></img>
           </div>
           <div className="carousel-item">
-            <img src="/public/step5.svg"  className="d-block w-100" alt="..."></img>
+            <img src="https://res.cloudinary.com/dqbobmeyb/image/upload/v1741007085/step5_thnx9e.png"  className="d-block w-100" alt="..."></img>
           </div>
         </div> 
         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">

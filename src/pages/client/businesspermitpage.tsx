@@ -1127,8 +1127,10 @@ const handleRemoveBusiness = (index: number) => {
                   </select>
                 </div>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
+                <div style={{gap: '10'}}>
                 <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>Back</button>
                 <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
+                </div>
 
               </div>
             </div>
@@ -1248,8 +1250,14 @@ const handleRemoveBusiness = (index: number) => {
                   <label>Email Address:</label>
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
-                <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
-                <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
+                <div style={{ display: 'flex', gap: '15px' }}>
+  <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
+    Back
+  </button>
+  <button type="button" onClick={goToNextStep} className="btn btn-success">
+    Next
+  </button>
+</div>
               </div>
             </div>
           )}
@@ -1272,8 +1280,14 @@ const handleRemoveBusiness = (index: number) => {
                     <input type="text" value={lng} readOnly />
                   </label>
                 </div>
-                <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
-                <button type="button" onClick={goToNextStep}className="btn btn-success">Next</button>
+                <div style={{ display: 'flex', gap: '15px' }}>
+  <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
+    Back
+  </button>
+  <button type="button" onClick={goToNextStep} className="btn btn-success">
+    Next
+  </button>
+</div>
               </div>
             </div>
           )}
@@ -1355,8 +1369,14 @@ businesses?.length > 0 ? (
 }
 
       <div> {!isFormValid && <p style={{ color: 'red' }}>Please add at least one business nature before proceeding.</p>}
-                <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
-                <button type="button" onClick={goToNextStep} className="btn btn-success" >Next</button>
+      <div style={{ display: 'flex', gap: '15px' }}>
+  <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
+    Back
+  </button>
+  <button type="button" onClick={goToNextStep} className="btn btn-success">
+    Next
+  </button>
+</div>
                 </div>
 
               </div>
@@ -1407,8 +1427,13 @@ businesses?.length > 0 ? (
                 <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
                 
               <div>
-              <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>Back</button>
-              <button className="btn btn-success" type="submit">Submit</button>
+              <div style={{ display: 'flex', gap: '15px' }}>
+  <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
+    Back
+  </button>
+  <button className="btn btn-success" type="submit">Submit</button>
+</div>
+            
               </div>
           </div>
           )}

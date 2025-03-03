@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
+import Swal from 'sweetalert2';
 
 export interface BusinessPermit {
   _id: string;
@@ -536,31 +536,60 @@ const closePermitChecker = () => {
 
 // Update permit status (approve or reject)
 const updatebusinesspermitstatus = async (action: string, remarks: string) => {
-    if (!activePermitId) return;
-  
-    // Validate remarks only if the action is 'reject'
-    if (action === 'rejected' && !remarks) {
-      alert('Please provide remarks for rejection');
-      return;
-    }
-  
-    try {
-      // Send the action as part of the request payload
-      const response = await axios.put(
-        `https://capstone-project-backend-nu.vercel.app/admin/updatebusinesspermitstatus/${activePermitId._id}`,
-        { status: action, remarks }
-      );
-  
-      // Assuming fetchBusinessPermits() is a function to refetch the list of permits
-      fetchBusinessPermits();
-  
-      console.log('Update successful:', response.data);
-      closePermitChecker(); // Close the modal after the update
-    } catch (error) {
-      console.error('Update failed:', error);
-      alert('Failed to update permit status. Please try again.');
-    }
-  };
+  if (!activePermitId) return;
+
+  // Validate remarks only if the action is 'rejected'
+  if (action === 'rejected' && !remarks) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Remarks Required',
+      text: 'Please provide remarks for rejection.',
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
+
+  try {
+    // Show loading while updating
+    Swal.fire({
+      title: 'Updating Status...',
+      text: 'Please wait while the business permit status is being updated.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    // Send the action as part of the request payload
+    const response = await axios.put(
+      `https://capstone-project-backend-nu.vercel.app/admin/updatebusinesspermitstatus/${activePermitId._id}`,
+      { status: action, remarks }
+    );
+
+    // Assuming fetchBusinessPermits() is a function to refetch the list of permits
+    fetchBusinessPermits();
+    console.log('Update successful:', response.data);
+
+    // Show success notification
+    Swal.fire({
+      icon: 'success',
+      title: 'Status Updated',
+      text: 'The business permit status has been successfully updated.',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+    closePermitChecker(); // Close the modal after the update
+  } catch (error) {
+    console.error('Update failed:', error);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: 'Failed to update permit status. Please try again.',
+    });
+  }
+};
   
   
   const [remarks, setRemarks] = useState(''); // For storing remarks when the permit is rejected

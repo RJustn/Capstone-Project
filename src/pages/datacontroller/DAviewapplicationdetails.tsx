@@ -5,6 +5,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Swal from 'sweetalert2';
+
 export interface PersonalInformation {
     lastName: string;
     firstName: string;
@@ -156,24 +158,78 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       };
     
       const handleFinalConfirm = async () => {
-        // Logic to handle submission of comments
-        console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
+        if (!workPermit?._id) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Permit ID',
+            text: 'The work permit ID is missing. Please try again.',
+          });
+          return;
+        }
+      
+        if (!comments.trim()) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Comments Required',
+            text: 'Please provide comments before rejecting the application.',
+          });
+          return;
+        }
       
         try {
-          const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${workPermit?._id}`, {
-            status: 'Rejected',
-            comments: comments,
+          // Show confirmation alert before proceeding
+          const { isConfirmed } = await Swal.fire({
+            title: 'Reject Work Permit?',
+            text: 'Are you sure you want to reject this work permit application?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Reject',
+            cancelButtonText: 'Cancel',
           });
-          console.log('Updated Permit:', response.data);
       
-          // Update local state with the response data
+          if (!isConfirmed) return; // Stop execution if user cancels
+      
+          // Show loading indicator while processing
+          Swal.fire({
+            title: 'Processing...',
+            text: 'Updating work permit status. Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+      
+          const response = await axios.put(
+            `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${workPermit?._id}`,
+            {
+              status: 'Rejected',
+              comments: comments,
+            }
+          );
+      
+          console.log('Updated Permit:', response.data);
           setWorkPermit(response.data);
-          alert('Work Permit Application updated successfully!');
-          navigate(-1);
+      
+          // Show success alert
+          Swal.fire({
+            icon: 'success',
+            title: 'Work Permit Rejected',
+            text: 'The work permit application has been rejected successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+      
+          closeModal(); // Close modal after confirmation
+          navigate(-1); // Go back to the previous page
         } catch (error) {
           console.error('Error updating work permit:', error);
-        } console.log('Application rejected with comments:', comments);
-        closeModal(); // Close modal after confirmation
+      
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'An error occurred while rejecting the application. Please try again.',
+          });
+        }
       };
 
 
@@ -271,37 +327,84 @@ const DataControllerViewApplicationDetails: React.FC = () => {
     );
   };
 
-    const handleUpdate = async () => {
-      console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
+  const handleUpdate = async () => {
+    if (!workPermit?._id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Permit ID',
+        text: 'The work permit ID is missing. Please try again.',
+      });
+      return;
+    }
   
-      try {
-          let newStatus;
+    let newStatus;
   
-          // Check the classification and set the new status accordingly
-          if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
-              newStatus = 'Released';
-          } else if (workPermit?.formData.personalInformation.workpermitclassification=== 'Renew') {
-              newStatus = 'Waiting for Payment';
-          }
+    // Determine new status based on classification
+    if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
+      newStatus = 'Released';
+    } else if (workPermit?.formData.personalInformation.workpermitclassification === 'Renew') {
+      newStatus = 'Waiting for Payment';
+    }
   
-          // If newStatus is set, proceed with the update
-          if (newStatus) {
-              const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermithandleupdate/${workPermit?._id}`, {
-                  status: newStatus,
-              });
+    if (!newStatus) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Classification',
+        text: 'No valid classification found to update the status.',
+      });
+      return;
+    }
   
-              console.log('Updated Permit:', response.data);
+    try {
+      // Show confirmation alert before proceeding
+      const { isConfirmed } = await Swal.fire({
+        title: 'Update Work Permit?',
+        text: `Are you sure you want to update the status to "${newStatus}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Update',
+        cancelButtonText: 'Cancel',
+      });
   
-              // Update local state with the response data
-              setWorkPermit(response.data);
-              alert('Work Permit Application updated successfully!');
-              navigate(-1);
-          } else {
-              alert('No valid classification found to update the status.');
-          }
-      } catch (error) {
-          console.error('Error updating work permit:', error);
-      }
+      if (!isConfirmed) return; // Stop execution if user cancels
+  
+      // Show loading indicator
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Updating work permit status. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermithandleupdate/${workPermit?._id}`,
+        { status: newStatus }
+      );
+  
+      console.log('Updated Permit:', response.data);
+      setWorkPermit(response.data);
+  
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Work Permit Updated',
+        text: 'The work permit application status has been updated successfully.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+  
+      navigate(-1); // Go back to the previous page
+    } catch (error) {
+      console.error('Error updating work permit:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'An error occurred while updating the work permit. Please try again.',
+      });
+    }
   };
   
 

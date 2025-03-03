@@ -652,11 +652,13 @@ background-color: #399918; /* Darker green on hover */
 
 .user-details {
   text-align: center;
+  font-weight: bold;
 }
 
 .user-info {
-  margin-top: 20px;
+  margin-top: 25px;
   text-align: left;
+  
 }
 
 .user-info p {
@@ -938,4 +940,8 @@ margin-right: 105px;
 
 .panelviewapplicationdetails h1 {
 margin-bottom: 30px;
+}
+
+.pagination{
+margin-top: 20px;
 }

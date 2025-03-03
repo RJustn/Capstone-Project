@@ -4,6 +4,7 @@ import DASidebar from '../components/NavigationBars/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export interface BusinessPermit {
   _id: string;
@@ -348,20 +349,67 @@ const handlePrint = () => {
 // Function to handle the payment update
 const handlePayment = async () => {
   try {
-    // Call the API to update the payment status
-    const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`, {
-      paymentStatus: 'Paid',
-      businesspermitstatus: 'Released'
+    // Show confirmation alert before proceeding
+    const { isConfirmed } = await Swal.fire({
+      title: 'Confirm Payment?',
+      text: 'Are you sure you want to update the payment status?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, proceed!',
+      cancelButtonText: 'Cancel',
     });
+
+    if (!isConfirmed) return; // Stop execution if the user cancels
+
+    // Show loading SweetAlert
+    Swal.fire({
+      title: 'Processing Payment...',
+      text: 'Please wait while we update the payment status.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    // Call the API to update the payment status
+    const response = await axios.put(
+      `https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`,
+      {
+        paymentStatus: 'Paid',
+        businesspermitstatus: 'Released',
+      }
+    );
 
     if (response.status === 200) {
       console.log('Payment status updated successfully');
       setConfirmPayment(true);
+
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Payment Successful!',
+        text: 'The payment status has been updated.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } else {
       console.error('Failed to update payment status');
+
+      // Show error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Failed to update the payment status. Please try again.',
+      });
     }
   } catch (error) {
     console.error('Error updating payment status:', error);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Unexpected Error',
+      text: 'An error occurred while updating the payment status. Please try again.',
+    });
   }
 };
 

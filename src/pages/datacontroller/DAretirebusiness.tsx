@@ -4,7 +4,7 @@ import DASidebar from '../components/NavigationBars/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 
 export interface BusinessPermit {
   _id: string;
@@ -385,29 +385,63 @@ const [viewBusinessNature, setViewbusinessNature] = useState(false);
   };
 
   // Update permit status (approve or reject)
-  const handleRetireBusiness = async (action: string,) => {
+  const handleRetireBusiness = async (action: string) => {
     if (!activePermitId) return;
   
+    // Ask for confirmation before proceeding
+    const { isConfirmed } = await Swal.fire({
+      title: action === 'accept' ? 'Confirm Retirement' : 'Reject Retirement?',
+      text: action === 'accept'
+        ? 'Are you sure you want to retire this business?'
+        : 'Are you sure you want to reject the retirement request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: action === 'accept' ? 'Yes, Retire' : 'Yes, Reject',
+      cancelButtonText: 'Cancel',
+    });
+  
+    if (!isConfirmed) return; // Stop execution if user cancels
+  
     try {
-        const response = await axios.put(
-          `https://capstone-project-backend-nu.vercel.app/datacontroller/retirebusinesspermit/${activePermitId._id}`,
-          {
-            classification: action === 'accept' ? 'RetiredBusiness' : activePermitId.classification, // Update classification only if accepted
-            businessstatus: action === 'accept' ? 'Retired' : activePermitId.businessstatus, // Update businessstatus if accepted
-            forretirement: action === 'accept' 
-              ? 'RetiredBusiness' // Set forretirement to 'Retired Business' if accepted
-              : action === 'reject' 
-              ? null // Set forretirement to null if rejected
-              : activePermitId.forretirement, // Otherwise, retain the current value
-          }
-        );
+      // Show loading while updating
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Updating business permit status. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/retirebusinesspermit/${activePermitId._id}`,
+        {
+          classification: action === 'accept' ? 'RetiredBusiness' : activePermitId.classification,
+          businessstatus: action === 'accept' ? 'Retired' : activePermitId.businessstatus,
+          forretirement: action === 'accept' ? 'RetiredBusiness' : action === 'reject' ? null : activePermitId.forretirement,
+        }
+      );
   
       console.log('Update successful:', response.data);
-      alert('Business Permit Updated'); // Notify the user of the update
-      window.location.reload();
+  
+      // Show success message and reload page
+      Swal.fire({
+        icon: 'success',
+        title: 'Business Permit Updated',
+        text: action === 'accept' ? 'The business has been retired successfully.' : 'Retirement request has been rejected.',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        window.location.reload();
+      });
     } catch (error) {
       console.error('Update failed:', error);
-      alert('Failed to update permit status. Please try again.');
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Failed to update permit status. Please try again.',
+      });
     }
   };
   

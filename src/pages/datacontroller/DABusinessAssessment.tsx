@@ -6,7 +6,7 @@ import axios from 'axios';
 import GenerateStatementofAccountPDF from '../components/GenerateStatementofAccountPDF';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
+import Swal from 'sweetalert2';
 
 export interface BusinessPermit {
     _id: string;
@@ -1710,53 +1710,81 @@ useEffect(() => {
 
 
 
-const handlesaveassessment = async () => {
-
-  if (
-    businessPermit?.businesspermitstatus === 'Waiting for Payment' || 
-    businessPermit?.businesspermitstatus === 'Released' ||  
-    businessPermit?.businesspermitstatus === 'Expired'
-  ) {
-    setCheckPermit(false);
-    alert('Cannot assess already assessed permits');
-    return;
+  const handlesaveassessment = async () => {
+    if (
+      businessPermit?.businesspermitstatus === 'Waiting for Payment' ||
+      businessPermit?.businesspermitstatus === 'Released' ||
+      businessPermit?.businesspermitstatus === 'Expired'
+    ) {
+      setCheckPermit(false);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Assessment Not Allowed',
+        text: 'Cannot assess already assessed permits.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
   
-  }
+    const updatedData = {
+      dateassessed,
+      mayorspermit,
+      sanitary,
+      health,
+      businessplate,
+      zoningclearance,
+      annualInspection,
+      environmental,
+      miscfee,
+      liquortobaco,
+      liquorplate,
+      total,
+      paymentmethodtotal,
+      paymentmethod,
+    };
   
-  const updatedData = {
-    dateassessed,
-    mayorspermit,
-    sanitary,
-    health,
-    businessplate,
-    zoningclearance,
-    annualInspection,
-    environmental,
-    miscfee,
-    liquortobaco,
-    liquorplate,
-    total,
-    paymentmethodtotal,
-    paymentmethod,
+    try {
+      // Show loading while saving assessment
+      Swal.fire({
+        title: 'Saving Assessment...',
+        text: 'Please wait while the assessment is being saved.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/savingassessment/${id}`,
+        updatedData,
+        {
+          withCredentials: true,
+        }
+      );
+  
+      console.log('Update successful:', response.data);
+  
+      // Show success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Assessment Saved',
+        text: 'Business permit assessment has been successfully saved.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+  
+      setfinishpopup(true);
+      setCheckPermit(false);
+    } catch (error) {
+      console.error('Update failed:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Assessment Failed',
+        text: 'There was an error saving the assessment. Please try again.',
+      });
+    }
   };
-
-  try {
-    // Make the PUT request with credentials included
-    const response = await axios.put(
-      `https://capstone-project-backend-nu.vercel.app/datacontroller/savingassessment/${id}`,
-      updatedData,
-      {
-        withCredentials: true, // Ensures cookies are sent along with the request
-      }
-    );
-
-    console.log('Update successful:', response.data);
-    setfinishpopup(true);
-    setCheckPermit(false);
-  } catch (error) {
-    console.error('Update failed:', error);
-  }
-};
 
 
 const [userNameDisplay, setUserNameDisplay] = useState<string>('');

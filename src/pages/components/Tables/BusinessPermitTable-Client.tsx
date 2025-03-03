@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {BusinessPermit, GroupedBusinessPermit,} from "../Interface(Front-end)/Types";
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
+import '../../Styles/ClientStyles.css';
 interface BusinessPermitTableProps {
     businessPermits: GroupedBusinessPermit[];
 

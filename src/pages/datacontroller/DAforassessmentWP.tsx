@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
 interface WorkPermit {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -283,16 +284,42 @@ const logFormData = (formData: FormData) => {
     e.preventDefault();
   
     if (!receiptFile) {
-      alert('Please upload a receipt.');
-      return; // Prevent further execution
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Receipt',
+        text: 'Please upload a receipt before proceeding.',
+      });
+      return;
     }
   
     const formData = new FormData();
     formData.append('document1', receiptFile);
   
-    logFormData(formData); // For debugging
+    logFormData(formData); // Debugging
   
     try {
+      // Show confirmation alert before uploading
+      const { isConfirmed } = await Swal.fire({
+        title: 'Submit Payment?',
+        text: 'Are you sure you want to submit this payment?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Submit',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (!isConfirmed) return; // Stop execution if user cancels
+  
+      // Show loading alert while submitting
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Uploading payment receipt. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
       const response = await axios.post(
         `https://capstone-project-backend-nu.vercel.app/client/workpermithandlepayment/${activePermitId}`,
         formData,
@@ -305,21 +332,36 @@ const logFormData = (formData: FormData) => {
       );
   
       console.log(response.data);
+  
       if (response.status === 200) {
         setConfirmPayment(true);
-        setReceiptFile(null); // Clear the file state
+        setReceiptFile(null); // Clear file state
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Payment Submitted',
+          text: 'Your payment has been submitted successfully.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } else {
         const errorMessage = (response.data as { message: string }).message;
         console.error('Error submitting application:', errorMessage);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: errorMessage || 'Something went wrong. Please try again.',
+        });
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Axios error:', error.response?.data || error.message);
-        alert('Failed to submit work permit payment. Please try again.');
-      } else {
-        console.error('Unexpected error:', error);
-        alert('An unexpected error occurred. Please contact support.');
-      }
+      console.error('Error:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Submission Failed',
+        text: 'An error occurred while submitting the payment. Please try again.',
+      });
     }
   };
   
