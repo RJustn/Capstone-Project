@@ -224,49 +224,49 @@ const DataControllerReportandGraph: React.FC = () => {
     };
 
     return (
-        <section className="DAbody">
-        <div className="DAsidebar-container">
-            <DASidebar /> {/* Pass handleLogout to DASidebar */}
-        </div>
-
-        <div className="DAcontent">
-            <header className='DAheader'>
-                <h1>Online Business and Work Permit Licensing System</h1>
-            </header>
-
-
-             <div className="DAchartreport">
-            
-                <div className="DAchart" onClick={handleBarClick}>
-                    <h2>Monthly Payment Status - {currentYear}</h2>
-                    {barData.datasets[0].data.length > 0 ? (
-                        <Bar data={barData} />
-                    ) : (
-                        <p>There is no data</p>
-                    )}
-                </div>
-
-                <div className="DAchart" onClick={handleCategoryClick}>
-                    <h2>Permit Applications by Category - {currentYear}</h2>
-                    {categoryDataForChart.datasets[0].data.length > 0 ? (
-                        <Bar data={categoryDataForChart} />
-                    ) : (
-                        <p>There is no data</p>
-                    )}
-                </div>
-
-                <div className="DAchartlocation" onClick={handlePieClick}>
-                    <h2>Business Permit Locations - {currentYear}</h2>
-                    {locationbarData.datasets[0].data.length > 0 ? (
-                        <Bar data={locationbarData} />
-                    ) : (
-                        <p>There is no data</p>
-                    )}
-                </div>
-
+<section className="DAbody">
+            <div className="DAsidebar-container">
+                <DASidebar /> {/* Pass handleLogout to DASidebar */}
             </div>
-        </div>
-    </section>
+
+            <div className="DAcontent">
+                <header className='DAheader'>
+                    <h1>Online Business and Work Permit Licensing System</h1>
+                </header>
+
+                <div className='DaChartcontainer'>
+                 <div className="DAchartreport">
+
+                    <div className="DAchartgraph" onClick={handleBarClick}>
+                        <h2>Monthly Payment Status - {currentYear}</h2>
+                        {barData.datasets[0].data.length > 0 ? (
+                            <Bar data={barData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
+                    </div>
+
+                    <div className="DAchartgraph" onClick={handleCategoryClick}>
+                        <h2>Permit Applications by Category - {currentYear}</h2>
+                        {categoryDataForChart.datasets[0].data.length > 0 ? (
+                            <Bar data={categoryDataForChart} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
+                    </div>
+
+                    <div className="DAchartlocation" onClick={handlePieClick}>
+                        <h2>Business Permit Locations - {currentYear}</h2>
+                        {locationbarData.datasets[0].data.length > 0 ? (
+                            <Bar data={locationbarData} />
+                        ) : (
+                            <p>There is no data</p>
+                        )}
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 
