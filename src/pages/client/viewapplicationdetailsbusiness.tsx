@@ -363,7 +363,7 @@ useEffect(() => {
       display: "flex",
       gridTemplateColumns: "1fr 2fr", // Align labels and files
       alignItems: "center",
-      gap: "12px",
+      gap: "20px",
       maxWidth: "600px", // Adjust for readability
       margin: "0 auto", // Center align
     }}

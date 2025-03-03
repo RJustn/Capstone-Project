@@ -1305,7 +1305,7 @@ const handleRemoveBusiness = (index: number) => {
       {/* Table to display added businesses */}
 
       {
-  businessNatureMap ? (
+businesses?.length > 0 ? (
     <table className="permit-table">
     <thead>
       <tr>
