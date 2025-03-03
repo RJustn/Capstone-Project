@@ -2,7 +2,7 @@ import React, {  useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {BusinessPermit, GroupedBusinessPermit,} from "../Interface(Front-end)/Types";
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 interface BusinessPermitTableProps {
     businessPermits: GroupedBusinessPermit[];
 
@@ -62,15 +62,46 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
   
   const handleRetireBusiness = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    if (!activePermitId?._id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Permit ID',
+        text: 'The permit ID is missing. Please try again.',
+      });
+      return;
+    }
+  
     const formData = new FormData();
-    // Append documents to formData if available
-    console.log(activePermitId?._id);
+  
+    // Append documents if available
     if (files.document1) formData.append('document1', files.document1);
     if (files.document2) formData.append('document2', files.document2);
     logFormData(formData); // Ensure this logs the formData correctly
-
+  
     try {
+      // Show confirmation alert before proceeding
+      const { isConfirmed } = await Swal.fire({
+        title: 'Submit Retirement Application?',
+        text: 'Are you sure you want to submit your business retirement application?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Submit',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (!isConfirmed) return; // Stop execution if the user cancels
+  
+      // Show loading indicator while processing
+      Swal.fire({
+        title: 'Submitting Application...',
+        text: 'Please wait while we process your request.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
       const response = await axios.post(
         `https://capstone-project-backend-nu.vercel.app/client/retirebusinessapplication/${activePermitId?._id}`,
         formData,
@@ -81,23 +112,39 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
           withCredentials: true,
         }
       );
-
-      console.log(response.data);
+  
       if (response.status === 200) {
-        alert('Business Retire Application submitted successfully!');
-        window.location.reload();
-        setFiles({ document1: null, document2: null, document3: null,
-
+        console.log(response.data);
+  
+        // Show success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'Application Submitted!',
+          text: 'Your business retirement application has been successfully submitted.',
+          timer: 2000,
+          showConfirmButton: false,
         });
+  
+        setFiles({ document1: null, document2: null, document3: null }); // Clear uploaded files
+        window.location.reload(); // Reload page
       } else {
-        // Log error response data for debugging
         const errorMessage = response.data?.message || 'Unknown error';
         console.error('Error submitting application:', errorMessage);
-        alert(`Error: ${errorMessage}`);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: `Error: ${errorMessage}`,
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while submitting the business retirement application.');
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Unexpected Error',
+        text: 'An error occurred while submitting the application. Please try again.',
+      });
     }
   };
 
@@ -139,25 +186,74 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
     }
   };
 
-  // Function to handle the payment update
+
+  
   const handlePayment = async () => {
     try {
-      // Call the API to update the payment status
-      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`, {
-        paymentStatus: 'Paid',
-        businesspermitstatus: 'Released'
+      // Show confirmation alert before proceeding
+      const { isConfirmed } = await Swal.fire({
+        title: 'Confirm Payment?',
+        text: 'Are you sure you want to update the payment status?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'Cancel',
       });
-
+  
+      if (!isConfirmed) return; // Stop execution if the user cancels
+  
+      // Show loading SweetAlert
+      Swal.fire({
+        title: 'Processing Payment...',
+        text: 'Please wait while we update the payment status.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      // Call the API to update the payment status
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`,
+        {
+          paymentStatus: 'Paid',
+          businesspermitstatus: 'Released',
+        }
+      );
+  
       if (response.status === 200) {
         console.log('Payment status updated successfully');
         setConfirmPayment(true);
+  
+        // Show success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'Payment Successful!',
+          text: 'The payment status has been updated.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
       } else {
         console.error('Failed to update payment status');
+  
+        // Show error alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: 'Failed to update the payment status. Please try again.',
+        });
       }
     } catch (error) {
       console.error('Error updating payment status:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Unexpected Error',
+        text: 'An error occurred while updating the payment status. Please try again.',
+      });
     }
   };
+  
 
   const expireBusinessPermit = async (permitId: string) => {
     try {

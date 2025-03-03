@@ -467,42 +467,7 @@ return (
         </table>
       ) : (
         <div>No businesses to display.</div>
-      )}
-
-<h1>List of Businesses</h1>
-{businessPermit && businessPermit.businesses && businessPermit.businesses.length > 0 ? (
-  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-    <thead>
-      <tr>
-        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Nature</th>
-        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Type</th>
-        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Capital Investment</th>
-        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Las Year Gross</th>
-      </tr>
-    </thead>
-    <tbody>
-      {businessPermit.businesses.map((business) => (
-        <tr key={business._id}>
-          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-            {business.businessNature || 'N/A'}
-          </td>
-          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-            {business.businessType || 'N/A'}
-          </td>
-          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-            ${business.capitalInvestment?.toLocaleString() || 'N/A'}
-          </td>
-          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-            ${business.lastYearGross?.toLocaleString() || 'N/A'}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-) : (
-  <div>No businesses to display.</div>
-)}     
-
+      )}  
                         <p>{/* User Info content */}</p>
                     </div>
                 ) : activeTab === 'business' ? (
