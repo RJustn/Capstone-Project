@@ -358,9 +358,11 @@ useEffect(() => {
     
 
             
-    <div
+    <div className= "panelviewapplicationdetails">
+  {/* Main Documents Container */}
+  <div
     style={{
-      display: "flex",
+      display: "grid",
       gridTemplateColumns: "1fr 2fr", // Align labels and files
       alignItems: "center",
       gap: "20px",
@@ -519,6 +521,7 @@ useEffect(() => {
   {businessPermit.applicationComments && (
     <p>Comments: {businessPermit.applicationComments}</p>
   )}
+  </div>
             
           </>
         ) : (
