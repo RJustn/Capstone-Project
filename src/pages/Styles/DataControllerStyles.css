@@ -39,7 +39,7 @@
   }
 
   .DAchart {
-    flex: 1 1 45%; /* Adjust the flex basis to fit two charts side by side */
+    flex:45%; /* Adjust the flex basis to fit two charts side by side */
     padding: 20px; /* Increased padding for a cleaner appearance */
     background-color: #ffffff; /* Bright white for better contrast */
     border: 1px solid #ccc; /* Softer border color */
@@ -51,11 +51,61 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
     display: block;
   }
+
+  
+  .DAchartreport {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 20px; /* Adjust the gap between charts */
+    padding: 20px;
+    margin: 20px 0; /* Space above and below the table */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    overflow-x: auto;
+    grid-template-areas: 
+        "graph1 graph2"
+        "location location"; /* Define the layout areas */
+  }
+
+  .DAchartgraph {
+    padding: 20px; 
+    background-color: #ffffff; 
+    border: 1px solid #ccc;
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    display: block;
+  }
+  
+    .DAchartgraph:nth-child(1) {
+      grid-area: graph1; 
+    }
+  
+    .DAchartgraph:nth-child(2) {
+      grid-area: graph2; 
+    }
+  
+
   
   .DAchart:hover {
     transform: translateY(-5px); /* Slight lift effect on hover */
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
   }
+
+  
+  .DAchartlocation {
+    grid-area: location; 
+    padding: 20px;
+    width: 100%; 
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    display: block;
+}
 
 /* SIDEBAR CONTAINER STYLE */
 .DAsidebar-container {
@@ -459,24 +509,4 @@ h2 {
     color: #555;  /* Adjust the text color of the selected option */
 }
 
-.DAChart {
-        width: 300px; /* Adjust the width as needed */
-        height: 300px; /* Adjust the height as needed */
-        margin: 0 auto; /* Center the container */
-        padding: 10px; /* Add some padding */
-        background-color: #f9f9f9; /* Light background color */
-        border: 1px solid #ddd; /* Light border */
-        border-radius: 8px; /* Rounded corners */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
 
-.DApanel-Header{
-    background-color: #004494; /* Black background color */
-    color: #ffffff; /* White text color */
-    padding: 10px 20px; /* Padding around the header */
-    border-radius: 10px; /* Rounded corners */
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Space between elements inside the header */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
