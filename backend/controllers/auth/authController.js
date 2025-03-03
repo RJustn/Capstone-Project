@@ -141,11 +141,12 @@ const signup = async (req, res) => {
 
         // Clear cookie with matching options
         res.clearCookie("authToken", {
-            httpOnly: true,
-            secure: true, // Ensure HTTPS is used
-            sameSite: "lax",
-            path: "/",
+          httpOnly: true,
+          secure: false,  // Match session settings
+          sameSite: "None", // Match session settings
+          path: "/",
         });
+        
 
         res.status(200).json({ message: "Logout successful" });
     } catch (error) {
