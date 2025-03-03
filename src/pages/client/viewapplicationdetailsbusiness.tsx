@@ -188,9 +188,9 @@ useEffect(() => {
         <div>
         
         <div className="panel">
-        <h1>Business Permit Details</h1>
         {businessPermit ? ( 
           <> 
+          <h1>Business Permit Details</h1>
           <div className="panelviewapplicationdetails-personalinfo">
           <p><strong>Application ID:</strong> {businessPermit.id}</p>
             <p> <strong>Date Issued:</strong> {businessPermit.createdAt ? new Date(businessPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
@@ -480,8 +480,8 @@ useEffect(() => {
     {businessPermit.files.remarksdoc10 && (
     <p>Remarks: {businessPermit.files.remarksdoc10}</p>
   )}
-  </div>            
-  {businessPermit.receipt?.receiptFile && (
+
+{businessPermit.receipt?.receiptFile && (
       <div>
     <p>Receipt: </p>
     <span>
@@ -521,11 +521,12 @@ useEffect(() => {
   {businessPermit.applicationComments && (
     <p>Comments: {businessPermit.applicationComments}</p>
   )}
+  </div>            
   </div>
             
           </>
         ) : (
-          <p>Business permit details available.</p>
+          <p>No business permit details available.</p>
         )}
         </div>
       </div>

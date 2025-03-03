@@ -7,170 +7,9 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-export interface BusinessPermit {
-  _id: string;
-  id: string;
-  userId: string;
-  permittype?: string;
-  businesspermitstatus?: string;
-  businessstatus?: string;
-  classification?: string;
-  transaction?: string;
-  amountToPay?: string;
-  permitFile?: string;
-  permitDateIssued?: string;
-  permitExpiryDate?: string;
-  expiryDate?: string;
-  applicationdateIssued: Date;
-  applicationComments?: string;
 
-  owner: Owner;
-  business: Business;
-  otherbusinessinfo: OtherBusiness;
-  mapview: MapView;
-  businesses: Businesses[];
-  files: Files;
-  department: Department; // Change to object with key-value pairs
-  statementofaccount: Statement;
-
-  createdAt?: string;
-}
-
-export interface Owner {
-corporation?: boolean;
-lastname?: string;
-firstname?: string;
-middleinitial?: string;
-civilstatus?: string;
-companyname?: string;
-gender?: string;
-citizenship?: string;
-tinnumber?: string;
-representative?: boolean;
-houseandlot?: string;
-buildingstreetname?: string;
-subdivision?: string;
-region?: string;
-province?: string;
-municipality?: string;
-barangay?: string;
-telephonenumber?: string;
-mobilenumber?: string;
-email?: string;
-representativedetails?: RepDetails;
-}
-
-export interface RepDetails {
-repfullname: string,
-repdesignation: string,
-repmobilenumber: string,
-}
-
-export interface Business {
-businessname?: string,
-businessscale?: string,
-paymentmethod?: string,
-businessbuildingblocklot?: string,
-businessbuildingname?: string,
-businesssubcompname?: string,
-businessregion?: string,
-businessprovince?: string,
-businessmunicipality?: string,
-businessbarangay?: string,
-businesszip?: string,
-businesscontactnumber?: string,
-ownershiptype?: string,
-agencyregistered?: string,
-dtiregistrationnum?: string,
-dtiregistrationdate?: string,
-dtiregistrationexpdate?: string,
-secregistrationnum?: string,
-birregistrationnum?: string,
-industrysector?: string,
-businessoperation?: string,
-typeofbusiness?: string,
-
-}
-
-export interface OtherBusiness {
-dateestablished?: string,
-startdate?: string,
-occupancy?: string,
-otherbusinesstype?: string,
-businessemail?: string,
-businessarea?: string,
-businesslotarea?: string,
-numofworkermale?: string,
-numofworkerfemale?: string,
-numofworkertotal?: string,
-numofworkerlgu?: string,
-lessorfullname?: string,
-lessormobilenumber?: string,
-monthlyrent?: string,
-lessorfulladdress?: string,
-lessoremailaddress?: string,
-}
-
-export interface MapView{
-lat: string,
-lng: string,
-}
-
-export interface Businesses {
-_id: string;
-businessNature: string;
-businessType: string;
-capitalInvestment: string;
-}
-
-
-export interface Department{
- 
-  Zoning: string;
-  OffBldOfcl: string;
-  CtyHlthOff: string;
-  BreuFrPrt: string;
-
-}
-
-export interface Files {
-document1: string | null; // Optional
-document2: string | null; // Optional
-document3: string | null; // Optional
-document4: string | null; // Optional
-document5: string | null; // Optional
-document6: string | null; // 
-document7: string | null; // Optional
-document8: string | null; // Optional
-document9: string | null; // Optional
-document10: string | null; // Optional
-remarksdoc1: string;
-remarksdoc2: string;
-remarksdoc3: string;
-remarksdoc4: string;
-remarksdoc5: string;
-remarksdoc6: string;
-remarksdoc7: string;
-remarksdoc8: string;
-remarksdoc9: string;
-remarksdoc10: string;
-}
-
-export interface Statement{
-  permitassessed: string;
-  dateassessed: string;
-  mayorspermit: string;
-  sanitary:  string;
-  health:  string;
-  businessplate:  string;
-  zoningclearance:  string;
-  annualInspection:  string;
-  environmental:  string;
-  miscfee:  string;
-  liquortobaco:  string;
-  liquorplate:  string;
-  statementofaccountfile: string;
-}
+import { BusinessPermit} from "../components/Interface(Front-end)/Types";
+import Swal from 'sweetalert2';
 
 
 const DataControllerForAssessmentBP: React.FC = () => {
@@ -489,41 +328,71 @@ const logFormData = (formData: FormData) => {
     formData.append('remarksdoc4', remarksdoc4);
     formData.append('remarksdoc5', remarksdoc5);
     formData.append('remarksdoc6', remarksdoc6);
-
-
+  
     if (files.document1) formData.append('document1', files.document1);
     if (files.document2) formData.append('document2', files.document2);
     if (files.document3) formData.append('document3', files.document3);
     if (files.document4) formData.append('document4', files.document4);
     if (files.document5) formData.append('document5', files.document5);
-    if (files.document6) formData.append('document5', files.document6);
-
-
+    if (files.document6) formData.append('document6', files.document6); // Fixed duplicate document5 key
+  
     logFormData(formData);
-
+  
+    // Show loading SweetAlert
+    Swal.fire({
+      title: 'Updating Attachments...',
+      text: 'Please wait while we upload your documents.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
   
     try {
       const response = await axios.post(
         `https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessattachment/${activePermitId._id}`,
         formData,
         {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true, 
-      });
-        console.log(response.data);
-        if (response.status === 200) {
-          fetchBusinessPermits(); // Fetch work permits if token is present
-          setUpdateSuccess(true);
-          closeViewAttachmentsModal();
-        } else {
-          const errorMessage = (response.data as { message: string }).message;
-          console.error('Error submitting application:', errorMessage);
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true, 
         }
-      } catch (error) {
-        console.error('Error:', error);
+      );
+  
+      if (response.status === 200) {
+        console.log(response.data);
+        fetchBusinessPermits(); // Refresh business permits
+        closeViewAttachmentsModal();
+  
+        // Show success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'Attachments Updated!',
+          text: 'The attachments have been successfully uploaded.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } else {
+        console.error('Error submitting application:', response.data.message);
+        
+        // Show error alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: response.data.message || 'Failed to update attachments. Please try again.',
+        });
       }
+    } catch (error) {
+      console.error('Error:', error);
+  
+      // Show error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'An error occurred while updating attachments. Please try again.',
+      });
+    }
   };
 
   const closeViewAttachmentsModal = () => {
@@ -639,7 +508,7 @@ const logFormData = (formData: FormData) => {
     if (!activePermitId) return;
   
     const updatedData = {
-       business: {
+      business: {
         businessname,
         businessscale,
         paymentmethod,
@@ -662,19 +531,46 @@ const logFormData = (formData: FormData) => {
         industrysector,
         businessoperation,
         typeofbusiness,
-        
-        },
+      },
     };
   
-    try {
-      const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessinfopermit/${activePermitId._id}`, updatedData);
+    // Show loading SweetAlert
+    Swal.fire({
+      title: 'Saving Changes...',
+      text: 'Please wait while we update the business information.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
   
-      fetchBusinessPermits(); // Fetch work permits if token is present
+    try {
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessinfopermit/${activePermitId._id}`,
+        updatedData
+      );
+  
+      fetchBusinessPermits(); // Refresh business permits
       console.log('Update successful:', response.data);
       closeViewBusinessDetails(); // Exit editing mode
-      setUpdateSuccess(true);
+  
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Business Updated!',
+        text: 'The business information has been successfully updated.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
       console.error('Update failed:', error);
+  
+      // Show error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Failed to update business information. Please try again.',
+      });
     }
   };
   //Edit Business
@@ -915,16 +811,45 @@ const handleeditsave = async () => {
     },
   };
 
-  try {
-    const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessownerpermit/${activePermitId._id}`, updatedData);
+  // Show loading SweetAlert
+  Swal.fire({
+    title: 'Saving Changes...',
+    text: 'Please wait while we update the business owner details.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
 
-    fetchBusinessPermits(); // Fetch work permits if token is present
+  try {
+    const response = await axios.put(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/updatebusinessownerpermit/${activePermitId._id}`,
+      updatedData
+    );
+
+    fetchBusinessPermits(); // Refresh data
     editcloseModal();
-    setUpdateSuccess(true);
-    console.log('Update successful:', response.data);
     setIsEditing(false); // Exit editing mode
+
+    console.log('Update successful:', response.data);
+
+    // Show success alert
+    Swal.fire({
+      icon: 'success',
+      title: 'Update Successful!',
+      text: 'Business owner details have been updated.',
+      timer: 2000,
+      showConfirmButton: false,
+    });
   } catch (error) {
     console.error('Update failed:', error);
+
+    // Show error alert
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: 'An error occurred while updating. Please try again later.',
+    });
   }
 };
 
@@ -1007,11 +932,25 @@ const handleCancelEdit = () => {
 const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   if (!activePermitId) return;
 
-  // Validate remarks only if the action is 'reject'
+  // Validate remarks only if the action is 'rejected'
   if (action === 'rejected' && !remarks) {
-    alert('Please provide remarks for rejection');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Remarks Required',
+      text: 'Please provide remarks for rejection.',
+    });
     return;
   }
+
+  // Show loading SweetAlert
+  Swal.fire({
+    title: 'Updating Status...',
+    text: 'Please wait while we process the request.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
 
   try {
     // Send the action as part of the request payload
@@ -1020,14 +959,29 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
       { status: action, remarks }
     );
 
-    // Assuming fetchBusinessPermits() is a function to refetch the list of permits
+    // Refresh business permits list
     fetchBusinessPermits();
 
     console.log('Update successful:', response.data);
     setRejectPermit(false); // Close the modal after the update
+
+    // Show success alert
+    Swal.fire({
+      icon: 'success',
+      title: 'Status Updated!',
+      text: `Business permit has been ${action === 'approved' ? 'approved' : 'rejected'}.`,
+      timer: 2000,
+      showConfirmButton: false,
+    });
   } catch (error) {
     console.error('Update failed:', error);
-    alert('Failed to update permit status. Please try again.');
+
+    // Show error alert
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: 'Failed to update permit status. Please try again.',
+    });
   }
 };
 

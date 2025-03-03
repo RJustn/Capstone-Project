@@ -343,7 +343,7 @@ const [files, setFiles] = useState<{
 
   return (
                     <div className='businesspermittable'>
-                    <p>Business Permits</p>
+                    <p>Business Permit Applications</p>
                     {businessPermits.length === 0 ? (
       <p style={{ color: "green", textAlign: "center", fontSize: "16px" }}>
         No Business Permits found.
