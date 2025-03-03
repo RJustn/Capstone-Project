@@ -357,13 +357,13 @@ useEffect(() => {
     </div>
     
 
-            
+    <h1>Documents</h1>
     <div className= "panelviewapplicationdetails">
   {/* Main Documents Container */}
   <div
     style={{
       display: "grid",
-      gridTemplateColumns: "1fr 2fr", // Align labels and files
+      gridTemplateColumns: "3fr 2fr", // Align labels and files
       alignItems: "center",
       gap: "20px",
       maxWidth: "600px", // Adjust for readability
