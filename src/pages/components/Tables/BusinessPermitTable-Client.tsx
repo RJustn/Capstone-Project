@@ -558,7 +558,7 @@ const [files, setFiles] = useState<{
             >
               Previous
             </button>
-            <span>
+            <span style={{ margin: "0 10px",  marginTop: "8px" }}>
               Page {currentPage} of {totalPages}
             </span>
             <button

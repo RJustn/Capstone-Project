@@ -355,10 +355,25 @@ const openModal = (filePath: string) => {
       </table>
       
 
-      <div className="pagination-buttons">
-        {currentPage > 0 && <button onClick={handlePreviousPage}>Back</button>}
-        {currentPage < totalPages - 1 && <button onClick={handleNextPage}>Next</button>}
-      </div>
+      <div className="pagination">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="btn btn-danger"
+            >
+              Previous
+            </button>
+            <span style={{ margin: "0 10px",  marginTop: "8px" }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="btn btn-success"
+            >
+              Next
+            </button>
+          </div>
 </>)}
       {/* Modal Dumps */}
 {showPaymentMethod && (
