@@ -6,7 +6,7 @@ import ClientNavbar from '../components/NavigationBars/clientnavbar';
 import MapLocation from '../components/MapContents/MapLocation';
 import axios from 'axios';
 import Select from 'react-select';
-
+import Swal from 'sweetalert2';
 
 interface BusinessNatureOption {
   value: string;
@@ -152,9 +152,10 @@ const BusinessPermit: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
-    //Step 1
+    
+    // Step 1
     formData.append('corporation', String(corporation));
     formData.append('lastname', lastname);
     formData.append('firstname', firstname);
@@ -178,8 +179,8 @@ const BusinessPermit: React.FC = () => {
     formData.append('telephonenumber', telephonenumber);
     formData.append('mobilenumber', mobilenumber);
     formData.append('email', email);
-
-    //Step 2
+  
+    // Step 2
     formData.append('businessname', businessname);
     formData.append('businessscale', businessscale);
     formData.append('paymentmethod', paymentmethod);
@@ -202,8 +203,8 @@ const BusinessPermit: React.FC = () => {
     formData.append('industrysector', industrysector);
     formData.append('businessoperation', businessoperation);
     formData.append('typeofbusiness', typeofbusiness);
-   
-    //Step 3
+  
+    // Step 3
     formData.append('dateestablished', dateestablished);
     formData.append('startdate', startdate);
     formData.append('occupancy', occupancy);
@@ -220,28 +221,31 @@ const BusinessPermit: React.FC = () => {
     formData.append('monthlyrent', monthlyrent);
     formData.append('lessorfulladdress', lessorfulladdress);
     formData.append('lessoremailaddress', lessoremailaddress);
-
-    //Step 4
+  
+    // Step 4
     formData.append('lat', String(lat));
     formData.append('lng', String(lng));
-   
-    //Step 5
+  
+    // Step 5
     formData.append('businesses', JSON.stringify(businesses));
-
-    if (files.document1) formData.append('document1', files.document1);
-    if (files.document2) formData.append('document2', files.document2);
-    if (files.document3) formData.append('document3', files.document3);
-    if (files.document4) formData.append('document4', files.document4);
-    if (files.document5) formData.append('document5', files.document5);
-    if (files.document6) formData.append('document6', files.document6);
-
-    if (files.document7) formData.append('document7', files.document7);
-    if (files.document8) formData.append('document8', files.document8);
-    if (files.document9) formData.append('document9', files.document9);
-    if (files.document10) formData.append('document10', files.document10);
+  
+    // Attach documents if they exist
+    Object.entries(files).forEach(([key, file]) => {
+      if (file) formData.append(key, file);
+    });
+  
     logFormData(formData);
-
-
+  
+    // Show loading SweetAlert
+    Swal.fire({
+      title: 'Submitting Application...',
+      text: 'Please wait while we process your request.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  
     try {
       const response = await axios.post('https://capstone-project-backend-nu.vercel.app/client/businesspermitapplication', formData, {
         headers: {
@@ -249,16 +253,35 @@ const BusinessPermit: React.FC = () => {
         },
         withCredentials: true,
       });
+  
       console.log(response.data);
+  
       if (response.status === 200) {
-        alert('Business Permit Application submitted successfully!');
-        navigate('/dashboard');
+        // Show success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Application Submitted!',
+          text: 'Your business permit application has been submitted successfully!',
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate('/dashboard');
+        });
       } else {
         const errorMessage = (response.data as { message: string }).message;
-        console.error('Error submitting application:', errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: errorMessage || 'Something went wrong. Please try again.',
+        });
       }
     } catch (error) {
       console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Something went wrong. Please try again later.',
+      });
     }
   };
 

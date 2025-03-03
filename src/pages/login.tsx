@@ -25,6 +25,16 @@ const Login: React.FC = () => {
       });
       return;
     }
+
+      // Show loading alert
+  Swal.fire({
+    title: 'Logging in...',
+    text: 'Please wait while we authenticate your credentials.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
   
     try {
       const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/login', {
