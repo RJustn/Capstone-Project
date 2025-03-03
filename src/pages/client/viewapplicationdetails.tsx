@@ -233,7 +233,7 @@ useEffect(() => {
   {/* Main Documents Container */}
   <div
     style={{
-      display: "grid",
+      display: "flex",
       gridTemplateColumns: "1fr 2fr", // Align labels and files
       alignItems: "center",
       gap: "12px",

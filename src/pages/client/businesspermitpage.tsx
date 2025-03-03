@@ -1303,28 +1303,34 @@ const handleRemoveBusiness = (index: number) => {
       <h2>Businesses to Add</h2>
 
       {/* Table to display added businesses */}
-      <table className="permit-table">
-        <thead>
-          <tr>
-            <th>Business Nature</th>
-            <th>Business Type</th>
-            <th>Capital Investment</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {businesses.map((business, index) => (
-            <tr key={index}>
-              <td>{businessNatureMap[business.businessNature as keyof typeof businessNatureMap] || business.businessNature}</td>
-              <td>{business.businessType}</td>
-              <td>{business.capitalInvestment}</td>
-              <td>
-                <button onClick={(e) => {handleRemoveBusiness(index); e.preventDefault();}} className="removebutton">Remove</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      {
+  businessNatureMap ? (
+    <table className="permit-table">
+    <thead>
+      <tr>
+        <th>Business Nature</th>
+        <th>Business Type</th>
+        <th>Capital Investment</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {businesses.map((business, index) => (
+        <tr key={index}>
+          <td>{businessNatureMap[business.businessNature as keyof typeof businessNatureMap] || business.businessNature}</td>
+          <td>{business.businessType}</td>
+          <td>{business.capitalInvestment}</td>
+          <td>
+            <button onClick={(e) => {handleRemoveBusiness(index); e.preventDefault();}} className="removebutton">Remove</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  ) : null // Optionally, render something else when the condition is not met
+}
+
       <div> {!isFormValid && <p style={{ color: 'red' }}>Please add at least one business nature before proceeding.</p>}
                 <button type="button" onClick={goToPreviousStep}className="btn btn-danger">Back</button>
                 <button type="button" onClick={goToNextStep} className="btn btn-success" >Next</button>

@@ -358,7 +358,16 @@ useEffect(() => {
     
 
             
-    <div className="panelviewapplicationdetails-documents" style={{display: 'flex', justifyContent: 'center', gap: '26px', flexWrap: 'wrap', padding: '16px', marginTop: '30px', fontSize: '16px'}}>
+    <div
+    style={{
+      display: "flex",
+      gridTemplateColumns: "1fr 2fr", // Align labels and files
+      alignItems: "center",
+      gap: "12px",
+      maxWidth: "600px", // Adjust for readability
+      margin: "0 auto", // Center align
+    }}
+  >
     <p> Upload DTI / SEC / CDA: </p>
     <span>
       {businessPermit.files?.document1 ? (
