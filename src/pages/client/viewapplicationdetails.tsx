@@ -187,44 +187,49 @@ useEffect(() => {
         <div>
         
         <div className="panel">
-        <h1>Work Permit Details</h1>
+        <h1 className= "panelviewapplicationdetails">Work Permit Details</h1>
         {workPermit ? (
           <> 
-            <p> Date Issued: {workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
-            <p> Work Permit Status: {workPermit.workpermitstatus}</p>
-            <p> Classification: {workPermit.classification}</p>
-
-            <h1>Personal Information Details</h1>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', textAlign: 'left'}}>
-              <p><strong>Application ID:</strong> {workPermit.id}</p>
-              <p><strong>Fullname:</strong> {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial}</p>
-              <p><strong>Permanent Address:</strong> {workPermit.formData.personalInformation.permanentAddress}</p>
-              <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding}</p>
-              <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress}</p>
-              <p><strong>Age:</strong> {workPermit.formData.personalInformation.age}</p>
-              <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth}</p>
-              <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship}</p>
-              <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus}</p>
-              <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender}</p>
-              <p><strong>Height:</strong> {workPermit.formData.personalInformation.height}</p>
-              <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight}</p>
-              <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age}</p>
-              <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-              <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment}</p>
-              <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork}</p>
-              <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork}</p>
-              <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName}</p>
-              <p><strong>Email:</strong> {workPermit.formData.personalInformation.email}</p>
-              <p><strong>Work Permit Classification:</strong> {workPermit.formData.personalInformation.workpermitclassification}</p>
+          <div className= "panelviewapplicationdetails">
+            <p> <strong>Date Issued:</strong> {workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}</p>
+            <p> <strong>Work Permit Status:</strong> {workPermit.workpermitstatus}</p>
+            <p> <strong>Classification:</strong> {workPermit.classification}</p>
             </div>
 
-            <h1>Emergency Contact Details</h1>
-            <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2}</p>
-            <p><strong>Mobile Number:</strong> {workPermit.formData.emergencyContact.mobileTel2}</p>
-            <p><strong>Address:</strong> {workPermit.formData.emergencyContact.address}</p>
+            <h1 className= "panelviewapplicationdetails">Personal Information Details</h1>
+            <div className= "panelviewapplicationdetails-personalinfo">
+              <p><strong>Application ID:</strong> {workPermit.id}</p>
+              <p><strong>Fullname:</strong> {workPermit.formData.personalInformation.lastName}, {workPermit.formData.personalInformation.firstName} {workPermit.formData.personalInformation.middleInitial || 'N/A'}</p>
+              <p><strong>Permanent Address:</strong>{workPermit.formData.personalInformation.permanentAddress || 'N/A'}</p>
+              <p><strong>Currently Residing:</strong> {workPermit.formData.personalInformation.currentlyResiding || 'N/A'}</p>
+              <p><strong>Temporary Address:</strong> {workPermit.formData.personalInformation.temporaryAddress || 'N/A'}</p>
+              <p><strong>Age:</strong> {workPermit.formData.personalInformation.age || 'N/A'}</p>
+              <p><strong>Place of Birth:</strong> {workPermit.formData.personalInformation.placeOfBirth || 'N/A'}</p>
+              <p><strong>Citizenship:</strong> {workPermit.formData.personalInformation.citizenship || 'N/A'}</p>
+              <p><strong>Civil Status:</strong> {workPermit.formData.personalInformation.civilStatus || 'N/A'}</p>
+              <p><strong>Gender:</strong> {workPermit.formData.personalInformation.gender|| 'N/A'}</p>
+              <p><strong>Height:</strong> {workPermit.formData.personalInformation.height || 'N/A'}</p>
+              <p><strong>Weight:</strong> {workPermit.formData.personalInformation.weight || 'N/A'}</p>
+              <p><strong>Mobile Number:</strong> {workPermit.formData.personalInformation.age || 'N/A'}</p>
+              <p><strong>Email:</strong> {workPermit.formData.personalInformation.email || 'N/A'}</p>
+              <p><strong>Educational Attainment:</strong> {workPermit.formData.personalInformation.educationalAttainment || 'N/A'}</p>
+              <p><strong>Nature of Work:</strong> {workPermit.formData.personalInformation.natureOfWork || 'N/A'}</p>
+              <p><strong>Place of Work:</strong> {workPermit.formData.personalInformation.placeOfWork || 'N/A'}</p>
+              <p><strong>Company Name:</strong> {workPermit.formData.personalInformation.companyName || 'N/A'}</p>
+              <p><strong>Email:</strong> {workPermit.formData.personalInformation.email || 'N/A'}</p>
+              <p><strong>Work Permit Classification:</strong> {workPermit.formData.personalInformation.workpermitclassification || 'N/A'}</p>
+            </div>
+
+            <h1 className= "panelviewapplicationdetails">Emergency Contact Details</h1>
+            <div className= "panelviewapplicationdetails-emergencycontact">
+            <p><strong>Name:</strong> {workPermit.formData.emergencyContact.name2 || 'N/A'}</p>
+            <p><strong>Mobile Number:</strong> {workPermit.formData.emergencyContact.mobileTel2 || 'N/A'}</p>
+            <p><strong>Address:</strong> {workPermit.formData.emergencyContact.address || 'N/A'}</p>
+            </div>
+
 
             <h1>Documents</h1>
-<div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+  <div className= "panelviewapplicationdetails">
   {/* Main Documents Container */}
   <div
     style={{

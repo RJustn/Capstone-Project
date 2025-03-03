@@ -397,7 +397,6 @@ const handleRemoveBusiness = (index: number) => {
           {step === 1 && (
             <div className="businesspermit-form">
               <h2>Step 1: Personal Details</h2>
-              <h2>Personal Details</h2>
               <div className="form-group">
                 <label className="checkbox-label">
                   <input
@@ -1115,8 +1114,7 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 3 */}
               <div className="businesspermit-form">
-                <h2>Step 3 Other Information</h2>
-                <h2>Other Business Information</h2>
+                <h2>Step 3: Business Other Information</h2>
                 <div className="form-group">
                   <label>Date Established:</label>
                   <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
@@ -1237,7 +1235,6 @@ const handleRemoveBusiness = (index: number) => {
               {/* Content for Step 4 */}
               <div className="businesspermit-form">
                 <h2>Step 4 Map Location</h2>
-                <h4>Map Location</h4>
 
                 <MapLocation initialLat={lat} initialLng={lng} onLocationChange={handleLocationChange} />
 
@@ -1263,7 +1260,6 @@ const handleRemoveBusiness = (index: number) => {
                 {/* Content for Step 5 */}
                 
                 <h2>Step 5 Business Nature</h2>
-                Business Nature:
                 <Select
         name="businessNature"
         value={newBusiness.businessNature
@@ -1339,6 +1335,7 @@ const handleRemoveBusiness = (index: number) => {
           )}
           {step === 6 && (
             <div className="upload-section">
+              <h2>Upload Documents</h2>
                 <label>
                   Upload DTI / SEC / CDA:
                 </label>
