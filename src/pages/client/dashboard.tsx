@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css'; //  CSS file
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
-import axios from 'axios';
 import { WorkPermit, GroupedBusinessPermit } from "../components/Interface(Front-end)/Types";
 import WorkPermitTable from "../components/Tables/WorkPermitTable-Client";
 import BusinessPermitTable from "../components/Tables/BusinessPermitTable-Client";
@@ -130,38 +129,38 @@ useEffect(() => {
   fetchWorkPermits();
 }, []); // Remove workPermits from dependencies
 
-useEffect(() => {
-  const checkAuth = async () => {
-    try {
 
 
-      const response = await axios.get(
-        'https://capstone-project-backend-nu.vercel.app/auth/check-auth-client',
-        { withCredentials: true }
-      );
-
-      if (response.status === 401) {
-        // If unauthorized, redirect to login
-        console.error('Access denied: No token');
-        navigate('/login');
-        return;
-      }
-
-      if (response.status === 204) {
-        console.log('Access Success');
-        return;
-      }
-
-      // Handle unexpected response
-      console.error('Unexpected response status:', response.status);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      setError('Failed to load dashboard. Please try again.');
-    } 
-  };
-
-  checkAuth();
-}, [navigate]); // Only depend on navigate, which is necessary for the redirection
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-client', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
+  
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
+        }
+  
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+  
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+    
+      } 
+    };
+  
+    checkAuth();
+  }, [navigate]);
 
 useEffect(() => {
   if (workPermits.length > 0) {
