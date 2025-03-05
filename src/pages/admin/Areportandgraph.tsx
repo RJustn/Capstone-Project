@@ -17,8 +17,9 @@ const AdminReportsAndGraph: React.FC = () => {
     _id: string;
     count: number;
     labels: string[];
-    paid: number[];
-    unpaid: number[];
+    approved: number[];
+    waitingForPayment: number[];
+    rejected: number[];
     month: string;
   }
   interface WorkPermitData {
@@ -43,7 +44,7 @@ const AdminReportsAndGraph: React.FC = () => {
 
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
-  const [monthlyData, setMonthlyData] = useState<{ labels: string[], paid: number[], unpaid: number[] }>({ labels: [], paid: [], unpaid: [] });
+  const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [] });
   const [workPermitData, setWorkPermitData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   const [businessPermitData, setBusinessPermitData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
 
@@ -100,31 +101,59 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching location data:', error));
 
-    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
-      .then(response => response.json())
+    fetch('https://capstone-project-backend-nu.vercel.app/admin/graphmonthlybusinesspermit')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
-        const labels = data.map((item: MonthlyData) => item.month);
-        const paid = data.map((item: MonthlyData) => item.paid);
-        const unpaid = data.map((item: MonthlyData) => item.unpaid);
-        setMonthlyData({ labels, paid, unpaid });
+        if (Array.isArray(data)) {
+          const labels = data.map((item: MonthlyData) => item.month);
+          const approved = data.flatMap((item: MonthlyData) => item.approved);
+          const waitingForPayment = data.flatMap((item: MonthlyData) => item.waitingForPayment);
+          const rejected = data.flatMap((item: MonthlyData) => item.rejected);
+          setMonthlyData({ labels, approved, waitingForPayment, rejected });
+        } else {
+          console.error('Expected array but got:', data);
+        }
       })
       .catch(error => console.error('Error fetching monthly payment data:', error));
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphpermitapplicationcategory')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
-        const labels = data.map((item: WorkPermitData) => item.month);
-        const counts = data.map((item: WorkPermitData) => item.count);
-        setWorkPermitData({ labels, data: counts });
+        if (data.workPermitCategories && Array.isArray(data.workPermitCategories)) {
+          const labels = data.workPermitCategories.map((item: WorkPermitData) => item.month);
+          const counts = data.workPermitCategories.map((item: WorkPermitData) => item.count);
+          setWorkPermitData({ labels, data: counts });
+        } else {
+          console.error('Expected array but got:', data);
+        }
       })
       .catch(error => console.error('Error fetching work permit data:', error));
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitmonthlyappication')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
-        const labels = data.map((item: BusinessPermitData) => item.month);
-        const counts = data.map((item: BusinessPermitData) => item.count);
-        setBusinessPermitData({ labels, data: counts });
+        if (data.businessPermitCategories && Array.isArray(data.businessPermitCategories)) {
+          const labels = data.businessPermitCategories.map((item: BusinessPermitData) => item.month);
+          const counts = data.businessPermitCategories.map((item: BusinessPermitData) => item.count);
+          setBusinessPermitData({ labels, data: counts });
+        } else {
+          console.error('Expected array but got:', data);
+        }
       })
       .catch(error => console.error('Error fetching business permit data:', error));
   }, [navigate]);
@@ -147,8 +176,9 @@ const AdminReportsAndGraph: React.FC = () => {
   const handleBarClick = () => {
     const data = monthlyData.labels.map((label, index) => ({
       Month: label,
-      Paid: monthlyData.paid[index],
-      Unpaid: monthlyData.unpaid[index]
+      Approved: monthlyData.approved[index],
+      WaitingForPayment: monthlyData.waitingForPayment[index],
+      Rejected: monthlyData.rejected[index]
     }));
     downloadExcel(data, 'MonthlyPaymentStatus');
   };
@@ -176,90 +206,95 @@ const AdminReportsAndGraph: React.FC = () => {
     labels: monthlyData.labels,
     datasets: [
       {
-        label: 'Paid',
-        data: monthlyData.paid,
+        label: 'Approved',
+        data: monthlyData.approved,
         backgroundColor: '#36A2EB'
       },
       {
-                label: 'Unpaid',
-                data: monthlyData.unpaid,
-                backgroundColor: '#FF6384'
-            }
-        ]
-    };
+        label: 'Waiting for Payment',
+        data: monthlyData.waitingForPayment,
+        backgroundColor: '#FFCE56'
+      },
+      {
+        label: 'Rejected',
+        data: monthlyData.rejected,
+        backgroundColor: '#FF6384'
+      }
+    ]
+  };
 
-    const workPermitChartData = {
-        labels: workPermitData.labels,
-        datasets: [
-          {
-            label: 'Work Permit Applications',
-            data: workPermitData.data,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: true,
-          },
-        ],
-      };
-    
-      const businessPermitChartData = {
-        labels: businessPermitData.labels,
-        datasets: [
-          {
-            label: 'Business Permit Applications',
-            data: businessPermitData.data,
-            borderColor: 'rgba(153, 102, 255, 1)',
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            fill: true,
-          },
-        ],
-      };
+  const workPermitChartData = {
+    labels: workPermitData.labels,
+    datasets: [
+      {
+        label: 'Work Permit Applications',
+        data: workPermitData.data,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+    ],
+  };
 
-    return (
-        <section className="Abody">
-            <div className="Asidebar-container">
-                <AdminSideBar />
-            </div>
-            <div className="Acontent">
-                <header className='DAheader'>
-                    <h1>Online Business and Work Permit Licensing System</h1>
-                </header>
-                <div className="DAchart-container">
-                    <div className="DAchart" onClick={handlePieClick}>
-                        <h2>Business Permit Locations</h2>
-                        {pieData.datasets[0].data.length > 0 ? (
-                            <Doughnut data={pieData} />
-                        ) : (
-                            <p>There is no data</p>
-                        )}
-                    </div>
-                    <div className="DAchart" onClick={handleBarClick}>
-                        <h2>Monthly Payment Status</h2>
-                        {barData.datasets[0].data.length > 0 ? (
-                            <Bar data={barData} />
-                        ) : (
-                            <p>There is no data</p>
-                        )}
-                    </div>
-                    <div className="DAchart">
-                        <h2>Monthly Applications Trend Business</h2>
-                        {businessPermitChartData.datasets[0].data.length > 0 ? (
-                            <Line data={businessPermitChartData} />
-                        ) : (
-                            <p>There is no data</p>
-                        )}
-                    </div>
-                    <div className="DAchart">
-                        <h2>Monthly Applications Trend Work</h2>    
-                        {workPermitChartData.datasets[0].data.length > 0 ? (
-                            <Line data={workPermitChartData} />
-                        ) : (
-                            <p>There is no data</p>
-                        )}
-                        </div>
-                </div>
-            </div>
-        </section>
-    );
+  const businessPermitChartData = {
+    labels: businessPermitData.labels,
+    datasets: [
+      {
+        label: 'Business Permit Applications',
+        data: businessPermitData.data,
+        borderColor: 'rgba(153, 102, 255, 1)',
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        fill: true,
+      },
+    ],
+  };
+
+  return (
+    <section className="Abody">
+      <div className="Asidebar-container">
+        <AdminSideBar />
+      </div>
+      <div className="Acontent">
+        <header className='Aheader'>
+          <h1>Online Business and Work Permit Licensing System</h1>
+        </header>
+        <div className="Achart-container">
+          <div className="Achart" onClick={handlePieClick}>
+            <h2>Business Permit Locations</h2>
+            {pieData.datasets[0]. data.length > 0 ? (
+              <Doughnut data={pieData} />
+            ) : ( 
+              <p>There is no data</p>
+            )}
+          </div>
+          <div className="Achart" onClick={handleBarClick}>
+            <h2>Buisness Permit Status</h2>
+            {barData.datasets[0].data.length > 0 ? (
+              <Bar data={barData} />
+            ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+          <div className="Achart">
+            <h2>Monthly Applications Trend Business</h2>
+            {businessPermitChartData.datasets[0].data.length > 0 ? (
+              <Line data={businessPermitChartData} />
+            ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+          <div className="Achart">
+            <h2>Monthly Applications Trend Work</h2>    
+            {workPermitChartData.datasets[0].data.length > 0 ? (
+              <Line data={workPermitChartData} />
+            ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default AdminReportsAndGraph;

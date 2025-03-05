@@ -34,6 +34,7 @@ const { retirebusinesspermit } = require('../../controllers/datacontroller/retir
 const { workpermithandleupdate } = require('../../controllers/datacontroller/workpermithandleupdate');
 const { workpermitdetails } = require('../../controllers/datacontroller/workpermitdetails');
 const { workpermitreject } = require('../../controllers/datacontroller/workpermitreject');
+const { graphmonthlybusinesspermit } = require('../../controllers/datacontroller/graphmonthlybusinesspermit');
 
 
 module.exports = {
@@ -83,6 +84,7 @@ module.exports = {
     graphbusinesspermitlocation,
     graphmonthlypaymentstatus,
     graphpermitapplicationcategory,
+    graphmonthlybusinesspermit,
 
     businesspermitmonthlyappication
 

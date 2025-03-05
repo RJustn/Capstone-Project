@@ -1127,10 +1127,14 @@ const handleRemoveBusiness = (index: number) => {
                   </select>
                 </div>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
-                <div style={{gap: '10'}}>
-                <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>Back</button>
-                <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
-                </div>
+                <div style={{ display: 'flex', gap: '15px' }}>
+  <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
+    Back
+  </button>
+  <button type="button" onClick={goToNextStep} className="btn btn-success">
+    Next
+  </button>
+</div>
 
               </div>
             </div>
@@ -1335,7 +1339,7 @@ const handleRemoveBusiness = (index: number) => {
       <button onClick={(e) => {
                              e.preventDefault(); // Prevents default form submission or button behavior
                              handleAddBusiness(); // Calls your custom function
-                            }}className="addbusiness">Add Business</button>
+                            }}className="addbusiness ">Add Business</button>
 
       <h2>Businesses to Add</h2>
 
