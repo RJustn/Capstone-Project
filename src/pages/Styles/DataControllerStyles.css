@@ -5,19 +5,39 @@
   overflow: hidden; /* Prevents scrolling */
 }
 
+
 .DAstats {
   display: flex;
   justify-content: space-between;
   padding: 20px;
   background-color: #f9f9f9;
-  border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
+.DAcard {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 50px 20px 55px 15px;
+  margin: 0px 20px 0px 20px;
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+
 .DAstats div {
   margin-right: 20px;
-  font-size: 16px;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+}
+
+.pagination {
+   margin-top: 10px;
+   gap: 5px;
 }
 
 
@@ -132,13 +152,26 @@
 }
 
 .DAbusinesspermitbutton, .DAworkpermitbutton {
-  display: inline-block; /* Ensure buttons are inline */
+  display: grid; /* Ensure buttons are inline */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  text-align: center; /* Center-align the button text */
   background-color: #ffffff; /* Button background color */
   color: rgb(0, 0, 0); /* black text color */
   padding: 3rem; /* Padding for the button */
   border-radius: 5px; /* Rounded corners */
   text-decoration: none; /* Remove underline */
   transition: background-color 0.3s; /* Smooth hover effect */
+  justify-items: center;
+  width: 400px; /* Set a fixed width for the buttons */
+  font-size: x-large;
+}
+
+.DAbusinesspermitbutton{
+  background-color: #a4c4f2; /* Example background color */
+}
+
+.DAworkpermitbutton {
+  background-color: #998fe3; /* Example background color */
 }
 
 .DAbusinesspermitbutton:hover, .DAworkpermitbutton:hover {

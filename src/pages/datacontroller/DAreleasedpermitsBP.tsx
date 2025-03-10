@@ -1894,12 +1894,12 @@ if (type === 'new') {
     ))}
   </tbody>
           </table>
-          <div className="pagination-buttons">
+          <div className="pagination">
             {currentPage > 0 && (
-              <button onClick={handlePreviousPage}>Back</button>
+              <button className='btn btn-danger' onClick={handlePreviousPage}>Back</button>
             )}
             {currentPage < totalPages - 1 && (
-              <button onClick={handleNextPage}>Next</button>
+              <button className='btn btn-success' onClick={handleNextPage}>Next</button>
             )}
           </div>
         </div>
@@ -2113,7 +2113,7 @@ if (type === 'new') {
       </div>
 
       <div>
-        <button className="cancel-button" onClick={CloseOwnerModal}>Close</button>
+        <button className="btn btn-danger" onClick={CloseOwnerModal}>Close</button>
       </div>
     </div>
   </div>
@@ -2519,7 +2519,7 @@ if (type === 'new') {
   </p>
 )}
         {/* Close Modal Button */}
-        <button className="close-modal" onClick={closeViewAttachmentsModal}>
+        <button className="btn btn-danger" style={{marginTop: '10px'}} onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>
@@ -3126,7 +3126,7 @@ if (type === 'new') {
           )}
         </div>
       )}
-      <button className="back-button" onClick={closeModal}>Close</button>
+      <button className="btn-danger" style={{marginTop: '10px'}} onClick={closeModal}>Close</button>
     </div>
   </div>
 )}

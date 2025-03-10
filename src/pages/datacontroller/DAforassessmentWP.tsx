@@ -668,12 +668,12 @@ if (type === 'new') {
   </tbody>
           </table>
 
-          <div className="pagination-buttons">
+          <div className="pagination">
             {currentPage > 0 && (
-              <button onClick={handlePreviousPage}>Back</button>
+              <button className="btn btn-success " onClick={handlePreviousPage}>Back</button>
             )}
             {currentPage < totalPages - 1 && (
-              <button onClick={handleNextPage}>Next</button>
+              <button className="btn btn-success " onClick={handleNextPage}>Next</button>
             )}
           </div>
         </div>
@@ -1057,10 +1057,12 @@ if (type === 'new') {
                 }
               />
             </label>
-            <button type="button" className="btn btn-secondary" onClick={closeModal}>
+            <div style={{marginTop: '10px'}}>
+            <button type="submit" className="btn btn-success" >Save</button>
+            <button type="button" className="btn btn-danger" onClick={closeModal} style={{marginLeft: '10px'}}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-success">Save</button>
+            </div>
           </form>
         )}
       </Modal>
@@ -1172,7 +1174,7 @@ if (type === 'new') {
         {renderFile(selectedFiles.document4)}
         {isEditingAttach ? (
           <>
-            <button type="button" className="btn btn-secondary" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+            <button type="button" className="btn btn-danger" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
               Cancel
             </button>
             <button type="button" className="btn btn-success" onClick={updateAttachments} style={{ marginLeft: '10px' }}>
@@ -1185,7 +1187,7 @@ if (type === 'new') {
           </button>
 
         )}
-        <button type="button" className="btn btn-secondary" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+        <button type="button" className="btn btn-danger" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
             Close
           </button>
       </div>

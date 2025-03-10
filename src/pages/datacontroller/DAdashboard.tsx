@@ -2,10 +2,16 @@ import '../Styles/DataControllerStyles.css';
 import DASidebar from '../components/NavigationBars/DAsidebar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bar} from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+import * as XLSX from 'xlsx';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { FaBriefcase, FaBuilding, FaFileAlt, FaSyncAlt, FaDollarSign, FaCheck } from 'react-icons/fa'; // Import the icons
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
+
+interface ExcelData {
+  [key: string]: string | number;
+}
 
 const DAdashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -99,6 +105,33 @@ const DAdashboard: React.FC = () => {
 
   const handleToggle = () => {
     setShowWorkPermit(!showWorkPermit);
+  };
+
+  const downloadExcel = (data: ExcelData[], filename: string) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, `${filename}.xlsx`);
+  };
+
+  const handleDownloadWorkPermit = () => {
+    const data = totalWorkingPermitsData.labels.map((label, index) => ({
+      month: label,
+      'Total Permits Released': totalWorkingPermitsData.datasets[0].data[index],
+      'New Permits': WorkingPermitChart.datasets[0].data[index],
+      'Renewal Permits': WorkingPermitChart.datasets[1].data[index],
+    }));
+    downloadExcel(data, 'WorkPermitData');
+  };
+
+  const handleDownloadBusinessPermits = () => {
+    const data = totalBusinessPermitsData.labels.map((label, index) => ({
+      month: label,
+      'Total Business Permits Released': totalBusinessPermitsData.datasets[0].data[index],
+      'New Permits': BusinessPermitChart.datasets[0].data[index],
+      'Renewal Permits': BusinessPermitChart.datasets[1].data[index],
+    }));
+    downloadExcel(data, 'BusinessPermitData');
   };
 
   useEffect(() => {
@@ -274,6 +307,7 @@ const DAdashboard: React.FC = () => {
 
     fetchData();
   }, [month]);
+  
 
 
   return (
@@ -296,16 +330,16 @@ const DAdashboard: React.FC = () => {
         {showWorkPermit ? (
           <>
             <div>
-              <h2>Work Permit</h2>
+              <h2><FaBriefcase  style={{ margin: '10px 20px' }}/>Work Permit</h2>
             </div>
             <div className="DAstats-chart-container">
               <div className="DAstats">
-                <div>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
-                <div>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
-                <div>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
-                <div>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
+                <div className="DAcard" ><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
               </div>
-              <div className="DaChartcontainer">
+              <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
                 <div className="DAchart">
                   <Bar data={totalWorkingPermitsData} />
                 </div>
@@ -318,16 +352,16 @@ const DAdashboard: React.FC = () => {
         ) : (
           <>
             <div>
-              <h2>Business Permit</h2>
+              <h2><FaBuilding style={{ margin: '10px 20px' }}/>Business Permit</h2>
             </div>
             <div className="DAstats-chart-container">
               <div className="DAstats">
-                <div>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
-                <div>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
-                <div>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
-                <div>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
               </div>
-              <div className="DaChartcontainer">
+              <div className="DaChartcontainer" onClick={handleDownloadBusinessPermits}>
                 <div className="DAchart">
                   <Bar data={totalBusinessPermitsData} />
                 </div>

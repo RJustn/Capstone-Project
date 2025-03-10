@@ -571,10 +571,12 @@ return (
     </div>
   )}
 </div>
-            {workPermit.workpermitstatus === 'Pending' && (
+{workPermit.workpermitstatus === 'Pending' && (
               <p>
+                <div className='pagination'>
         <button className="btn btn-success" onClick={handleUpdate}>Accept Application</button>
         <button className="btn btn-danger" onClick={openRejectModal}>Reject Application</button>
+        </div>
         </p>
       )}
     
@@ -598,7 +600,7 @@ return (
                 )}
               </div>
             )}
-            <button className="cancel-button" onClick={closeModal}>Close</button>
+            <button className="btn btn-danger" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}
@@ -627,8 +629,10 @@ return (
                   rows={4}
                   style={{ width: '100%' }} // Adjust width as needed
                 />
+                <div className="pagination">
                 <button className="DAactionbutton" onClick={handleFinalConfirm}>Submit</button>
                 <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
+                </div>
               </>
             )}
           </div>

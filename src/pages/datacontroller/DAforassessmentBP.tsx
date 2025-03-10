@@ -1122,12 +1122,12 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     ))}
   </tbody>
           </table>
-          <div className="pagination-buttons">
+          <div className="pagination">
             {currentPage > 0 && (
-              <button onClick={handlePreviousPage}>Back</button>
+              <button className="btn btn-success " onClick={handlePreviousPage}>Back</button>
             )}
             {currentPage < totalPages - 1 && (
-              <button onClick={handleNextPage}>Next</button>
+              <button className="btn btn-success " onClick={handleNextPage}>Next</button>
             )}
           </div>
         </div>
@@ -1392,16 +1392,18 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 </div>
           {/* Additional fields */}
           <div>
-  <button className="btn btn-success "onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
+  <button className="btn btn-success" onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
-    <button className="btn btn-secondary" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-danger" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
-            <button className="btn btn-danger" onClick={editcloseModal}>Close</button>
-          </div>
+  {!isEditing && (
+    <button className="btn btn-danger" onClick={editcloseModal} style={{ marginLeft: '10px' }}>Close</button>
+  )}
+</div>
         </div>
       </div>
           )}
