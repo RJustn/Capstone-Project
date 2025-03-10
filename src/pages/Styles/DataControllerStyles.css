@@ -385,6 +385,9 @@
   padding: 20px;
 }
 
+.permit-table { margin-top: 15px}
+
+
 .modal-overlay {
   position: fixed;
   top: 0;

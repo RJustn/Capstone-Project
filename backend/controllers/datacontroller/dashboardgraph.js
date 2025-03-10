@@ -16,7 +16,7 @@ const { WorkPermit, BusinessPermit } = require('../../index/models');
   // Endpoint for fetching the count of renewal working permits 
     const renewalWorkingpermits = async (req, res) => {
     try {
-      const renewalPermitsCount = await WorkPermit.countDocuments({ classification: 'RenewBusiness' });
+      const renewalPermitsCount = await WorkPermit.countDocuments({ classification: 'Renew' });
       const month = new Date().toLocaleString('default', { month: 'long' });
       res.json({ count: renewalPermitsCount });
     } catch (error) {
@@ -190,6 +190,9 @@ const businesspermitmonthlyappication =  async (req, res) => {
       res.status(500).json({ message: 'Error fetching monthly business permit applications' });
     }
   };
+
+
+  
 
   module.exports = {newWorkingpermits, renewalWorkingpermits, newBusinesspermits, renewalBusinesspermits, workingpermitsChart, businesspermitsChart, workpermitdatastats, dashboardData, permitApplicationsByCategory, businesspermitmonthlyappication}
   
