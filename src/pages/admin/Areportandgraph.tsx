@@ -267,7 +267,7 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
-          <div className="Achart" onClick={handleBarClick}>
+          <div className="Achartreport" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
               <Bar data={barData} />
@@ -275,7 +275,7 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
-          <div className="Achart">
+          <div className="Achartreport">
             <h2>Monthly Applications Trend Business</h2>
             {businessPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={businessPermitChartData} />
@@ -283,7 +283,7 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
-          <div className="Achart">
+          <div className="Achartreport">
             <h2>Monthly Applications Trend Work</h2>    
             {workPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={workPermitChartData} />

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { FaBriefcase, FaBuilding, FaFileAlt, FaSyncAlt, FaDollarSign, FaCheck } from 'react-icons/fa'; // Import the icons
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
 
@@ -298,14 +299,14 @@ const Adashboard: React.FC = () => {
         {showWorkPermit ? (
           <>
             <div>
-              <h2>Work Permit</h2>
+              <h2><FaBriefcase style={{ margin: '10px 20px' }}/>Work Permit</h2>
             </div>
-            <div className="Astats-chart-container">
-              <div className="Astats">
-                <div>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
-                <div>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
-                <div>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
-                <div>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
+            <div className="DAstats-chart-container">
+              <div className="DAstats">
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
               </div>
             </div>
             <div className="DaChartcontainer">
@@ -320,14 +321,14 @@ const Adashboard: React.FC = () => {
         ) : (
           <>
             <div>
-              <h2>Business Permit</h2>
+              <h2><FaBuilding style={{ margin: '10px 20px' }}/>Business Permit</h2>
             </div>
             <div className="Astats-chart-container">
               <div className="Astats">
-                <div>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
-                <div>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
-                <div>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
-                <div>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
               </div>
             </div>
             <div className="DaChartcontainer">

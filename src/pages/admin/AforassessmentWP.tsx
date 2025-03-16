@@ -643,14 +643,24 @@ useEffect(() => {
               ))}
             </tbody>
           </table>
-
-          <div className="pagination-buttons">
-            {currentPage > 0 && (
-              <button onClick={handlePreviousPage}>Back</button>
-            )}
-            {currentPage < totalPages - 1 && (
-              <button onClick={handleNextPage}>Next</button>
-            )}
+          <div className="pagination">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+              className="btn btn-danger"
+            >
+              Previous
+            </button>
+            <span style={{ margin: "0 10px", marginTop: "8px" }}>
+              Page {currentPage + 1} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages - 1}
+              className="btn btn-success"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

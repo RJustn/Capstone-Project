@@ -5,6 +5,15 @@
   overflow: hidden; /* Prevents scrolling */
 }
 
+.DaChartcontainer {
+  display: flex;
+  gap: 20px; /* Adds spacing between the charts */
+  justify-content: center; /* Centers the charts horizontally */
+  align-items: center; /* Centers the charts vertically */
+  flex-wrap: wrap; /* Allows charts to wrap on smaller screens */
+  padding: 20px; /* Adds padding around the container */
+  background-color: #f5f5f5; /* Subtle background color for the container */
+}
 
 .DAstats {
   display: flex;
