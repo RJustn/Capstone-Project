@@ -98,6 +98,7 @@ const AdminReportsAndGraph: React.FC = () => {
         const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
         const labels = filteredData.map((item: LocationData) => item._id);
         const counts = filteredData.map((item: LocationData) => item.count);
+        console.log('Filtered Location Data:', { labels, counts }); // Add this line
         setLocationData({ labels, data: counts });
       })
       .catch(error => console.error('Error fetching location data:', error));
@@ -112,10 +113,12 @@ const AdminReportsAndGraph: React.FC = () => {
       .then(data => {
         console.log('Monthly Payment Data:', data); // Add this line
         if (Array.isArray(data)) {
+          console.log('Monthly Payment Data is an array:', data); // Add this line
           const labels = data.map((item: MonthlyData) => item.month);
           const approved = data.flatMap((item: MonthlyData) => item.approved);
           const waitingForPayment = data.flatMap((item: MonthlyData) => item.waitingForPayment);
           const rejected = data.flatMap((item: MonthlyData) => item.rejected);
+          console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected }); // Add this line
           setMonthlyData({ labels, approved, waitingForPayment, rejected });
         } else {
           console.error('Expected array but got:', data);
@@ -133,8 +136,10 @@ const AdminReportsAndGraph: React.FC = () => {
       .then(data => {
         console.log('Work Permit Data:', data); // Add this line
         if (data.workPermitCategories && Array.isArray(data.workPermitCategories)) {
+          console.log('Work Permit Categories is an array:', data.workPermitCategories); // Add this line
           const labels = data.workPermitCategories.map((item: WorkPermitData) => item.month);
           const counts = data.workPermitCategories.map((item: WorkPermitData) => item.count);
+          console.log('Processed Work Permit Data:', { labels, counts }); // Add this line
           setWorkPermitData({ labels, data: counts });
         } else {
           console.error('Expected array but got:', data);
@@ -142,7 +147,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching work permit data:', error));
 
-    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitmonthlyappication')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlybusinesspermit')
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -152,8 +157,10 @@ const AdminReportsAndGraph: React.FC = () => {
       .then(data => {
         console.log('Business Permit Data:', data); // Add this line
         if (data.businessPermitCategories && Array.isArray(data.businessPermitCategories)) {
+          console.log('Business Permit Categories is an array:', data.businessPermitCategories); // Add this line
           const labels = data.businessPermitCategories.map((item: BusinessPermitData) => item.month);
           const counts = data.businessPermitCategories.map((item: BusinessPermitData) => item.count);
+          console.log('Processed Business Permit Data:', { labels, counts }); // Add this line
           setBusinessPermitData({ labels, data: counts });
         } else {
           console.error('Expected array but got:', data);
@@ -265,7 +272,7 @@ const AdminReportsAndGraph: React.FC = () => {
         <div className="Achart-container">
          <div className="Achartreport">
           <div className="Achartgraph" onClick={handleBarClick}>
-            <h3>Buisness Permit Status</h3>
+            <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
               <Bar data={barData} />
             ) : (
@@ -273,7 +280,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           <div className="Achartgraph">
-            <h3>Monthly Applications Trend Business</h3>
+            <h2>Monthly Applications Trend Business</h2>
             {businessPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={businessPermitChartData} />
             ) : (
@@ -281,7 +288,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           <div className="Achartgraph">
-            <h3>Monthly Applications Trend Work</h3>    
+            <h2>Monthly Applications Trend Work</h2>    
             {workPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={workPermitChartData} />
             ) : (
