@@ -20,6 +20,13 @@
     font-size: 16px;
   }
  
+  .Achart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px; /* Adjust the gap between charts */
+    padding: 30px;
+  }
 
   .Achartreport {
     display: grid;

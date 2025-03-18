@@ -325,10 +325,22 @@ const Adashboard: React.FC = () => {
             </div>
             <div className="Astats-chart-container">
               <div className="Astats">
-                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
-                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
-                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
-                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>  
+                 <div>Total Permit Applications:</div>
+                <div>{dashboardData.totalWorkPermitApplications}</div>
+                </div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>
+                <div>Total Renewal Applications:</div>
+                <div>{dashboardData.totalWorkRenewalApplications}</div>
+                </div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>
+                <div>Total Collections:</div>
+                <div>{dashboardData.totalWorkCollections}</div>
+                </div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>      
+                <div>Total Released:</div>
+                <div>{dashboardData.totalWorkReleased}</div>
+                </div>
               </div>
             </div>
             <div className="DaChartcontainer">

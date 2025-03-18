@@ -2,52 +2,177 @@ const { WorkPermit, BusinessPermit } = require('../../index/models');
 
 
 // Endpoint for fetching the count of new working permits 
-    const newWorkingpermits = async (req, res) => {
-    try {
-      const newPermitsCount = await WorkPermit.countDocuments({ classification: 'New' });
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ count: newPermitsCount });
-    } catch (error) {
-      console.error('Error fetching new working permits data:', error);
-      res.status(500).json({ message: 'Error fetching new working permits data' });
-    }
-  };
-  
-  // Endpoint for fetching the count of renewal working permits 
-    const renewalWorkingpermits = async (req, res) => {
-    try {
-      const renewalPermitsCount = await WorkPermit.countDocuments({ classification: 'Renew' });
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ count: renewalPermitsCount });
-    } catch (error) {
-      console.error('Error fetching renewal working permits data:', error);
-      res.status(500).json({ message: 'Error fetching renewal working permits data' });
-    }
-  };
-  
-  // Endpoint for fetching the count of new business permits
-   const newBusinesspermits = async (req, res) => {
-    try {
-      const newBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'NewBusiness' });
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ count: newBusinessPermitsCount });
-    } catch (error) {
-      console.error('Error fetching new business permits data:', error);
-      res.status(500).json({ message: 'Error fetching new business permits data' });
-    }
-  };
-  
-  // Endpoint for fetching the count of renewal business permits
-    const renewalBusinesspermits = async (req, res) => {
-    try {
-      const renewalBusinessPermitsCount = await BusinessPermit.countDocuments({ classification: 'RenewBusiness' });
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ count: renewalBusinessPermitsCount });
-    } catch (error) {
-      console.error('Error fetching renewal business permits data:', error);
-      res.status(500).json({ message: 'Error fetching renewal business permits data' });
-    }
-  };
+const newWorkingpermits = async (req, res) => {
+  try {
+    const monthlyData = await WorkPermit.aggregate([
+      {
+        $match: { classification: 'New' }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching monthly new working permits:', error);
+    res.status(500).json({ message: 'Error fetching monthly new working permits' });
+  }
+};
+
+const renewalWorkingpermits = async (req, res) => {
+  try {
+    const monthlyData = await WorkPermit.aggregate([
+      {
+        $match: { classification: 'Renew' }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching monthly renewal working permits:', error);
+    res.status(500).json({ message: 'Error fetching monthly renewal working permits' });
+  }
+};
+
+const newBusinesspermits = async (req, res) => {
+  try {
+    const monthlyData = await BusinessPermit.aggregate([
+      {
+        $match: { classification: 'NewBusiness' }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching monthly new business permits:', error);
+    res.status(500).json({ message: 'Error fetching monthly new business permits' });
+  }
+};
+
+const renewalBusinesspermits = async (req, res) => {
+  try {
+    const monthlyData = await BusinessPermit.aggregate([
+      {
+        $match: { classification: 'RenewBusiness' }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching monthly renewal business permits:', error);
+    res.status(500).json({ message: 'Error fetching monthly renewal business permits' });
+  }
+};
   
   
   // Endpoint for fetching the count of working permits
