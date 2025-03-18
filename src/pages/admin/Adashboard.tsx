@@ -329,8 +329,8 @@ const Adashboard: React.FC = () => {
             <div>
               <h2><FaBuilding style={{ margin: '10px 20px' }}/>Business Permit</h2>
             </div>
-            <div className="Astats-chart-container">
-              <div className="Astats">
+            <div className="DAstats-chart-container">
+              <div className="DAstats">
                 <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications:
                 <div>{dashboardData.totalWorkPermitApplications}</div>
                 </div>
