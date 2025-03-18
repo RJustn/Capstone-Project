@@ -181,11 +181,11 @@ const Adashboard: React.FC = () => {
           const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json();
 
           setWorkingpermitchart({
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            labels: newPermitsData.map((data: { month: string }) => data.month),
             datasets: [
               {
                 label: 'New Permits',
-                data: [newPermitsData.count],
+                data: newPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -193,7 +193,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Permits',
-                data: [renewalPermitsData.count],
+                data: renewalPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -203,11 +203,11 @@ const Adashboard: React.FC = () => {
           });
 
           setBusinessPermitChart({
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            labels: newBusinessPermitsData.map((data: { month: any; }) => data.month),
             datasets: [
               {
                 label: 'New Business Permits',
-                data: [newBusinessPermitsData.count],
+                data: newBusinessPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -215,7 +215,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: [renewalBusinessPermitsData.count],
+                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -225,11 +225,11 @@ const Adashboard: React.FC = () => {
           });
 
           setTotalWorkingPermitsData({
-            labels: [month],
+            labels: workingPermitsData.map((data: { month: any; }) => data.month),
             datasets: [
               {
                 label: 'Total Permits Released',
-                data: [workingPermitsData.count],
+                data: workingPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -239,11 +239,11 @@ const Adashboard: React.FC = () => {
           });
 
           settotalBusinessPermit({
-            labels: [month],
+            labels: businessPermitsData.map((data: { month: any; }) => data.month),
             datasets: [
               {
                 label: 'Total Business Permits Released',
-                data: [businessPermitsData.count],
+                data: businessPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -251,8 +251,6 @@ const Adashboard: React.FC = () => {
               },
             ],
           });
-
-        
         } 
 
         if (dashboardDataResponse.ok) {
@@ -325,20 +323,16 @@ const Adashboard: React.FC = () => {
             </div>
             <div className="Astats-chart-container">
               <div className="Astats">
-                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>  
-                 <div>Total Permit Applications:</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications:
                 <div>{dashboardData.totalWorkPermitApplications}</div>
                 </div>
-                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>
-                <div>Total Renewal Applications:</div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>Total Renewal Applications:
                 <div>{dashboardData.totalWorkRenewalApplications}</div>
                 </div>
-                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>
-                <div>Total Collections:</div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>Total Collections:
                 <div>{dashboardData.totalWorkCollections}</div>
                 </div>
-                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>      
-                <div>Total Released:</div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>Total Released:
                 <div>{dashboardData.totalWorkReleased}</div>
                 </div>
               </div>

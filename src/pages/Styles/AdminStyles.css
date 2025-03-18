@@ -27,6 +27,19 @@
     gap: 20px; /* Adjust the gap between charts */
     padding: 30px;
   }
+  
+  .Achartlocation {
+    grid-area: location; 
+    padding: 20px;
+    width: 100%; 
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    display: block;
+  }
 
   .Achartreport {
     display: grid;

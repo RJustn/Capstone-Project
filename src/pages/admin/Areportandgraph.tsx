@@ -260,14 +260,6 @@ const AdminReportsAndGraph: React.FC = () => {
         </header>
         <div className="Achart-container">
          <div className="Achartreport">
-          <div className="Achartgraph" onClick={handlePieClick}>
-            <h2>Business Permit Locations</h2>
-            {pieData.datasets[0]. data.length > 0 ? (
-              <Doughnut data={pieData} />
-            ) : ( 
-              <p>There is no data</p>
-            )}
-          </div>
           <div className="Achartgraph" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
@@ -289,6 +281,14 @@ const AdminReportsAndGraph: React.FC = () => {
             {workPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={workPermitChartData} />
             ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+          <div className="Achartlocation" onClick={handlePieClick}>
+            <h2>Business Permit Locations</h2>
+            {pieData.datasets[0]. data.length > 0 ? (
+              <Doughnut data={pieData} />
+            ) : ( 
               <p>There is no data</p>
             )}
           </div>

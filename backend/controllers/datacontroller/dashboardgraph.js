@@ -175,29 +175,87 @@ const renewalBusinesspermits = async (req, res) => {
 };
   
   
-  // Endpoint for fetching the count of working permits
-   const workingpermitsChart = async (req, res) => {
-    try {
-      const workingPermits = await WorkPermit.countDocuments();
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ label: 'Working Permit', count: workingPermits });
-    } catch (error) {
-      console.error('Error fetching working permit data:', error);
-      res.status(500).json({ message: 'Error fetching working permit data' });
-    }
-  };
-  
-  // Endpoint for fetching the count of business permits
-    const businesspermitsChart = async (req, res) => {
-    try {
-      const businessPermits = await BusinessPermit.countDocuments();
-      const month = new Date().toLocaleString('default', { month: 'long' });
-      res.json({ label: 'Business Permit', count: businessPermits });
-    } catch (error) {
-      console.error('Error fetching business permit data:', error);
-      res.status(500).json({ message: 'Error fetching business permit data' });
-    }
-  };
+// Endpoint for fetching the count of working permits
+const workingpermitsChart = async (req, res) => {
+  try {
+    const monthlyData = await WorkPermit.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching working permit data:', error);
+    res.status(500).json({ message: 'Error fetching working permit data' });
+  }
+};
+
+// Endpoint for fetching the count of business permits
+const businesspermitsChart = async (req, res) => {
+  try {
+    const monthlyData = await BusinessPermit.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
+              " ",
+              { $toString: "$_id.year" }
+            ]
+          },
+          count: 1
+        }
+      }
+    ]);
+
+    res.json(monthlyData);
+  } catch (error) {
+    console.error('Error fetching business permit data:', error);
+    res.status(500).json({ message: 'Error fetching business permit data' });
+  }
+};
   
   // For the Dashboard
    const workpermitdatastats = async (req, res) => {
@@ -320,4 +378,3 @@ const businesspermitmonthlyappication =  async (req, res) => {
   
 
   module.exports = {newWorkingpermits, renewalWorkingpermits, newBusinesspermits, renewalBusinesspermits, workingpermitsChart, businesspermitsChart, workpermitdatastats, dashboardData, permitApplicationsByCategory, businesspermitmonthlyappication}
-  
