@@ -94,6 +94,7 @@ const AdminReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
       .then(response => response.json())
       .then(data => {
+        console.log('Location Data:', data); // Add this line
         const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
         const labels = filteredData.map((item: LocationData) => item._id);
         const counts = filteredData.map((item: LocationData) => item.count);
@@ -101,7 +102,7 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching location data:', error));
 
-    fetch('https://capstone-project-backend-nu.vercel.app/admin/graphmonthlybusinesspermit')
+    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus') // Updated endpoint
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -109,6 +110,7 @@ const AdminReportsAndGraph: React.FC = () => {
         return response.json();
       })
       .then(data => {
+        console.log('Monthly Payment Data:', data); // Add this line
         if (Array.isArray(data)) {
           const labels = data.map((item: MonthlyData) => item.month);
           const approved = data.flatMap((item: MonthlyData) => item.approved);
@@ -129,6 +131,7 @@ const AdminReportsAndGraph: React.FC = () => {
         return response.json();
       })
       .then(data => {
+        console.log('Work Permit Data:', data); // Add this line
         if (data.workPermitCategories && Array.isArray(data.workPermitCategories)) {
           const labels = data.workPermitCategories.map((item: WorkPermitData) => item.month);
           const counts = data.workPermitCategories.map((item: WorkPermitData) => item.count);
@@ -147,6 +150,7 @@ const AdminReportsAndGraph: React.FC = () => {
         return response.json();
       })
       .then(data => {
+        console.log('Business Permit Data:', data); // Add this line
         if (data.businessPermitCategories && Array.isArray(data.businessPermitCategories)) {
           const labels = data.businessPermitCategories.map((item: BusinessPermitData) => item.month);
           const counts = data.businessPermitCategories.map((item: BusinessPermitData) => item.count);
@@ -261,7 +265,7 @@ const AdminReportsAndGraph: React.FC = () => {
         <div className="Achart-container">
          <div className="Achartreport">
           <div className="Achartgraph" onClick={handleBarClick}>
-            <h2>Buisness Permit Status</h2>
+            <h3>Buisness Permit Status</h3>
             {barData.datasets[0].data.length > 0 ? (
               <Bar data={barData} />
             ) : (
@@ -269,7 +273,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           <div className="Achartgraph">
-            <h2>Monthly Applications Trend Business</h2>
+            <h3>Monthly Applications Trend Business</h3>
             {businessPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={businessPermitChartData} />
             ) : (
@@ -277,7 +281,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           <div className="Achartgraph">
-            <h2>Monthly Applications Trend Work</h2>    
+            <h3>Monthly Applications Trend Work</h3>    
             {workPermitChartData.datasets[0].data.length > 0 ? (
               <Line data={workPermitChartData} />
             ) : (
@@ -285,7 +289,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           <div className="Achartlocation" onClick={handlePieClick}>
-            <h2>Business Permit Locations</h2>
+            <h3>Business Permit Locations</h3>
             {pieData.datasets[0]. data.length > 0 ? (
               <Doughnut data={pieData} />
             ) : ( 

@@ -178,13 +178,13 @@ const Adashboard: React.FC = () => {
           const workingPermitsData = await workingPermitsResponse.json();
           const businessPermitsData = await businessPermitsResponse.json();
           const newBusinessPermitsData = await newBusinessPermitsResponse.json();
-          const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json();
+          const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json(); // Ensure this line is present
 
           setWorkingpermitchart({
             labels: newPermitsData.map((data: { month: string }) => data.month),
             datasets: [
               {
-                label: 'New Permits',
+                label: 'New Work Permits',
                 data: newPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -192,7 +192,7 @@ const Adashboard: React.FC = () => {
                 fill: true,
               },
               {
-                label: 'Renewal Permits',
+                label: 'Renewal Work Permits',
                 data: renewalPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
@@ -215,7 +215,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count),
+                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count), // Ensure this line is present
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -301,10 +301,18 @@ const Adashboard: React.FC = () => {
             </div>
             <div className="DAstats-chart-container">
               <div className="DAstats">
-                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalWorkPermitApplications}`}</div>
-                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications : ${dashboardData.totalWorkRenewalApplications}`}</div>
-                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalWorkCollections}`}</div>
-                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalWorkReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications: 
+                <div>{dashboardData.totalWorkPermitApplications} </div>
+                  </div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/> Total Renewal Applications :
+                <div>{dashboardData.totalWorkRenewalApplications}</div>
+                </div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>Total Collections:
+                <div>{dashboardData.totalWorkCollections}</div>
+                  </div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>Total Released:
+                <div>{dashboardData.totalWorkReleased}</div>
+                </div>
               </div>
             </div>
             <div className="DaChartcontainer">
