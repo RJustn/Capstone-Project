@@ -135,7 +135,7 @@ const renewalBusinesspermits = async (req, res) => {
   try {
     const monthlyData = await BusinessPermit.aggregate([
       {
-        $match: { classification: 'RenewBusiness' }
+        $match: { classification: 'RenewBusiness' } // Ensure this line is present
       },
       {
         $group: {

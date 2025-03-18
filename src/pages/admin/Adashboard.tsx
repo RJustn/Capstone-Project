@@ -181,7 +181,7 @@ const Adashboard: React.FC = () => {
           const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json(); // Ensure this line is present
 
           setWorkingpermitchart({
-            labels: newPermitsData.map((data: { month: string }) => data.month),
+            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
             datasets: [
               {
                 label: 'New Work Permits',
@@ -203,7 +203,7 @@ const Adashboard: React.FC = () => {
           });
 
           setBusinessPermitChart({
-            labels: newBusinessPermitsData.map((data: { month: any; }) => data.month),
+            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
             datasets: [
               {
                 label: 'New Business Permits',
@@ -215,7 +215,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count), // Ensure this line is present
+                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
