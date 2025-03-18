@@ -2,7 +2,7 @@ import '../Styles/AdminStyles.css';
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Line } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
 import { FaBriefcase, FaBuilding, FaFileAlt, FaSyncAlt, FaDollarSign, FaCheck } from 'react-icons/fa'; // Import the icons
 
@@ -320,7 +320,7 @@ const Adashboard: React.FC = () => {
                   <Line data={totalWorkingPermitsData} />
                 </div>
                 <div className="DAchart">
-                  <Line data={WorkingPermitChart} />
+                  <Bar data={WorkingPermitChart} />
                 </div>
               </div>
           </>
@@ -350,7 +350,7 @@ const Adashboard: React.FC = () => {
                   <Line data={totalBusinessPermitsData} />
                 </div>
                 <div className="DAchart">
-                  <Line data={BusinessPermitChart} />
+                  <Bar data={BusinessPermitChart} />
                 </div>
               </div>
           </>
