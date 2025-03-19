@@ -143,6 +143,24 @@ const AdminReportsAndGraph: React.FC = () => {
     downloadExcel(data, 'BusinesspermitStatus');
   };
 
+  const handlePaidClick = () => {
+    const data = monthlyData.labels.map((label, index) => ({
+      Month: label,
+      BusinessPaid: monthlyData.businessPaid[index],
+      WorkPaid: monthlyData.workPaid[index]
+    }));
+    downloadExcel(data, 'PaidStatus');
+  };
+
+  const handleUnpaidClick = () => {
+    const data = monthlyData.labels.map((label, index) => ({
+      Month: label,
+      BusinessUnpaid: monthlyData.businessUnpaid[index],
+      WorkUnpaid: monthlyData.workUnpaid[index]
+    }));
+    downloadExcel(data, 'UnpaidStatus');
+  };
+
   const pieData = {
     labels: locationData.labels,
     datasets: [
@@ -227,17 +245,8 @@ const AdminReportsAndGraph: React.FC = () => {
         <div className="Achart-container">
          <div className="Achartreport">
 
-         <div className="Achartgraph" onClick={handleBarClick}>
-           <h2>Monthly Payment</h2>
-            {barData.datasets[0].data.length > 0 ? (
-              <Bar data={barData} />
-            ) : (
-              <p>There is no data</p>
-            )}
-          </div>
-           
           <div className="Achartgraph" onClick={handleBarClick}>
-            <h2>Buisness Permit Status</h2>
+            <h2>Business Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
               <Bar data={barData} />
             ) : (
@@ -245,7 +254,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           
-          <div className="Achartgraph" onClick={handleBarClick}>
+          <div className="Achartgraph" onClick={handlePaidClick}>
             <h2>Paid Status</h2>
             {paidData.datasets[0].data.length > 0 ? (
               <Bar data={paidData} />
@@ -254,7 +263,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
           
-          <div className="Achartgraph" onClick={handleBarClick}>
+          <div className="Achartgraph" onClick={handleUnpaidClick}>
             <h2>Unpaid Status</h2>
             {unpaidData.datasets[0].data.length > 0 ? (
               <Bar data={unpaidData} />
