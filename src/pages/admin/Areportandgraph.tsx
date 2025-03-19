@@ -32,7 +32,7 @@ const AdminReportsAndGraph: React.FC = () => {
 
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
-  const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [] });
+  const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[], businessPaid: number[], businessUnpaid: number[], workPaid: number[], workUnpaid: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [], businessPaid: [], businessUnpaid: [], workPaid: [], workUnpaid: [] });
   
   useEffect(() => {
     const checkAuth = async () => {
@@ -104,8 +104,12 @@ const AdminReportsAndGraph: React.FC = () => {
           const approved = data.businessPermits.flatMap((item: MonthlyData) => item.paid);
           const waitingForPayment = data.businessPermits.flatMap((item: MonthlyData) => item.unpaid);
           const rejected = data.workPermits.flatMap((item: MonthlyData) => item.unpaid); // Assuming rejected is equivalent to unpaid for work permits
-          console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected }); // Add this line
-          setMonthlyData({ labels, approved, waitingForPayment, rejected });
+          const businessPaid = data.businessPermits.flatMap((item: MonthlyData) => item.paid);
+          const businessUnpaid = data.businessPermits.flatMap((item: MonthlyData) => item.unpaid);
+          const workPaid = data.workPermits.flatMap((item: MonthlyData) => item.paid);
+          const workUnpaid = data.workPermits.flatMap((item: MonthlyData) => item.unpaid);
+          console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected, businessPaid, businessUnpaid, workPaid, workUnpaid }); // Add this line
+          setMonthlyData({ labels, approved, waitingForPayment, rejected, businessPaid, businessUnpaid, workPaid, workUnpaid });
         } else {
           console.error('Expected array but got:', data);
         }
@@ -183,9 +187,14 @@ const AdminReportsAndGraph: React.FC = () => {
     labels: monthlyData.labels,
     datasets: [
       {
-        label: 'Paid',
-        data: monthlyData.approved,
+        label: 'Business Paid',
+        data: monthlyData.businessPaid,
         backgroundColor: '#4BC0C0'
+      },
+      {
+        label: 'Work Paid',
+        data: monthlyData.workPaid,
+        backgroundColor: '#36A2EB'
       }
     ]
   };
@@ -194,9 +203,14 @@ const AdminReportsAndGraph: React.FC = () => {
     labels: monthlyData.labels,
     datasets: [
       {
-        label: 'Unpaid',
-        data: monthlyData.waitingForPayment,
+        label: 'Business Unpaid',
+        data: monthlyData.businessUnpaid,
         backgroundColor: '#FF9F40'
+      },
+      {
+        label: 'Work Unpaid',
+        data: monthlyData.workUnpaid,
+        backgroundColor: '#FF6384'
       }
     ]
   };
