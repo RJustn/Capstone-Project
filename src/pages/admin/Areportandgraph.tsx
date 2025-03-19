@@ -226,6 +226,7 @@ const AdminReportsAndGraph: React.FC = () => {
         </header>
         <div className="Achart-container">
          <div className="Achartreport">
+
          <div className="Achartgraph" onClick={handleBarClick}>
            <h2>Monthly Payment</h2>
             {barData.datasets[0].data.length > 0 ? (
@@ -234,6 +235,7 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
+           
           <div className="Achartgraph" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
@@ -270,7 +272,7 @@ const AdminReportsAndGraph: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+        </div>
       </div>
     </section>
   );
