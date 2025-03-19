@@ -45,14 +45,14 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
     gap: 20px; /* Adjust the gap between charts */
-    padding: 60px;
+    padding: 50px;
     margin: 20px 0; /* Space above and below the table */
     border-radius: 8px; /* Rounded corners */
     background-color: #ffffff; /* White background for contrast */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow-x: auto;
     grid-template-areas: 
-        "graph1 graph2 graph3"
+        "graph1 graph2 graph3 graph4"
         "location location location graph4" ; /* Define the layout areas */
   }
   
