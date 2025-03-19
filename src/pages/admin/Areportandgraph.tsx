@@ -233,7 +233,7 @@ const AdminReportsAndGraph: React.FC = () => {
             ) : (
               <p>There is no data</p>
             )}
-
+          </div>
           <div className="Achartgraph" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
@@ -269,7 +269,6 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
-        </div>
         </div>
       </div>
       </div>
