@@ -2,7 +2,7 @@ import '../Styles/AdminStyles.css';
 import React, { useEffect, useState } from 'react';
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import { useNavigate } from 'react-router-dom';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto'; // Import Chart.js
 import * as XLSX from 'xlsx';
 
@@ -21,20 +21,8 @@ const AdminReportsAndGraph: React.FC = () => {
     waitingForPayment: number[];
     rejected: number[];
     month: string;
-  }
-  interface WorkPermitData {
-    labels: string[];
-    data: number[];
-    _id: string;
-    count: number;
-    month: string;
-  }
-  interface BusinessPermitData {
-    labels: string[];
-    data: number[];
-    _id: string;
-    count: number;
-    month: string;
+    paid: string[];
+    unpaid: string[];
   }
 
   interface ExcelData {
@@ -45,9 +33,7 @@ const AdminReportsAndGraph: React.FC = () => {
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [] });
-  const [workPermitData, setWorkPermitData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
-  const [businessPermitData, setBusinessPermitData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
-
+  
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -112,12 +98,12 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .then(data => {
         console.log('Monthly Payment Data:', data); // Add this line
-        if (Array.isArray(data)) {
+        if (data && data.businessPermits && data.workPermits) {
           console.log('Monthly Payment Data is an array:', data); // Add this line
-          const labels = data.map((item: MonthlyData) => item.month);
-          const approved = data.flatMap((item: MonthlyData) => item.approved);
-          const waitingForPayment = data.flatMap((item: MonthlyData) => item.waitingForPayment);
-          const rejected = data.flatMap((item: MonthlyData) => item.rejected);
+          const labels = data.businessPermits.map((item: MonthlyData) => item.month);
+          const approved = data.businessPermits.flatMap((item: MonthlyData) => item.paid);
+          const waitingForPayment = data.businessPermits.flatMap((item: MonthlyData) => item.unpaid);
+          const rejected = data.workPermits.flatMap((item: MonthlyData) => item.unpaid); // Assuming rejected is equivalent to unpaid for work permits
           console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected }); // Add this line
           setMonthlyData({ labels, approved, waitingForPayment, rejected });
         } else {
@@ -126,47 +112,6 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching monthly payment data:', error));
 
-    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphpermitapplicationcategory')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Work Permit Data:', data); // Add this line
-        if (data.workPermitCategories && Array.isArray(data.workPermitCategories)) {
-          console.log('Work Permit Categories is an array:', data.workPermitCategories); // Add this line
-          const labels = data.workPermitCategories.map((item: WorkPermitData) => item.month);
-          const counts = data.workPermitCategories.map((item: WorkPermitData) => item.count);
-          console.log('Processed Work Permit Data:', { labels, counts }); // Add this line
-          setWorkPermitData({ labels, data: counts });
-        } else {
-          console.error('Expected array but got:', data);
-        }
-      })
-      .catch(error => console.error('Error fetching work permit data:', error));
-
-    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlybusinesspermit')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Business Permit Data:', data); // Add this line
-        if (data.businessPermitCategories && Array.isArray(data.businessPermitCategories)) {
-          console.log('Business Permit Categories is an array:', data.businessPermitCategories); // Add this line
-          const labels = data.businessPermitCategories.map((item: BusinessPermitData) => item.month);
-          const counts = data.businessPermitCategories.map((item: BusinessPermitData) => item.count);
-          console.log('Processed Business Permit Data:', { labels, counts }); // Add this line
-          setBusinessPermitData({ labels, data: counts });
-        } else {
-          console.error('Expected array but got:', data);
-        }
-      })
-      .catch(error => console.error('Error fetching business permit data:', error));
   }, [navigate]);
 
   const downloadExcel = (data: ExcelData[], filename: string) => {
@@ -191,7 +136,7 @@ const AdminReportsAndGraph: React.FC = () => {
       WaitingForPayment: monthlyData.waitingForPayment[index],
       Rejected: monthlyData.rejected[index]
     }));
-    downloadExcel(data, 'MonthlyPaymentStatus');
+    downloadExcel(data, 'BusinesspermitStatus');
   };
 
   const pieData = {
@@ -234,32 +179,6 @@ const AdminReportsAndGraph: React.FC = () => {
     ]
   };
 
-  const workPermitChartData = {
-    labels: workPermitData.labels,
-    datasets: [
-      {
-        label: 'Work Permit Applications',
-        data: workPermitData.data,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: true,
-      },
-    ],
-  };
-
-  const businessPermitChartData = {
-    labels: businessPermitData.labels,
-    datasets: [
-      {
-        label: 'Business Permit Applications',
-        data: businessPermitData.data,
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        fill: true,
-      },
-    ],
-  };
-
   return (
     <section className="Abody">
       <div className="Asidebar-container">
@@ -271,6 +190,7 @@ const AdminReportsAndGraph: React.FC = () => {
         </header>
         <div className="Achart-container">
          <div className="Achartreport">
+
           <div className="Achartgraph" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
@@ -279,22 +199,7 @@ const AdminReportsAndGraph: React.FC = () => {
               <p>There is no data</p>
             )}
           </div>
-          <div className="Achartgraph">
-            <h2>Monthly Applications Trend Business</h2>
-            {businessPermitChartData.datasets[0].data.length > 0 ? (
-              <Line data={businessPermitChartData} />
-            ) : (
-              <p>There is no data</p>
-            )}
-          </div>
-          <div className="Achartgraph">
-            <h2>Monthly Applications Trend Work</h2>    
-            {workPermitChartData.datasets[0].data.length > 0 ? (
-              <Line data={workPermitChartData} />
-            ) : (
-              <p>There is no data</p>
-            )}
-          </div>
+          
           <div className="Achartlocation" onClick={handlePieClick}>
             <h3>Business Permit Locations</h3>
             {pieData.datasets[0]. data.length > 0 ? (
