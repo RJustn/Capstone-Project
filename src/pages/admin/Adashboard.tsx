@@ -185,7 +185,7 @@ const Adashboard: React.FC = () => {
             datasets: [
               {
                 label: 'New Work Permits',
-                data: newPermitsData.map((data: { count: any; }) => data.count),
+                data: newPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -193,7 +193,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Work Permits',
-                data: renewalPermitsData.map((data: { count: any; }) => data.count),
+                data: renewalPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -207,7 +207,7 @@ const Adashboard: React.FC = () => {
             datasets: [
               {
                 label: 'New Business Permits',
-                data: newBusinessPermitsData.map((data: { count: any; }) => data.count),
+                data: newBusinessPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -215,7 +215,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: renewalBusinessPermitsData.map((data: { count: any; }) => data.count),
+                data: renewalBusinessPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -225,11 +225,11 @@ const Adashboard: React.FC = () => {
           });
 
           setTotalWorkingPermitsData({
-            labels: workingPermitsData.map((data: { month: any; }) => data.month),
+            labels: workingPermitsData.map((data: { month: string; }) => data.month),
             datasets: [
               {
                 label: 'Total Permits Released',
-                data: workingPermitsData.map((data: { count: any; }) => data.count),
+                data: workingPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -239,11 +239,11 @@ const Adashboard: React.FC = () => {
           });
 
           settotalBusinessPermit({
-            labels: businessPermitsData.map((data: { month: any; }) => data.month),
+            labels: businessPermitsData.map((data: { month: string; }) => data.month),
             datasets: [
               {
                 label: 'Total Business Permits Released',
-                data: businessPermitsData.map((data: { count: any; }) => data.count),
+                data: businessPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,

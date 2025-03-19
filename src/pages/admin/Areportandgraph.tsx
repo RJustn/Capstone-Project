@@ -179,6 +179,28 @@ const AdminReportsAndGraph: React.FC = () => {
     ]
   };
 
+  const paidData = {
+    labels: monthlyData.labels,
+    datasets: [
+      {
+        label: 'Paid',
+        data: monthlyData.approved,
+        backgroundColor: '#4BC0C0'
+      }
+    ]
+  };
+
+  const unpaidData = {
+    labels: monthlyData.labels,
+    datasets: [
+      {
+        label: 'Unpaid',
+        data: monthlyData.waitingForPayment,
+        backgroundColor: '#FF9F40'
+      }
+    ]
+  };
+
   return (
     <section className="Abody">
       <div className="Asidebar-container">
@@ -190,11 +212,36 @@ const AdminReportsAndGraph: React.FC = () => {
         </header>
         <div className="Achart-container">
          <div className="Achartreport">
+         <div className="Achartgraph" onClick={handleBarClick}>
+           <h2>Monthly Payment</h2>
+            {barData.datasets[0].data.length > 0 ? (
+              <Bar data={barData} />
+            ) : (
+              <p>There is no data</p>
+            )}
 
           <div className="Achartgraph" onClick={handleBarClick}>
             <h2>Buisness Permit Status</h2>
             {barData.datasets[0].data.length > 0 ? (
               <Bar data={barData} />
+            ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+          
+          <div className="Achartgraph" onClick={handleBarClick}>
+            <h2>Paid Status</h2>
+            {paidData.datasets[0].data.length > 0 ? (
+              <Bar data={paidData} />
+            ) : (
+              <p>There is no data</p>
+            )}
+          </div>
+          
+          <div className="Achartgraph" onClick={handleBarClick}>
+            <h2>Unpaid Status</h2>
+            {unpaidData.datasets[0].data.length > 0 ? (
+              <Bar data={unpaidData} />
             ) : (
               <p>There is no data</p>
             )}
@@ -210,6 +257,7 @@ const AdminReportsAndGraph: React.FC = () => {
           </div>
         </div>
         </div>
+      </div>
       </div>
     </section>
   );
