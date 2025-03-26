@@ -37,29 +37,7 @@ const Areleasedpermits: React.FC = () => {
         checkAuth();
       }, [navigate]); // Only depend on navigate, which is necessary for the redirection
 
-      const navigateNewWorkpermit= () => {
-        navigate('AreleasedpermitsWP/new'); // Redirect to the login page
-      };
 
-      const navigateRenewWorkpermit = () => {
-        navigate('AreleasedpermitsWP/renew'); // Redirect to the login page
-      };
-
-      const navigateAllWorkpermit = () => {
-        navigate('AreleasedpermitsWP/'); // Redirect to the login page
-      };
-
-      const navigateNewBusinesspermit= () => {
-        navigate('AreleasedpermitsBP/new'); // Redirect to the login page
-      };
-
-      const navigateRenewBusinesspermit = () => {
-        navigate('AreleasedpermitsBP/renew'); // Redirect to the login page
-      };
-
-      const navigateAllBusinesspermit = () => {
-        navigate('AreleasedpermitsBP/'); // Redirect to the login page
-      };
 
 return (
     <section className="Abody">
@@ -72,29 +50,29 @@ return (
             <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className="button-container">
-            <a onClick={navigateNewWorkpermit} className='DAworkpermitbutton'>
+            <a href='AreleasedpermitsWP/new' className='DAworkpermitbutton'>
               Released New Working Permit
             </a>
 
-            <a onClick={navigateRenewWorkpermit} className='DAworkpermitbutton'>
+            <a href='AreleasedpermitsWP/renew' className='DAworkpermitbutton'>
               Released Renew Working Permit
             </a>
 
-            <a onClick={navigateAllWorkpermit} className='DAworkpermitbutton'>
+            <a href='AreleasedpermitsWP/' className='DAworkpermitbutton'>
               View All Released  Working Permit
             </a>
         </div>
 
         <div className="button-container">
-        <a onClick={navigateNewBusinesspermit} className='DAbusinesspermitbutton'>
+        <a href='AreleasedpermitsBP/new' className='DAbusinesspermitbutton'>
               Released New Business Permit
             </a>
 
-            <a onClick={navigateRenewBusinesspermit} className='DAbusinesspermitbutton'>
+            <a href='AreleasedpermitsBP/renew' className='DAbusinesspermitbutton'>
               Released Renew Business Permit
             </a>
 
-            <a onClick={navigateAllBusinesspermit} className='DAbusinesspermitbutton'>
+            <a href='AreleasedpermitsBP/' className='DAbusinesspermitbutton'>
               View All Released  Business Permit
             </a>   
         </div>
