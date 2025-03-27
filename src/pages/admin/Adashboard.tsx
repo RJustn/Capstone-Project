@@ -5,10 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
 import { FaBriefcase, FaBuilding, FaFileAlt, FaSyncAlt, FaDollarSign, FaCheck } from 'react-icons/fa'; // Import the icons
+import * as XLSX from 'xlsx';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
 
 const Adashboard: React.FC = () => {
+  interface ExcelData {
+    [key: string]: string | number;
+  }
+
   const navigate = useNavigate();
 
   const month = new Date().toLocaleString('default', { month: 'long' });
@@ -100,6 +105,33 @@ const Adashboard: React.FC = () => {
 
   const handleToggle = () => {
     setShowWorkPermit(!showWorkPermit);
+  };
+
+  const downloadExcel = (data: ExcelData[], filename: string) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, `${filename}.xlsx`);
+  };
+
+  const handleDownloadWorkPermit = () => {
+    const data = totalWorkingPermitsData.labels.map((label, index) => ({
+      month: label,
+      'Total Permits Released': totalWorkingPermitsData.datasets[0].data[index],
+      'New Permits': WorkingPermitChart.datasets[0].data[index],
+      'Renewal Permits': WorkingPermitChart.datasets[1].data[index],
+    }));
+    downloadExcel(data, 'WorkPermitData');
+  };
+
+  const handleDownloadBusinessPermits = () => {
+    const data = totalBusinessPermitsData.labels.map((label, index) => ({
+      month: label,
+      'Total Business Permits Released': totalBusinessPermitsData.datasets[0].data[index],
+      'New Permits': BusinessPermitChart.datasets[0].data[index],
+      'Renewal Permits': BusinessPermitChart.datasets[1].data[index],
+    }));
+    downloadExcel(data, 'BusinessPermitData');
   };
 
   useEffect(() => {
@@ -215,7 +247,7 @@ const Adashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: renewalBusinessPermitsData.map((data: { count: number; }) => data.count),
+                data: renewalBusinessPermitsData.map((data: { count: number; }) => data.count), // Ensure correct mapping
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -292,6 +324,11 @@ const Adashboard: React.FC = () => {
           <button onClick={handleToggle}>
             {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
           </button>
+          {showWorkPermit ? (
+            <button onClick={handleDownloadWorkPermit}>Download Work Permit Data</button>
+          ) : (
+            <button onClick={handleDownloadBusinessPermits}>Download Business Permit Data</button>
+          )}
         </div>
 
         {showWorkPermit ? (
