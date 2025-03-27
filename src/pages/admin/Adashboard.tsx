@@ -324,13 +324,7 @@ const Adashboard: React.FC = () => {
           <button onClick={handleToggle}>
             {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
           </button>
-          {showWorkPermit ? (
-            <button onClick={handleDownloadWorkPermit}>Download Work Permit Data</button>
-          ) : (
-            <button onClick={handleDownloadBusinessPermits}>Download Business Permit Data</button>
-          )}
-        </div>
-
+          </div>
         {showWorkPermit ? (
           <>
             <div>
@@ -352,7 +346,7 @@ const Adashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="DaChartcontainer">
+            <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
                 <div className="DAchart">
                   <Line data={totalWorkingPermitsData} />
                 </div>
@@ -382,7 +376,7 @@ const Adashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="DaChartcontainer">
+            <div className="DaChartcontainer" onClick={handleDownloadBusinessPermits}>
                 <div className="DAchart">
                   <Line data={totalBusinessPermitsData} />
                 </div>

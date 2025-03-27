@@ -380,9 +380,9 @@ const DAdashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
+            <div className="DaChartcontainer" onClick={handleDownloadBusinessPermits}>
               <div className="DAchart">
-                <Line data={totalBusinessPermitsData} onClick={handleDownloadBusinessPermits} />
+                <Line data={totalBusinessPermitsData} />
               </div>
               <div className="DAchart">
                 <Bar data={BusinessPermitChart} />
