@@ -332,26 +332,30 @@ const DAdashboard: React.FC = () => {
         {showWorkPermit ? (
           <>
             <div>
-              <h2><FaBriefcase  style={{ margin: '10px 20px' }}/>Work Permit</h2>
+              <h2><FaBriefcase style={{ margin: '10px 20px' }}/>Work Permit</h2>
             </div>
             <div className="DAstats-chart-container">
               <div className="DAstats">
-                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications: 
                 <div>{dashboardData.totalWorkPermitApplications}</div>
-                <div className="DAcard" ><FaSyncAlt style={{ marginRight: '8px' }}/>Total Renewal Applications:</div>
+                </div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>Total Renewal Applications:
                 <div>{dashboardData.totalWorkRenewalApplications}</div>
-                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>Total Collections</div>
+                </div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>Total Collections:
                 <div>{dashboardData.totalWorkCollections}</div>
-                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>Total Released:</div>
+                </div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>Total Released:
                 <div>{dashboardData.totalWorkReleased}</div>
+                </div>
               </div>
-              <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
-                <div className="DAchart">
-                  <Line data={totalWorkingPermitsData} />
-                </div>
-                <div className="DAchart">
-                  <Bar data={WorkingPermitChart} />
-                </div>
+            </div>
+            <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
+              <div className="DAchart">
+                <Line data={totalWorkingPermitsData}/>
+              </div>
+              <div className="DAchart">
+                <Bar data={WorkingPermitChart} />
               </div>
             </div>
           </>
@@ -362,18 +366,26 @@ const DAdashboard: React.FC = () => {
             </div>
             <div className="DAstats-chart-container">
               <div className="DAstats">
-                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>{`Total Permit Applications: ${dashboardData.totalBusinessPermitApplications}`}</div>
-                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>{`Total Renewal Applications: ${dashboardData.totalBusinessRenewalApplications}`}</div>
-                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>{`Total Collections: ${dashboardData.totalBusinessCollections}`}</div>
-                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>{`Total Released: ${dashboardData.totalBusinessReleased}`}</div>
+                <div className="DAcard"><FaFileAlt style={{ marginRight: '8px' }}/>Total Permit Applications:
+                <div>{dashboardData.totalBusinessPermitApplications}</div>
+                </div>
+                <div className="DAcard"><FaSyncAlt style={{ marginRight: '8px' }}/>Total Renewal Applications:
+                <div>{dashboardData.totalBusinessRenewalApplications}</div>
+                </div>
+                <div className="DAcard"><FaDollarSign style={{ marginRight: '8px' }}/>Total Collections:
+                <div>{dashboardData.totalBusinessCollections}</div>
+                </div>
+                <div className="DAcard"><FaCheck style={{ marginRight: '8px' }}/>Total Released:
+                <div>{dashboardData.totalBusinessReleased}</div>
+                </div>
               </div>
-              <div className="DaChartcontainer" onClick={handleDownloadBusinessPermits}>
-                <div className="DAchart">
-                  <Line data={totalBusinessPermitsData} />
-                </div>
-                <div className="DAchart">
-                  <Bar data={BusinessPermitChart} />
-                </div>
+            </div>
+            <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
+              <div className="DAchart">
+                <Line data={totalBusinessPermitsData} onClick={handleDownloadBusinessPermits} />
+              </div>
+              <div className="DAchart">
+                <Bar data={BusinessPermitChart} />
               </div>
             </div>
           </>
