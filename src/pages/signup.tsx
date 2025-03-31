@@ -27,6 +27,11 @@ const Signup: React.FC = () => {
       setError('All required fields must be filled out.');
       return;
     }
+
+    if (password.length < 8 || password.length > 12){
+      setError('Password must be between 8 and 12 characters long.');
+
+    };
     
     if (confirmpassword !== password) {
       setError('Password does not match.');

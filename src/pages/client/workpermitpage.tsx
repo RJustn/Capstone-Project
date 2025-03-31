@@ -35,6 +35,7 @@ const WorkPermit: React.FC = () => {
   const [mobileTel2, setMobileTel2] = useState('');
   const [address, setAddress] = useState('');
   const [workpermitclassification, setWorkPermitClassification] =useState ('');
+  const [, setErrors] = useState<string[]>([]);
   const [files, setFiles] = useState<{
     document1: File | null;
     document2: File | null;
@@ -47,7 +48,7 @@ const WorkPermit: React.FC = () => {
     document4: null,
   });
   const [latestWorkPermit, setLatestWorkPermit] = useState<WorkPermits | null>(null);
-  
+
   const fetchWorkPermits = async () => {
       try {
         const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/fetchuserworkpermits', {
@@ -68,6 +69,7 @@ const WorkPermit: React.FC = () => {
   const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0; // Use 0 if createdAt is undefined
   return dateB - dateA; // Sort in descending order
 });
+
 
 // Set the latest work permit if there are any permits
 if (WorkPermitData.length > 0) {
@@ -120,13 +122,39 @@ if (WorkPermitData.length > 0) {
   }, [latestWorkPermit]);
 
 
+  const validateFields = () => {
+    const newErrors: string[] = [];
+  
+    if (!firstName) newErrors.push('First name is required.');
+    if (!lastName ) newErrors.push('Last name is required.');
+    if (!email) newErrors.push('Date of birth is required.');
+    if (!mobileTel) newErrors.push('Mobile number is required.');
+    if (!natureOfWork) newErrors.push('Nature of work is required.');
+    if (!email) newErrors.push('Email is required.');
+    if (!workpermitclassification) newErrors.push('Work permit classification is required.');
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  const validateFiles = () => {
+    const filErrors: string[] = [];
+
+    if (!files.document1) filErrors.push('1x1 Picture is required.');
+    if (!files.document2) filErrors.push('Cedula is required.');
+    if (!files.document3 && !currentlyResiding) filErrors.push('Referral Letter is required.');
+    if (!files.document4 && workPermits.length === 0) filErrors.push('FTJS Certificate is required.');
+
+    setErrors(filErrors);
+    return filErrors.length === 0;
+  }
+
 
       const goToNextStep = () => {
           // Perform validation based on the current step
 
        if (step === 1) {
-     // Check if required fields are filled for step 1
-    if (!firstName || !lastName || !workpermitclassification) {
+        if (!validateFields() || !validateFiles()) {
       setIsFormValid(false); // Set form as invalid
       return; // Prevent moving to the next step
     }
@@ -173,6 +201,11 @@ if (WorkPermitData.length > 0) {
       
       const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if(!validateFields()) {
+          return;
+        }
+
       
         const formData = new FormData();
         formData.append('lastName', lastName);
@@ -203,10 +236,13 @@ if (WorkPermitData.length > 0) {
         if (files.document1) formData.append('document1', files.document1);
         if (files.document2) formData.append('document2', files.document2);
         if (files.document3) formData.append('document3', files.document3);
-        if (files.document4) formData.append('document4', files.document4);
+        if (workPermits.length === 0 && files.document4) {
+          formData.append('document4', files.document4);
+        }
       
         logFormData(formData);
-      
+
+        try {
         // Show loading SweetAlert
         Swal.fire({
           title: 'Submitting Application...',
@@ -217,7 +253,6 @@ if (WorkPermitData.length > 0) {
           },
         });
       
-        try {
           const response = await axios.post('https://capstone-project-backend-nu.vercel.app/client/workpermitapplication', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -460,13 +495,12 @@ if (WorkPermitData.length > 0) {
     </div>
   )}
   {
-  workPermits.length === 0 ? (
+  workPermits.length === 0 && (
     <div className="upload-item">
       <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
       <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workPermits.length === 0} />
     </div>
-  ) : null // Optionally, render something else when the condition is not met
-}
+  )}
   <div className="buttoncontainer">
   <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
   <button type="submit" className="btn btn-success">Submit</button>

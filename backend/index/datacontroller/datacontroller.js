@@ -11,7 +11,6 @@ const {
     businesspermitsChart, 
     workpermitdatastats, 
     dashboardData, 
-    permitApplicationsByCategory,
     businesspermitmonthlyappication} = require('../../controllers/datacontroller/dashboardgraph');
 const { updatebusinessnature } = require('../../controllers/datacontroller/updatebusinessnature');
 const { updatebusinessattachment } = require('../../controllers/datacontroller/updatebusinessattachment');
@@ -35,7 +34,8 @@ const { workpermithandleupdate } = require('../../controllers/datacontroller/wor
 const { workpermitdetails } = require('../../controllers/datacontroller/workpermitdetails');
 const { workpermitreject } = require('../../controllers/datacontroller/workpermitreject');
 const { graphmonthlybusinesspermit } = require('../../controllers/datacontroller/graphmonthlybusinesspermit');
-
+const {getWorkPermitStatus} = require('../../controllers/datacontroller/getworkpermitstatus');
+const {getBusinessPermitStatus} = require('../../controllers/datacontroller/getbusinesspermitstatus');
 
 module.exports = {
     changepassword,
@@ -79,7 +79,8 @@ module.exports = {
     businesspermitsChart, 
     workpermitdatastats, 
     dashboardData, 
-    permitApplicationsByCategory,
+    getWorkPermitStatus,
+    getBusinessPermitStatus,
 
     graphbusinesspermitlocation,
     graphmonthlypaymentstatus,

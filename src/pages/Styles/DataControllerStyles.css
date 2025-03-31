@@ -77,19 +77,19 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
   gap: 20px; /* Adjust the gap between charts */
-  padding: 60px;
+  padding: 30px;
   margin: 20px 0; /* Space above and below the table */
   border-radius: 8px; /* Rounded corners */
   background-color: #ffffff; /* White background for contrast */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   overflow-x: auto;
   grid-template-areas: 
-      "graph1 graph2"
-      "location location"; /* Define the layout areas */
+      "graph1 graph2 grpaph3" /* Define the layout for the first row */
+      "location location location"; /* Define the layout areas */
 }
 
 .DAchartgraph {
-  padding: 75px; 
+  padding: 90px; 
   background-color: #ffffff; 
   border: 1px solid #ccc;
   border-radius: 12px; 
@@ -104,6 +104,9 @@
 
   .DAchartgraph:nth-child(2) {
     grid-area: graph2; 
+  }
+  .DAchartgraph:nth-child(3) {
+    grid-area: graph3; 
   }
 
 

@@ -12,7 +12,6 @@ const {
     businesspermitsChart,
     workpermitdatastats,
     dashboardData,
-    permitApplicationsByCategory,
     updatebusinessnature,
     updatebusinessattachment,
     updatebusinessinfopermit,
@@ -21,6 +20,8 @@ const {
     rejectbusinesspermit,
     getworkpermitforassessment,
     updateworkpermit,
+    getBusinessPermitStatus,
+    getWorkPermitStatus,
     updateworkpermitattachment,
     getbusinesspermitforpayment,
     getworkpermitforpayment,
@@ -62,16 +63,9 @@ router.get('/getworkpermitrelease/:type', getworkpermitrelease);
 
 router.get('/getbusinesspermitforretire', getbusinesspermitforretire)
 
-
-
-
-
-
-
 router.put('/updateworkpermit/:id', updateworkpermit);
 
 router.post('/updateworkpermitattachment/:id', uploadworkpermitfiles, updateworkpermitattachment)
-
 
 //Business Permit Table
 router.get('/businesspermitdetails/:id', businesspermitdetails);
@@ -90,15 +84,11 @@ router.put('/rejectbusinesspermit/:permitId', rejectbusinesspermit);
 
 router.put('/retirebusinesspermit/:id', retirebusinesspermit);
 
-
-
 router.put('/workpermithandleupdate/:id', workpermithandleupdate);
 
 router.get('/workpermitdetails/:id', workpermitdetails);
 
 router.put('/workpermitreject/:id', workpermitreject);
-
-
 
 //Graphs
 
@@ -118,16 +108,16 @@ router.get('/workpermitdatastats', workpermitdatastats);
 
 router.get('/dashboardData', dashboardData);
 
-router.get('/permitApplicationsByCategory', permitApplicationsByCategory);
-
 router.get('/businesspermitmonthlyappication', businesspermitmonthlyappication);
-
-
 
 router.get('/graphbusinesspermitlocation', graphbusinesspermitlocation);
 
 router.get('/graphmonthlypaymentstatus', graphmonthlypaymentstatus);
 
-router.get('/graphpermitapplicationcategory', graphpermitapplicationcategory)
+router.get('/graphpermitapplicationcategory', graphpermitapplicationcategory);
+
+router.get('/graphworkpermitstatus', getWorkPermitStatus);
+
+router.get('/graphbusinesspermitstatus', getBusinessPermitStatus);
 
 module.exports = router;
