@@ -162,6 +162,22 @@ const DataControllerReportandGraph: React.FC = () => {
         downloadExcel(data, 'MonthlyPaymentStatus');
     };
 
+    const handleworkstatusClick = () => {
+        const data = workPermitStatusData.labels.map((label, index) => ({
+            workpermitstatus: label,
+            Count: workPermitStatusData.data[index] || 0
+        }));
+        downloadExcel(data, 'WorkPermitStatus');
+    };
+
+    const handlebusinessstatusClick = () => {
+        const data = businessPermitStatusData.labels.map((label, index) => ({
+            businesspermitstatus: label,
+            Count: businessPermitStatusData.data[index] || 0
+        }));
+        downloadExcel(data, 'BusinessPermitStatus');
+    };
+
 
     const locationbarData = {
         labels: locationData.labels,
@@ -252,8 +268,7 @@ const DataControllerReportandGraph: React.FC = () => {
                     </div>
                     </div>
 
-                    <div className="DAchartstatus">
-                        <div className="DAworkpermitstatus">
+                        <div className="DAchartgraph" onClick={handleworkstatusClick}>
                             <h2>Work Permit Status</h2>
                             {workPermitStatusChartData.datasets[0].data.length > 0 ? (
                                 <Bar data={workPermitStatusChartData} />
@@ -262,7 +277,7 @@ const DataControllerReportandGraph: React.FC = () => {
                             )}
                         </div>
 
-                        <div className="DAbusinesspermitstatus">
+                        <div className="DAchartgraph" onClick={handlebusinessstatusClick}>
                             <h2>Business Permit Status</h2>
                             {businessPermitStatusChartData.datasets[0].data.length > 0 ? (
                                 <Bar data={businessPermitStatusChartData} />
@@ -272,7 +287,6 @@ const DataControllerReportandGraph: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     );
 };

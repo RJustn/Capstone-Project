@@ -1624,7 +1624,7 @@ businesses?.length > 0 ? (
           {step === 6 && (
             <div className="upload-section">
               <h2>Upload Documents</h2>
-              {errors.documents && <p style={{ color: 'red' }}>{errors.documents}</p>}
+              {errors.documents && <p style={{ color: 'red' }}>{errors.socuments}</p>}
                 <label>
                   Upload DTI / SEC / CDA:
                 </label>

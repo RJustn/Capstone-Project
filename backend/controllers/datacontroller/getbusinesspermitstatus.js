@@ -1,10 +1,14 @@
-const { BusinessPermit } = require('../../index/models'); // Corrected model import path
+const { BusinessPermit } = require('../../models'); // Corrected model import path
 
 const getBusinessPermitStatus = async (req, res) => {
     try {
         const data = await BusinessPermit.aggregate([
-            { $group: { _id: "$status", count: { $sum: 1 } } },
-            { $project: { status: "$_id", count: 1, _id: 0 } }
+            {
+                $group: {
+                    _id: '$businesspermitstatus', // Group by businesspermitstatus
+                    count: { $sum: 1 } // Count the number of occurrences
+                }
+            }
         ]);
         res.status(200).json(data);
     } catch (error) {
@@ -13,4 +17,4 @@ const getBusinessPermitStatus = async (req, res) => {
     }
 };
 
-module.exports = {getBusinessPermitStatus};
+module.exports = { getBusinessPermitStatus };
