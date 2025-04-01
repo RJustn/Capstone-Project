@@ -266,9 +266,7 @@ const DataControllerReportandGraph: React.FC = () => {
                             <p>There is no data</p>
                         )}
                     </div>
-                    </div>
-
-                        <div className="DAchartgraph" onClick={handleworkstatusClick}>
+                    <div className="DAchartgraph" onClick={handleworkstatusClick}>
                             <h2>Work Permit Status</h2>
                             {workPermitStatusChartData.datasets[0].data.length > 0 ? (
                                 <Bar data={workPermitStatusChartData} />
@@ -285,6 +283,7 @@ const DataControllerReportandGraph: React.FC = () => {
                                 <p>There is no data</p>
                             )}
                         </div>
+                    </div>                        
                     </div>
                 </div>
         </section>
