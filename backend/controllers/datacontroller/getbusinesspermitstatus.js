@@ -1,4 +1,4 @@
-const { BusinessPermit } = require('../../models'); // Corrected model import path
+const { BusinessPermit } = require('../../index/models'); // Corrected model import path
 
 const getBusinessPermitStatus = async (req, res) => {
     try {
