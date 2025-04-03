@@ -283,6 +283,7 @@ const DataControllerReportandGraph: React.FC = () => {
                                 <p>There is no data</p>
                             )}
                         </div>
+                        
                     </div>                        
                     </div>
                 </div>

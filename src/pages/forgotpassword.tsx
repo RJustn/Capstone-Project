@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Styles/forgotpassword.css';
+import Swal from 'sweetalert2';
 
 const ForgotPassword: React.FC = () => {
     const location = useLocation();
@@ -69,12 +70,12 @@ const ForgotPassword: React.FC = () => {
 
     const handleVerifyOtp = async () => {
         if (!email || !otp) return;
-
+    
         if (confirmpassword !== password) {
             setError('Password Not Match.');
             return;
         }
-
+    
         try {
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
                 method: 'POST',
@@ -85,8 +86,15 @@ const ForgotPassword: React.FC = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                setSuccess('Password Changed');
-                navigate('/login');
+                // Show SweetAlert success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password Changed',
+                    text: 'Your password has been successfully updated.',
+                    confirmButtonText: 'OK',
+                }).then(() => {
+                    navigate('/login'); // Redirect to login after user clicks OK
+                });
                 setError(null);
             } else {
                 setError(data.error);
@@ -96,7 +104,6 @@ const ForgotPassword: React.FC = () => {
             setError('Error verifying OTP, please try again.');
         }
     };
-
     const handleCancel = () => {
         navigate('/'); // Redirect to home page
     };

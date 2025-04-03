@@ -57,7 +57,6 @@
   gap: 20px; /* Adjust the gap between charts */
   padding: 30px;
 }
-
 .DAchart {
   flex:45%; /* Adjust the flex basis to fit two charts side by side */
   padding: 20px; /* Increased padding for a cleaner appearance */
@@ -84,7 +83,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   overflow-x: auto;
   grid-template-areas: 
-      "graph1 graph2 grpaph3" /* Define the layout for the first row */
+      "graph1 graph2 graph3 "
       "location location location"; /* Define the layout areas */
 }
 
