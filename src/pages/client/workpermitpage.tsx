@@ -139,25 +139,38 @@ const WorkPermit: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateFiles = () => {
+    const fileErrors: string[] = [];
 
-  // const validateFiles = () => {
-  //   const filErrors: string[] = [];
+    if (!files.document1) fileErrors.push('1x1 Picture is required.');
+    if (!files.document2) fileErrors.push('Cedula is required.');
+    if (!files.document3 && !currentlyResiding) fileErrors.push('Referral Letter is required.');
+    if (!files.document4 && workPermits.length === 0) fileErrors.push('FTJS Certificate is required.');
 
-  //   if (!files.document1) filErrors.push('1x1 Picture is required.');
-  //   if (!files.document2) filErrors.push('Cedula is required.');
-  //   if (!files.document3 && !currentlyResiding) filErrors.push('Referral Letter is required.');
-  //   if (!files.document4 && workPermits.length === 0) filErrors.push('FTJS Certificate is required.');
+    if (fileErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'File Validation Failed',
+        text: fileErrors.join('\n'),
+      });
+      return false;
+    }
 
-  //   return filErrors.length === 0;
-  // };
+    return true;
+  };
 
   const goToNextStep = () => {
     if (step === 1) {
       const isFieldsValid = validateFields();
-      // const isFilesValid = validateFiles();
-
       if (!isFieldsValid) {
         setIsFormValid(false);
+        return;
+      }
+    }
+
+    if (step === 2) {
+      const areFilesValid = validateFiles();
+      if (!areFilesValid) {
         return;
       }
     }
@@ -480,7 +493,6 @@ const WorkPermit: React.FC = () => {
                 <label>Upload 1x1 Picture:</label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
               </div>
-
               <div className="upload-item">
                 <label>Upload Cedula:</label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
@@ -488,16 +500,15 @@ const WorkPermit: React.FC = () => {
               {!currentlyResiding && (
                 <div className="upload-item">
                   <label>Upload Referral Letter:</label>
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document3')} disabled={currentlyResiding} />
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
                 </div>
               )}
-              {
-                workPermits.length === 0 && (
-                  <div className="upload-item">
-                    <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
-                    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} disabled={workPermits.length === 0} />
-                  </div>
-                )}
+              {workPermits.length === 0 && (
+                <div className="upload-item">
+                  <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
+                  <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                </div>
+              )}
               <div className="buttoncontainer">
                 <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
                 <button type="submit" className="btn btn-success">Submit</button>
