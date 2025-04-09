@@ -26,12 +26,12 @@ const Login: React.FC = () => {
       return;
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(password)) {
       Swal.fire({
         icon: 'warning',
         title: 'Weak Password',
-        text: 'Password must be at least 8 characters long and contain at least one letter and one number.',
+        text: 'Password must be at least 8 characters long and contain at least one letter, one uppercase letter, and one number.',
       });
       return;
       }
