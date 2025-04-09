@@ -28,18 +28,11 @@ const Signup: React.FC = () => {
       return;
     }
 
-    if (password.length < 8 || password.length > 12) {
+    if (password.length < 8 || password.length > 12){
       setError('Password must be between 8 and 12 characters long.');
-      return;
-    }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      setError('Password must be at least 8 characters long and contain at least one letter, one uppercase letter, and one number.');
-      return;
-    }
-
-
+    };
+    
     if (confirmpassword !== password) {
       setError('Password does not match.');
       return;
