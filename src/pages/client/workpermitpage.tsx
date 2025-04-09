@@ -47,6 +47,7 @@ const WorkPermit: React.FC = () => {
     document3: null,
     document4: null,
   });
+  const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
   const [latestWorkPermit, setLatestWorkPermit] = useState<WorkPermits | null>(null);
 
   const fetchWorkPermits = async () => {
@@ -115,7 +116,18 @@ const WorkPermit: React.FC = () => {
 
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
+    if (!lastName) {
+      newErrors.lastName = 'Lastname is required.';
+    } else {
+      delete errors.lastName; // Clear error if valid
+    }
 
+    if (!firstName) {
+      newErrors.firstName = 'Firstname is required.';
+      } else {
+        delete errors.firstName; // Clear error if valid
+        }
+    
     if (!email) {
       newErrors.email = 'Email is required.';
     } else {
@@ -190,10 +202,18 @@ const WorkPermit: React.FC = () => {
         ...prev,
         [doc]: selectedFiles[0],
       }));
+      setFileErrors((prev) => ({
+        ...prev,
+        [doc]: '', // Clear error if file is selected
+      }));
     } else {
       setFiles((prev) => ({
         ...prev,
         [doc]: null,
+      }));
+      setFileErrors((prev) => ({
+        ...prev,
+        [doc]: 'This file is required.', // Set error if no file is selected
       }));
     }
   };
@@ -343,12 +363,12 @@ const WorkPermit: React.FC = () => {
               <h2>Personal Information</h2>
               <div className="form-row">
                 <div className="form-group">
-                  <label>LAST NAME:</label>
+                  <label>LAST NAME:<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                   {errors.lastName && <p style={{ color: 'red' }}>{errors.lastName}</p>}
                 </div>
                 <div className="form-group">
-                  <label>FIRST NAME:</label>
+                  <label>FIRST NAME:<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                   {errors.firstName && <p style={{ color: 'red' }}>{errors.firstName}</p>}
                 </div>
@@ -424,12 +444,12 @@ const WorkPermit: React.FC = () => {
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>MOBILE/TEL. NO:</label>
+                  <label>MOBILE/TEL. NO:<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={mobileTel} onChange={(e) => setMobileTel(e.target.value)} />
                   {errors.mobileTel && <p style={{ color: 'red' }}>{errors.mobileTel}</p>}
                 </div>
                 <div className="form-group">
-                  <label>EMAIL ADDRESS:</label>
+                  <label>EMAIL ADDRESS:<span style={{ color: 'red' }}>*</span></label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                   {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
                 </div>
@@ -440,7 +460,7 @@ const WorkPermit: React.FC = () => {
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>NATURE OF WORK:</label>
+                  <label>NATURE OF WORK:<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={natureOfWork} onChange={(e) => setNatureOfWork(e.target.value)} />
                   {errors.natureOfWork && <p style={{ color: 'red' }}>{errors.natureOfWork}</p>}
                 </div>
@@ -475,7 +495,7 @@ const WorkPermit: React.FC = () => {
                   <input type="text" value={name2} onChange={(e) => setName2(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>MOBILE/TEL. NO:</label>
+                  <label>MOBILE/TEL. NO:<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={mobileTel2} onChange={(e) => setMobileTel2(e.target.value)} />
                 </div>
               </div>
@@ -490,23 +510,27 @@ const WorkPermit: React.FC = () => {
           {step === 2 && (
             <div className="upload-section">
               <div className="upload-item">
-                <label>Upload 1x1 Picture:</label>
+                <label>Upload 1x1 Picture:<span style={{ color: 'red' }}>*</span></label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+                {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
               </div>
               <div className="upload-item">
-                <label>Upload Cedula:</label>
+                <label>Upload Cedula:<span style={{ color: 'red' }}>*</span></label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+                {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
               </div>
               {!currentlyResiding && (
                 <div className="upload-item">
-                  <label>Upload Referral Letter:</label>
+                  <label>Upload Referral Letter:<span style={{ color: 'red' }}>*</span></label>
                   <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+                  {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
                 </div>
               )}
               {workPermits.length === 0 && (
                 <div className="upload-item">
                   <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
                   <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                  {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
                 </div>
               )}
               <div className="buttoncontainer">
