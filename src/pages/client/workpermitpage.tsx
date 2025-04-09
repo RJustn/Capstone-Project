@@ -115,7 +115,7 @@ const WorkPermit: React.FC = () => {
 
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!email) {
       newErrors.email = 'Email is required.';
     } else {
@@ -139,23 +139,23 @@ const WorkPermit: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validateFiles = () => {
-    const filErrors: string[] = [];
+  // const validateFiles = () => {
+  //   const filErrors: string[] = [];
 
-    if (!files.document1) filErrors.push('1x1 Picture is required.');
-    if (!files.document2) filErrors.push('Cedula is required.');
-    if (!files.document3 && !currentlyResiding) filErrors.push('Referral Letter is required.');
-    if (!files.document4 && workPermits.length === 0) filErrors.push('FTJS Certificate is required.');
+  //   if (!files.document1) filErrors.push('1x1 Picture is required.');
+  //   if (!files.document2) filErrors.push('Cedula is required.');
+  //   if (!files.document3 && !currentlyResiding) filErrors.push('Referral Letter is required.');
+  //   if (!files.document4 && workPermits.length === 0) filErrors.push('FTJS Certificate is required.');
 
-    return filErrors.length === 0;
-  };
+  //   return filErrors.length === 0;
+  // };
 
   const goToNextStep = () => {
     if (step === 1) {
       const isFieldsValid = validateFields();
-      const isFilesValid = validateFiles();
+      // const isFilesValid = validateFiles();
 
-      if (!isFieldsValid || !isFilesValid) {
+      if (!isFieldsValid) {
         setIsFormValid(false);
         return;
       }
