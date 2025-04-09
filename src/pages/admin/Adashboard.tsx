@@ -17,7 +17,7 @@ const Adashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const month = new Date().toLocaleString('default', { month: 'long' });
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const months = React.useMemo(() => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], []);
   const currentMonthIndex = new Date().getMonth();
 
   const [WorkingPermitChart, setWorkingpermitchart] = useState({
@@ -263,7 +263,7 @@ const Adashboard: React.FC = () => {
             datasets: [
               {
                 label: 'Total Permits Released',
-                data: months.map((_, index) => (index === currentMonthIndex ? workingPermitsData.count : 0)),
+                data: workingPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -308,7 +308,7 @@ const Adashboard: React.FC = () => {
     }; 
 
     fetchData();
-  }, [month]);
+  }, [month, currentMonthIndex, months]);
 
 
   return (

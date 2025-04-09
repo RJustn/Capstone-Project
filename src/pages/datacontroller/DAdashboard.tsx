@@ -264,7 +264,7 @@ const DAdashboard: React.FC = () => {
             datasets: [
               {
                 label: 'Total Permits Released',
-                data: months.map((_, index) => (index === currentMonthIndex ? workingPermitsData.count : 0)),
+                data: workingPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
