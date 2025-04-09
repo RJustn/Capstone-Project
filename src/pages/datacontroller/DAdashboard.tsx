@@ -215,19 +215,25 @@ const DAdashboard: React.FC = () => {
           const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json(); // Ensure this line is present
 
           setWorkingpermitchart({
-            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            labels: months,
             datasets: [
               {
-                label: 'New Work Permits',
-                data: newPermitsData.map((data: { count: number; }) => data.count),
+                label: 'New Working Permits',
+                data: months.map((_, index) => {
+                  const monthData = newPermitsData.find((data: { month: string }) => data.month === months[index]);
+                  return monthData ? monthData.count : 0;
+                }),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 fill: true,
               },
               {
-                label: 'Renewal Work Permits',
-                data: renewalPermitsData.map((data: { count: number; }) => data.count),
+                label: 'Renewal Working Permits',
+                data: months.map((_, index) => {
+                  const monthData = renewalPermitsData.find((data: { month: string }) => data.month === months[index]);
+                  return monthData ? monthData.count : 0;
+                }),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -263,7 +269,10 @@ const DAdashboard: React.FC = () => {
             datasets: [
               {
                 label: 'Total Permits Released',
-                data: months.map((_, index) => (index <= currentMonthIndex ? workingPermitsData.slice(0, index + 1).reduce((sum: number, data: { count: number }) => sum + data.count, 0) : 0)),
+                data: months.map((_, index) => {
+                  const monthData = workingPermitsData.find((data: { month: string }) => data.month === months[index]);
+                  return monthData ? monthData.count : 0;
+                }),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -308,7 +317,7 @@ const DAdashboard: React.FC = () => {
     };
 
     fetchData();
-  }, [currentMonthIndex, month, months]);
+  }, [month, currentMonthIndex, months]);
 
   return (
     <section className="DAbody">
