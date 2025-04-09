@@ -215,25 +215,19 @@ const DAdashboard: React.FC = () => {
           const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json(); // Ensure this line is present
 
           setWorkingpermitchart({
-            labels: months,
+            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
             datasets: [
               {
-                label: 'New Working Permits',
-                data: months.map((_, index) => {
-                  const monthData = newPermitsData.find((data: { month: string }) => data.month === months[index]);
-                  return monthData ? monthData.count : 0;
-                }),
+                label: 'New Work Permits',
+                data: newPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 fill: true,
               },
               {
-                label: 'Renewal Working Permits',
-                data: months.map((_, index) => {
-                  const monthData = renewalPermitsData.find((data: { month: string }) => data.month === months[index]);
-                  return monthData ? monthData.count : 0;
-                }),
+                label: 'Renewal Work Permits',
+                data: renewalPermitsData.map((data: { count: number; }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -317,7 +311,7 @@ const DAdashboard: React.FC = () => {
     };
 
     fetchData();
-  }, [month, currentMonthIndex, months]);
+  }, [currentMonthIndex, month, months]);
 
   return (
     <section className="DAbody">
