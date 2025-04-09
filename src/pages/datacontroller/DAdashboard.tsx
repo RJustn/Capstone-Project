@@ -258,24 +258,24 @@ const DAdashboard: React.FC = () => {
            });
  
            setTotalWorkingPermitsData({
-             labels: workingPermitsData.map((data: { month: string; }) => data.month),
-             datasets: [
-               {
-                 label: 'Total Work Permit',
-                 data: workingPermitsData.map((data: { count: number; }) => data.count),
-                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                 borderColor: 'rgba(54, 162, 235, 1)',
-                 borderWidth: 1,
-                 fill: true,
-               },
-             ],
-           });
- 
+            labels: workingPermitsData.map((data: { month: string; }) => data.month),
+            datasets: [
+              {
+                label: 'Total Working Permits',
+                data: workingPermitsData.map((data: { count: number; }) => data.count),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                fill: true,
+              },
+            ],
+          });
+ //workingPermitsData
            settotalBusinessPermit({
              labels: businessPermitsData.map((data: { month: string; }) => data.month),
              datasets: [
                {
-                 label: 'Total Business Permits',
+                 label: 'Total Business Permits R',
                  data: businessPermitsData.map((data: { count: number; }) => data.count),
                  backgroundColor: 'rgba(54, 162, 235, 0.2)',
                  borderColor: 'rgba(54, 162, 235, 1)',
