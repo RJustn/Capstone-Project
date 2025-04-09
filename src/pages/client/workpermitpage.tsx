@@ -121,7 +121,6 @@ const WorkPermit: React.FC = () => {
     if (!email) newErrors.email = 'Email is required.';
     if (!mobileTel) newErrors.mobileTel = 'Mobile number is required.';
     if (!natureOfWork) newErrors.natureOfWork = 'Nature of work is required.';
-    if (!workpermitclassification) newErrors.workpermitclassification = 'Work permit classification is required.';
 
     setErrors(newErrors);
 
