@@ -124,6 +124,8 @@ const WorkPermit: React.FC = () => {
     if (!workpermitclassification) newErrors.workpermitclassification = 'Work permit classification is required.';
 
     setErrors(newErrors);
+
+    // Reset errors if no validation errors exist
     return Object.keys(newErrors).length === 0;
   };
 
@@ -140,7 +142,10 @@ const WorkPermit: React.FC = () => {
 
   const goToNextStep = () => {
     if (step === 1) {
-      if (!validateFields() || !validateFiles()) {
+      const isFieldsValid = validateFields();
+      const isFilesValid = validateFiles();
+
+      if (!isFieldsValid || !isFilesValid) {
         setIsFormValid(false);
         return;
       }
