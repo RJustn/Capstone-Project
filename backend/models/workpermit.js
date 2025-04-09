@@ -69,8 +69,16 @@ const workPermitSchema = new mongoose.Schema({
     receiptDate: String,
     amountPaid: String,
     receiptFile: String
-  }
+  },
+  lastEdited: { type: Date, default: Date.now } // Add this field
 }, { timestamps: true });
+
+// Middleware to update lastEdited on save
+workPermitSchema.pre('save', function (next) {
+  this.lastEdited = new Date();
+  next();
+});
+
 
 const WorkPermit = mongoose.model('WorkPermit', workPermitSchema);
 

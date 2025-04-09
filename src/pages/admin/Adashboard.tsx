@@ -347,13 +347,13 @@ const Adashboard: React.FC = () => {
               </div>
             </div>
             <div className="DaChartcontainer" onClick={handleDownloadWorkPermit}>
-                <div className="DAchart">
-                  <Line data={totalWorkingPermitsData} />
-                </div>
-                <div className="DAchart">
-                  <Bar data={WorkingPermitChart} />
-                </div>
+              <div className="DAchart">
+                <Line data={totalWorkingPermitsData} />
               </div>
+              <div className="DAchart">
+                <Bar data={WorkingPermitChart} />
+              </div>
+            </div>
           </>
         ) : (
           <>

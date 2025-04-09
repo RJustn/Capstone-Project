@@ -946,3 +946,53 @@ margin-bottom: 30px;
 .pagination{
 margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+  .workpermit-form {
+    padding: 15px;
+    margin-top: 15px;
+    max-width: 100%; /* Adjust width for smaller screens */
+    box-shadow: none; /* Remove shadow for simplicity */
+    display: flex;
+    flex-direction: column; /* Arrange items in a column */
+    gap: 10px; /* Add spacing between items */
+  }
+
+  .form-row {
+    flex-direction: column; /* Stack form fields vertically */
+    gap: 10px; /* Add spacing between rows */
+  }
+
+  .form-group {
+    width: 100%; /* Ensure form fields take full width */
+  }
+
+  .submitbuttonworkpermit {
+    width: 100%; /* Make button full width */
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 12px; /* Adjust padding for touch devices */
+
+  }
+  .businesspermitbutton, .workpermitbutton {
+    display: flex;
+    text-align: center;
+    align-items: center; /* Aligns items vertically */
+    justify-content: center; /* Centers content horizontally */
+    background-color: #00a944;
+    color: #ffffff;
+    width: 150px; /* Fixed width for uniform size */
+    height: 100px; /* Fixed height for uniform size */
+    padding: 1rem; /* Adjusted padding for better spacing */
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 12px; /* Adds space between the logo and text */
+  }
+}
+
+.permit-table-container {
+  max-height: 300px; /* Set a fixed height for the table container */
+  overflow-x: auto; /* Horizontal scrolling for smaller screens */
+  width: 100%; /* Ensure the container takes full width */
+}

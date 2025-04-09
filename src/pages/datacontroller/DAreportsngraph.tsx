@@ -2,7 +2,7 @@ import '../Styles/DataControllerStyles.css';
 import DASidebar from '../components/NavigationBars/DAsidebar';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import {  Bar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto'; // Import Chart.js
 import * as XLSX from 'xlsx';
 
@@ -17,6 +17,15 @@ const DataControllerReportandGraph: React.FC = () => {
         month: string;
         paid: number;
         unpaid: number;
+    }
+
+    interface WorkPermitStatus {
+        status: string;
+        count: number;
+    }
+    interface BusinessPermitStatus {
+        status: string;
+        count: number;
     }
     
 
@@ -62,8 +71,6 @@ const DataControllerReportandGraph: React.FC = () => {
         checkAuth();
       }, [navigate]);
 
-
-
     useEffect(() => {
         const barangays = [
             "Burol 1", "Burol 2", "Burol 3", "Datu Esmael", "Datu Esmael 2", "Fatima 1", "Fatima 2", "Fatima 3", 
@@ -79,66 +86,55 @@ const DataControllerReportandGraph: React.FC = () => {
             "Zone 8", "Zone 9", "Zone 10", "Zone 11", "Zone 12"
         ];
 
-    //     mock data for testing dounut chart
-    //     const mockData = barangays.map(barangay => ({
-    //       _id: barangay,
-    //       count: Math.floor(Math.random() * 100) // Random count between 0 and 99
-    //   }));
+        const fetchData = async () => {
+            try {
+                const [locationRes, monthlyRes, workPermitRes, businessPermitRes] = await Promise.all([
+                    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation'),
+                    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus'),
+                    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphworkpermitstatus'),
+                    fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
+                ]);
 
-    //   const filteredData = mockData.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
-    //   const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
-    //   const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
-    //   setLocationData({ labels, data: counts });
+                const locationData = await locationRes.json();
+                const monthlyData = await monthlyRes.json();
+                const workPermitData = await workPermitRes.json();
+                const businessPermitData = await businessPermitRes.json();
 
-    //   mock data for testing bar chart
-    //   const mockMonthlyData = {
-    //     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    //     paid: Array.from({ length: 12 }, () => Math.floor(Math.random() * 100)), // Random data for 12 months
-    //     unpaid: Array.from({ length: 12 }, () => Math.floor(Math.random() * 100)) // Random data for 12 months
-    // };
-    // setMonthlyData(mockMonthlyData);
+                // Process location data
+                const filteredLocationData = locationData.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
+                setLocationData({
+                    labels: filteredLocationData.map((item: BusinessPermitLocation) => item._id),
+                    data: filteredLocationData.map((item: BusinessPermitLocation) => item.count)
+                });
 
-        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
-            .then(response => response.json())
-            .then(data => {
-                const filteredData = data.filter((item: BusinessPermitLocation) => barangays.includes(item._id));
-                const labels = filteredData.map((item: BusinessPermitLocation) => item._id);
-                const counts = filteredData.map((item: BusinessPermitLocation) => item.count);
-                setLocationData({ labels, data: counts });
-            })
-            .catch(error => console.error('Error fetching location data:', error));
-            
-        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map((item: MonthlyPaymentStatus) => item.month);
-                const paid = data.map((item: MonthlyPaymentStatus) => item.paid);
-                const unpaid = data.map((item: MonthlyPaymentStatus) => item.unpaid);
-                setMonthlyData({ labels, paid, unpaid });
-            })
-            .catch(error => console.error('Error fetching monthly payment data:', error));
+                // Process monthly data
+                setMonthlyData({
+                    labels: monthlyData.map((item: MonthlyPaymentStatus) => item.month),
+                    paid: monthlyData.map((item: MonthlyPaymentStatus) => item.paid),
+                    unpaid: monthlyData.map((item: MonthlyPaymentStatus) => item.unpaid)
+                });
 
-        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphworkpermitstatus')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map((item: { status: string, count: number }) => item.status);
-                const counts = data.map((item: { status: string, count: number }) => item.count);
-                setWorkPermitStatusData({ labels, data: counts });
-            })
-            .catch(error => console.error('Error fetching work permit status data:', error));
+                // Process work permit data
+                setWorkPermitStatusData({
+                    labels: workPermitData.map((item: WorkPermitStatus) => item.status),
+                    data: workPermitData.map((item: WorkPermitStatus) => item.count)
+                });
 
-        fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map((item: { status: string, count: number }) => item.status);
-                const counts = data.map((item: { status: string, count: number }) => item.count);
-                setBusinessPermitStatusData({ labels, data: counts });
-            })
-            .catch(error => console.error('Error fetching business permit status data:', error));
-            
+                // Process business permit data
+                setBusinessPermitStatusData({
+                    labels: businessPermitData.map((item: BusinessPermitStatus) => item.status),
+                    data: businessPermitData.map((item: BusinessPermitStatus) => item.count)
+                });
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
-    const downloadExcel = (data:    ExcelData[], filename: string) => {
+    const downloadExcel = (data: ExcelData[], filename: string) => {
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -177,7 +173,6 @@ const DataControllerReportandGraph: React.FC = () => {
         }));
         downloadExcel(data, 'BusinessPermitStatus');
     };
-
 
     const locationbarData = {
         labels: locationData.labels,
@@ -218,20 +213,22 @@ const DataControllerReportandGraph: React.FC = () => {
         labels: workPermitStatusData.labels,
         datasets: [
             {
+                label: 'Work Permit Status',
                 data: workPermitStatusData.data,
-                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF']
-            }
-        ]
+                backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'], // Colors for Approved, Waiting for Payment, Rejected
+            },
+        ],
     };
 
     const businessPermitStatusChartData = {
         labels: businessPermitStatusData.labels,
         datasets: [
             {
+                label: 'Business Permit Status',
                 data: businessPermitStatusData.data,
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-            }
-        ]
+                backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'], // Colors for Approved, Pending, Rejected
+            },
+        ],
     };
 
     return (

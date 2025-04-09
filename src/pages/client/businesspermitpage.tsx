@@ -651,13 +651,13 @@ const handleRemoveBusiness = (index: number) => {
                <div className="form-row">
                 <div className="form-group">
                   <label>LAST NAME:</label>
-                  {errors.lastname && <p style={{ color: 'red' }}>{errors.lastname}</p>}
                   <input type="text" value={lastname} onChange={(e) => setLastName(e.target.value)} required disabled={corporation} />
+                  {errors.lastname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.lastname}</p>}
                 </div>
                 <div className="form-group">
                   <label>FIRST NAME:</label>
-                  {errors.firstname && <p style={{ color: 'red' }}>{errors.firstname}</p>}
                   <input type="text" value={firstname} onChange={(e) => setFirstName(e.target.value)}  required disabled={corporation} />
+                  {errors.firstname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.firstname}</p>}
                 </div>
                 <div className="form-group">
                   <label>MIDDLE INITIAL(optional):</label>
@@ -665,14 +665,13 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Company Name:</label>
-                  {errors.companyname && <p style={{ color: 'red' }}>{errors.companyname}</p>}
                   <input type="text" value={companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
+                  {errors.companyname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.companyname}</p>}
                 </div>
                 </div>
                <div className="form-row">
                 <div className="form-group">
                 <label>CIVIL STATUS:</label>
-                {errors.civilstatus && <p style={{ color: 'red' }}>{errors.civilstatus}</p>}
                 <select
                   value={civilstatus}
                   onChange={(e) => setCivilStatus(e.target.value)}
@@ -686,10 +685,10 @@ const handleRemoveBusiness = (index: number) => {
                   <option value="Seperated">Seperated</option>
                   <option value="Undefined">Undefined</option>
                 </select>
+                {errors.civilstatus && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.civilstatus}</p>}
                 </div>
                 <div className="form-group">
                 <label>Gender:</label>
-                {errors.gender && <p style={{ color: 'red' }}>{errors.gender}</p>}
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
@@ -702,11 +701,12 @@ const handleRemoveBusiness = (index: number) => {
                   <option value="Other">Other</option>
                   <option value="Corp">Corporation</option>
                 </select>
+                {errors.gender && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.gender}</p>}
                 </div>
                 <div className="form-group">
                 <label>CITIZENSHIP:</label>
-                {errors.citizenship && <p style={{ color: 'red' }}>{errors.citizenship}</p>}
                 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
+                {errors.citizenship && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.citizenship}</p>}
                 </div>
                <div className="form-row">
                 <div className="form-group">
@@ -746,16 +746,17 @@ const handleRemoveBusiness = (index: number) => {
                 <label>Building Name / Street Name</label>
 
                 <input type="text" value={buildingstreetname} onChange={(e) => setBuildingStreetName(e.target.value)}  />
+                {errors.buildingstreetname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.buildingstreetname}</p>}
                 </div>
                <div className="form-group">
                 <label>Subdivision / Compound Name</label>
                 <input type="text" value={subdivision} onChange={(e) => setSubdivision(e.target.value)} />
+                {errors.subdivision && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.subdivision}</p>}
                </div>
                </div>
                <div className="form-row">
                <div className="form-group">
                 <label>Region</label>
-                {}
                 <input type="text" value={region} onChange={(e) => setRegion(e.target.value)} />
               </div>
               <div className="form-group">
@@ -770,8 +771,8 @@ const handleRemoveBusiness = (index: number) => {
               <div className="form-row">
               <div className="form-group">
                 <label>Barangay</label>
-                {errors.barangay && <p style={{ color: 'red' }}>{errors.barangay}</p>}
                 <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
+                {errors.barangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.barangay}</p>}
               </div>
               <div className="form-group">
                 <label>Telephone Number</label>
@@ -784,12 +785,12 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div className="form-group">
                 <label>Email Address</label>
-                {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
                 <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                {errors.email && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.email}</p>}
               </div>
               <div>
-                {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
                 <button type="button" onClick={goToNextStep} className="btn btn-success">Next</button>
+                {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
               </div>
             </div>
           )}
@@ -800,12 +801,11 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Step 2 Business Information</h2>
                 <div className="form-group">
                   <label>Business Name:</label>
-                  {errors.businessname && <p style={{ color: 'red' }}>{errors.businessname}</p>}
+                  {errors.businessname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessname}</p>}
                   <input type="text" value={businessname} onChange={(e) => setBusinessName(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Business Scale:</label>
-                  {errors.businessscale && <p style={{ color: 'red' }}>{errors.businessscale}</p>}
                   <select
                     value={businessscale}
                     onChange={(e) => setBusinessScale(e.target.value)}
@@ -817,10 +817,10 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="Medium">Medium (15M - 100M or Having 100-199 Employees)</option>
                     <option value="Large">Large (more than 100M or Asset size of more than 100M)</option>
                   </select>
+                  {errors.businessscale && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessscale}</p>}
                 </div>
 <div className="form-group">
       <label>Payment Mode:</label>
-      {errors.paymentmode && <p style={{ color: 'red' }}>{errors.paymentmode}</p>}
       <select
         value={paymentmethod}
         onChange={(e) => setPaymentMethod(e.target.value)}
@@ -835,22 +835,23 @@ const handleRemoveBusiness = (index: number) => {
           </option>
         ))}
       </select>
+      {errors.paymentmode && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.paymentmode}</p>}
     </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
                   <label>House/Bldg No./Blk and Lot:</label>
-                  {errors.businessbuildingblocklot && <p style={{ color: 'red' }}>{errors.businessbuildingblocklot}</p>}
                   <input type="text" value={businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
+                  {errors.businessbuildingblocklot && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbuildingblocklot}</p>}
                 </div>
                 <div className="form-group">
                   <label>Building Name/Street Name:</label>
-                  {errors.buildingstreetname && <p style={{ color: 'red' }}>{errors.buildingstreetname}</p>}
                   <input type="text" value={businessbuildingname} onChange={(e) => setBusinessBuildingName(e.target.value)} />
+                  {errors.buildingstreetname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.buildingstreetname}</p>}
                 </div>
                 <div className="form-group">
                   <label>Subdivision/Compound Name:</label>
-                  {errors.subdivision && <p style={{ color: 'red' }}>{errors.subdivision}</p>}
                   <input type="text" value={businesssubcompname} onChange={(e) => setBusinessSubCompName(e.target.value)}  />
+                  {errors.subdivision && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.subdivision}</p>}
                 </div>
                 <div className="form-group">
                   <label>Region:</label>
@@ -866,19 +867,19 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Barangay:</label>
-                  {errors.businessbarangay && <p style={{ color: 'red' }}>{errors.businessbarangay}</p>}
                   <input type="text" value={businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
+                  {errors.businessbarangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbarangay}</p>}
                 </div>
 
                 <div className="form-group">
                   <label>Zip:</label>
-                  {errors.businesszip && <p style={{ color: 'red' }}>{errors.businesszip}</p>}
+                  {errors.businesszip && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesszip}</p>}
                   <input type="text" value={businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Contact Number:</label>
-                  {errors.businesscontactnumber && <p style={{ color: 'red' }}>{errors.businesscontactnumber}</p>}
                   <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
+                  {errors.businesscontactnumber && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesscontactnumber}</p>}
                   <label className="checkbox-label">
                   <input
                     type="checkbox"
@@ -898,7 +899,6 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Necessities Information</h2>
                 <div className="form-group">
                   <label>Ownership Type:</label>
-                  {errors.ownershiptype && <p style={{ color: 'red' }}>{errors.ownershiptype}</p>}
                   <select
                     value={ownershiptype}
                     onChange={(e) => {
@@ -930,6 +930,7 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="PART">Partnership</option>
                     <option value="SOLE">Sole Person</option>
                   </select>
+                  {errors.ownershiptype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.ownershiptype}</p>}
                 </div>
                 <div className="form-group">
                   <label>Agency Registered No:</label>
@@ -937,7 +938,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>DTI Registration No:</label>
-                  {errors.dtiregistrationnum && <p style={{ color: 'red' }}>{errors.dtiregistrationnum}</p>}
+                  {errors.dtiregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationnum}</p>}
                   <input
                     type="text"
                     value={dtiregistrationnum}
@@ -948,27 +949,27 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>DTI Registration Date:</label>
-                  {errors.dtiregistrationdate && <p style={{ color: 'red' }}>{errors.dtiregistrationdate}</p>}
+                  {errors.dtiregistrationdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationdate}</p>}
                   <input type="date" value={dtiregistrationdate} onChange={(e) => setDTIRegistrationDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
                 </div>
                 <div className="form-group">
                   <label>DTI Expiration Date:</label>
-                  {errors.dtiregistrationexpdate && <p style={{ color: 'red' }}>{errors.dtiregistrationexpdate}</p>}
+                  {errors.dtiregistrationexpdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationexpdate}</p>}
                   <input type="date" value={dtiregistrationexpdate} onChange={(e) => setDTIRegistrationExpDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
                 </div>
                 <div className="form-group">
                   <label>SEC Registration No:</label>
-                  {errors.secregistrationnum && <p style={{ color: 'red' }}>{errors.secregistrationnum}</p>}
+                  {errors.secregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.secregistrationnum}</p>}
                   <input type="text" value={secregistrationnum} onChange={(e) => setSECRegistrationNum(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "SOLE"} />
                 </div>
                 <div className="form-group">
                   <label>BIR Registration No:</label>
-                  {errors.birregistrationnum && <p style={{ color: 'red' }}>{errors.birregistrationnum}</p>}
+                  {errors.birregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.birregistrationnum}</p>}
                   <input type="text" value={birregistrationnum} onChange={(e) => setBIRRegistrationNum(e.target.value)} disabled={ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || ownershiptype === "SOLE"} />
                 </div>
                 <div className="form-group">
                   <label>Industry Sector:</label>
-                  {errors.industrysector && <p style={{ color: 'red' }}>{errors.industrysector}</p>}
+                  {errors.industrysector && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.industrysector}</p>}
                   <select
                     value={industrysector}
                     onChange={(e) => setIndustrySector(e.target.value)}
@@ -1377,7 +1378,7 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Step 3: Business Other Information</h2>
                 <div className="form-group">
                   <label>Date Established:</label>
-                  {errors.dateestablished && <p style={{ color: 'red' }}>{errors.dateestablished}</p>}
+                  {errors.dateestablished && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dateestablished}</p>}
                   <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
                   <label className="checkbox-label">
                     <input
@@ -1395,7 +1396,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Start Date:</label>
-                  {errors.startdate && <p style={{ color: 'red' }}>{errors.startdate}</p>}
+                  {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
                   <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
                   <label className="checkbox-label">
                 <input
@@ -1413,7 +1414,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Occupancy:</label>
-                  {errors.occupancy && <p style={{ color: 'red' }}>{errors.occupancy}</p>}
+                  {errors.occupancy && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.occupancy}</p>}
                   <select
                     value={occupancy}
                     onChange={(e) => setOccupancy(e.target.value)}
@@ -1428,7 +1429,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Business Type:</label>
-                  {errors.otherusinesstype && <p style={{ color: 'red' }}>{errors.otherbusinesstype}</p>}
+                  {errors.otherusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
                   <select
                     value={otherbusinesstype}
                     onChange={(e) => setOtherBusinessType(e.target.value)}
@@ -1441,17 +1442,17 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Email Address:</label>
-                  {errors.businessemail && <p style={{ color: 'red' }}>{errors.businessemail}</p>}
+                  {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                   <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Business Area:</label>
-                  {errors.businessarea && <p style={{ color: 'red' }}>{errors.businessarea}</p>}
+                  {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Lot Area:</label>
-                  {errors.businesslotarea && <p style={{ color: 'red' }}>{errors.businesslotarea}</p>}
+                  {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
                 </div>
                 <div className="form-group">
@@ -1582,6 +1583,7 @@ const handleRemoveBusiness = (index: number) => {
 
       {
 businesses?.length > 0 ? (
+  <div className='.permit-table-container'>
     <table className="permit-table">
     <thead>
       <tr>
@@ -1604,9 +1606,9 @@ businesses?.length > 0 ? (
       ))}
     </tbody>
   </table>
+  </div>
   ) : null // Optionally, render something else when the condition is not met
 }
-
       <div> {!isFormValid && <p style={{ color: 'red' }}>Please add at least one business nature before proceeding.</p>}
       <div style={{ display: 'flex', gap: '15px' }}>
   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
@@ -1624,7 +1626,7 @@ businesses?.length > 0 ? (
           {step === 6 && (
             <div className="upload-section">
               <h2>Upload Documents</h2>
-              {errors.documents && <p style={{ color: 'red' }}>{errors.socuments}</p>}
+              {errors.documents && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.documents}</p>}
                 <label>
                   Upload DTI / SEC / CDA:
                 </label>

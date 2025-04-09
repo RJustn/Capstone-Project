@@ -3,12 +3,21 @@ const { WorkPermit } = require('../../index/models');
 const getWorkPermitStatus = async (req, res) => {
     try {
         const workPermitStatusCounts = await WorkPermit.aggregate([
-            {
-                $group: {
-                    _id: '$workpermitstatus', // Group by workpermitstatus
-                    count: { $sum: 1 } // Count the number of occurrences
-                }
-            }
+            { 
+                $group: { 
+                    _id: "$status", 
+                    count: { $sum: 1 },
+                    lastEdited: { $max: "$lastEdited" } // Get the most recent lastEdited timestamp
+                } 
+            },
+            { 
+                $project: { 
+                    status: "$_id", 
+                    count: 1, 
+                    lastEdited: 1, 
+                    _id: 0 
+                } 
+            },
         ]);
         res.status(200).json(data);
     } catch (error) {

@@ -2,7 +2,7 @@ import '../Styles/AdminStyles.css';
 import React, { useEffect, useState } from 'react';
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import { useNavigate } from 'react-router-dom';
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto'; // Import Chart.js
 import * as XLSX from 'xlsx';
 
@@ -33,6 +33,7 @@ const AdminReportsAndGraph: React.FC = () => {
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[], businessPaid: number[], businessUnpaid: number[], workPaid: number[], workUnpaid: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [], businessPaid: [], businessUnpaid: [], workPaid: [], workUnpaid: [] });
+  const [businessPermitStatusData, setBusinessPermitStatusData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   
   useEffect(() => {
     const checkAuth = async () => {
@@ -116,6 +117,20 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .catch(error => console.error('Error fetching monthly payment data:', error));
 
+      fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
+      .then(response => response.json())
+      .then(data => {
+          const approved = data.filter((item: { status: string }) => item.status === 'Approved').map((item: { count: number }) => item.count);
+          const pending = data.filter((item: { status: string }) => item.status === 'Pending').map((item: { count: number }) => item.count);
+          const rejected = data.filter((item: { status: string }) => item.status === 'Rejected').map((item: { count: number }) => item.count);
+
+          setBusinessPermitStatusData({
+              labels: ['Approved', 'Pending', 'Rejected'],
+              data: [approved[0] || 0, pending[0] || 0, rejected[0] || 0],
+          });
+      })
+      .catch(error => console.error('Error fetching business permit status data:', error));
+      
   }, [navigate]);
 
   const downloadExcel = (data: ExcelData[], filename: string) => {
@@ -133,15 +148,13 @@ const AdminReportsAndGraph: React.FC = () => {
     downloadExcel(data, 'BusinessPermitLocations');
   };
 
-  const handleBarClick = () => {
-    const data = monthlyData.labels.map((label, index) => ({
-      Month: label,
-      Approved: monthlyData.approved[index],
-      WaitingForPayment: monthlyData.waitingForPayment[index],
-      Rejected: monthlyData.rejected[index]
+  const handlebusinessstatusClick = () => {
+    const data = businessPermitStatusData.labels.map((label, index) => ({
+        businesspermitstatus: label,
+        Count: businessPermitStatusData.data[index] || 0
     }));
-    downloadExcel(data, 'BusinesspermitStatus');
-  };
+    downloadExcel(data, 'BusinessPermitStatus');
+};
 
   const handlePaidClick = () => {
     const data = monthlyData.labels.map((label, index) => ({
@@ -180,26 +193,16 @@ const AdminReportsAndGraph: React.FC = () => {
     ]
   };
 
-  const barData = {
-    labels: monthlyData.labels,
+  const businessPermitStatusChartData = {
+    labels: businessPermitStatusData.labels,
     datasets: [
-      {
-        label: 'Approved',
-        data: monthlyData.approved,
-        backgroundColor: '#36A2EB'
-      },
-      {
-        label: 'Waiting for Payment',
-        data: monthlyData.waitingForPayment,
-        backgroundColor: '#FFCE56'
-      },
-      {
-        label: 'Rejected',
-        data: monthlyData.rejected,
-        backgroundColor: '#FF6384'
-      }
-    ]
-  };
+        {
+            label: 'Business Permit Status',
+            data: businessPermitStatusData.data,
+            backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'], // Colors for Approved, Pending, Rejected
+        },
+    ],
+};
 
   const paidData = {
     labels: monthlyData.labels,
@@ -245,10 +248,10 @@ const AdminReportsAndGraph: React.FC = () => {
         <div className="Achart-container">
          <div className="Achartreport">
 
-          <div className="Achartgraph" onClick={handleBarClick}>
+          <div className="Achartgraph" onClick={handlebusinessstatusClick}>
             <h2>Business Permit Status</h2>
-            {barData.labels.length > 0 ? (
-              <Bar data={barData} />
+            {businessPermitStatusChartData.labels.length > 0 ? (
+              <Bar data={businessPermitStatusChartData} />
             ) : (
               <p>There is no data</p>
             )}
@@ -275,7 +278,7 @@ const AdminReportsAndGraph: React.FC = () => {
           <div className="Achartlocation" onClick={handlePieClick}>
             <h3>Business Permit Locations</h3>
             {pieData.labels.length > 0 ? (
-              <Doughnut data={pieData} />
+              <Bar data={pieData} />
             ) : ( 
               <p>There is no data</p>
             )}

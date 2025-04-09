@@ -162,7 +162,14 @@ typeofbusiness: String,
     amountPaid: String, // amount
     receiptFile: String,
   },
+  lastEdited: { type: Date, default: Date.now }, // Add this field
 }, { timestamps: true });
+
+// Middleware to update lastEdited on save
+businessPermitSchema.pre('save', function (next) {
+  this.lastEdited = new Date();
+  next();
+});
 
 const BusinessPermit = mongoose.model('BusinessPermit', businessPermitSchema);
 
