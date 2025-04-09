@@ -19,8 +19,6 @@ const ForgotPassword: React.FC = () => {
     const handleSendOtp = async () => {
         if (!email) return;
 
-
-
         try {
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
                 method: 'POST',
@@ -70,12 +68,18 @@ const ForgotPassword: React.FC = () => {
 
     const handleVerifyOtp = async () => {
         if (!email || !otp) return;
-    
+
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            setError('Password must be at least 8 characters long and contain at least one letter, one uppercase letter, and one number.');
+            return;
+        }
+
         if (confirmpassword !== password) {
             setError('Password Not Match.');
             return;
         }
-    
+
         try {
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
                 method: 'POST',
@@ -104,6 +108,7 @@ const ForgotPassword: React.FC = () => {
             setError('Error verifying OTP, please try again.');
         }
     };
+
     const handleCancel = () => {
         navigate('/'); // Redirect to home page
     };
@@ -163,20 +168,20 @@ const ForgotPassword: React.FC = () => {
                     </div>
                 </div>
                 <div className="button-group">
-                <button type="button" className="cancelForgotPassword" onClick={handleCancel}>
-                    Cancel
-                </button>
+                    <button type="button" className="cancelForgotPassword" onClick={handleCancel}>
+                        Cancel
+                    </button>
                     <button
                         type="button"
                         className={`sendotp ${otpSent ? 'disabled-button' : ''}`}  // Add conditional class
                         onClick={handleSendOtp}
                         disabled={otpSent} // Disable button if OTP is sent
                     >
-                    Send OTP
+                        Send OTP
                     </button>
-                        <label className="otp-timer-label">
+                    <label className="otp-timer-label">
                         {otpSent && otpCountdown !== null ? `(${otpCountdown}s)` : ''}
-                        </label>
+                    </label>
                     <button
                         type="button"
                         className="verifyemail"
