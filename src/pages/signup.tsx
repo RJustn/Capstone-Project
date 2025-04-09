@@ -52,30 +52,24 @@ const Signup: React.FC = () => {
         isVerified: false,  // You might want to adjust this logic later
       });
   
-      const data = response.data; // Accessing the response data directly
       if (response.status === 201) { // Check the response status
-        setSuccess(data.message);
+        setSuccess(response.data.message);
         setError(null);
         navigate('/emailverification', { state: { email } }); // Redirect to email verification page
       }
-      else if (response.status === 409) { // Check the response status
-        setError('User already exists.');
-      } else {
-        setError(data.error);
-        setTimeout(() => {
-          setError(null);
-        }, 3000);
-      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-      if (error.response && error.response.status === 409) {
-        setError('User already exists.');
+        if (error.response.status === 409) {
+          setError('A user with this email already exists. Please try logging in.');
+        } else {
+          console.error('Error signing up:', error);
+          setError('An unexpected error occurred. Please try again later.');
+        }
       } else {
-        console.error('Error signing up, please try again', error);
-        setError('Error signing up, please try again');
+        console.error('Unknown error:', error);
+        setError('An unexpected error occurred. Please try again later.');
       }
-      }
-    };
+    }
   };
   
 

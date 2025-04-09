@@ -139,6 +139,7 @@ const WorkPermit: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+
   // const validateFiles = () => {
   //   const filErrors: string[] = [];
 
