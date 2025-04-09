@@ -115,16 +115,27 @@ const WorkPermit: React.FC = () => {
 
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
+    
+    if (!email) {
+      newErrors.email = 'Email is required.';
+    } else {
+      delete errors.email; // Clear error if valid
+    }
 
-    if (!firstName) newErrors.firstName = 'First name is required.';
-    if (!lastName) newErrors.lastName = 'Last name is required.';
-    if (!email) newErrors.email = 'Email is required.';
-    if (!mobileTel) newErrors.mobileTel = 'Mobile number is required.';
-    if (!natureOfWork) newErrors.natureOfWork = 'Nature of work is required.';
+    if (!mobileTel) {
+      newErrors.mobileTel = 'Mobile number is required.';
+    } else {
+      delete errors.mobileTel; // Clear error if valid
+    }
+
+    if (!natureOfWork) {
+      newErrors.natureOfWork = 'Nature of work is required.';
+    } else {
+      delete errors.natureOfWork; // Clear error if valid
+    }
 
     setErrors(newErrors);
 
-    // Reset errors if no validation errors exist
     return Object.keys(newErrors).length === 0;
   };
 
