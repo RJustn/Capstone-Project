@@ -66,10 +66,16 @@ const Signup: React.FC = () => {
           setError(null);
         }, 3000);
       }
-    } catch (error) {
-      console.error('Error signing up, please try again', error);
-      setError('Error signing up, please try again');
-    }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+      if (error.response && error.response.status === 409) {
+        setError('User already exists.');
+      } else {
+        console.error('Error signing up, please try again', error);
+        setError('Error signing up, please try again');
+      }
+      }
+    };
   };
   
 
