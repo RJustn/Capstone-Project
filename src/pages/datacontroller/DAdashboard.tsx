@@ -20,7 +20,6 @@ const DAdashboard: React.FC = () => {
   const months = React.useMemo(() => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], []);
   const currentMonthIndex = new Date().getMonth();
 
-
   const [WorkingPermitChart, setWorkingpermitchart] = useState({
     labels: [] as string[],
     datasets: [
