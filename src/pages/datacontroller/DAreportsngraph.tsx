@@ -73,18 +73,18 @@ const DataControllerReportandGraph: React.FC = () => {
 
     useEffect(() => {
         const barangays = [
-            "Burol 1", "Burol 2", "Burol 3", "Datu Esmael", "Datu Esmael 2", "Fatima 1", "Fatima 2", "Fatima 3", 
-            "Fatima 4", "Fatima 5", "Fatima 6", "Langkaan 1", "Langkaan 2", "Paliparan 1", "Paliparan 2", "Paliparan 3", 
-            "Salawag", "Sampaloc 1", "Sampaloc 2", "Sampaloc 3", "Sampaloc 4", "Sampaloc 5", "San Agustin 1", "San Agustin 2", 
-            "San Agustin 3", "San Agustin 4", "San Andres 1", "San Andres 2", "San Andres 3", "San Andres 4", 
-            "San Antonio de Padua 1", "San Antonio de Padua 2", "San Esteban", "San Francisco", "San Isidro Labrador 1", 
-            "San Isidro Labrador 2", "San Juan Bautista 1", "San Juan Bautista 2", "San Lorenzo Ruiz 1", "San Lorenzo Ruiz 2", 
-            "Rural Barangays", "Sabang", "Salitran 1", "Salitran 2", "Salitran 3", "Salitran 4", "Salitran 5", "Salitran 6", 
-            "San Jose", "San Miguel", "San Nicolas 1", "San Nicolas 2", "San Roque", "Santa Cruz 1", "Santa Cruz 2", 
-            "Santa Cruz 3", "Santa Cruz 4", "Santa Fe", "Santiago", "Santo Cristo", "Santo Domingo", "Santo Niño 1", 
-            "Santo Niño 2", "Santo Niño 3", "Zone 1", "Zone 2", "Zone 3", "Zone 4", "Zone 5", "Zone 6", "Zone 7", 
-            "Zone 8", "Zone 9", "Zone 10", "Zone 11", "Zone 12"
-        ];
+            "Burol I", "Burol II", "Burol III", "Datu Esmael", "Datu Esmael II", "Fatima I", "Fatima II", "Fatima III",
+            "Fatima IV", "Fatima V", "Fatima VI", "Langkaan I", "Langkaan II", "Paliparan I", "Paliparan II", "Paliparan III",
+            "Salawag", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "Sampaloc V", "San Agustin I", "San Agustin II",
+            "San Agustin III", "San Agustin IV", "San Andres I", "San Andres II", "San Andres III", "San Andres IV",
+            "San Antonio de Padua I", "San Antonio de Padua II", "San Esteban", "San Francisco", "San Isidro Labrador I",
+            "San Isidro Labrador II", "San Juan Bautista I", "San Juan Bautista II", "San Lorenzo Ruiz I", "San Lorenzo Ruiz II",
+            "Rural Barangays", "Sabang", "Salitran I", "Salitran II", "Salitran III", "Salitran IV", "Salitran V", "Salitran VI",
+            "San Jose", "San Miguel", "San Nicolas I", "San Nicolas II", "San Roque", "Santa Cruz I", "Santa Cruz II",
+            "Santa Cruz III", "Santa Cruz IV", "Santa Fe", "Santiago", "Santo Cristo", "Santo Domingo", "Santo Niño I",
+            "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII",
+            "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
+          ];
 
         const fetchData = async () => {
             try {

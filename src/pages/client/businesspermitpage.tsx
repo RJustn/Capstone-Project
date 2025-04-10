@@ -13,6 +13,20 @@ interface BusinessNatureOption {
   label: string;
 }
 
+const barangays = [
+  "Burol I", "Burol II", "Burol III", "Datu Esmael", "Datu Esmael II", "Fatima I", "Fatima II", "Fatima III",
+  "Fatima IV", "Fatima V", "Fatima VI", "Langkaan I", "Langkaan II", "Paliparan I", "Paliparan II", "Paliparan III",
+  "Salawag", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "Sampaloc V", "San Agustin I", "San Agustin II",
+  "San Agustin III", "San Agustin IV", "San Andres I", "San Andres II", "San Andres III", "San Andres IV",
+  "San Antonio de Padua I", "San Antonio de Padua II", "San Esteban", "San Francisco", "San Isidro Labrador I",
+  "San Isidro Labrador II", "San Juan Bautista I", "San Juan Bautista II", "San Lorenzo Ruiz I", "San Lorenzo Ruiz II",
+  "Rural Barangays", "Sabang", "Salitran I", "Salitran II", "Salitran III", "Salitran IV", "Salitran V", "Salitran VI",
+  "San Jose", "San Miguel", "San Nicolas I", "San Nicolas II", "San Roque", "Santa Cruz I", "Santa Cruz II",
+  "Santa Cruz III", "Santa Cruz IV", "Santa Fe", "Santiago", "Santo Cristo", "Santo Domingo", "Santo Niño I",
+  "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII",
+  "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
+];
+
 const BusinessPermit: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -664,7 +678,16 @@ const handleRemoveBusiness = (index: number) => {
               <div className="form-row">
               <div className="form-group">
                 <label>Barangay<span style={{ color: 'red' }}>*</span></label>
-                <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
+                <select
+                  value={barangay}
+                  onChange={(e) => setBarangay(e.target.value)}
+                  className="form-control"
+                >
+                  <option value="" disabled>Select Barangay</option>
+                  {barangays.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
                 {errors.barangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.barangay}</p>}
               </div>
               <div className="form-group">
