@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';// Import your CSS file
 import MapLocationView from '../components/MapContents/MapLocationView';
 import {BusinessPermit} from "../components/Interface(Front-end)/Types";
+import { businessNatureMap } from "../components/Interface(Front-end)/BusinessNatureMap"; 
 
 export interface Files {
 document1: string | null; // Optional
@@ -299,18 +300,37 @@ return (
 
 
     <h1>List of Businesses</h1>
-{businessPermit?.businesses?.length > 0 ? (
-  <ul>
-    {businessPermit.businesses.map((business) => (
-      <li key={business._id} style={{ marginBottom: '1rem' }}>
-        <strong>Nature:</strong> {business.businessNature || 'N/A'} <br />
-        <strong>Type:</strong> {business.businessType || 'N/A'} <br />
-        <strong>Capital Investment:</strong> ${business.capitalInvestment.toLocaleString()}
-      </li>
-    ))}
-  </ul>
+{businessPermit && businessPermit.businesses && businessPermit.businesses.length > 0 ? (
+  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <thead>
+      <tr>
+        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Nature</th>
+        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Type</th>
+        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Capital Investment</th>
+        <th style={{ padding: '8px', border: '1px solid #ddd' }}>Las Year Gross</th>
+      </tr>
+    </thead>
+    <tbody>
+      {businessPermit.businesses.map((business) => (
+        <tr key={business._id}>
+          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+            {businessNatureMap[business.businessNature as keyof typeof businessNatureMap] || business.businessNature || 'N/A'}
+          </td>
+          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+            {business.businessType || 'N/A'}
+          </td>
+          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+          ₱  {business.capitalInvestment?.toLocaleString() || 'N/A'}
+          </td>
+          <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+          ₱  {business.lastYearGross?.toLocaleString() || 'N/A'}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 ) : (
-  <div>No businesses to display.</div> 
+  <div>No businesses to display.</div>
 )}
     </div>
 
