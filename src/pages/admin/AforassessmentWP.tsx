@@ -507,20 +507,6 @@ const updateAttachments = async (e: React.FormEvent) => {
   }
 };
 
-const handleCancelEditAttach = () => {
-  setRemarksdoc1('');
-  setRemarksdoc2('');
-  setRemarksdoc3('');
-  setRemarksdoc4('');
-  setFiles({
-    document1: null,
-    document2: null,
-    document3: null,
-    document4: null,
-  });
-  setSelectedFiles({});
-  setIsEditingAttach(false); // Add this line to exit edit mode
-};
 
 useEffect(() => {
   const urls: Record<string, string> = {}; // Define a typed object for URLs
@@ -650,7 +636,6 @@ if (type === 'new') {
                       </option>
                       <option value="viewApplication">View Application</option>
                       <option value="viewAttachments">View Attachments</option>
-                      <option value="editFormDetails">Edit Form Details</option>
                     </select>
                   </td>
                 </tr>
@@ -684,7 +669,7 @@ if (type === 'new') {
         contentLabel="Edit Work Permit"
         style={customModalStyles} // Apply custom styles
       >
-                <h2>Edit Work Permit</h2>
+                <h2>Viewing Work Permit Details</h2>
         {selectedPermit && (
           <form onSubmit={handleFormSubmit}>
             <label>
@@ -1168,20 +1153,7 @@ if (type === 'new') {
           />
         </p>
         {renderFile(selectedFiles.document4)}
-        {isEditingAttach ? (
-          <>
-            <button type="button" onClick={updateAttachments} style={{ marginLeft: '10px' }}>
-              Save
-            </button>
-            <button type="button" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
-              Cancel
-            </button>
-          </>
-        ) : (
-          <button type="button" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
-            Edit Attachments
-          </button>
-        )}
+        <button type="button" onClick={closeAttachmentsModal}></button>
       </div>
     )}
   </form>

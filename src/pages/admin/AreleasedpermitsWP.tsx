@@ -617,7 +617,7 @@ if (type === 'new') {
                 />
               </p>
               {renderFile(selectedFiles.document4)}
-
+              <button className="back-button" onClick={closeAttachmentsModal}>Close</button>
             </div>
           )}
         </form>
