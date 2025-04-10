@@ -363,22 +363,22 @@ const WorkPermit: React.FC = () => {
               <h2>Personal Information</h2>
               <div className="form-row">
                 <div className="form-group">
-                  <label>LAST NAME:<span style={{ color: 'red' }}>*</span></label>
+                  <label>LAST NAME<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                   {errors.lastName && <p style={{ color: 'red' }}>{errors.lastName}</p>}
                 </div>
                 <div className="form-group">
-                  <label>FIRST NAME:<span style={{ color: 'red' }}>*</span></label>
+                  <label>FIRST NAME<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                   {errors.firstName && <p style={{ color: 'red' }}>{errors.firstName}</p>}
                 </div>
                 <div className="form-group">
-                  <label>MIDDLE INITIAL:</label>
+                  <label>MIDDLE INITIAL</label>
                   <input type="text" value={middleInitial} onChange={(e) => setMiddleInitial(e.target.value)} />
                 </div>
               </div>
               <div className="form-group">
-                <label>PERMANENT ADDRESS:</label>
+                <label>PERMANENT ADDRESS</label>
                 <input type="text" value={permanentAddress} onChange={(e) => setPermanentAddress(e.target.value)} />
               </div>
               <div className="form-group">
@@ -392,34 +392,34 @@ const WorkPermit: React.FC = () => {
                 </label>
               </div>
               <div className="form-group">
-                <label>TEMPORARY ADDRESS (IF ANY):</label>
+                <label>TEMPORARY ADDRESS (IF ANY)</label>
                 <input type="text" value={temporaryAddress} onChange={(e) => setTemporaryAddress(e.target.value)} />
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>DATE OF BIRTH:</label>
+                  <label>DATE OF BIRTH</label>
                   <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>AGE:</label>
+                  <label>AGE</label>
                   <input type="number" value={age} onChange={(e) => setAge(Number(e.target.value))} />
                 </div>
                 <div className="form-group">
-                  <label>PLACE OF BIRTH:</label>
+                  <label>PLACE OF BIRTH</label>
                   <input type="text" value={placeOfBirth} onChange={(e) => setPlaceOfBirth(e.target.value)} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>CITIZENSHIP:</label>
+                  <label>CITIZENSHIP</label>
                   <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>CIVIL STATUS:</label>
+                  <label>CIVIL STATUS</label>
                   <input type="text" value={civilStatus} onChange={(e) => setCivilStatus(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="gender">GENDER:</label>
+                  <label htmlFor="gender">GENDER</label>
                   <select
                     id="gender"
                     name="gender"
@@ -434,48 +434,48 @@ const WorkPermit: React.FC = () => {
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>HEIGHT:</label>
+                  <label>HEIGHT</label>
                   <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>WEIGHT:</label>
+                  <label>WEIGHT</label>
                   <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>MOBILE/TEL. NO:<span style={{ color: 'red' }}>*</span></label>
+                  <label>MOBILE/TEL. NO<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={mobileTel} onChange={(e) => setMobileTel(e.target.value)} />
                   {errors.mobileTel && <p style={{ color: 'red' }}>{errors.mobileTel}</p>}
                 </div>
                 <div className="form-group">
-                  <label>EMAIL ADDRESS:<span style={{ color: 'red' }}>*</span></label>
+                  <label>EMAIL ADDRESS<span style={{ color: 'red' }}>*</span></label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                   {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
                 </div>
                 <div className="form-group">
-                  <label>EDUCATIONAL ATTAINMENT:</label>
+                  <label>EDUCATIONAL ATTAINMENT</label>
                   <input type="text" value={educationalAttainment} onChange={(e) => setEducationalAttainment(e.target.value)} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>NATURE OF WORK:<span style={{ color: 'red' }}>*</span></label>
+                  <label>NATURE OF WORK<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={natureOfWork} onChange={(e) => setNatureOfWork(e.target.value)} />
                   {errors.natureOfWork && <p style={{ color: 'red' }}>{errors.natureOfWork}</p>}
                 </div>
                 <div className="form-group">
-                  <label>PLACE OF WORK:</label>
+                  <label>PLACE OF WORK</label>
                   <input type="text" value={placeOfWork} onChange={(e) => setPlaceOfWork(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>COMPANY NAME:</label>
+                  <label>COMPANY NAME</label>
                   <input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
               </div>
 
               <div className="form-group gender-group">
-                <label htmlFor="classification">Work Permit Classification:</label>
+                <label htmlFor="classification">Work Permit Classification</label>
                 <input
                   type="text"
                   id="classification"
@@ -491,16 +491,16 @@ const WorkPermit: React.FC = () => {
               <h2>In Case of Emergency</h2>
               <div className="form-row">
                 <div className="form-group">
-                  <label>NAME:</label>
+                  <label>NAME</label>
                   <input type="text" value={name2} onChange={(e) => setName2(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>MOBILE/TEL. NO:<span style={{ color: 'red' }}>*</span></label>
+                  <label>MOBILE/TEL. NO<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={mobileTel2} onChange={(e) => setMobileTel2(e.target.value)} />
                 </div>
               </div>
               <div className="form-group">
-                <label>ADDRESS:</label>
+                <label>ADDRESS</label>
                 <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
               {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
@@ -510,25 +510,25 @@ const WorkPermit: React.FC = () => {
           {step === 2 && (
             <div className="upload-section">
               <div className="upload-item">
-                <label>Upload 1x1 Picture:<span style={{ color: 'red' }}>*</span></label>
+                <label>Upload 1x1 Picture<span style={{ color: 'red' }}>*</span></label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
                 {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
               </div>
               <div className="upload-item">
-                <label>Upload Cedula:<span style={{ color: 'red' }}>*</span></label>
+                <label>Upload Cedula<span style={{ color: 'red' }}>*</span></label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
                 {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
               </div>
               {!currentlyResiding && (
                 <div className="upload-item">
-                  <label>Upload Referral Letter:<span style={{ color: 'red' }}>*</span></label>
+                  <label>Upload Referral Letter<span style={{ color: 'red' }}>*</span></label>
                   <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
                   {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
                 </div>
               )}
               {workPermits.length === 0 && (
                 <div className="upload-item">
-                  <label>Upload FTJS (First Time Job Seeker) Certificate:</label>
+                  <label>Upload FTJS (First Time Job Seeker) Certificate</label>
                   <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
                   {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
                 </div>

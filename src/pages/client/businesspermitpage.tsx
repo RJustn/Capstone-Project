@@ -325,69 +325,16 @@ const BusinessPermit: React.FC = () => {
     { businessNature: string; businessType: string; capitalInvestment: number }[]
   >([]);
 
-
-  //Form Pages
-  const goToNextStep = () => {
-    // Perform validation based on the cur
-    const newErrors: {   
-      
-      //step 1
-      lastname?: string;
-      firstname?: string;
-      companyname?: string;
-      civilstatus?: string;
-      gender?: string;
-      houseandlot?: string;
-      buildingstreetname?: string;
-      barangay?: string;
-      mobilenumber?: string;
-      email?: string;
-
-      //step 2
-      businessname?: string;
-      businessscale?: string;
-      paymentmethod?: string;
-      businessbuildingblocklot?: string;
-      businessbarangay?: string;
-      subdivision?: string;
-      businesszip?: string;
-      businesscontactnumber?: string;
-
-      ownershiptype?: string;
-      dtiregistrationnum?: string;
-      dtiregistrationdate?: string;
-      dtiregistrationexpdate?: string;
-      secregistrationnum?: string;
-      industrysector?: string;
-      
-
-      //step 3
-      dateestablished?: string;
-      startdate?: string;
-      occupancy?: string;
-      businessarea?: string;
-      businesslotarea?: string;
-      otherbusinesstype?: string;
-      businessemail?: string;
-
-      //step 4
-      lat?: string;
-
-      //step 5
-      businessnature?: string;
-
-      //step6
-      documents?: string;
-
-    } = {};
-
+  const validateFields = () => {
+    const newErrors: { [key: string]: string } = {};
+  
+    // Step 1 validation
     if (step === 1) {
       if (corporation) {
         if (!companyname.trim()) {
           newErrors.companyname = 'Company Name is required for corporations.';
         }
-        
-      }  else {
+      } else {
         if (!lastname.trim()) {
           newErrors.lastname = 'Last Name is required for non-corporations.';
         }
@@ -401,31 +348,7 @@ const BusinessPermit: React.FC = () => {
           newErrors.gender = 'Gender is required for non-corporations.';
         }
       }
-
-      if (!ownershiptype.trim()) {
-        newErrors.ownershiptype = 'Ownership Type is required.';
-      }
-    
-      if (ownershiptype === 'SOLE') {
-        if (!dtiregistrationnum.trim()) {
-          newErrors.dtiregistrationnum = 'DTI Registration No is required for Sole Proprietorship.';
-        }
-        if (!dtiregistrationdate.trim()) {
-          newErrors.dtiregistrationdate = 'DTI Registration Date is required for Sole Proprietorship.';
-        }
-        if (!dtiregistrationexpdate.trim()) {
-          newErrors.dtiregistrationexpdate = 'DTI Expiration Date is required for Sole Proprietorship.';
-        }
-      } else if (['CORP', 'PART', 'INST'].includes(ownershiptype)) {
-        if (!secregistrationnum.trim()) {
-          newErrors.secregistrationnum = 'SEC Registration No is required for Corporations, Partnerships, and Institutions.';
-        }
-      }
-    
-      if (!industrysector.trim()) {
-        newErrors.industrysector = 'Industry Sector is required.';
-      }
-
+  
       if (!houseandlot.trim()) {
         newErrors.houseandlot = 'House/Bldg No./Blk and Lot is required.';
       }
@@ -441,43 +364,24 @@ const BusinessPermit: React.FC = () => {
       if (!email.trim()) {
         newErrors.email = 'Email Address is required.';
       }
-
-      if (!ownershiptype.trim()) {
-        newErrors.ownershiptype = 'Ownership Type is required.';
-      }
-    
-  
-      // If there are errors, set them and prevent moving to the next step
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        setIsFormValid(false);
-        return;
-      }
     }
+  
+    // Step 2 validation
     if (step === 2) {
       if (!businessname.trim()) {
         newErrors.businessname = 'Business Name is required.';
       }
-
-      if (!businessscale.trim()) { 
+      if (!businessscale.trim()) {
         newErrors.businessscale = 'Business Scale is required.';
       }
-        
-      if (!paymentmethod) {
+      if (!paymentmethod.trim()) {
         newErrors.paymentmethod = 'Payment Method is required.';
-        return; // Prevent moving to the next step
       }
       if (!businessbuildingblocklot.trim()) {
         newErrors.businessbuildingblocklot = 'House/Bldg No./Blk and Lot is required.';
       }
-      if (!buildingstreetname.trim()) {
-        newErrors.buildingstreetname = 'Building Name/Street Name is required.';
-      }   
-      if (!businessbarangay.trim()) { 
+      if (!businessbarangay.trim()) {
         newErrors.businessbarangay = 'Barangay is required.';
-      }
-      if (!subdivision.trim()) {
-        newErrors.subdivision = 'Subdivision/Compound Name is required.';
       }
       if (!businesszip.trim()) {
         newErrors.businesszip = 'Zip Code is required.';
@@ -485,12 +389,9 @@ const BusinessPermit: React.FC = () => {
       if (!businesscontactnumber.trim()) {
         newErrors.businesscontactnumber = 'Contact Number is required.';
       }
-
-
-      setIsFormValid(false);
     }
-
-
+  
+    // Step 3 validation
     if (step === 3) {
       if (!dateestablished.trim()) {
         newErrors.dateestablished = 'Date Established is required.';
@@ -513,56 +414,47 @@ const BusinessPermit: React.FC = () => {
       if (!businessemail.trim()) {
         newErrors.businessemail = 'Business Email is required.';
       }
-      setIsFormValid(false);
-      setErrors(newErrors);
     }
-
+  
+    // Step 4 validation
     if (step === 4) {
       if (!lat || !lng) {
         newErrors.lat = 'Location is required.';
       }
-      setIsFormValid(false);
-      setErrors(newErrors);
     }
-
+  
+    // Step 5 validation
     if (step === 5) {
-      // Check if at least one business is added
       if (businesses.length === 0) {
         newErrors.businessnature = 'At least one business is required.';
-        return;
-      }
-      setIsFormValid(false);
-      setErrors(newErrors);
-    }
-    if (step === 6) {
-      // Check if all required documents are uploaded
-      const allDocumentsUploaded = Object.values(files).every((file) => file !== null);
-      if (!allDocumentsUploaded) {
-        newErrors.documents = 'All required documents must be uploaded.';
-        setErrors(newErrors);
-        setIsFormValid(false);
-        return; // Prevent moving to the next step
       }
     }
   
-
-    // Reset validity state if validation passes
-    setErrors({}); 
+    // Step 6 validation
+    if (step === 6) {
+      const allDocumentsUploaded = Object.values(files).every((file) => file !== null);
+      if (!allDocumentsUploaded) {
+        newErrors.documents = 'All required documents must be uploaded.';
+      }
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  const goToNextStep = () => {
+    if (!validateFields()) {
+      setIsFormValid(false);
+      return;
+    }
+  
     setIsFormValid(true);
-    setStep(prevStep => prevStep + 1);
+    setStep((prevStep) => prevStep + 1);
   };
-
+  
   const goToPreviousStep = () => {
-      setIsFormValid(true);
-    setStep(prevStep => prevStep - 1);
+    setStep((prevStep) => prevStep - 1);
   };
-
-
-  //Form Pages End
-
-
-
-
 
 // Map for business nature for display purposes
 
@@ -624,7 +516,7 @@ const handleRemoveBusiness = (index: number) => {
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <div className="businesspermit-form">
-              <h2>Step 1: Personal Details</h2>
+              <h2>Step 1 Personal Details</h2>
               <div className="form-group">
                 <label className="checkbox-label">
                   <input
@@ -650,28 +542,28 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                <div className="form-row">
                 <div className="form-group">
-                  <label>LAST NAME:</label>
+                  <label>LAST NAME<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={lastname} onChange={(e) => setLastName(e.target.value)} required disabled={corporation} />
                   {errors.lastname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.lastname}</p>}
                 </div>
                 <div className="form-group">
-                  <label>FIRST NAME:</label>
+                  <label>FIRST NAME<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={firstname} onChange={(e) => setFirstName(e.target.value)}  required disabled={corporation} />
                   {errors.firstname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.firstname}</p>}
                 </div>
                 <div className="form-group">
-                  <label>MIDDLE INITIAL(optional):</label>
+                  <label>MIDDLE INITIAL(optional)</label>
                   <input type="text" value={middleinitial} onChange={(e) => setMiddleInitial(e.target.value)}  disabled={corporation} />
                 </div>
                 <div className="form-group">
-                  <label>Company Name:</label>
+                  <label>Company Name<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
                   {errors.companyname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.companyname}</p>}
                 </div>
                 </div>
                <div className="form-row">
                 <div className="form-group">
-                <label>CIVIL STATUS:</label>
+                <label>CIVIL STATUS<span style={{ color: 'red' }}>*</span></label>
                 <select
                   value={civilstatus}
                   onChange={(e) => setCivilStatus(e.target.value)}
@@ -688,7 +580,7 @@ const handleRemoveBusiness = (index: number) => {
                 {errors.civilstatus && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.civilstatus}</p>}
                 </div>
                 <div className="form-group">
-                <label>Gender:</label>
+                <label>Gender<span style={{ color: 'red' }}>*</span></label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
@@ -704,13 +596,13 @@ const handleRemoveBusiness = (index: number) => {
                 {errors.gender && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.gender}</p>}
                 </div>
                 <div className="form-group">
-                <label>CITIZENSHIP:</label>
+                <label>CITIZENSHIP</label>
                 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
                 {errors.citizenship && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.citizenship}</p>}
                 </div>
                <div className="form-row">
                 <div className="form-group">
-                  <label>TIN NUMBER:</label>
+                  <label>TIN NUMBER</label>
                   <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
                  </div>
                 </div>
@@ -723,15 +615,15 @@ const handleRemoveBusiness = (index: number) => {
                </div>
                <div className="form-row">
                 <div className="form-group">
-                    <label>Representative Full Name:</label>
+                    <label>Representative Full Name</label>
                 <input type="text" value={repfullname} onChange={(e) => setRepFullName(e.target.value)} disabled={!representative} />
                 </div>
                <div className="form-group">
-                <label>Designation/Position:</label>
+                <label>Designation/Position</label>
                 <input type="text" value={repdesignation} onChange={(e) => setRepDesignation(e.target.value)} disabled={!representative} />
                 </div>
                 <div className="form-group">
-                <label>Representative Mobile Number:</label>
+                <label>Representative Mobile Number</label>
                 <input type="text" value={repmobilenumber} onChange={(e) => setRepMobileNumber(e.target.value)} disabled={!representative} />
                </div>
                </div>
@@ -739,11 +631,12 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Contact Information</h2>
                <div className="form-row">
                 <div className="form-group">
-                <label>House/Bldg No./Blk and Lot</label>
+                <label>House/Bldg No./Blk and Lot<span style={{ color: 'red' }}>*</span></label>
                 <input type="text" value={houseandlot} onChange={(e) => setHouseandLot(e.target.value)} />
+                {errors.houseandlot && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.houseandlot}</p>}
                </div>
                 <div className="form-group">
-                <label>Building Name / Street Name</label>
+                <label>Building Name / Street Name<span style={{ color: 'red' }}>*</span></label>
 
                 <input type="text" value={buildingstreetname} onChange={(e) => setBuildingStreetName(e.target.value)}  />
                 {errors.buildingstreetname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.buildingstreetname}</p>}
@@ -770,7 +663,7 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div className="form-row">
               <div className="form-group">
-                <label>Barangay</label>
+                <label>Barangay<span style={{ color: 'red' }}>*</span></label>
                 <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
                 {errors.barangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.barangay}</p>}
               </div>
@@ -779,12 +672,13 @@ const handleRemoveBusiness = (index: number) => {
                 <input type="text" value={telephonenumber} onChange={(e) => setTelephoneNumber(e.target.value)} />
               </div>
               <div className="form-group">
-                <label>Mobile Number</label>
+                <label>Mobile Number<span style={{ color: 'red' }}>*</span></label>
                 <input type="text" value={mobilenumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                {errors.mobilenumber && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.mobilenumber}</p>}
               </div>
               </div>
               <div className="form-group">
-                <label>Email Address</label>
+                <label>Email Address<span style={{ color: 'red' }}>*</span></label>
                 <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                 {errors.email && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.email}</p>}
               </div>
@@ -800,12 +694,12 @@ const handleRemoveBusiness = (index: number) => {
               <div className="businesspermit-form">
                 <h2>Step 2 Business Information</h2>
                 <div className="form-group">
-                  <label>Business Name:</label>
+                  <label>Business Name<span style={{ color: 'red' }}>*</span></label>
                   {errors.businessname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessname}</p>}
                   <input type="text" value={businessname} onChange={(e) => setBusinessName(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Business Scale:</label>
+                  <label>Business Scale<span style={{ color: 'red' }}>*</span></label>
                   <select
                     value={businessscale}
                     onChange={(e) => setBusinessScale(e.target.value)}
@@ -820,7 +714,7 @@ const handleRemoveBusiness = (index: number) => {
                   {errors.businessscale && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessscale}</p>}
                 </div>
 <div className="form-group">
-      <label>Payment Mode:</label>
+      <label>Payment Mode<span style={{ color: 'red' }}>*</span></label>
       <select
         value={paymentmethod}
         onChange={(e) => setPaymentMethod(e.target.value)}
@@ -839,45 +733,45 @@ const handleRemoveBusiness = (index: number) => {
     </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
-                  <label>House/Bldg No./Blk and Lot:</label>
+                  <label>House/Bldg No./Blk and Lot</label>
                   <input type="text" value={businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
                   {errors.businessbuildingblocklot && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbuildingblocklot}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Building Name/Street Name:</label>
+                  <label>Building Name/Street Name</label>
                   <input type="text" value={businessbuildingname} onChange={(e) => setBusinessBuildingName(e.target.value)} />
                   {errors.buildingstreetname && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.buildingstreetname}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Subdivision/Compound Name:</label>
+                  <label>Subdivision/Compound Name</label>
                   <input type="text" value={businesssubcompname} onChange={(e) => setBusinessSubCompName(e.target.value)}  />
                   {errors.subdivision && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.subdivision}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Region:</label>
+                  <label>Region</label>
                   <input type="text" value={businessregion} onChange={(e) => setBusinessRegion(e.target.value)} disabled />
                 </div>
                 <div className="form-group">
-                  <label>Province:</label>
+                  <label>Province</label>
                   <input type="text" value={businessprovince} onChange={(e) => setBusinessProvince(e.target.value)} disabled />
                 </div>
                 <div className="form-group">
-                  <label>City/Municipality:</label>
+                  <label>City/Municipality</label>
                   <input type="text" value={businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
                 </div>
                 <div className="form-group">
-                  <label>Barangay:</label>
+                  <label>Barangay<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
                   {errors.businessbarangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbarangay}</p>}
                 </div>
 
                 <div className="form-group">
-                  <label>Zip:</label>
+                  <label>Zip<span style={{ color: 'red' }}>*</span></label>
                   {errors.businesszip && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesszip}</p>}
                   <input type="text" value={businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Contact Number:</label>
+                  <label>Contact Number<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
                   {errors.businesscontactnumber && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesscontactnumber}</p>}
                   <label className="checkbox-label">
@@ -898,7 +792,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <h2>Necessities Information</h2>
                 <div className="form-group">
-                  <label>Ownership Type:</label>
+                  <label>Ownership Type</label>
                   <select
                     value={ownershiptype}
                     onChange={(e) => {
@@ -933,11 +827,11 @@ const handleRemoveBusiness = (index: number) => {
                   {errors.ownershiptype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.ownershiptype}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Agency Registered No:</label>
+                  <label>Agency Registered No</label>
                   <input type="text" value={agencyregistered} onChange={(e) => setAgencyRegistered(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>DTI Registration No:</label>
+                  <label>DTI Registration No</label>
                   {errors.dtiregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationnum}</p>}
                   <input
                     type="text"
@@ -948,27 +842,27 @@ const handleRemoveBusiness = (index: number) => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>DTI Registration Date:</label>
+                  <label>DTI Registration Date</label>
                   {errors.dtiregistrationdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationdate}</p>}
                   <input type="date" value={dtiregistrationdate} onChange={(e) => setDTIRegistrationDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
                 </div>
                 <div className="form-group">
-                  <label>DTI Expiration Date:</label>
+                  <label>DTI Expiration Date</label>
                   {errors.dtiregistrationexpdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dtiregistrationexpdate}</p>}
                   <input type="date" value={dtiregistrationexpdate} onChange={(e) => setDTIRegistrationExpDate(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART"} />
                 </div>
                 <div className="form-group">
-                  <label>SEC Registration No:</label>
+                  <label>SEC Registration No</label>
                   {errors.secregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.secregistrationnum}</p>}
                   <input type="text" value={secregistrationnum} onChange={(e) => setSECRegistrationNum(e.target.value)} disabled={ownershiptype === "COOP" || ownershiptype === "SOLE"} />
                 </div>
                 <div className="form-group">
-                  <label>BIR Registration No:</label>
+                  <label>BIR Registration No</label>
                   {errors.birregistrationnum && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.birregistrationnum}</p>}
                   <input type="text" value={birregistrationnum} onChange={(e) => setBIRRegistrationNum(e.target.value)} disabled={ownershiptype === "CORP" || ownershiptype === "INST" || ownershiptype === "PART" || ownershiptype === "SOLE"} />
                 </div>
                 <div className="form-group">
-                  <label>Industry Sector:</label>
+                  <label>Industry Sector</label>
                   {errors.industrysector && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.industrysector}</p>}
                   <select
                     value={industrysector}
@@ -1335,7 +1229,7 @@ const handleRemoveBusiness = (index: number) => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Business Operation:</label>
+                  <label>Business Operation</label>
                   <select
                     value={businessoperation}
                     onChange={(e) => setBusinessOperation(e.target.value)}
@@ -1347,7 +1241,7 @@ const handleRemoveBusiness = (index: number) => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Business Type:</label>
+                  <label>Business Type</label>
                   <select
                     value={typeofbusiness}
                     onChange={(e) => setTypeofBusiness(e.target.value)}
@@ -1375,9 +1269,9 @@ const handleRemoveBusiness = (index: number) => {
             <div>
               {/* Content for Step 3 */}
               <div className="businesspermit-form">
-                <h2>Step 3: Business Other Information</h2>
+                <h2>Step 3 Business Other Information</h2>
                 <div className="form-group">
-                  <label>Date Established:</label>
+                  <label>Date Established<span style={{ color: 'red' }}>*</span></label>
                   {errors.dateestablished && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dateestablished}</p>}
                   <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
                   <label className="checkbox-label">
@@ -1395,7 +1289,7 @@ const handleRemoveBusiness = (index: number) => {
                   </label>
                 </div>
                 <div className="form-group">
-                  <label>Start Date:</label>
+                  <label>Start Date<span style={{ color: 'red' }}>*</span></label>
                   {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
                   <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
                   <label className="checkbox-label">
@@ -1413,7 +1307,7 @@ const handleRemoveBusiness = (index: number) => {
                 </label>
                 </div>
                 <div className="form-group">
-                  <label>Occupancy:</label>
+                  <label>Occupancy<span style={{ color: 'red' }}>*</span></label>
                   {errors.occupancy && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.occupancy}</p>}
                   <select
                     value={occupancy}
@@ -1428,7 +1322,7 @@ const handleRemoveBusiness = (index: number) => {
               
                 </div>
                 <div className="form-group">
-                  <label>Business Type:</label>
+                  <label>Business Type</label>
                   {errors.otherusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
                   <select
                     value={otherbusinesstype}
@@ -1441,54 +1335,54 @@ const handleRemoveBusiness = (index: number) => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Email Address:</label>
+                  <label>Email Address</label>
                   {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                   <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Business Area:</label>
+                  <label>Business Area<span style={{ color: 'red' }}>*</span></label>
                   {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>Lot Area:</label>
+                  <label>Lot Area<span style={{ color: 'red' }}>*</span></label>
                   {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>No of Workers:</label>
+                  <label>No of Workers</label>
                   Male:
                   <input type="number" value={numofworkermale} onChange={handleMaleChange} /> 
                   Female:
                   <input type="number" value={numofworkerfemale} onChange={handleFemaleChange} />
                 </div>
                 <div className="form-group">
-                  <label>Total:</label>
+                  <label>Total</label>
                   <input type="text" value={numofworkertotal} readOnly placeholder='Total Workers'/>
                 </div>
                 <div className="form-group">
-                  <label>Employees residing within LGU:</label>
+                  <label>Employees residing within LGU</label>
                   <input type="text" value={numofworkerlgu} onChange={(e) => setNumofWorkerLGU(e.target.value)} />
                 </div>
                 <h2>Fill up only if Business Place is Rented</h2>
                 <div className="form-group">
-                  <label>Lessor's Full Name:</label>
+                  <label>Lessor's Full Name</label>
                   <input type="text" value={lessorfullname} onChange={(e) => setLessorFullName(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} />
                 </div>
                 <div className="form-group">
-                  <label>Lessor's Mobile Number:</label>
+                  <label>Lessor's Mobile Number</label>
                   <input type="text" value={lessormobilenumber} onChange={(e) => setLessorMobileNumber(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
                 <div className="form-group">
-                  <label>Monthly Rent:</label>
+                  <label>Monthly Rent</label>
                   <input type="text" value={monthlyrent} onChange={(e) => setMonthlyRent(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
                 <div className="form-group">
-                  <label>Lessor's Full Address:</label>
+                  <label>Lessor's Full Address</label>
                   <input type="text" value={lessorfulladdress} onChange={(e) => setLessorFullAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} />
                 </div>
                 <div className="form-group">
-                  <label>Email Address:</label>
+                  <label>Email Address</label>
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
@@ -1512,12 +1406,12 @@ const handleRemoveBusiness = (index: number) => {
 
                 <div style={{ marginTop: '10px' }}>
                   <label>
-                    Latitude:
+                    Latitude<span style={{ color: 'red' }}>*</span>
                     <input type="text" value={lat} readOnly />
                   </label>
                   <br />
                   <label>
-                    Longitude:
+                    Longitude<span style={{ color: 'red' }}>*</span>
                     <input type="text" value={lng} readOnly />
                   </label>
                 </div>
@@ -1628,43 +1522,43 @@ businesses?.length > 0 ? (
               <h2>Upload Documents</h2>
               {errors.documents && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.documents}</p>}
                 <label>
-                  Upload DTI / SEC / CDA:
+                  Upload DTI / SEC / CDA<span style={{ color: 'red' }}>*</span>
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
                 <label>
-                  Occupancy Permit (Optional):
+                  Occupancy Permit (Optional)
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
                 <label>
-                  Lease Contract (if rented) / Tax Declaration (If Owned):
+                  Lease Contract (if rented) / Tax Declaration (If Owned)<span style={{ color: 'red' }}>*</span>
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
                 <label>
-                  Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative):
+                  Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
                 <label>
-                 Owner's ID:
+                 Owner's ID
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
                 <label>
-                  Picture of Establishment (Perspective View):
+                  Picture of Establishment (Perspective View)
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
                 <label>
-                Zoning:
+                Zoning
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
                 <label>
-                Office of the Building Official:
+                Office of the Building Official
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
                 <label>
-                City Health Office:
+                City Health Office
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
                 <label>
-                Bureau of Fire Protection:
+                Bureau of Fire Protection
                 </label>
                 <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
                 
