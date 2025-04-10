@@ -702,7 +702,7 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div className="form-group">
                 <label>Email Address<span style={{ color: 'red' }}>*</span></label>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 {errors.email && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.email}</p>}
               </div>
               <div>
@@ -1414,7 +1414,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
+                  <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} required/>
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
