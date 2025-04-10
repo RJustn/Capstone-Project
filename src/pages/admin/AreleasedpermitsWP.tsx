@@ -392,6 +392,19 @@ const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
     </button>
   );
 };
+let displayTextTitle = 'All Work Permit Applications (Released)';
+
+if (type === 'new') {
+  displayTextTitle = 'New Work Permit Applications (Released)';
+} else if (type === 'renew') {
+  displayTextTitle = 'Renewal of Work Permit Applications (Released)';
+} else if (type === 'all') {
+  displayTextTitle = 'All Work Permit Applications (Released)';
+} else {
+  displayTextTitle = 'All Work Permit Applications (Released)';
+}
+
+
   return (
     <section className="Abody">
       <div className="Asidebar-container">
@@ -403,7 +416,7 @@ const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Released Work Permit Applications</p>
+          <p>{displayTextTitle}</p>
           {/* Search Bar */}
           <div className="search-bar-container">
             <input

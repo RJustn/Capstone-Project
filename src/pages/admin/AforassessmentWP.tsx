@@ -541,6 +541,18 @@ useEffect(() => {
 }, [files]); // Watch the `files` object for changes
 
 
+let displayTextTitle = 'All Work Permit Applications (For Assessments)';
+
+if (type === 'new') {
+  displayTextTitle = 'New Work Permit Applications (For Assessments)';
+} else if (type === 'renew') {
+  displayTextTitle = 'Renewal of Work Permit Applications (For Assessments)';
+} else if (type === 'all') {
+  displayTextTitle = 'All Work Permit Applications (For Assessments)';
+} else {
+  displayTextTitle = 'All Work Permit Applications (For Assessments)';
+}
+
   return (
     <section className="Abody">
       <div className="Asidebar-container">
@@ -552,7 +564,7 @@ useEffect(() => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Work Permit Applications (For Assessments)</p>
+          <p>{displayTextTitle}</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">

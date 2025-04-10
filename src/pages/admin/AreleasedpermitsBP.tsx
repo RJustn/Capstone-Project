@@ -1769,16 +1769,16 @@ const businessNatureMap = {
   "WHE_FLR": "Wholesaler-Essential - Distributor - Flour",
 };
 
-let displayTextTitle = 'All Business Permit Applications (For Payments)';
+let displayTextTitle = 'All Business Permit Applications (Released)';
 
 if (type === 'new') {
-  displayTextTitle = 'New Business Permit Applications (For Payments)';
+  displayTextTitle = 'New Business Permit Applications (Released)';
 } else if (type === 'renew') {
-  displayTextTitle = 'Renewal of Business Permit Applications (For Payments)';
+  displayTextTitle = 'Renewal of Business Permit Applications (Released)';
 } else if (type === 'all') {
-  displayTextTitle = 'All Business Permit Applications (For Payments)';
+  displayTextTitle = 'All Business Permit Applications (Released)';
 } else {
-  displayTextTitle = 'All Business Permit Applications (For Payments)';
+  displayTextTitle = 'All Business Permit Applications (Released)';
 }
 
   return (

@@ -18,7 +18,7 @@ export interface BusinessPermit {
   classification?: string;
   transaction?: string;
   amountToPay?: string;
-  permitFile?: string;
+  permitFile: string;
   permitDateIssued?: string;
   permitExpiryDate?: string;
   expiryDate?: string;
@@ -32,8 +32,17 @@ export interface BusinessPermit {
   businesses: Businesses[];
   files: Files;
   department: Department; // Change to object with key-value pairs
-
+  statementofaccount: Statement;
+receipt: Receipt;
   createdAt?: string;
+}
+
+export interface Receipt {
+  receiptId?: string; // Optional
+  modeOfPayment?: string; // Optional
+  receiptDate?: string; // Optional
+  amountPaid?: string; // Optional
+  receiptFile: string;
 }
 
 export interface Owner {
@@ -117,10 +126,12 @@ lng: string,
 }
 
 export interface Businesses {
-_id: string;
-businessNature: string;
-businessType: string;
-capitalInvestment: string;
+  _id: string;
+  businessNature: string;
+  businessType: string;
+  capitalInvestment: string;
+  lastYearGross: string;
+  tax: string;
 }
 
 
@@ -155,11 +166,39 @@ export interface Files {
   remarksdoc9: string;
   remarksdoc10: string;
   }
+
+export interface Statement{
+  permitassessed: string;
+  dateassessed: string;
+  mayorspermit: string;
+  sanitary:  string;
+  health:  string;
+  businessplate:  string;
+  zoningclearance:  string;
+  annualInspection:  string;
+  environmental:  string;
+  miscfee:  string;
+  liquortobaco:  string;
+  liquorplate:  string;
+  statementofaccountfile: string;
+}
 const AdminForAssessmentBusinessPermit: React.FC = () => {
   const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
   const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
   
   const navigate = useNavigate();
+const [viewingType, setViewingType] = useState('');
+
+const openModal = (filePath: string) => {
+  setModalFile(filePath);
+  setIsModalOpenFile(true);
+};
+
+const closeModal = () => {
+  setIsModalOpenFile(false);
+  setModalFile(null);
+};
+
 
 //Selected Permit Id
   const [selectedUserIdDep, setSelectedUserId] = useState<string | null>(null); //For Departments Display
@@ -268,69 +307,6 @@ const handleDateSearch = () => {
 //File
 const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
 
-const renderFile = (fileUrl: string | null) => {
-
-
-  if (!fileUrl) return null;
-  
-  if (fileUrl.endsWith('.pdf')) {
-    return (
-      <>
-      <iframe
-      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-      width="100%"
-      height="500px"
-      style={{ border: '1px solid #ccc' }}
-    />
-        <DownloadButton fileUrl={fileUrl || ''} /> 
-    </>
-    );
-  } 
-  else if (fileUrl.endsWith('.docx')) {
-    return (
-      <>
-      <iframe
-      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-      width="100%"
-      height="500px"
-      style={{ border: '1px solid #ccc' }}
-    />
-    
-    <DownloadButton fileUrl={fileUrl || ''} />
-    </>
-    );
-  
-  }
-  else {
-    return (
-      <img
-        src={fileUrl}
-        alt="Document"
-        style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
-      />
-    );
-  }
-  };
-  
-  const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
-  return (
-    <button
-      className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
-      onClick={(e) => {
-        e.preventDefault(); // Prevent default behavior
-        const link = document.createElement("a");
-        link.href = fileUrl;
-        link.download = fileUrl.split("/").pop() || "download"; // Extract filename
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }}
-    >
-     Download File
-    </button>
-  );
-  };
-
 //File
 
 
@@ -410,7 +386,9 @@ const renderFile = (fileUrl: string | null) => {
           break;
 
           case 'assessment':
-            navigate(`/ABusinessAssessment/${permit._id}`);
+            renderDocument(permit.statementofaccount.statementofaccountfile); // Automatically open modal
+            setViewingType('receipts');
+            setActivePermitId(permit);
             break;
 
           case 'viewattatchments':
@@ -436,6 +414,80 @@ const renderFile = (fileUrl: string | null) => {
 
 //Use Effect
   
+//File
+const [modalFile, setModalFile] = useState<string | null>(null);
+const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+
+
+const renderFile = (fileUrl: string | null) => {
+
+
+  if (!fileUrl) return null;
+  
+  if (fileUrl.endsWith('.pdf')) {
+    return (
+      <>
+      <iframe
+      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+      className="w-full h-full rounded-md border"
+      title="Word Document Viewer"
+    />
+        <DownloadButton fileUrl={fileUrl || ''} /> 
+    </>
+    );
+  } 
+  else if (fileUrl.endsWith('.docx')) {
+    return (
+      <>
+      <iframe
+      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+      className="w-full h-full rounded-md border"
+      title="Word Document Viewer"
+    />
+    
+    <DownloadButton fileUrl={fileUrl || ''} />
+    </>
+    );
+  
+  }
+  else {
+    return (
+      <img
+        src={fileUrl}
+        alt="Document"
+        style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+      />
+    );
+  }
+  };
+  
+  const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
+  return (
+    <button
+      className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
+      onClick={(e) => {
+        e.preventDefault(); // Prevent default behavior
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.download = fileUrl.split("/").pop() || "download"; // Extract filename
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }}
+    >
+     Download File
+    </button>
+  );
+  };
+
+const renderDocument = (fileName: string | null) => {
+  const fileUrl = fileName;
+
+  if (!fileUrl) return <span>Not uploaded</span>;
+  // Automatically open the modal if a valid file is found
+      openModal(fileUrl); // Open the modal automatically
+
+};
 
 const fetchBusinessPermits = async () => {
   try {
@@ -595,6 +647,18 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   const [remarks, setRemarks] = useState(''); // For storing remarks when the permit is rejected
   const [isRejecting, setIsRejecting] = useState(false)
 
+  let displayTextTitle = 'All Business Permit Applications (For Assessments)';
+
+  if (type === 'new') {
+    displayTextTitle = 'New Business Permit Applications (For Assessments)';
+  } else if (type === 'renew') {
+    displayTextTitle = 'Renewal of Business Permit Applications (For Assessments)';
+  } else if (type === 'all') {
+    displayTextTitle = 'All Business Permit Applications (For Assessments)';
+  } else {
+    displayTextTitle = 'All Business Permit Applications (For Assessments)';
+  }
+
   return (
     <section className="Abody">
       <div className="Asidebar-container">
@@ -606,7 +670,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
           <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className='workpermittable'>
-          <p>Business Permit Applications New Business(For Assessments)</p>
+                  <p>{displayTextTitle}</p>
           {/* Search Bar */}
           Search:
           <div className="search-bar-container">
@@ -696,15 +760,15 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 <option value="editbusiness">View Business Details</option>
                 <option value="viewApplication">View Application</option>
                 <option value="editnature">View Business Nature</option>
-                <option value="assessment">View Assessment</option>
   {/* Conditionally show the 'Approve/Reject Application' option */}
   {permit?.businesspermitstatus === 'Assessed' && (
-    <option value="acceptReject">Approve/Reject Application</option>
+  <>
+  <option value="acceptReject">Approve/Reject Application</option>
+  <option value="assessment">View Assessment</option>
+</>
   )}
   
                 <option value="viewattatchments">View Attatchments</option>
-                <option value="department">Department</option>
-                <option>Cancel Application</option>
               </>
           </select>
         </td>
@@ -1904,6 +1968,38 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 </div>
 </div>
       )}
+
+{isModalOpenFile && activePermitId && (
+  <div className="modal-overlay" onClick={closeModal}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      {modalFile && (
+        <div>
+          {viewingType === 'receipts' && (
+            <label>Viewing Receipt for {activePermitId.id}</label>
+          )}
+          {viewingType === 'permits' && (
+            <label>Viewing Business Permit for {activePermitId.id}</label>
+          )}
+          {modalFile.endsWith('.pdf') ? (
+            <iframe
+              src={modalFile}
+              style={{ width: '500px', height: '600px' }}
+              title="PDF Viewer"
+            />
+          ) : (
+            <img
+              src={modalFile}
+              alt="Document"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          )}
+        </div>
+      )}
+      <button className="back-button" onClick={closeModal}>Close</button>
+    </div>
+  </div>
+)}
+
 
 {checkpermit && activePermitId && (
         <div className="modal-overlay" onClick={closePermitChecker}>
