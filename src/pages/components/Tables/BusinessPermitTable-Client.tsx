@@ -493,13 +493,13 @@ const [files, setFiles] = useState<{
                       <select
                 defaultValue=""
                 onChange={(e) => {
-     handleActionBP(e.target.value, group.permits[0]);  // Pass action and permit to handler
+     handleActionBP(e.target.value, sortedPermits[0]);  // Pass action and permit to handler
      e.target.value = ""; // Reset dropdown to default after selection
                 }}
                 className="dropdown-button"
               >
                 <option value="" disabled>
-                  Select Action
+                  Select Action {group._id}
                 </option>
                 {sortedPermits[0].businesspermitstatus === 'Pending' && sortedPermits[0].classification === 'NewBusiness' && (
                           <>
@@ -586,7 +586,7 @@ const [files, setFiles] = useState<{
                           <td> <select
                 defaultValue=""
                 onChange={(e) => {
-     handleActionBP(e.target.value, group.permits[0]);  // Pass action and permit to handler
+     handleActionBP(e.target.value, permit);  // Pass action and permit to handler
      e.target.value = ""; // Reset dropdown to default after selection
                 }}
                 className="dropdown-button"
