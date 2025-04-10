@@ -733,7 +733,7 @@ const handleRemoveBusiness = (index: number) => {
     </div>
                 <h2>Buisness Contact Information</h2>
                 <div className="form-group">
-                  <label>House/Bldg No./Blk and Lot</label>
+                  <label>House/Bldg No./Blk and Lot<span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={businessbuildingblocklot} onChange={(e) => setBusinessBuildingBlockLot(e.target.value)} />
                   {errors.businessbuildingblocklot && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbuildingblocklot}</p>}
                 </div>
@@ -1336,18 +1336,18 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                   <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
+                  {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                 </div>
                 <div className="form-group">
                   <label>Business Area<span style={{ color: 'red' }}>*</span></label>
-                  {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
+                  {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                 </div>
                 <div className="form-group">
                   <label>Lot Area<span style={{ color: 'red' }}>*</span></label>
-                  {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
+                  {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                 </div>
                 <div className="form-group">
                   <label>No of Workers</label>

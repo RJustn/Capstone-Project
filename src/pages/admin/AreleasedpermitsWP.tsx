@@ -254,7 +254,7 @@ const AreleasedpermitsWP: React.FC = () => {
     switch (action) {
       case 'viewApplication':
     console.log(`Edit permit ID: ${permit._id}`);
-      navigate(`/DAviewapplicationdetails/${permit._id}`);
+      navigate(`/Aviewapplicationdetails/${permit._id}`);
         break;
       case 'viewAttachments':
         console.log(`View attachments for permit ID: ${permit._id}`);

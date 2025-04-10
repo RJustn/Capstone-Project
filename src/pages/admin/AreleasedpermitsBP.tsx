@@ -420,7 +420,7 @@ const handleActionBP = (action: string, permit: BusinessPermit) => {
             break;
 
           case 'viewApplication':
-      navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
+      navigate(`/Aviewbusinessapplicationdetails/${permit._id}`);
   console.log(`Edit permit ID: ${permit._id}`);
       break;
 

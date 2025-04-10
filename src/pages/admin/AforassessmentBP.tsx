@@ -401,16 +401,16 @@ const renderFile = (fileUrl: string | null) => {
               break;
 
             case 'viewApplication':
-        navigate(`/DAviewbusinessapplicationdetails/${permit._id}`);
+        navigate(`/Aviewbusinessapplicationdetails/${permit._id}`);
     console.log(`Edit permit ID: ${permit._id}`);
         break;
 
         case 'editnature':
-          navigate(`/DAEditBusinessNature/${permit._id}`);
+          navigate(`/AEditBusinessNature/${permit._id}`);
           break;
 
           case 'assessment':
-            navigate(`/DABusinessAssessment/${permit._id}`);
+            navigate(`/ABusinessAssessment/${permit._id}`);
             break;
 
           case 'viewattatchments':
