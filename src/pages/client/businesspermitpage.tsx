@@ -702,7 +702,7 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div className="form-group">
                 <label>Email Address<span style={{ color: 'red' }}>*</span></label>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 {errors.email && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.email}</p>}
               </div>
               <div>
@@ -1359,7 +1359,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
+                  <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} required/>
                   {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                 </div>
                 <div className="form-group">
@@ -1406,7 +1406,7 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
+                  <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} required/>
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
                   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
