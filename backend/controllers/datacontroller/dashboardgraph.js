@@ -183,16 +183,16 @@ const workingpermitsChart = async (req, res) => {
         $group: {
           _id: {
             year: { $year: "$createdAt" },
-            month: { $month: "$createdAt" }
+            month: { $month: "$createdAt" },
           },
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
         $sort: {
           "_id.year": 1,
-          "_id.month": 1
-        }
+          "_id.month": 1,
+        },
       },
       {
         $project: {
@@ -201,12 +201,12 @@ const workingpermitsChart = async (req, res) => {
             $concat: [
               { $arrayElemAt: [["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "$_id.month"] },
               " ",
-              { $toString: "$_id.year" }
-            ]
+              { $toString: "$_id.year" },
+            ],
           },
-          count: 1
-        }
-      }
+          count: 1,
+        },
+      },
     ]);
 
     res.json(monthlyData);
