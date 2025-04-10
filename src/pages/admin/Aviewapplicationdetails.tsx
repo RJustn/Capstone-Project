@@ -76,7 +76,7 @@ export interface PersonalInformation {
     applicationComments: string;
   }
 
-const DataControllerViewApplicationDetails: React.FC = () => {
+const AdminViewApplicationDetails: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>(); // Extract work permit ID from URL
     const [workPermit, setWorkPermit] = useState<WorkPermit | null>(null);
@@ -88,7 +88,7 @@ const DataControllerViewApplicationDetails: React.FC = () => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
+          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
             method: 'GET',
             credentials: 'include', // This ensures cookies are sent with the request
           });
@@ -645,4 +645,4 @@ return (
 
 };
 
-export default DataControllerViewApplicationDetails;
+export default AdminViewApplicationDetails;

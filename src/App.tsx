@@ -60,6 +60,7 @@ import AdminReleasedPermitsWP from './pages/admin/AreleasedpermitsWP';
 import AdminReleasedPermitsBP from './pages/admin/AreleasedpermitsBP';
 import AdminReportsAndGraph from './pages/admin/Areportandgraph';
 import AdminViewApplicationDetails from './pages/admin/Aviewapplicationdetails';
+import AdminViewBusinessApplicationDetails from './pages/admin/Aviewbusinessapplicationdetails';
 
 
 const App: React.FC = () => {
@@ -120,7 +121,8 @@ const App: React.FC = () => {
           <Route path="/AreleasedpermitsWP/:type?" element={<AdminReleasedPermitsWP />} /> 
           <Route path="/AreleasedpermitsBP/:type?" element={<AdminReleasedPermitsBP />} />
           <Route path="/Areportandgraph" element={<AdminReportsAndGraph />} />
-          <Route path="/Aviewapplicationdetails" element={<AdminViewApplicationDetails />} />
+          <Route path="/Aviewapplicationdetails/:id?" element={<AdminViewApplicationDetails />} />
+          <Route path="Aviewbusinessapplicationdetails/:id?" element={<AdminViewBusinessApplicationDetails/>}/>
       </Routes>
       </Suspense>
     </Router>
