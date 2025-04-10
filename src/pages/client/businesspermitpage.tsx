@@ -783,11 +783,19 @@ const handleRemoveBusiness = (index: number) => {
                   <input type="text" value={businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
                 </div>
                 <div className="form-group">
-                  <label>Barangay<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
-                  {errors.businessbarangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbarangay}</p>}
-                </div>
-
+                <label>Barangay<span style={{ color: 'red' }}>*</span></label>
+                <select
+                  value={businessbarangay}
+                  onChange={(e) => setbusinessBarangay(e.target.value)}
+                  className="form-control"
+                >
+                  <option value="" disabled>Select Barangay</option>
+                  {barangays.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                {errors.businessbarangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessbarangay}</p>}
+              </div>
                 <div className="form-group">
                   <label>Zip<span style={{ color: 'red' }}>*</span></label>
                   {errors.businesszip && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesszip}</p>}
@@ -1330,7 +1338,7 @@ const handleRemoveBusiness = (index: number) => {
                 </label>
                 </div>
                 <div className="form-group">
-                  <label>Occupancy<span style={{ color: 'red' }}>*</span></label>
+                  <label>Occupancy <span style={{ color: 'red' }}>*</span></label>
                   {errors.occupancy && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.occupancy}</p>}
                   <select
                     value={occupancy}
@@ -1345,8 +1353,7 @@ const handleRemoveBusiness = (index: number) => {
               
                 </div>
                 <div className="form-group">
-                  <label>Business Type</label>
-                  {errors.otherusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
+                  <label>Business Type <span style={{ color: 'red' }}>*</span></label>
                   <select
                     value={otherbusinesstype}
                     onChange={(e) => setOtherBusinessType(e.target.value)}
@@ -1356,19 +1363,20 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="COMM">COMMERCIAL</option>
                     <option value="INDUST">INDUSTRIAL</option>
                   </select>
+                  {errors.otherusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Email Address</label>
+                  <label>Email Address <span style={{ color: 'red' }}>*</span></label>
                   <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
                   {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Business Area<span style={{ color: 'red' }}>*</span></label>
+                  <label>Business Area <span style={{ color: 'red' }}>*</span></label>
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
                   {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Lot Area<span style={{ color: 'red' }}>*</span></label>
+                  <label>Lot Area <span style={{ color: 'red' }}>*</span></label>
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
                   {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                 </div>
@@ -1409,12 +1417,14 @@ const handleRemoveBusiness = (index: number) => {
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"}/>
                 </div>
                 <div style={{ display: 'flex', gap: '15px' }}>
+                {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
                   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
                     Back
                   </button>
                   <button type="button" onClick={goToNextStep} className="btn btn-success">
                     Next
                   </button>
+                  
                 </div>
               </div>
             </div>
