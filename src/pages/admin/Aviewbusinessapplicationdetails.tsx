@@ -1,4 +1,4 @@
-import '../Styles/DataControllerStyles.css'; 
+import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -85,11 +85,11 @@ const AdminViewBusinessApplicationDetails: React.FC = () => {
   
     return (
       <div
-        className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        className="Amodal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         onClick={onClose}
       >
         <div
-          className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
+          className="Amodal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* File Viewer */}
@@ -167,12 +167,12 @@ const AdminViewBusinessApplicationDetails: React.FC = () => {
   
 
 return (
-    <section className="DAbody">
-        <div className="DAsidebar-container">
+    <section className="Abody">
+        <div className="Asidebar-container">
         <AdminSideBar /> {/* Pass handleLogout to DASidebar */}
       </div>
-      <div className="DAcontent">
-        <header className='DAheader'>
+      <div className="Acontent">
+        <header className='Aheader'>
             <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div>

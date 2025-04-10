@@ -1,4 +1,4 @@
-import '../Styles/DataControllerStyles.css'; 
+import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -588,8 +588,8 @@ return (
         )}
 
 {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="Amodal-overlay" onClick={closeModal}>
+          <div className="Amodal" onClick={(e) => e.stopPropagation()}>
             {modalFile && (
               <div>
                 {modalFile}
@@ -609,8 +609,8 @@ return (
       
 
 {showRejectModal && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="Amodal-overlay">
+          <div className="Amodal">
             <h2>Reject Application</h2>
             {!isCommentVisible ? (
               <>
