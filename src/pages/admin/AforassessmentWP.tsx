@@ -309,6 +309,7 @@ const AdminForAssessmentWP: React.FC = () => {
             )
           );
           closeModal();
+          window.location.reload();
         } else {
           console.error('Failed to update permit');
         }
@@ -497,6 +498,7 @@ const updateAttachments = async (e: React.FormEvent) => {
       console.log('Attachments updated successfully');
       setIsEditingAttach(false); 
       closeAttachmentsModal();
+      window.location.reload();
     } else {
       console.error('Failed to upload files');
     }
@@ -1058,7 +1060,6 @@ useEffect(() => {
       > 
         <form onSubmit={updateAttachments}>
           <h2>View Attachments</h2>
-    <h2>View Attachments</h2>
     {selectedPermit && (
       <div>
         <label>Attachments:</label>

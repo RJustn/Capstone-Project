@@ -1,8 +1,11 @@
-import '../Styles/AdminStyles.css'; 
-import ASidebar from '../components/NavigationBars/AdminSideBar';
+import '../Styles/DataControllerStyles.css'; 
+import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Swal from 'sweetalert2';
 
 export interface PersonalInformation {
     lastName: string;
@@ -62,6 +65,7 @@ export interface PersonalInformation {
     userId?: string; // Can be a string for front end
     permittype?: string; // Default value can be handled in logic
     workpermitstatus: string;
+    classification: string;
     transaction: string;
     transactionstatus: string;
     applicationdateIssued?: Date; // Optional
@@ -72,7 +76,7 @@ export interface PersonalInformation {
     applicationComments: string;
   }
 
-const AdminViewApplicationDetails: React.FC = () => {
+const DataControllerViewApplicationDetails: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>(); // Extract work permit ID from URL
     const [workPermit, setWorkPermit] = useState<WorkPermit | null>(null);
@@ -84,7 +88,7 @@ const AdminViewApplicationDetails: React.FC = () => {
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-admin', {
+          const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
             method: 'GET',
             credentials: 'include', // This ensures cookies are sent with the request
           });
@@ -154,97 +158,260 @@ const AdminViewApplicationDetails: React.FC = () => {
       };
     
       const handleFinalConfirm = async () => {
-        // Logic to handle submission of comments
-        console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
+        if (!workPermit?._id) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Permit ID',
+            text: 'The work permit ID is missing. Please try again.',
+          });
+          return;
+        }
+      
+        if (!comments.trim()) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Comments Required',
+            text: 'Please provide comments before rejecting the application.',
+          });
+          return;
+        }
       
         try {
-          const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${workPermit?._id}`, {
-            status: 'Rejected',
-            comments: comments,
+          // Show confirmation alert before proceeding
+          const { isConfirmed } = await Swal.fire({
+            title: 'Reject Work Permit?',
+            text: 'Are you sure you want to reject this work permit application?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Reject',
+            cancelButtonText: 'Cancel',
           });
-          console.log('Updated Permit:', response.data);
       
-          // Update local state with the response data
+          if (!isConfirmed) return; // Stop execution if user cancels
+      
+          // Show loading indicator while processing
+          Swal.fire({
+            title: 'Processing...',
+            text: 'Updating work permit status. Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+      
+          const response = await axios.put(
+            `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${workPermit?._id}`,
+            {
+              status: 'Rejected',
+              comments: comments,
+            }
+          );
+      
+          console.log('Updated Permit:', response.data);
           setWorkPermit(response.data);
-          alert('Work Permit Application updated successfully!');
-          navigate(-1);
+      
+          // Show success alert
+          Swal.fire({
+            icon: 'success',
+            title: 'Work Permit Rejected',
+            text: 'The work permit application has been rejected successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+      
+          closeModal(); // Close modal after confirmation
+          navigate(-1); // Go back to the previous page
         } catch (error) {
           console.error('Error updating work permit:', error);
-        } console.log('Application rejected with comments:', comments);
-        closeModal(); // Close modal after confirmation
+      
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'An error occurred while rejecting the application. Please try again.',
+          });
+        }
       };
 
 
 //End REJECT MODAL @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      const openModal = (filePath: string) => {
-        setModalFile(filePath);
-        setIsModalOpen(true);
-      };
-    
+
       const closeRejectModal = () => {
         setIsModalOpen(false);
         setShowRejectModal(false);
         setModalFile(null);
       };
     
-      const fetchDocumentUrl = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts'): string | null => {
-        if (!fileName) return null;
-        
-        // Return the file URL based on the folder specified
-        return `https://capstone-project-backend-nu.vercel.app/${folder}/${fileName}`;
-      };
-      
-    const renderDocument = (fileName: string | null, folder: 'uploads' | 'permits' | 'receipts') => {
-      const fileUrl = fetchDocumentUrl(fileName, folder);
-      if (!fileUrl) return <span>Not uploaded</span>;
-    
-      const fileExtension = fileUrl.split('.').pop()?.toLowerCase();
-      console.log(fileUrl);
-      return (
-        <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => openModal(fileUrl)}>
-          {fileExtension === 'pdf' ? 'View PDF' : 'View Document'}
-        </span>
-      );
-    };
 
-    const handleUpdate = async () => {
-      console.log('Updating permit with ID:', workPermit?._id); // Log ID for debugging
+  const DocumentViewer = ({ fileUrl, onClose }: { fileUrl: string; onClose: () => void }) => {
+    const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
+    const isDocx = fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".doc");
   
-      try {
-          let newStatus;
+    return (
+      <div
+        className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={onClose}
+      >
+        <div
+          className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* File Viewer */}
+          {isPdf ? (
+            <>
+              <iframe
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+                className="w-full h-[80vh] rounded-md border mb-4"
+                title="PDF Viewer"
+              />
+              <DownloadButton fileUrl={fileUrl} />
+            </>
+          ) : isDocx ? (
+            <>
+              <iframe
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+                className="w-full h-[80vh] rounded-md border mb-4"
+                title="Word Document Viewer"
+              />
+              <DownloadButton fileUrl={fileUrl} />
+            </>
+          ) : (
+            <img src={fileUrl} alt="Uploaded Document" className="w-full max-h-[80vh] rounded-md mb-4" />
+          )}
   
-          // Check the classification and set the new status accordingly
-          if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
-              newStatus = 'Released';
-          } else if (workPermit?.formData.personalInformation.workpermitclassification=== 'Renewal') {
-              newStatus = 'Waiting for Payment';
-          }
+          {/* Close Button */}
+          <button
+            className="btn btn-danger self-end bg-[#0056b3] hover:bg-[#003c80] text-white font-semibold py-2 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  };
   
-          // If newStatus is set, proceed with the update
-          if (newStatus) {
-              const response = await axios.put(`https://capstone-project-backend-nu.vercel.app/datacontroller/workpermithandleupdate/${workPermit?._id}`, {
-                  status: newStatus,
-              });
+  // Reusable Download Button Component
+  const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
+    return (
+      <button
+        className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
+        onClick={(e) => {
+          e.preventDefault(); // Prevent default behavior
+          const link = document.createElement("a");
+          link.href = fileUrl;
+          link.download = fileUrl.split("/").pop() || "download"; // Extract filename
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }}
+      >
+       Download File
+      </button>
+    );
+  };
   
-              console.log('Updated Permit:', response.data);
+  // File Renderer Component
+  const FileRenderer = ({ fileName }: { fileName: string | null }) => {
+    const [modalOpen, setModalOpen] = useState(false);
+    const fileUrl = fileName || "";
   
-              // Update local state with the response data
-              setWorkPermit(response.data);
-              alert('Work Permit Application updated successfully!');
-              navigate(-1);
-          } else {
-              alert('No valid classification found to update the status.');
-          }
-      } catch (error) {
-          console.error('Error updating work permit:', error);
-      }
+    if (!fileUrl) return <span>Not uploaded</span>;
+  
+    return (
+      <>
+        <span style={{ cursor: "pointer", color: "blue" }} onClick={() => setModalOpen(true)}>
+          {fileUrl.endsWith(".pdf") ? "View PDF" : "View Document"}
+        </span>
+        {modalOpen && <DocumentViewer fileUrl={fileUrl} onClose={() => setModalOpen(false)} />}
+      </>
+    );
+  };
+
+  const handleUpdate = async () => {
+    if (!workPermit?._id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Permit ID',
+        text: 'The work permit ID is missing. Please try again.',
+      });
+      return;
+    }
+  
+    let newStatus;
+  
+    // Determine new status based on classification
+    if (workPermit?.formData.personalInformation.workpermitclassification === 'New') {
+      newStatus = 'Released';
+    } else if (workPermit?.formData.personalInformation.workpermitclassification === 'Renew') {
+      newStatus = 'Waiting for Payment';
+    }
+  
+    if (!newStatus) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Classification',
+        text: 'No valid classification found to update the status.',
+      });
+      return;
+    }
+  
+    try {
+      // Show confirmation alert before proceeding
+      const { isConfirmed } = await Swal.fire({
+        title: 'Update Work Permit?',
+        text: `Are you sure you want to update the status to "${newStatus}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Update',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (!isConfirmed) return; // Stop execution if user cancels
+  
+      // Show loading indicator
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Updating work permit status. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.put(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermithandleupdate/${workPermit?._id}`,
+        { status: newStatus }
+      );
+  
+      console.log('Updated Permit:', response.data);
+      setWorkPermit(response.data);
+  
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Work Permit Updated',
+        text: 'The work permit application status has been updated successfully.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+  
+      navigate(-1); // Go back to the previous page
+    } catch (error) {
+      console.error('Error updating work permit:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'An error occurred while updating the work permit. Please try again.',
+      });
+    }
   };
   
 
 return (
     <section className="Abody">
         <div className="Asidebar-container">
-        <ASidebar />
+        <AdminSideBar /> {/* Pass handleLogout to ASidebar */}
       </div>
     <div className="Acontent">
         <header className='Aheader'>
@@ -262,6 +429,9 @@ return (
         />
         <label>Work Permit Status:</label>
         <input type="text" value={workPermit.workpermitstatus || ""} readOnly />
+        <label>Classification:</label>
+        <input type="text" value={workPermit.classification || ""} readOnly />
+        
       <h1>Personal Information Details</h1>
       <div className="grid-container">
           <label>Application ID:</label>
@@ -304,39 +474,109 @@ return (
           <input type="text" value={workPermit.formData.emergencyContact.address|| ""} readOnly />
         
 
-      <h1>Documents</h1>
-      <div style={{display: 'flex',justifyContent: 'center', gap: '16px',flexWrap: 'wrap' }}>
-  {workPermit.formData.files ? (
-    <>
-      <p>Document 1: {renderDocument(workPermit.formData.files.document1, 'uploads')}</p>
-      <p>Document 2: {renderDocument(workPermit.formData.files.document2, 'uploads')}</p>
-      <p>Document 3: {renderDocument(workPermit.formData.files.document3, 'uploads')}</p>
-      <p>Document 4: {renderDocument(workPermit.formData.files.document4, 'uploads')}</p>
-    </>
-  ) : (
-    <p>No documents available.</p>
-  )}
-</div>
+          <h1>Documents</h1>
+<div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+  {/* Main Documents Container */}
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 2fr", // Align labels and files
+      alignItems: "center",
+      gap: "12px",
+      maxWidth: "600px", // Adjust for readability
+      margin: "0 auto", // Center align
+    }}
+  >
+    {/* 1x1 Picture */}
+    <p><strong>1x1 Picture:</strong></p>
+    <span>
+      {workPermit.formData.files?.document1 ? (
+        <FileRenderer fileName={workPermit.formData.files.document1} />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
 
-      <div>
-  {workPermit.receipt?.receiptFile && (
-    <p>Receipt: {renderDocument(workPermit.receipt.receiptFile, 'receipts')}</p>
-  )}
-  {workPermit.permitFile && (
-    <p>Work Permit: {renderDocument(workPermit.permitFile, 'permits')}</p>
-  )}
+    {/* Cedula */}
+    <p><strong>Cedula:</strong></p>
+    <span>
+      {workPermit.formData.files?.document2 ? (
+        <FileRenderer fileName={workPermit.formData.files.document2} />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
+
+    {/* Referral Letter (Conditional) */}
+    {!workPermit.formData.personalInformation.currentlyResiding && (
+      <>
+        <p><strong>Referral Letter:</strong></p>
+        <span>
+          {workPermit.formData.files?.document3 ? (
+            <FileRenderer fileName={workPermit.formData.files.document3} />
+          ) : (
+            "No file uploaded"
+          )}
+        </span>
+      </>
+    )}
+
+    {/* FTJS Certificate (Conditional) */}
+    {workPermit.classification === "New" && (
+      <>
+        <p><strong>FTJS Certificate:</strong></p>
+        <span>
+          {workPermit.formData.files?.document4 ? (
+            <FileRenderer fileName={workPermit.formData.files.document4} />
+          ) : (
+            "No file uploaded"
+          )}
+        </span>
+      </>
+    )}
+
+    {/* Receipt (Conditional) */}
+    {workPermit.receipt?.receiptFile && (
+      <>
+        <p><strong>Receipt: </strong></p>
+        <span>
+          <FileRenderer fileName={workPermit.receipt.receiptFile} />
+        </span>
+      </>
+    )}
+
+    {/* Work Permit (Conditional) */}
+    {workPermit.permitFile && (
+      <>
+        <p><strong>Work Permit:</strong></p>
+        <span>
+          <FileRenderer fileName={workPermit.permitFile} />
+        </span>
+      </>
+    )}
+  </div>
+
+  {/* Application Comments (if available) */}
   {workPermit.applicationComments && (
-    <p>Comments: {workPermit.applicationComments}</p>
+    <div
+      style={{
+        marginTop: "16px",
+        padding: "12px",
+        backgroundColor: "#f9f9f9",
+        borderRadius: "8px",
+        textAlign: "center",
+      }}
+    >
+      <strong>Comments:</strong> {workPermit.applicationComments}
+    </div>
   )}
 </div>
-
-
-
-
-            {workPermit.workpermitstatus === 'Pending' && (
+{workPermit.workpermitstatus === 'Pending' && (
               <p>
-        <button className="Aactionbutton" onClick={handleUpdate}>Accept Application</button>
-        <button className="actionreject-button" onClick={openRejectModal}>Reject Application</button>
+                <div className='pagination'>
+        <button className="btn btn-success" onClick={handleUpdate}>Accept Application</button>
+        <button className="btn btn-danger" onClick={openRejectModal}>Reject Application</button>
+        </div>
         </p>
       )}
     
@@ -360,7 +600,7 @@ return (
                 )}
               </div>
             )}
-            <button className="cancel-button" onClick={closeModal}>Close</button>
+            <button className="btn btn-danger" onClick={closeModal}>Close</button>
           </div>
         </div>
       )}
@@ -389,8 +629,10 @@ return (
                   rows={4}
                   style={{ width: '100%' }} // Adjust width as needed
                 />
+                <div className="pagination">
                 <button className="Aactionbutton" onClick={handleFinalConfirm}>Submit</button>
                 <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
+                </div>
               </>
             )}
           </div>
@@ -403,4 +645,4 @@ return (
 
 };
 
-export default AdminViewApplicationDetails;
+export default DataControllerViewApplicationDetails;
