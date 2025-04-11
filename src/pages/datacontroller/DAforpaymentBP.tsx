@@ -382,7 +382,7 @@ const handlePayment = async () => {
 
     if (response.status === 200) {
       console.log('Payment status updated successfully');
-      setConfirmPayment(true);
+      window.location.reload();
 
       // Show success alert
       Swal.fire({

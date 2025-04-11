@@ -1773,7 +1773,7 @@ useEffect(() => {
         showConfirmButton: false,
       });
   
-      setfinishpopup(true);
+      navigate('/DAforassessmentBP/');
       setCheckPermit(false);
     } catch (error) {
       console.error('Update failed:', error);
@@ -2655,7 +2655,7 @@ return (
 
                         {/* Document 1 */}
 <p>
-  Document 1: {businessPermit?.files.document1 || 'Not uploaded'}
+  Document 1: {businessPermit?.files?.document1 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document1 && (
     <button
@@ -2680,7 +2680,7 @@ return (
 
 {/* Document 2 */}
 <p>
-  Document 2: {businessPermit?.files.document2 || 'Not uploaded'}
+  Document 2: {businessPermit?.files?.document2 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document2 && (
     <button
@@ -2704,7 +2704,7 @@ return (
 
 {/* Document 3 */}
 <p>
-  Document 3: {businessPermit?.files.document3 || 'Not uploaded'}
+  Document 3: {businessPermit?.files?.document3 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document3 && (
     <button
@@ -2729,7 +2729,7 @@ return (
 
 {/* Document 4 */}
 <p>
-  Document 4: {businessPermit?.files.document4 || 'Not uploaded'}
+  Document 4: {businessPermit?.files?.document4 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document4 && (
     <button
@@ -2753,7 +2753,7 @@ return (
 
 {/* Document 5 */}
 <p>
-  Document 5: {businessPermit?.files.document5 || 'Not uploaded'}
+  Document 5: {businessPermit?.files?.document5 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document5 && (
     <button
@@ -2777,7 +2777,7 @@ return (
 
 {/* Document 6 */}
 <p>
-  Document 6: {businessPermit?.files.document6 || 'Not uploaded'}
+  Document 6: {businessPermit?.files?.document6 ? 'Uploaded' : 'Not uploaded'}
 
   {businessPermit?.files.document6 && (
     <button

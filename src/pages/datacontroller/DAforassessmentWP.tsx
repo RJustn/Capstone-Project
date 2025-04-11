@@ -665,8 +665,8 @@ if (type === 'new') {
                 <th onClick={() => handleSort('workpermitstatus')}>
                   Status {sortConfig.key === 'workpermitstatus' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => handleSort('classification')}>
-                  Classification {sortConfig.key === 'classification' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
+                <th>
+                  Classification
                 </th>
                 <th onClick={() => handleSort('createdAt')}>
                   Date Issued {sortConfig.key === 'createdAt' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
