@@ -1108,17 +1108,17 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 <th onClick={() => handleSort('id')}>
                   ID {sortConfig.key === 'id' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
-                <th>
-                  Classification
+                <th onClick={() => handleSort('classification')}>
+                 Classification {sortConfig.key === 'classification' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
-                <th>
-                 Application Status
+                <th onClick={() => handleSort('businesspermitstatus')}>
+                 Application Status {sortConfig.key === 'businesspermitstatus' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
-                <th>
-                 Business Status 
+                <th onClick={() => handleSort('businessstatus')}>
+                 Business Status {sortConfig.key === 'businessstatus' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
-                <th>
-                  Date Issued 
+                <th onClick={() => handleSort('createdAt')}>
+                  Date Issued {sortConfig.key === 'createdAt' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
                 <th>Action</th>
               </tr>
