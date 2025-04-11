@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
+import Swal from 'sweetalert2';
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -297,6 +297,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
     handleCancelEditAttach();
   };
 
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedPermit) {
@@ -306,7 +307,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ formData: selectedPermit.formData }), // Ensure the entire formData is sent
+          body: JSON.stringify({ formData: selectedPermit.formData }),
         });
   
         if (response.ok) {
@@ -317,14 +318,30 @@ const DataControllerForAssessmentWP: React.FC = () => {
             )
           );
           closeModal();
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Work permit updated successfully.',
+          });
         } else {
           console.error('Failed to update permit');
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to update the work permit.',
+          });
         }
       } catch (error) {
         console.error('Error updating permit:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Something went wrong. Please try again later.',
+        });
       }
     }
   };
+  
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof PersonalInformation) => {
     const value = e.target.value;
@@ -477,10 +494,8 @@ const logFormData = (formData: FormData) => {
 
 const updateAttachments = async (e: React.FormEvent) => {
   e.preventDefault();
-  // if (!selectedPermit) return;
 
   const formData = new FormData();
-  
   formData.append('remarksdoc1', remarksdoc1);
   formData.append('remarksdoc2', remarksdoc2);
   formData.append('remarksdoc3', remarksdoc3);
@@ -496,8 +511,14 @@ const updateAttachments = async (e: React.FormEvent) => {
   try {
     if (!selectedPermit) {
       console.error('No permit selected');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'No permit selected for updating attachments.',
+      });
       return;
     }
+
     const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/updateworkpermitattachment/${selectedPermit._id}`, {
       method: 'POST',
       body: formData,
@@ -510,17 +531,33 @@ const updateAttachments = async (e: React.FormEvent) => {
           permit._id === updatedPermit._id ? updatedPermit : permit
         )
       );
-      console.log('Attachments updated successfully');
-      alert('Attachments updated successfully');
-      window.location.reload();
-      setIsEditingAttach(false); 
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Updated!',
+        text: 'Attachments updated successfully.',
+      }).then(() => {
+        window.location.reload();
+      });
+
+      setIsEditingAttach(false);
       closeAttachmentsModal();
       handleCancelEditAttach();
     } else {
       console.error('Failed to upload files');
+      Swal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: 'Failed to update attachments. Please try again.',
+      });
     }
   } catch (error) {
     console.error('Error uploading files:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Something went wrong during the upload.',
+    });
   }
 };
 

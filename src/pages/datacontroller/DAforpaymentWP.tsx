@@ -262,22 +262,8 @@ const logFormData = (formData: FormData) => {
 
 //Payment Submission
 
- const [confirmpayment, setConfirmPayment] = useState(false);
 
-  const confirmpaymentclose = () => {
-    setConfirmPayment(false);
-    setActivePermitId(null);
-    setShowPaymentMethod(false);
-    window.location.reload();
-  };
 
-  const closeviewpayment = () => {
-    setShowPaymentMethod(false);
-    setActivePermitId(null);
-    setConfirmPayment(false);
-    window.location.reload();
-
-  };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -334,13 +320,12 @@ const logFormData = (formData: FormData) => {
       console.log(response.data);
   
       if (response.status === 200) {
-        setConfirmPayment(true);
         setReceiptFile(null); // Clear file state
-  
+        window.location.reload();
         Swal.fire({
           icon: 'success',
           title: 'Payment Submitted',
-          text: 'Your payment has been submitted successfully.',
+          text: 'Receipt payment has been submitted successfully.',
           timer: 2000,
           showConfirmButton: false,
         });
@@ -589,14 +574,6 @@ if (type === 'new') {
   </div>
 )}
 
-{confirmpayment && activePermitId &&(
-  <div className="modal-overlay" onClick={closeviewpayment}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          Payment Completed for Working Permit Application {activePermitId}
-          <button onClick={confirmpaymentclose}>Okay</button>
-            </div>
-            </div>
-)}
       </div>
       <Modal
         isOpen={isAttachmentsModalOpen}

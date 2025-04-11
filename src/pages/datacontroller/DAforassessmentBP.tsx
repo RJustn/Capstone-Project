@@ -316,6 +316,52 @@ const logFormData = (formData: FormData) => {
       console.log(`${key}:`, value);
     }
   };
+  const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' | null }>({
+    key: '', 
+    direction: null
+  });
+  
+  const handleSort = (key: keyof BusinessPermit) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+  
+    // Toggle sorting direction if the same column is clicked
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+  
+    setSortConfig({ key, direction });
+  
+    // Sort the filteredItems based on the key and direction
+    const sortedItems = [...filteredItems].sort((a, b) => {
+      const aValue = a[key];
+      const bValue = b[key];
+  
+      if (aValue == null || bValue == null) return 0; // Safely handle null/undefined
+  
+      // Handle strings, numbers, or dates
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return direction === 'ascending'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+  
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return direction === 'ascending' ? aValue - bValue : bValue - aValue;
+      }
+  
+      if (aValue instanceof Date && bValue instanceof Date) {
+        return direction === 'ascending'
+          ? aValue.getTime() - bValue.getTime()
+          : bValue.getTime() - aValue.getTime();
+      }
+  
+      return 0; // fallback if types are mixed or unhandled
+    });
+  
+    setFilteredItems(sortedItems);
+  };
+  
+
 
   const updateAttachments = async () => {
     if (!activePermitId) return;
@@ -1059,8 +1105,8 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 <th>
                  Business Information 
                 </th>
-                <th>
-                  ID
+                <th onClick={() => handleSort('id')}>
+                  ID {sortConfig.key === 'id' && (sortConfig.direction === 'ascending' ? '↑' : '↓')}
                 </th>
                 <th>
                   Classification
