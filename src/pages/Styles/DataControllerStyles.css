@@ -76,7 +76,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
   gap: 20px; /* Adjust the gap between charts */
-  padding: 10px;
+  padding: 20px;
   margin: 20px 0; /* Space above and below the table */
   border-radius: 8px; /* Rounded corners */
   background-color: #ffffff; /* White background for contrast */
@@ -88,7 +88,7 @@
 }
 
 .DAchartgraph {
-  padding: 90px; 
+  padding: 40px; 
   background-color: #ffffff; 
   border: 1px solid #ccc;
   border-radius: 12px; 
