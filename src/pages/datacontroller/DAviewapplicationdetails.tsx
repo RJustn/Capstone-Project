@@ -428,6 +428,7 @@ return (
           value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}
           InputProps={{ readOnly: true }}
           fullWidth
+          className="text-field-spacing"
         />
         <TextField
           label="Work Permit Status"
@@ -435,6 +436,7 @@ return (
           value={workPermit.workpermitstatus || ""}
           InputProps={{ readOnly: true }}
           fullWidth
+          className="text-field-spacing"
         />
         <TextField
           label="Classification"
@@ -442,6 +444,7 @@ return (
           value={workPermit.classification || ""}
           InputProps={{ readOnly: true }}
           fullWidth
+          className="text-field-spacing"
         />
         
       <h1>Personal Information Details</h1>
@@ -452,6 +455,7 @@ return (
             value={workPermit.id || ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Full Name"
@@ -459,6 +463,7 @@ return (
             value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Permanent Address"
@@ -466,6 +471,7 @@ return (
             value={workPermit.formData.personalInformation.permanentAddress|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Currently Residing"
@@ -473,6 +479,7 @@ return (
             value={workPermit.formData.personalInformation.age|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Temporary Address"
@@ -480,6 +487,7 @@ return (
             value={workPermit.formData.personalInformation.temporaryAddress || ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Birth Date"
@@ -487,6 +495,7 @@ return (
             value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Age"
@@ -494,6 +503,7 @@ return (
             value={workPermit.formData.personalInformation.age|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Place of Birth"
@@ -501,6 +511,7 @@ return (
             value={workPermit.formData.personalInformation.placeOfBirth|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Citizenship"
@@ -508,6 +519,7 @@ return (
             value={workPermit.formData.personalInformation.citizenship|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Company Name"
@@ -515,6 +527,7 @@ return (
             value={workPermit.formData.personalInformation.companyName|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
         {/* Add the remaining fields in similar fashion */}
       </div>
@@ -526,6 +539,7 @@ return (
             value={workPermit.formData.emergencyContact.name2|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Emergency Contact Mobile Number"
@@ -533,6 +547,7 @@ return (
             value={workPermit.formData.emergencyContact.mobileTel2|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
           <TextField
             label="Emergency Contact Address"
@@ -540,6 +555,7 @@ return (
             value={workPermit.formData.emergencyContact.address|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
+            className="text-field-spacing"
           />
         
 
