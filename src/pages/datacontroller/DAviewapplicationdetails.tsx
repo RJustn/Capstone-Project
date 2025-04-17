@@ -428,23 +428,23 @@ return (
           value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}
           InputProps={{ readOnly: true }}
           fullWidth
-          className="text-field-spacing"
+          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Work Permit Status"
           type="text"
-          value={workPermit.workpermitstatus || "Not Provided"}
+          value={workPermit.workpermitstatus || ""}
           InputProps={{ readOnly: true }}
           fullWidth
-          className="text-field-spacing"
+          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Classification"
           type="text"
-          value={workPermit.classification || "Not Provided"}
+          value={workPermit.classification || ""}
           InputProps={{ readOnly: true }}
           fullWidth
-          className="text-field-spacing"
+          style={{ marginBottom: '16px' }}
         />
         
       <h1>Personal Information Details</h1>
@@ -452,42 +452,37 @@ return (
           <TextField
             label="Application ID"
             type="text"
-            value={workPermit.id || "Not Provided"}
+            value={workPermit.id || ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Full Name"
             type="text"
-            value={`${workPermit.formData.personalInformation.lastName|| "Not Provided"}, ${workPermit.formData.personalInformation.firstName|| "Not Provided"} ${workPermit.formData.personalInformation.middleInitial|| "Not Provided"}`}
+            value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Permanent Address"
             type="text"
-            value={workPermit.formData.personalInformation.permanentAddress|| "Not Provided "}
+            value={workPermit.formData.personalInformation.permanentAddress|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Currently Residing"
             type="text"
-            value={workPermit.formData.personalInformation.age|| "Not Provided  "}
+            value={workPermit.formData.personalInformation.age|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Temporary Address"
             type="text"
-            value={workPermit.formData.personalInformation.temporaryAddress || "Not Provided  "}
+            value={workPermit.formData.personalInformation.temporaryAddress || ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Birth Date"
@@ -495,39 +490,34 @@ return (
             value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Age"
             type="text"
-            value={workPermit.formData.personalInformation.age|| "Not Provided  "}
+            value={workPermit.formData.personalInformation.age|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Place of Birth"
             type="text"
-            value={workPermit.formData.personalInformation.placeOfBirth|| "Not Provided "}
+            value={workPermit.formData.personalInformation.placeOfBirth|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Citizenship"
             type="text"
-            value={workPermit.formData.personalInformation.citizenship|| "Not Provided  "}
+            value={workPermit.formData.personalInformation.citizenship|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
           <TextField
             label="Company Name"
             type="text"
-            value={workPermit.formData.personalInformation.companyName|| "Not Provided  "}
+            value={workPermit.formData.personalInformation.companyName|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
           />
         {/* Add the remaining fields in similar fashion */}
       </div>
@@ -536,26 +526,26 @@ return (
           <TextField
             label="Emergency Contact Name"
             type="text"
-            value={workPermit.formData.emergencyContact.name2|| "Not Provided "}
+            value={workPermit.formData.emergencyContact.name2|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Mobile Number"
             type="text"
-            value={workPermit.formData.emergencyContact.mobileTel2|| "Not Provided  "}
+            value={workPermit.formData.emergencyContact.mobileTel2|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Address"
             type="text"
-            value={workPermit.formData.emergencyContact.address|| "Not Provided "}
+            value={workPermit.formData.emergencyContact.address|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            className="text-field-spacing"
+            style={{ marginBottom: '16px' }}
           />
         
 
@@ -658,7 +648,7 @@ return (
 </div>
 {workPermit.workpermitstatus === 'Pending' && (
               <p>
-                <div className='pagination'>
+                <div className='pagination' style={{ justifyContent: 'center', alignItems: 'center'}}>
         <button className="btn btn-success" onClick={handleUpdate}>Accept Application</button>
         <button className="btn btn-danger" onClick={openRejectModal}>Reject Application</button>
         </div>
