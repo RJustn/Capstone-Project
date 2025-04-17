@@ -425,26 +425,35 @@ return (
         <TextField
           label="Date Issued"
           type="text"
-          value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}
-          InputProps={{ readOnly: true }}
+          value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : ''}
+          InputProps={{
+            readOnly: true,
+            style: { padding: '10px', fontSize: '14px' },
+          }}
           fullWidth
-          style={{ marginBottom: '16px', fontSize: '14px'   }}
+          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Work Permit Status"
           type="text"
           value={workPermit.workpermitstatus || ""}
-          InputProps={{ readOnly: true }}
+          InputProps={{
+            readOnly: true,
+            style: { padding: '10px', fontSize: '14px' },
+          }}
           fullWidth
-          style={{ marginBottom: '16px', fontSize: '14px' }}
+          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Classification"
           type="text"
           value={workPermit.classification || ""}
-          InputProps={{ readOnly: true }}
+          InputProps={{
+            readOnly: true,
+            style: { padding: '10px', fontSize: '14px' },
+          }}
           fullWidth
-          style={{ marginBottom: '16px', fontSize: '14px' }}
+          style={{ marginBottom: '16px' }}
         />
         
       <h1>Personal Information Details</h1>
@@ -453,83 +462,111 @@ return (
             label="Application ID"
             type="text"
             value={workPermit.id || ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Full Name"
             type="text"
             value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Permanent Address"
             type="text"
             value={workPermit.formData.personalInformation.permanentAddress|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px',  fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Currently Residing"
-            placeholder="Enter current residence status"
             type="text"
             value={workPermit.formData.personalInformation.currentlyResiding ? "Yes" : "No"}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Temporary Address"
-            placeholder="Enter temporary address"
             type="text"
             value={workPermit.formData.personalInformation.temporaryAddress || ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Birth Date"
             type="text"
-            value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}
-            InputProps={{ readOnly: true }}
+            value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : ''}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px',  fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Age"
             type="text"
             value={workPermit.formData.personalInformation.age|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Place of Birth"
             type="text"
             value={workPermit.formData.personalInformation.placeOfBirth|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Citizenship"
             type="text"
             value={workPermit.formData.personalInformation.citizenship|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Company Name"
             type="text"
             value={workPermit.formData.personalInformation.companyName|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
         {/* Add the remaining fields in similar fashion */}
       </div>
@@ -537,30 +574,36 @@ return (
       <h1>Emergency Contact Details</h1>
           <TextField
             label="Emergency Contact Name"
-            placeholder="Enter emergency contact name"
             type="text"
             value={workPermit.formData.emergencyContact.name2|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Mobile Number"
-            placeholder="Enter emergency contact mobile number"
             type="text"
             value={workPermit.formData.emergencyContact.mobileTel2|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px', fontSize: '14px' }}
+            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Address"
-            placeholder="Enter emergency contact address"
             type="text"
             value={workPermit.formData.emergencyContact.address|| ""}
-            InputProps={{ readOnly: true }}
+            InputProps={{
+              readOnly: true,
+              style: { padding: '10px', fontSize: '14px' },
+            }}
             fullWidth
-            style={{ marginBottom: '16px' ,}}
+            style={{ marginBottom: '16px' }}
           />
         
 
