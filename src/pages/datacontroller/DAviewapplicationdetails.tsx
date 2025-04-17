@@ -426,6 +426,7 @@ return (
           label="Date Issued"
           type="text"
           value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : ''}
+          variant="standard"
           InputProps={{
             readOnly: true,
             style: { padding: '5px', fontSize: '14px' },
@@ -437,6 +438,7 @@ return (
           label="Work Permit Status"
           type="text"
           value={workPermit.workpermitstatus || ""}
+          variant="standard"
           InputProps={{
             readOnly: true,
             style: { padding: '5px', fontSize: '14px' },
@@ -448,6 +450,7 @@ return (
           label="Classification"
           type="text"
           value={workPermit.classification || ""}
+          variant="standard"
           InputProps={{
             readOnly: true,
             style: { padding: '5px', fontSize: '14px' },
@@ -462,6 +465,7 @@ return (
             label="Application ID"
             type="text"
             value={workPermit.id || ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -473,6 +477,7 @@ return (
             label="Full Name"
             type="text"
             value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -484,6 +489,7 @@ return (
             label="Permanent Address"
             type="text"
             value={workPermit.formData.personalInformation.permanentAddress|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -495,6 +501,7 @@ return (
             label="Currently Residing"
             type="text"
             value={workPermit.formData.personalInformation.currentlyResiding ? "Yes" : "No"}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -506,6 +513,7 @@ return (
             label="Temporary Address"
             type="text"
             value={workPermit.formData.personalInformation.temporaryAddress || ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -517,6 +525,7 @@ return (
             label="Birth Date"
             type="text"
             value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : ''}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -528,6 +537,7 @@ return (
             label="Age"
             type="text"
             value={workPermit.formData.personalInformation.age|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -539,6 +549,7 @@ return (
             label="Place of Birth"
             type="text"
             value={workPermit.formData.personalInformation.placeOfBirth|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -550,6 +561,7 @@ return (
             label="Citizenship"
             type="text"
             value={workPermit.formData.personalInformation.citizenship|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -561,6 +573,7 @@ return (
             label="Company Name"
             type="text"
             value={workPermit.formData.personalInformation.companyName|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -576,6 +589,7 @@ return (
             label="Emergency Contact Name"
             type="text"
             value={workPermit.formData.emergencyContact.name2|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -587,6 +601,7 @@ return (
             label="Emergency Contact Mobile Number"
             type="text"
             value={workPermit.formData.emergencyContact.mobileTel2|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
@@ -598,6 +613,7 @@ return (
             label="Emergency Contact Address"
             type="text"
             value={workPermit.formData.emergencyContact.address|| ""}
+            variant="standard"
             InputProps={{
               readOnly: true,
               style: { padding: '5px', fontSize: '14px' },
