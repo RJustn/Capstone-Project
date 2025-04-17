@@ -12,7 +12,7 @@ const businessPermitSchema = new mongoose.Schema({
   totalgrosssales: {type: String},
   totaltax: {type: String},
   transaction: { type: String },
-  amountToPay: {type: String },
+  amountToPay: {type: Number },
   paymentStatus: {type: String},
   permitnumber: {type: String},
   permitFile: {type: String},

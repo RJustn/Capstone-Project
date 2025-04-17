@@ -8,7 +8,7 @@ const workPermitSchema = new mongoose.Schema({
   workpermitstatus: { type: String, required: true },
   classification: { type: String, required: true },
   transaction: { type: String },
-  amountToPay: { type: String },
+  amountToPay: { type: Number },
   paymentStatus: {type: String},
   permitFile: { type: String },
   permitDateIssued: { type: String },
