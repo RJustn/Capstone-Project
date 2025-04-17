@@ -429,7 +429,8 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            style: { padding: '5px', fontSize: '14px' },
+            disableUnderline: true, // Removes the underline
+            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -441,7 +442,8 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            style: { padding: '5px', fontSize: '14px' },
+            disableUnderline: true, // Removes the underline
+            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -453,7 +455,8 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            style: { padding: '5px', fontSize: '14px' },
+            disableUnderline: true, // Removes the underline
+            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -468,7 +471,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -480,7 +484,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -492,7 +497,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -504,7 +510,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -516,7 +523,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -528,7 +536,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -540,7 +549,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -552,7 +562,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -564,7 +575,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -576,7 +588,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -592,7 +605,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -604,7 +618,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -616,7 +631,8 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              style: { padding: '5px', fontSize: '14px' },
+              disableUnderline: true, // Removes the underline
+              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
