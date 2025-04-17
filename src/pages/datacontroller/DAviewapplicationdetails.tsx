@@ -429,11 +429,9 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            disableUnderline: true, // Removes the underline
-            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
+          InputLabelProps={{ shrink: true }}
           fullWidth
-          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Work Permit Status"
@@ -442,11 +440,9 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            disableUnderline: true, // Removes the underline
-            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
+          InputLabelProps={{ shrink: true }}
           fullWidth
-          style={{ marginBottom: '16px' }}
         />
         <TextField
           label="Classification"
@@ -455,11 +451,9 @@ return (
           variant="standard"
           InputProps={{
             readOnly: true,
-            disableUnderline: true, // Removes the underline
-            style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
           }}
+          InputLabelProps={{ shrink: true }}
           fullWidth
-          style={{ marginBottom: '16px' }}
         />
         
       <h1>Personal Information Details</h1>
@@ -471,11 +465,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Full Name"
@@ -484,11 +476,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Permanent Address"
@@ -497,11 +487,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Currently Residing"
@@ -510,11 +498,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Temporary Address"
@@ -523,11 +509,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Birth Date"
@@ -536,11 +520,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Age"
@@ -549,11 +531,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Place of Birth"
@@ -562,11 +542,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Citizenship"
@@ -575,11 +553,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Company Name"
@@ -588,11 +564,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
         {/* Add the remaining fields in similar fashion */}
       </div>
@@ -605,11 +579,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Mobile Number"
@@ -618,11 +590,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
           <TextField
             label="Emergency Contact Address"
@@ -631,11 +601,9 @@ return (
             variant="standard"
             InputProps={{
               readOnly: true,
-              disableUnderline: true, // Removes the underline
-              style: { padding: '5px', fontSize: '14px', border: 'none', background: 'none' }, // Removes border and background
             }}
+            InputLabelProps={{ shrink: true }}
             fullWidth
-            style={{ marginBottom: '16px' }}
           />
         
 
