@@ -97,9 +97,6 @@
   display: block;
 }
 
-.text-field-spacing {
-  margin-bottom: 100px;
-}
 
   .DAchartgraph:nth-child(1) {
     grid-area: graph1; 
