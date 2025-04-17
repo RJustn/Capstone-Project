@@ -475,14 +475,16 @@ return (
           />
           <TextField
             label="Currently Residing"
+            placeholder="Enter current residence status"
             type="text"
-            value={workPermit.formData.personalInformation.age|| ""}
+            value={workPermit.formData.personalInformation.currentlyResiding ? "Yes" : "No"}
             InputProps={{ readOnly: true }}
             fullWidth
             style={{ marginBottom: '16px', fontSize: '14px' }}
           />
           <TextField
             label="Temporary Address"
+            placeholder="Enter temporary address"
             type="text"
             value={workPermit.formData.personalInformation.temporaryAddress || ""}
             InputProps={{ readOnly: true }}
@@ -535,6 +537,7 @@ return (
       <h1>Emergency Contact Details</h1>
           <TextField
             label="Emergency Contact Name"
+            placeholder="Enter emergency contact name"
             type="text"
             value={workPermit.formData.emergencyContact.name2|| ""}
             InputProps={{ readOnly: true }}
@@ -543,6 +546,7 @@ return (
           />
           <TextField
             label="Emergency Contact Mobile Number"
+            placeholder="Enter emergency contact mobile number"
             type="text"
             value={workPermit.formData.emergencyContact.mobileTel2|| ""}
             InputProps={{ readOnly: true }}
@@ -551,11 +555,12 @@ return (
           />
           <TextField
             label="Emergency Contact Address"
+            placeholder="Enter emergency contact address"
             type="text"
             value={workPermit.formData.emergencyContact.address|| ""}
             InputProps={{ readOnly: true }}
             fullWidth
-            style={{ marginBottom: '16px' , fontSize: '14px' }}
+            style={{ marginBottom: '16px' ,}}
           />
         
 
