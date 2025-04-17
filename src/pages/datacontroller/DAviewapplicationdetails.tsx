@@ -428,7 +428,7 @@ return (
           value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : ''}
           InputProps={{
             readOnly: true,
-            style: { padding: '10px', fontSize: '14px' },
+            style: { padding: '5px', fontSize: '14px' },
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -439,7 +439,7 @@ return (
           value={workPermit.workpermitstatus || ""}
           InputProps={{
             readOnly: true,
-            style: { padding: '10px', fontSize: '14px' },
+            style: { padding: '5px', fontSize: '14px' },
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -450,7 +450,7 @@ return (
           value={workPermit.classification || ""}
           InputProps={{
             readOnly: true,
-            style: { padding: '10px', fontSize: '14px' },
+            style: { padding: '5px', fontSize: '14px' },
           }}
           fullWidth
           style={{ marginBottom: '16px' }}
@@ -464,7 +464,7 @@ return (
             value={workPermit.id || ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -475,7 +475,7 @@ return (
             value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -486,7 +486,7 @@ return (
             value={workPermit.formData.personalInformation.permanentAddress|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -497,7 +497,7 @@ return (
             value={workPermit.formData.personalInformation.currentlyResiding ? "Yes" : "No"}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -508,7 +508,7 @@ return (
             value={workPermit.formData.personalInformation.temporaryAddress || ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -519,7 +519,7 @@ return (
             value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : ''}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -530,7 +530,7 @@ return (
             value={workPermit.formData.personalInformation.age|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -541,7 +541,7 @@ return (
             value={workPermit.formData.personalInformation.placeOfBirth|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -552,7 +552,7 @@ return (
             value={workPermit.formData.personalInformation.citizenship|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -563,7 +563,7 @@ return (
             value={workPermit.formData.personalInformation.companyName|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -578,7 +578,7 @@ return (
             value={workPermit.formData.emergencyContact.name2|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -589,7 +589,7 @@ return (
             value={workPermit.formData.emergencyContact.mobileTel2|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
@@ -600,7 +600,7 @@ return (
             value={workPermit.formData.emergencyContact.address|| ""}
             InputProps={{
               readOnly: true,
-              style: { padding: '10px', fontSize: '14px' },
+              style: { padding: '5px', fontSize: '14px' },
             }}
             fullWidth
             style={{ marginBottom: '16px' }}
