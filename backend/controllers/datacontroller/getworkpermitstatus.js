@@ -19,7 +19,7 @@ const getWorkPermitStatus = async (req, res) => {
                 } 
             },
         ]);
-        res.status(200).json(data);
+        res.status(200).json(workPermitStatusCounts);
     } catch (error) {
         console.error('Error fetching work permit status:', error);
         res.status(500).json({ error: 'Internal server error' });

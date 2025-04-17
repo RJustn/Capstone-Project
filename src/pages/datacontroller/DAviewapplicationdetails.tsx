@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { TextField } from '@mui/material';
 import Swal from 'sweetalert2';
 
 export interface PersonalInformation {
@@ -421,57 +422,125 @@ return (
   <h1>Work Permit Details</h1>
   {workPermit ? (
     <>
-        <label>Date Issued:</label>
-        <input
+        <TextField
+          label="Date Issued"
           type="text"
           value={workPermit.createdAt ? new Date(workPermit.createdAt).toLocaleDateString() : 'N/A'}
-          readOnly
+          InputProps={{ readOnly: true }}
+          fullWidth
         />
-        <label>Work Permit Status:</label>
-        <input type="text" value={workPermit.workpermitstatus || ""} readOnly />
-        <label>Classification:</label>
-        <input type="text" value={workPermit.classification || ""} readOnly />
+        <TextField
+          label="Work Permit Status"
+          type="text"
+          value={workPermit.workpermitstatus || ""}
+          InputProps={{ readOnly: true }}
+          fullWidth
+        />
+        <TextField
+          label="Classification"
+          type="text"
+          value={workPermit.classification || ""}
+          InputProps={{ readOnly: true }}
+          fullWidth
+        />
         
       <h1>Personal Information Details</h1>
       <div className="grid-container">
-          <label>Application ID:</label>
-          <input type="text" value={workPermit.id || ""} readOnly />
-          <label>Full Name:</label>
-          <input
+          <TextField
+            label="Application ID"
+            type="text"
+            value={workPermit.id || ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Full Name"
             type="text"
             value={`${workPermit.formData.personalInformation.lastName|| ""}, ${workPermit.formData.personalInformation.firstName|| ""} ${workPermit.formData.personalInformation.middleInitial|| ""}`}
-            readOnly
+            InputProps={{ readOnly: true }}
+            fullWidth
           />
-          <label>Permanent Address:</label>
-          <input type="text" value={workPermit.formData.personalInformation.permanentAddress|| ""} readOnly />
-          <label>Currently Residing:</label>
-          <input type="text" value={workPermit.formData.personalInformation.age|| ""} readOnly />
-          <label>Temporary Address:</label>
-          <input type="text" value={workPermit.formData.personalInformation.temporaryAddress || ""} readOnly />
-          <label>Birth Date:</label>
-          <input
+          <TextField
+            label="Permanent Address"
+            type="text"
+            value={workPermit.formData.personalInformation.permanentAddress|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Currently Residing"
+            type="text"
+            value={workPermit.formData.personalInformation.age|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Temporary Address"
+            type="text"
+            value={workPermit.formData.personalInformation.temporaryAddress || ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Birth Date"
             type="text"
             value={workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}
-            readOnly
+            InputProps={{ readOnly: true }}
+            fullWidth
           />
-          <label>Age:</label>
-          <input type="text" value={workPermit.formData.personalInformation.age|| ""} readOnly />
-          <label>Place of Birth:</label>
-          <input type="text" value={workPermit.formData.personalInformation.placeOfBirth|| ""} readOnly />
-          <label>Citizenship:</label>
-          <input type="text" value={workPermit.formData.personalInformation.citizenship|| ""} readOnly />
-          <label>Company Name:</label>
-          <input type="text" value={workPermit.formData.personalInformation.companyName|| ""} readOnly />
+          <TextField
+            label="Age"
+            type="text"
+            value={workPermit.formData.personalInformation.age|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Place of Birth"
+            type="text"
+            value={workPermit.formData.personalInformation.placeOfBirth|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Citizenship"
+            type="text"
+            value={workPermit.formData.personalInformation.citizenship|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Company Name"
+            type="text"
+            value={workPermit.formData.personalInformation.companyName|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
         {/* Add the remaining fields in similar fashion */}
       </div>
 
       <h1>Emergency Contact Details</h1>
-          <label>Name:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.name2|| ""} readOnly />
-          <label>Mobile Number:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.mobileTel2|| ""} readOnly />
-          <label>Address:</label>
-          <input type="text" value={workPermit.formData.emergencyContact.address|| ""} readOnly />
+          <TextField
+            label="Emergency Contact Name"
+            type="text"
+            value={workPermit.formData.emergencyContact.name2|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Emergency Contact Mobile Number"
+            type="text"
+            value={workPermit.formData.emergencyContact.mobileTel2|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
+          <TextField
+            label="Emergency Contact Address"
+            type="text"
+            value={workPermit.formData.emergencyContact.address|| ""}
+            InputProps={{ readOnly: true }}
+            fullWidth
+          />
         
 
           <h1>Documents</h1>

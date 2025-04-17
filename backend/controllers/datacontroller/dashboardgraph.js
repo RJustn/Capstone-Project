@@ -263,7 +263,7 @@ const businesspermitsChart = async (req, res) => {
       const totalPermitApplications = await WorkPermit.countDocuments();
       const totalRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renew' });
       const totalCollections = await WorkPermit.aggregate([
-        { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+        { $group: { _id: null, total: { $sum: "$amountToPay" } } }
       ]);
       const totalReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
   
@@ -285,14 +285,14 @@ const businesspermitsChart = async (req, res) => {
       const totalWorkPermitApplications = await WorkPermit.countDocuments();
       const totalWorkRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renew' });
       const totalWorkCollections = await WorkPermit.aggregate([
-        { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+        { $group: { _id: null, total: { $sum: "$amountToPay" } } }
       ]);
       const totalWorkReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
   
       const totalBusinessPermitApplications = await BusinessPermit.countDocuments();
       const totalBusinessRenewalApplications = await BusinessPermit.countDocuments({ classification: 'RenewBusiness' });
       const totalBusinessCollections = await BusinessPermit.aggregate([
-        { $group: { _id: null, total: { $sum: "$amountPaid" } } }
+        { $group: { _id: null, total: { $sum: "$amountToPay" } } }
       ]);
       const totalBusinessReleased = await BusinessPermit.countDocuments({ businesspermitstatus: 'Released' });
   
