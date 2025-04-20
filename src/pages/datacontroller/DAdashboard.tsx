@@ -304,11 +304,8 @@ const DAdashboard: React.FC = () => {
           <button onClick={handleToggle}>
             {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
           </button>
-          
+          <p>Year: {new Date().getFullYear()}</p>
         </div>
-        <div>
-          <p>{new Date().getFullYear()}</p>
-          </div>
 
         {showWorkPermit ? (
           <>
