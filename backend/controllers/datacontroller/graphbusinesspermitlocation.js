@@ -3,7 +3,8 @@ const { BusinessPermit } = require('../../index/models');
 const graphbusinesspermitlocation = async (req, res) => {
     try {
       const locations = await BusinessPermit.aggregate([
-        { $group: { _id: "$business.businessbarangay", count: { $sum: 1 } } }
+        { $group: { _id: "$business.businessbarangay", count: { $sum: 1 } } },
+        { $match: { _id: { $ne: null } } }
       ]);
       res.json(locations);
     } catch (error) {
