@@ -78,14 +78,20 @@ const DataControllerReportsAndGraph: React.FC = () => {
       "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
     ];
 
+
+
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
       .then(response => response.json())
       .then(data => {
-        const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
+        const filteredData = data.filter((item: LocationData) =>
+          barangays.map(b => b.toLowerCase()).includes(item._id.toLowerCase())
+        );
         const labels = filteredData.map((item: LocationData) => item._id);
         const counts = filteredData.map((item: LocationData) => item.count);
         setLocationData({ labels, data: counts });
+        
       })
+      
       .catch(error => console.error('Error fetching location data:', error));
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
