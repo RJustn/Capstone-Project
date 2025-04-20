@@ -81,18 +81,19 @@ const DataControllerReportsAndGraph: React.FC = () => {
 
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
-      .then(response => response.json())
-      .then(data => {
-        const filteredData = data.filter((item: LocationData) =>
-          barangays.map(b => b.toLowerCase()).includes(item._id.toLowerCase())
-        );
-        const labels = filteredData.map((item: LocationData) => item._id);
-        const counts = filteredData.map((item: LocationData) => item.count);
-        setLocationData({ labels, data: counts });
-        
-      })
-      
-      .catch(error => console.error('Error fetching location data:', error));
+    .then(response => response.json())
+    .then(data => {
+      console.log("API Response:", data); // Log the API response
+      const filteredData = data.filter((item: LocationData) =>
+        barangays.map(b => b.toLowerCase()).includes(item._id?.toLowerCase())
+      );
+      const labels = filteredData.map((item: LocationData) => item._id || "Unknown");
+      const counts = filteredData.map((item: LocationData) => item.count || 0);
+      console.log("Filtered Labels:", labels); // Log the filtered labels
+      console.log("Filtered Counts:", counts); // Log the filtered counts
+      setLocationData({ labels, data: counts });
+    })
+    .catch(error => console.error('Error fetching location data:', error));
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphmonthlypaymentstatus')
       .then(response => response.json())
