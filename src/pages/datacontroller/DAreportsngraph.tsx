@@ -108,9 +108,9 @@ const DataControllerReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
       .then(response => response.json())
       .then(data => {
-        const approved = data.filter((item: { status: string }) => item.status === 'Approved').map((item: { count: number }) => item.count);
-        const pending = data.filter((item: { status: string }) => item.status === 'Pending').map((item: { count: number }) => item.count);
-        const rejected = data.filter((item: { status: string }) => item.status === 'Rejected').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Approved').map((item: { count: number }) => item.count);
+        const pending = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Pending').map((item: { count: number }) => item.count);
+        const rejected = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Rejected').map((item: { count: number }) => item.count);
 
         setBusinessPermitStatusData({
           labels: ['Approved', 'Pending', 'Rejected'],
@@ -122,9 +122,9 @@ const DataControllerReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphworkpermitstatus')
       .then(response => response.json())
       .then(data => {
-        const approved = data.filter((item: { status: string }) => item.status === 'Approved').map((item: { count: number }) => item.count);
-        const pending = data.filter((item: { status: string }) => item.status === 'Pending').map((item: { count: number }) => item.count);
-        const rejected = data.filter((item: { status: string }) => item.status === 'Rejected').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Approved').map((item: { count: number }) => item.count);
+        const pending = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Pending').map((item: { count: number }) => item.count);
+        const rejected = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Rejected').map((item: { count: number }) => item.count);
 
         setWorkPermitStatusData({
           labels: ['Approved', 'Pending', 'Rejected'],

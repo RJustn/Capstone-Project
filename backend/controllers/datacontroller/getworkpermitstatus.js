@@ -5,14 +5,14 @@ const getWorkPermitStatus = async (req, res) => {
         const workPermitStatusCounts = await WorkPermit.aggregate([
             { 
                 $group: { 
-                    _id: "$status", 
+                    _id: "$workpermitstatus", 
                     count: { $sum: 1 },
-                    lastEdited: { $max: "$lastEdited" } // Get the most recent lastEdited timestamp
+                    lastEdited: { $max: "$lastEdited" }
                 } 
             },
             { 
                 $project: { 
-                    status: "$_id", 
+                    workpermitstatus: "$_id", 
                     count: 1, 
                     lastEdited: 1, 
                     _id: 0 
