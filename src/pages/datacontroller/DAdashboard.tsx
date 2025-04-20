@@ -17,9 +17,8 @@ const DAdashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const month = new Date().toLocaleString('default', { month: 'long' });
-  const months = React.useMemo(() => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], []);
+  const months = React.useMemo(() => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], []);
   const currentMonthIndex = new Date().getMonth();
-
 
   const [WorkingPermitChart, setWorkingpermitchart] = useState({
     labels: [] as string[],
@@ -74,7 +73,7 @@ const DAdashboard: React.FC = () => {
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
-        fill: true, // Ensure the line is not filled
+        fill: true,
       },
     ],
   });
@@ -88,7 +87,7 @@ const DAdashboard: React.FC = () => {
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
-        fill: true, // Filled area under the line
+        fill: true,
       },
     ],
   });
@@ -142,11 +141,10 @@ const DAdashboard: React.FC = () => {
       try {
         const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
           method: 'GET',
-          credentials: 'include', // This ensures cookies are sent with the request
+          credentials: 'include',
         });
 
         if (response.status === 401) {
-          // If unauthorized, redirect to login
           console.error('Access denied: No token');
           navigate('/login');
           return;
@@ -157,7 +155,6 @@ const DAdashboard: React.FC = () => {
           return;
         }
 
-        // Handle unexpected response
         console.error('Unexpected response status:', response.status);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -177,7 +174,7 @@ const DAdashboard: React.FC = () => {
           businessPermitsResponse,
           newBusinessPermitsResponse,
           renewalBusinessPermitsResponse,
-          dashboardDataResponse
+          dashboardDataResponse,
         ] = await Promise.all([
           fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/newWorkingpermits', { method: 'GET', credentials: 'include' }),
           fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/renewalWorkingpermits', { method: 'GET', credentials: 'include' }),
@@ -185,27 +182,8 @@ const DAdashboard: React.FC = () => {
           fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitsChart', { method: 'GET', credentials: 'include' }),
           fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/newBusinesspermits', { method: 'GET', credentials: 'include' }),
           fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/renewalBusinesspermits', { method: 'GET', credentials: 'include' }),
-          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/dashboardData', { method: 'GET', credentials: 'include' })
+          fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/dashboardData', { method: 'GET', credentials: 'include' }),
         ]);
-
-        if (!newPermitsResponse.ok) {
-          console.error('Error fetching new permits data:', newPermitsResponse.statusText);
-        }
-        if (!renewalPermitsResponse.ok) {
-          console.error('Error fetching renewal permits data:', renewalPermitsResponse.statusText);
-        }
-        if (!workingPermitsResponse.ok) {
-          console.error('Error fetching working permits data:', workingPermitsResponse.statusText);
-        }
-        if (!businessPermitsResponse.ok) {
-          console.error('Error fetching business permits data:', businessPermitsResponse.statusText);
-        }
-        if (!newBusinessPermitsResponse.ok) {
-          console.error('Error fetching new business permits data:', newBusinessPermitsResponse.statusText);
-        }
-        if (!renewalBusinessPermitsResponse.ok) {
-          console.error('Error fetching renewal business permits data:', renewalBusinessPermitsResponse.statusText);
-        }
 
         if (newPermitsResponse.ok && renewalPermitsResponse.ok && workingPermitsResponse.ok && businessPermitsResponse.ok && newBusinessPermitsResponse.ok && renewalBusinessPermitsResponse.ok) {
           const newPermitsData = await newPermitsResponse.json();
@@ -213,14 +191,14 @@ const DAdashboard: React.FC = () => {
           const workingPermitsData = await workingPermitsResponse.json();
           const businessPermitsData = await businessPermitsResponse.json();
           const newBusinessPermitsData = await newBusinessPermitsResponse.json();
-          const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json(); // Ensure this line is present
+          const renewalBusinessPermitsData = await renewalBusinessPermitsResponse.json();
 
           setWorkingpermitchart({
-            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            labels: months,
             datasets: [
               {
                 label: 'New Work Permits',
-                data: newPermitsData.map((data: { count: number; }) => data.count),
+                data: newPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -228,7 +206,7 @@ const DAdashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Work Permits',
-                data: renewalPermitsData.map((data: { count: number; }) => data.count),
+                data: renewalPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -238,11 +216,11 @@ const DAdashboard: React.FC = () => {
           });
 
           setBusinessPermitChart({
-            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            labels: months,
             datasets: [
               {
                 label: 'New Business Permits',
-                data: newBusinessPermitsData.map((data: { count: number; }) => data.count),
+                data: newBusinessPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
@@ -250,7 +228,7 @@ const DAdashboard: React.FC = () => {
               },
               {
                 label: 'Renewal Business Permits',
-                data: renewalBusinessPermitsData.map((data: { count: number; }) => data.count), // Ensure correct mapping
+                data: renewalBusinessPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -263,8 +241,8 @@ const DAdashboard: React.FC = () => {
             labels: months,
             datasets: [
               {
-                label: 'Total Permits Released',
-                data: months.map((_, index) => (index === currentMonthIndex ? workingPermitsData.count : 0)),
+                label: 'Total Working Permits Released',
+                data: workingPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -274,11 +252,11 @@ const DAdashboard: React.FC = () => {
           });
 
           settotalBusinessPermit({
-            labels: businessPermitsData.map((data: { month: string; }) => data.month),
+            labels: months,
             datasets: [
               {
-                label: 'Total Business Permits R',
-                data: businessPermitsData.map((data: { count: number; }) => data.count),
+                label: 'Total Business Permits Released',
+                data: businessPermitsData.map((data: { count: number }) => data.count),
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -304,12 +282,12 @@ const DAdashboard: React.FC = () => {
           console.error('Error fetching dashboard data:', dashboardDataResponse.statusText);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [currentMonthIndex, month, months]);
+  }, [month, currentMonthIndex, months]);
 
   return (
     <section className="DAbody">
