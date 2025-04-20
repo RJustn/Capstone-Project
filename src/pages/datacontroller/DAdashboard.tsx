@@ -304,7 +304,11 @@ const DAdashboard: React.FC = () => {
           <button onClick={handleToggle}>
             {showWorkPermit ? 'Switch to Business Permit' : 'Switch to Work Permit'}
           </button>
+          
         </div>
+        <div>
+          <p></p>
+          </div>
 
         {showWorkPermit ? (
           <>
