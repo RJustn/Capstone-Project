@@ -108,9 +108,9 @@ const DataControllerReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
       .then(response => response.json())
       .then(data => {
-        const approved = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Approved').map((item: { count: number }) => item.count);
-        const pending = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Pending').map((item: { count: number }) => item.count);
-        const rejected = data.filter((item: { businessstatus: string }) => item.businessstatus === 'Rejected').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Approved').map((item: { count: number }) => item.count);
+        const pending = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Pending').map((item: { count: number }) => item.count);
+        const rejected = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Rejected').map((item: { count: number }) => item.count);
 
         setBusinessPermitStatusData({
           labels: ['Approved', 'Pending', 'Rejected'],
