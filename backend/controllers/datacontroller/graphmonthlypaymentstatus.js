@@ -11,12 +11,12 @@ const graphmonthlypaymentstatus = async (req, res) => {
           },
           paid: {
             $sum: {
-              $cond: [{ $eq: ["$businesspermitstatus", "Paid"] }, 1, 0]
+              $cond: [{ $eq: ["$paymentStatus", "Paid"] }, 1, 0]
             }
           },
           unpaid: {
             $sum: {
-              $cond: [{ $eq: ["$businesspermitstatus", "Unpaid"] }, 1, 0]
+              $cond: [{ $eq: ["$paymentStatus", "Unpaid"] }, 1, 0]
             }
           }
         }
@@ -52,12 +52,12 @@ const graphmonthlypaymentstatus = async (req, res) => {
           },
           paid: {
             $sum: {
-              $cond: [{ $eq: ["$workpermitstatus", "Paid"] }, 1, 0]
+              $cond: [{ $eq: ["$paymentStatus", "Paid"] }, 1, 0]
             }
           },
           unpaid: {
             $sum: {
-              $cond: [{ $eq: ["$workpermitstatus", "Unpaid"] }, 1, 0]
+              $cond: [{ $eq: ["$paymentStatus", "Unpaid"] }, 1, 0]
             }
           }
         }
