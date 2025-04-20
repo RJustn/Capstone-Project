@@ -64,24 +64,11 @@ const DataControllerReportsAndGraph: React.FC = () => {
 
     checkAuth();
 
-    const barangays = [
-      "Burol I", "Burol II", "Burol III", "Datu Esmael", "Datu Esmael II", "Fatima I", "Fatima II", "Fatima III",
-      "Fatima IV", "Fatima V", "Fatima VI", "Langkaan I", "Langkaan II", "Paliparan I", "Paliparan II", "Paliparan III",
-      "Salawag", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "Sampaloc V", "San Agustin I", "San Agustin II",
-      "San Agustin III", "San Agustin IV", "San Andres I", "San Andres II", "San Andres III", "San Andres IV",
-      "San Antonio de Padua I", "San Antonio de Padua II", "San Esteban", "San Francisco", "San Isidro Labrador I",
-      "San Isidro Labrador II", "San Juan Bautista I", "San Juan Bautista II", "San Lorenzo Ruiz I", "San Lorenzo Ruiz II",
-      "Rural Barangays", "Sabang", "Salitran I", "Salitran II", "Salitran III", "Salitran IV", "Salitran V", "Salitran VI",
-      "San Jose", "San Miguel", "San Nicolas I", "San Nicolas II", "San Roque", "Santa Cruz I", "Santa Cruz II",
-      "Santa Cruz III", "Santa Cruz IV", "Santa Fe", "Santiago", "Santo Cristo", "Santo Domingo", "Santo Niño I",
-      "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII",
-      "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
-    ];
 
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitlocation')
       .then(response => response.json())
       .then(data => {
-        const filteredData = data.filter((item: LocationData) => barangays.includes(item._id));
+        const filteredData = data.filter((item: LocationData) => item._id);
         const labels = filteredData.map((item: LocationData) => item._id);
         const counts = filteredData.map((item: LocationData) => item.count);
         setLocationData({ labels, data: counts });
