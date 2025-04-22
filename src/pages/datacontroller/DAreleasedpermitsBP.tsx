@@ -3117,7 +3117,7 @@ if (type === 'new') {
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
       Application Files of ${activePermitId.id}
       {modalFile && (
-        <div>
+        <div style ={{ textAlign: 'center', justifyItems: 'center' }}>
           {viewingType === 'receipts' && (
             <label>Viewing Receipt for {activePermitId.id}</label>
           )}
