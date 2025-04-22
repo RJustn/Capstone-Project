@@ -421,9 +421,14 @@ return (
   <h1>Work Permit Details</h1>
   {workPermit ? (
     <>
+
+        
+        <label>Application Date:</label>
+        <input type="text" value={workPermit.applicationdateIssued ? new Date(workPermit.applicationdateIssued).toLocaleDateString() : ''} readOnly />
+        <label>Application Status:</label>
     <input type="text" value={workPermit.workpermitstatus || ""} readOnly />
-        <label>Classification:</label>
-        <input type="text" value={workPermit.classification || ""} readOnly />
+    <label>Classification:</label>
+    <input type="text" value={workPermit.classification || ""} readOnly />
         
       <h1>Personal Information Details</h1>
       <div className="grid-container">
