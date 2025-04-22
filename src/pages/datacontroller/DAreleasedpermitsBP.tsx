@@ -3107,7 +3107,7 @@ if (type === 'new') {
         <div>No businesses to display.</div>
       )}
 
-<button className="cancel-button" onClick={closeViewBusinessNature}>Close</button>
+<button className="btn" onClick={closeViewBusinessNature}>Close</button>
     </div>
   </div>
 )}
@@ -3139,7 +3139,7 @@ if (type === 'new') {
           )}
         </div>
       )}
-      <button className="btn-danger" style={{marginTop: '10px'}} onClick={closeModal}>Close</button>
+      <button className="btn btn-danger" style={{marginTop: '10px'}} onClick={closeModal}>Close</button>
     </div>
   </div>
 )}
