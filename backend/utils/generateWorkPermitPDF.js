@@ -125,29 +125,38 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 60;
       doc.text('REMARKS:', leftColumnX, currentY);
 
-      currentY = doc.page.margins.top + 20;
-      doc.text('Name: ____________________________________', rightColumnX, currentY);
+      
+      doc.text(`Permit ID: ${workPermit.id}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Nationality: _______________________________ Age: _______', rightColumnX, currentY);
+      doc.text(`Permit Type: ${workPermit.permittype}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Civil Status: _______________________________ Sex: ________', rightColumnX, currentY);
+      doc.text(`Status: ${workPermit.workpermitstatus}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Date of Birth: __________________________________________', rightColumnX, currentY);
+      doc.text(`Classification: ${workPermit.classification}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Residence: ______________________________________________', rightColumnX, currentY);
+      doc.text(`Transaction: ${workPermit.transaction}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('_________________________________________________________', rightColumnX, currentY);
+      doc.text(`Amount to Pay: ${workPermit.amountToPay}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Res. Certificate No.: _____________________________________', rightColumnX, currentY);
+      doc.text(`Date Issued: ${new Date(workPermit.permitDateIssued).toLocaleDateString()}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text('Date Issued: ____________________________________________', rightColumnX, currentY);
-      currentY += 20;
-      doc.text('Place Issued: ___________________________________________', rightColumnX, currentY);
-      currentY += 20;
-      doc.text('SSS No.: _______________________________________________', rightColumnX, currentY);
-      currentY += 20;
-      doc.text('Tax Identification: _______________________________________', rightColumnX, currentY);
+      doc.text(`Expiry Date: ${new Date(workPermit.permitExpiryDate).toLocaleDateString()}`, leftColumnX, currentY);
+      currentY += 40;
 
+      currentY = doc.page.margins.top + 20;
+      doc.text(`Name: ${workPermit.formData.personalInformation.lastName}, ${workPermit.formData.personalInformation.firstName}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Nationality: ${workPermit.formData.personalInformation.citizenship} Age: ${workPermit.formData.personalInformation.age}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Civil Status: ${workPermit.formData.personalInformation.civilStatus} Sex: ${workPermit.formData.personalInformation.gender}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Date of Birth: ${new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString()}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress}`, rightColumnX, currentY);
+      currentY += 20;
+      // doc.text(`SSS No.: ${workPermit.formData.personalInformation.sssNumber || 'N/A'}`, rightColumnX, currentY);
+      // currentY += 20;
+      doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
       // Finalize the PDF
       doc.end();
     } catch (error) {

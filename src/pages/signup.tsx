@@ -27,9 +27,9 @@ const Signup: React.FC = () => {
       setError('All required fields must be filled out.');
       return;
     }
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
     if (!passwordRegex.test(password)) {
-        setError('Password must be at least 8 characters long and contain at least one letter, one uppercase letter, one number, and one special character.');
+        setError('Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.');
         return;
     }
 
@@ -154,7 +154,12 @@ const Signup: React.FC = () => {
               type="text"
               id="contactNumber"
               value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) { // Allow only numbers
+                  setContactNumber(value);
+                }
+              }}
               className="form-control"
               required
             />
