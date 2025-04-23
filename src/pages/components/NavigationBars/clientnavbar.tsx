@@ -147,7 +147,8 @@ const ClientNavbar: React.FC = () => {
     <nav className="navbar cnavbar-custom navbar-expand-lg fixed-top py-3">
       <div className="container-fluid">
         <a className="navbar-brand me-auto text-white" href="/">
-          <span className="d-none d-lg-inline">OBWPLS</span>
+          <span className="d-none d-lg-inline"  onClick={() => navigate('/dashboard')} // Redirect to the dashboard
+             style={{ cursor: 'pointer' }}>OBWPLS</span>
           <span className="d-lg-none">OBWPLS</span>
         </a>
 
@@ -159,9 +160,7 @@ const ClientNavbar: React.FC = () => {
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header offcanvas-custom">
-            <h5 className="offcanvas-title text-white" id="offcanvasNavbarLabel"
-             onClick={() => navigate('/dashboard')} // Redirect to the dashboard
-             style={{ cursor: 'pointer' }}>
+            <h5 className="offcanvas-title text-white" id="offcanvasNavbarLabel">
               OBWPLS
             </h5>
             <button
