@@ -159,7 +159,9 @@ const ClientNavbar: React.FC = () => {
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header offcanvas-custom">
-            <h5 className="offcanvas-title text-white" id="offcanvasNavbarLabel">
+            <h5 className="offcanvas-title text-white" id="offcanvasNavbarLabel"
+             onClick={() => navigate('/dashboard')} // Redirect to the dashboard
+             style={{ cursor: 'pointer' }}>
               OBWPLS
             </h5>
             <button
