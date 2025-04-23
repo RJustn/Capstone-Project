@@ -146,9 +146,8 @@ const ClientNavbar: React.FC = () => {
   return (
     <nav className="navbar cnavbar-custom navbar-expand-lg fixed-top py-3">
       <div className="container-fluid">
-        <a className="navbar-brand me-auto text-white" href="/">
-          <span className="d-none d-lg-inline"  onClick={() => navigate('/dashboard')} // Redirect to the dashboard
-             style={{ cursor: 'pointer' }}>OBWPLS</span>
+        <a className="navbar-brand me-auto text-white" href="/dashboard">
+          <span className="d-none d-lg-inline">OBWPLS</span>
           <span className="d-lg-none">OBWPLS</span>
         </a>
 
