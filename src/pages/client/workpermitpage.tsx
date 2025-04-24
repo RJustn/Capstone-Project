@@ -347,6 +347,18 @@ const WorkPermit: React.FC = () => {
     }
 
     logFormData(formData);
+    // Check for any file upload errors
+const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
+
+if (hasFileErrors) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Invalid File Upload',
+    text: 'Please fix the file errors before submitting.',
+  });
+  return; // Stop submission
+}
+
 
     try {
       Swal.fire({
@@ -497,7 +509,6 @@ const WorkPermit: React.FC = () => {
   <label htmlFor="civilStatus">CIVIL STATUS</label>
   <select
     id="civilStatus"
-    className="form-control"
     value={civilStatus}
     onChange={(e) => setCivilStatus(e.target.value)}
     required
