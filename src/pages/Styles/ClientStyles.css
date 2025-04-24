@@ -460,7 +460,7 @@ background-color: #003c80;
   right: 0;
   bottom: 0;
   background: transparent; /* Remove the black background */
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 9999; /* Ensure it's above other content */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -710,7 +710,7 @@ background: rgba(0, 0, 0, 0.5);
 display: flex;
 justify-content: center;
 align-items: center;
-z-index: 1000;
+z-index: 9999;
 }
 
 .clientmodal {
