@@ -335,7 +335,11 @@ useEffect(() => {
 
 {isModalOpen && (
   <div
-  className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]"
+  className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+  style={{
+    zIndex: 999999, // Extremely high z-index
+    position: 'fixed', // Ensure it's covering all
+  }}
   onClick={closeModal}
 >
   <div
