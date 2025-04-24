@@ -175,7 +175,7 @@ if (confirmpassword !== password) {
               value={contactNumber}
               onChange={(e) => {
                 const value = e.target.value;
-                if (/^\d*$/.test(value)) { // Allow only numbers
+                if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
                   setContactNumber(value);
                 }
               }}

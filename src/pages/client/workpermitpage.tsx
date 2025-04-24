@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 
 const WorkPermit: React.FC = () => {
   const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState<{ email: string; firstName: string; lastName: string; id: string} | null>(null);;
   const [step, setStep] = useState(1);
   const [isFormValid, setIsFormValid] = useState(true);
   const [workPermits, setWorkPermits] = useState<WorkPermits[]>([]);
@@ -77,9 +78,28 @@ const WorkPermit: React.FC = () => {
     }
   };
 
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
+        method: 'GET',
+        credentials: 'include', // Ensure cookies (containing the token) are sent
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const userData = await response.json();
+      setUserDetails(userData.user);
+      localStorage.setItem('profile', JSON.stringify(userData.user));
+      localStorage.setItem('userId', userData.id);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
   useEffect(() => {
     console.log('Repeating');
     fetchWorkPermits();
+    fetchProfile();
   }, [navigate]);
 
   useEffect(() => {
@@ -112,7 +132,14 @@ const WorkPermit: React.FC = () => {
       setMobileTel2(latestWorkPermit.formData.emergencyContact.mobileTel2 ?? '');
       setAddress(latestWorkPermit.formData.emergencyContact.address ?? '');
     }
-  }, [latestWorkPermit]);
+    if (!latestWorkPermit){
+      setLastName(userDetails?.lastName ?? '');
+      setFirstName(userDetails?.firstName ?? '');
+      setEmail(userDetails?.email ?? '');
+    }
+
+
+  }, [latestWorkPermit, userDetails]);
 
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
@@ -144,6 +171,18 @@ const WorkPermit: React.FC = () => {
       newErrors.natureOfWork = 'Nature of work is required.';
     } else {
       delete errors.natureOfWork; // Clear error if valid
+    }
+
+    if (!civilStatus || civilStatus === "") {
+      newErrors.civilStatus = "Please select a valid civil status.";
+    } else {
+      delete errors.civilStatus;
+    }
+
+    if (!gender || gender === "") {
+      newErrors.gender = "Please select a gender.";
+    } else {
+      delete errors.gender;
     }
 
     setErrors(newErrors);
@@ -195,28 +234,63 @@ const WorkPermit: React.FC = () => {
     setStep(prevStep => prevStep - 1);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4') => {
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    doc: 'document1' | 'document2' | 'document3' | 'document4'
+  ) => {
     const selectedFiles = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: selectedFiles[0],
-      }));
-      setFileErrors((prev) => ({
-        ...prev,
-        [doc]: '', // Clear error if file is selected
-      }));
+    if (!selectedFiles || selectedFiles.length === 0) {
+      setFiles((prev) => ({ ...prev, [doc]: null }));
+      setFileErrors((prev) => ({ ...prev, [doc]: 'This file is required.' }));
+      return;
+    }
+  
+    const file = selectedFiles[0];
+  
+    // Restrict document1 to image files only
+    if (doc === 'document1') {
+      const validTypes = ['image/jpeg', 'image/png'];
+      const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
+  
+      if (!validTypes.includes(file.type)) {
+        setFileErrors((prev) => ({ ...prev, [doc]: 'Only JPEG or PNG images are allowed.' }));
+        return;
+      }
+  
+      if (file.size > maxSizeInBytes) {
+        setFileErrors((prev) => ({ ...prev, [doc]: 'File size must be less than 1MB.' }));
+        return;
+      }
+  
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+  
+      img.onload = () => {
+        if (img.width !== img.height) {
+          setFileErrors((prev) => ({ ...prev, [doc]: 'Image must be a 1x1 (square) picture.' }));
+          URL.revokeObjectURL(objectUrl);
+          return;
+        }
+  
+        // Valid image
+        setFiles((prev) => ({ ...prev, [doc]: file }));
+        setFileErrors((prev) => ({ ...prev, [doc]: '' }));
+        URL.revokeObjectURL(objectUrl);
+      };
+  
+      img.onerror = () => {
+        setFileErrors((prev) => ({ ...prev, [doc]: 'Invalid image file.' }));
+        URL.revokeObjectURL(objectUrl);
+      };
+  
+      img.src = objectUrl;
     } else {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: null,
-      }));
-      setFileErrors((prev) => ({
-        ...prev,
-        [doc]: 'This file is required.', // Set error if no file is selected
-      }));
+      // For other docs, no image restrictions
+      setFiles((prev) => ({ ...prev, [doc]: file }));
+      setFileErrors((prev) => ({ ...prev, [doc]: '' }));
     }
   };
+  
 
   const logFormData = (formData: FormData) => {
     for (const [key, value] of formData.entries()) {
@@ -364,12 +438,12 @@ const WorkPermit: React.FC = () => {
               <div className="form-row">
                 <div className="form-group">
                   <label>LAST NAME<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                  <input type="text" disabled readOnly value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                   {errors.lastName && <p style={{ color: 'red' }}>{errors.lastName}</p>}
                 </div>
                 <div className="form-group">
                   <label>FIRST NAME<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                  <input type="text" disabled readOnly value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                   {errors.firstName && <p style={{ color: 'red' }}>{errors.firstName}</p>}
                 </div>
                 <div className="form-group">
@@ -402,7 +476,12 @@ const WorkPermit: React.FC = () => {
                 </div>
                 <div className="form-group">
                   <label>AGE</label>
-                  <input type="number" value={age} onChange={(e) => setAge(Number(e.target.value))} />
+                  <input type="number" value={age} onChange={(e) =>{
+                    const value = e.target.value;
+                    if (/^\d*$/.test(value) && value.length <= 3) { // Only numbers & max 3 digits
+                      setAge(Number(value));
+                    }
+                  }} />
                 </div>
                 <div className="form-group">
                   <label>PLACE OF BIRTH</label>
@@ -415,9 +494,24 @@ const WorkPermit: React.FC = () => {
                   <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>CIVIL STATUS</label>
-                  <input type="text" value={civilStatus} onChange={(e) => setCivilStatus(e.target.value)} />
-                </div>
+  <label htmlFor="civilStatus">CIVIL STATUS</label>
+  <select
+    id="civilStatus"
+    className="form-control"
+    value={civilStatus}
+    onChange={(e) => setCivilStatus(e.target.value)}
+    required
+  >
+    <option value=""> Select Civil Status </option>
+    <option value="Single">Single</option>
+    <option value="Married">Married</option>
+    <option value="Divorced">Divorced</option>
+    <option value="Widowed">Widowed</option>
+    <option value="Separated">Separated</option>
+  </select>
+  {errors.civilStatus && <p style={{ color: 'red' }}>{errors.civilStatus}</p>}
+</div>
+
                 <div className="form-group">
                   <label htmlFor="gender">GENDER</label>
                   <select
@@ -430,22 +524,29 @@ const WorkPermit: React.FC = () => {
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                   </select>
+                  {errors.gender && <p style={{ color: 'red' }}>{errors.gender}</p>}
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>HEIGHT</label>
+                  <label>HEIGHT (in centimeters)</label>
                   <input type="text" value={height} onChange={(e) => setHeight(e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label>WEIGHT</label>
+                  <label>WEIGHT (in kilograms)</label>
                   <input type="text" value={weight} onChange={(e) => setWeight(e.target.value)} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>MOBILE/TEL. NO<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={mobileTel} onChange={(e) => setMobileTel(e.target.value)} />
+                  <input type="text" value={mobileTel} onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                      setMobileTel(value);
+                    }
+                  }} />
+                  
                   {errors.mobileTel && <p style={{ color: 'red' }}>{errors.mobileTel}</p>}
                 </div>
                 <div className="form-group">
@@ -496,7 +597,12 @@ const WorkPermit: React.FC = () => {
                 </div>
                 <div className="form-group">
                   <label>MOBILE/TEL. NO<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={mobileTel2} onChange={(e) => setMobileTel2(e.target.value)} />
+                  <input type="text" value={mobileTel2} onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                      setMobileTel2(value);
+                    }
+                  }} />
                 </div>
               </div>
               <div className="form-group">
@@ -511,7 +617,7 @@ const WorkPermit: React.FC = () => {
             <div className="upload-section">
               <div className="upload-item">
                 <label>Upload 1x1 Picture<span style={{ color: 'red' }}>*</span></label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+                <input type="file" accept="image/jpeg, image/png" onChange={(e) => handleFileChange(e, 'document1')} />
                 {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
               </div>
               <div className="upload-item">
@@ -533,7 +639,7 @@ const WorkPermit: React.FC = () => {
                   {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
                 </div>
               )}
-              <div className="buttoncontainer">
+              <div className="buttoncontainer mt-3">
                 <button type="button" onClick={goToPreviousStep} className="btn btn-danger">Back</button>
                 <button type="submit" className="btn btn-success">Submit</button>
               </div>

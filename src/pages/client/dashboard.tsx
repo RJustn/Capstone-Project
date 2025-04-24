@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [userDetails, setUserDetails] = useState<{ email: string; firstName: string; lastName: string; id: string} | null>(null);;
+  const [userDetails, setUserDetails] = useState<{ email: string; firstName: string; lastName: string; id: string} | null>(null);
   const [workPermits, setWorkPermits] = useState<WorkPermit[]>([]);
   const [businessPermits, setBusinessPermits] = useState<GroupedBusinessPermit[]>([]);
   const [error, setError] = useState<string | null>(null);

@@ -15,7 +15,6 @@ const ViewBusinessApplication: React.FC = () => {
 
     const [businessPermits, setBusinessPermits] = useState<GroupedBusinessPermit[]>([]);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBusinessPermits = async () => {
@@ -36,8 +35,6 @@ const ViewBusinessApplication: React.FC = () => {
         setBusinessPermits(businessPermitData);
       } catch (error) {
         console.error('Error fetching business permits:', error);
-      } finally {
-        setLoading(false); // Ensure loading state is updated
       }
     };
 
@@ -75,10 +72,6 @@ const ViewBusinessApplication: React.FC = () => {
   }, [navigate]); // Only depend on navigate, which is necessary for the redirection
 
  
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
     return (
         <section className="dashboard-container">

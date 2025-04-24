@@ -28,7 +28,7 @@ const EmailVerification: React.FC = () => {
             if (response.ok) {
                 setSuccess('OTP sent to your email.');
                 setOtpSent(true); // Disable the button
-                setOtpCountdown(300); // Set the timer to 10 seconds
+                setOtpCountdown(60); // Set the timer to 10 seconds
                 setTimeout(() => {
                     setSuccess(null);
                 }, 3000);
@@ -44,6 +44,7 @@ const EmailVerification: React.FC = () => {
             setError('Error sending OTP, please try again.');
         }
     };
+    
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
