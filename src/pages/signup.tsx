@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Styles/signup.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,18 +27,25 @@ const Signup: React.FC = () => {
       setError('All required fields must be filled out.');
       return;
     }
+
+    // Email validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailRegex.test(email)) {
+  setError('Please enter a valid email address.');
+  return;
+}
+
+if (confirmpassword !== password) {
+  setError('Password does not match.');
+  return;
+}
+    
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
     if (!passwordRegex.test(password)) {
         setError('Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.');
         return;
     }
 
-    
-    if (confirmpassword !== password) {
-      setError('Password does not match.');
-      return;
-    }
-  
     try {
       // Sending request using axios
       const response = await axios.post('https://capstone-project-backend-nu.vercel.app/auth/signup', {
@@ -80,6 +87,18 @@ const Signup: React.FC = () => {
   const navigateLogin = () => {
     navigate('/login'); // Redirect to the login page
   };
+
+    // Timer to clear the error after 3 seconds
+    useEffect(() => {
+      if (error) {
+        const timer = setTimeout(() => {
+          setError(null);
+        }, 3000); // 3 seconds
+  
+        return () => clearTimeout(timer); // cleanup
+      }
+    }, [error]);
+  
 
   return (
     <>

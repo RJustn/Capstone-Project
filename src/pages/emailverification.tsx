@@ -99,6 +99,8 @@ const EmailVerification: React.FC = () => {
                         <input
                             type="email"
                             id="email"
+                            readOnly
+                            disabled
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
