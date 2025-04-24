@@ -101,20 +101,12 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
         setError('Failed to load dashboard. Please try again.');
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
+      } 
     };
   
     checkAuth();
   }, [navigate]); // Only depend on navigate, which is necessary for the redirection
   
-  const [loading, setLoading] = useState(true);
-
-    // Show loading or redirect until the loading state is false
-    if (loading) {
-      return <p>Loading...</p>; // Or a spinner/loading animation
-  }
 
 // For Forget Password @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

@@ -283,7 +283,6 @@ const openModal = (filePath: string) => {
       });
   
       if (response.ok) {
-        alert("Permit deleted successfully");
         window.location.reload(); // Reload the page to refresh the data
       } else {
         alert("Failed to delete permit");

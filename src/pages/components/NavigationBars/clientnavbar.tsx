@@ -52,17 +52,20 @@ const ClientNavbar: React.FC = () => {
         localStorage.removeItem('userId');
   
         // Show success message
-        Swal.fire({
-          icon: 'success',
-          title: 'Logged Out',
-          text: 'You have been successfully logged out.',
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          // Redirect to the login page
-          navigate('/');
-        });
-  
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Logged Out',
+        //   text: 'You have been successfully logged out.',
+        //   timer: 2000,
+        //   showConfirmButton: false,
+        // }).then(() => {
+        //   // Redirect to the login page
+        //   navigate('/');
+        // });
+
+        
+   //Redirect to the login page
+           navigate('/');
       } else {
         // Handle any errors from the server
         const errorData = await response.json();
