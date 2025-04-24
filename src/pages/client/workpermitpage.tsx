@@ -247,24 +247,25 @@ const WorkPermit: React.FC = () => {
   
     const file = selectedFiles[0];
   
-    // Restrict document1 to image files only
-    if (doc === 'document1') {
-      const validTypes = ['image/jpeg', 'image/png'];
-      const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
+    const maxSizeInBytes = 5 * 1024 * 1024; // 2MB
+    const imageTypes = ['image/jpeg', 'image/png'];
+    const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
   
-      if (!validTypes.includes(file.type)) {
+    if (doc === 'document1') {
+      // Only JPEG/PNG images for document1 (1x1 picture)
+      if (!imageTypes.includes(file.type)) {
         setFileErrors((prev) => ({ ...prev, [doc]: 'Only JPEG or PNG images are allowed.' }));
         return;
       }
   
       if (file.size > maxSizeInBytes) {
-        setFileErrors((prev) => ({ ...prev, [doc]: 'File size must be less than 1MB.' }));
+        setFileErrors((prev) => ({ ...prev, [doc]: 'File size must be less than 2MB.' }));
         return;
       }
   
+      // Check if image is square (1x1)
       const img = new Image();
       const objectUrl = URL.createObjectURL(file);
-  
       img.onload = () => {
         if (img.width !== img.height) {
           setFileErrors((prev) => ({ ...prev, [doc]: 'Image must be a 1x1 (square) picture.' }));
@@ -272,24 +273,40 @@ const WorkPermit: React.FC = () => {
           return;
         }
   
-        // Valid image
         setFiles((prev) => ({ ...prev, [doc]: file }));
         setFileErrors((prev) => ({ ...prev, [doc]: '' }));
         URL.revokeObjectURL(objectUrl);
       };
-  
       img.onerror = () => {
         setFileErrors((prev) => ({ ...prev, [doc]: 'Invalid image file.' }));
         URL.revokeObjectURL(objectUrl);
       };
-  
       img.src = objectUrl;
     } else {
-      // For other docs, no image restrictions
+      // Allow only image, pdf, or word files for doc2-4
+      const allowedTypes = [...imageTypes, ...docTypes];
+      if (!allowedTypes.includes(file.type)) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'Only image, PDF, or Word documents are allowed.',
+        }));
+        return;
+      }
+  
+      if (file.size > maxSizeInBytes) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'File size must be less than 5MB.',
+        }));
+        return;
+      }
+  
+      // File is valid
       setFiles((prev) => ({ ...prev, [doc]: file }));
       setFileErrors((prev) => ({ ...prev, [doc]: '' }));
     }
   };
+  
   
 
   const logFormData = (formData: FormData) => {
@@ -369,7 +386,7 @@ const WorkPermit: React.FC = () => {
     Swal.fire({
       icon: 'error',
       title: 'Missing Required File(s)',
-      text: `Please upload the following document(s): ${missingDocs.join(', ')}`,
+      text: `Please upload the following documents`,
     });
     return;
   }
@@ -660,20 +677,20 @@ if (hasFileErrors) {
               </div>
               <div className="upload-item">
                 <label>Upload Cedula<span style={{ color: 'red' }}>*</span></label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document2')} />
                 {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
               </div>
               {!currentlyResiding && (
                 <div className="upload-item">
                   <label>Upload Referral Letter<span style={{ color: 'red' }}>*</span></label>
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+                  <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
                   {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
                 </div>
               )}
               {workPermits.length === 0 && (
                 <div className="upload-item">
                   <label>Upload FTJS (First Time Job Seeker) Certificate</label>
-                  <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                  <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document4')} />
                   {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
                 </div>
               )}
