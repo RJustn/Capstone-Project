@@ -113,7 +113,8 @@ const SuperAdminDashboard: React.FC = () => {
       });
   
       if (response.ok) {
-        // Clear any local storage data (if applicable)
+        // Clear cookies and local storage
+        document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem('profile');
         localStorage.removeItem('userId');
   
@@ -171,18 +172,18 @@ const SuperAdminDashboard: React.FC = () => {
       <div className="SAdashboard">
         {/* Top Action Buttons */}
         <div className="top-actions">
-          <div className="action-card">
+          <a className="action-card" href="/superadmin/accountadd">
             <div className="icon create-account"></div>
-            <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
+            <span>Create Account</span>
+          </a>
+          <a className="action-card" href="/superadmin/accounts">
             <div className="icon accounts"></div>
             <a href="/superadmin/accounts">Accounts</a>
-          </div>
-          <div className="action-card">
+          </a>
+          <a className="action-card" href="/superadmin/logbooks">
             <div className="icon logbook"></div>
-            <a href="/superadmin/logbooks">Logbook</a>
-          </div>
+            <span>Logbook</span>
+          </a>
         </div>
 
         {/* Grid Panels */}
