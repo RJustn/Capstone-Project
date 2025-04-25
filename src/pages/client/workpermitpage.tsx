@@ -143,6 +143,12 @@ const WorkPermit: React.FC = () => {
 
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
+
+    const isValidEmail = (email: string) => {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    
     if (!lastName) {
       newErrors.lastName = 'Lastname is required.';
     } else {
@@ -155,11 +161,11 @@ const WorkPermit: React.FC = () => {
         delete errors.firstName; // Clear error if valid
         }
     
-    if (!email) {
-      newErrors.email = 'Email is required.';
-    } else {
-      delete errors.email; // Clear error if valid
-    }
+        if (!email) {
+          newErrors.email = 'Email is required';
+        } else if (!isValidEmail(email)) {
+          newErrors.email = 'Please enter a valid email address';
+        }
 
     if (!mobileTel) {
       newErrors.mobileTel = 'Mobile number is required.';
