@@ -153,6 +153,7 @@ const handleVerifyOtp = async () => {
       setError('Password Not Match.');
       return;
   }
+  
 
   try {
       const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {

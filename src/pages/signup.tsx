@@ -40,7 +40,7 @@ if (confirmpassword !== password) {
   return;
 }
     
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+const passwordRegex = /^(?=.[A-Za-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
     if (!passwordRegex.test(password)) {
         setError('Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.');
         return;

@@ -34,6 +34,7 @@ const ClientNavbar: React.FC = () => {
     Swal.fire({
       title: 'Logging out...',
       text: 'Please wait while we process your request.',
+      timer: 2000,
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();

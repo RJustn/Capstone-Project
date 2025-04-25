@@ -60,18 +60,21 @@ const BusinessPermit: React.FC = () => {
   const [businessname, setBusinessName] = useState('');
   const [businessscale, setBusinessScale] = useState('');
   const [paymentmethod, setPaymentMethod] = useState('');
-    // Get current month and quarter
-    const currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
-    const quarter = Math.ceil(currentMonth / 3);
+
+
+  const getPaymentOptions = () => {
+    const month = new Date().getMonth() + 1;
+    const quarter = Math.ceil(month / 3);
   
-    // Determine applicable payment methods dynamically
-    const getPaymentOptions = () => {
-      if (quarter === 2 || quarter === 4) {
-        return ["Quarterly"];
-      }
+    // Only allow full options at the start of a half-year period
+    if (quarter === 1 || quarter === 3) {
       return ["Annual", "Semi-Annual", "Quarterly"];
-    };
+    }
   
+    // Mid-year quarters only allow quarterly payments
+    return ["Quarterly"];
+  };
+
     const paymentOptions = getPaymentOptions();
   const [businessbuildingblocklot, setBusinessBuildingBlockLot] = useState('');
   const [businessbuildingname, setBusinessBuildingName] = useState('');
@@ -342,6 +345,10 @@ const BusinessPermit: React.FC = () => {
   const validateFields = () => {
     const newErrors: { [key: string]: string } = {};
   
+    const isValidEmail = (email: string) => {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
     // Step 1 validation
     if (step === 1) {
       if (corporation) {
@@ -375,8 +382,10 @@ const BusinessPermit: React.FC = () => {
       if (!mobilenumber.trim()) {
         newErrors.mobilenumber = 'Mobile Number is required.';
       }
-      if (!email.trim()) {
-        newErrors.email = 'Email Address is required.';
+      if (!email.trim) {
+        newErrors.email = 'Email is required';
+      } else if (!isValidEmail(email)) {
+        newErrors.email = 'Please enter a valid email address';
       }
     }
   
@@ -427,6 +436,8 @@ const BusinessPermit: React.FC = () => {
       }
       if (!businessemail.trim()) {
         newErrors.businessemail = 'Business Email is required.';
+      }else if (!isValidEmail(businessemail)) {
+        newErrors.email = 'Please enter a valid email address';
       }
     }
   
@@ -613,13 +624,16 @@ const handleRemoveBusiness = (index: number) => {
                 <label>CITIZENSHIP</label>
                 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
                 {errors.citizenship && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.citizenship}</p>}
-                </div>
-               <div className="form-row">
+                </div>  
                 <div className="form-group">
                   <label>TIN NUMBER</label>
-                  <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
+                  <input type="number" value={tinnumber} onChange={(e) => {
+                     const value = e.target.value;
+                     if (/^\d*$/.test(value) && value.length <= 12) { // Only numbers & max 11 digits
+                       setTinNumber(value);
+                     }
+                  }} />
                  </div>
-                </div>
                 </div>
                 <div className="form-group">
                 <label className="checkbox-label">
@@ -678,25 +692,26 @@ const handleRemoveBusiness = (index: number) => {
               <div className="form-row">
               <div className="form-group">
                 <label>Barangay<span style={{ color: 'red' }}>*</span></label>
-                <select
-                  value={barangay}
-                  onChange={(e) => setBarangay(e.target.value)}
-                  className="form-control"
-                >
-                  <option value="" disabled>Select Barangay</option>
-                  {barangays.map((b) => (
-                    <option key={b} value={b}>{b}</option>
-                  ))}
-                </select>
+                <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
                 {errors.barangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.barangay}</p>}
               </div>
               <div className="form-group">
                 <label>Telephone Number</label>
-                <input type="text" value={telephonenumber} onChange={(e) => setTelephoneNumber(e.target.value)} />
+                <input type="text" value={telephonenumber} onChange={(e) => {
+                   const value = e.target.value;
+                   if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                     setTelephoneNumber(value);
+                   }
+                }} />
               </div>
               <div className="form-group">
                 <label>Mobile Number<span style={{ color: 'red' }}>*</span></label>
-                <input type="text" value={mobilenumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                <input type="text" value={mobilenumber} onChange={(e) =>{
+                   const value = e.target.value;
+                   if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                     setMobileNumber(value);
+                   }
+                }} />
                 {errors.mobilenumber && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.mobilenumber}</p>}
               </div>
               </div>
@@ -803,7 +818,12 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Contact Number<span style={{ color: 'red' }}>*</span></label>
-                  <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
+                  <input type="text" value={businesscontactnumber} onChange={(e) => {
+                     const value = e.target.value;
+                     if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                       setBusinessContactNumber(value);
+                     }
+                  }} />
                   {errors.businesscontactnumber && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesscontactnumber}</p>}
                   <label className="checkbox-label">
                   <input
@@ -1371,12 +1391,12 @@ const handleRemoveBusiness = (index: number) => {
                   {errors.businessemail && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessemail}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Business Area <span style={{ color: 'red' }}>*</span></label>
+                  <label>Business Area (sq. m)<span style={{ color: 'red' }}>*</span></label>
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
                   {errors.businessarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businessarea}</p>}
                 </div>
                 <div className="form-group">
-                  <label>Lot Area <span style={{ color: 'red' }}>*</span></label>
+                  <label>Lot Area (sq. m)<span style={{ color: 'red' }}>*</span></label>
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
                   {errors.businesslotarea && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesslotarea}</p>}
                 </div>
@@ -1499,6 +1519,7 @@ const handleRemoveBusiness = (index: number) => {
       />
 
       {/* Add Business Button */}
+      
       <button onClick={(e) => {
                              e.preventDefault(); // Prevents default form submission or button behavior
                              handleAddBusiness(); // Calls your custom function
@@ -1537,7 +1558,7 @@ businesses?.length > 0 ? (
   ) : null // Optionally, render something else when the condition is not met
 }
       <div> {!isFormValid && <p style={{ color: 'red' }}>Please add at least one business nature before proceeding.</p>}
-      <div style={{ display: 'flex', gap: '15px' }}>
+      <div className="mt-3" style={{ display: 'flex', gap: '15px' }}>
   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
     Back
   </button>
@@ -1596,7 +1617,7 @@ businesses?.length > 0 ? (
                 <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
                 
               <div>
-              <div style={{ display: 'flex', gap: '15px' }}>
+              <div className='mt-3' style={{ display: 'flex', gap: '15px' }}>
   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
     Back
   </button>
