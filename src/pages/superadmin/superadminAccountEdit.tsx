@@ -95,6 +95,12 @@ const SuperadminAccountEdit = () => {
           return;
         }
 
+        if (response.status === 401) {
+          console.error('Unauthorized: Invalid or expired token');
+          navigate('/superadmin/login');
+          return;
+        }
+
         if (response.status === 204) {
           console.log('Access Success');
           return;
