@@ -376,9 +376,6 @@ const BusinessPermit: React.FC = () => {
       if (!buildingstreetname.trim()) {
         newErrors.buildingstreetname = 'Building Name/Street Name is required.';
       }
-      if (!barangay.trim()) {
-        newErrors.barangay = 'Barangay is required.';
-      }
       if (!mobilenumber.trim()) {
         newErrors.mobilenumber = 'Mobile Number is required.';
       }
@@ -691,9 +688,9 @@ const handleRemoveBusiness = (index: number) => {
               </div>
               <div className="form-row">
               <div className="form-group">
-                <label>Barangay<span style={{ color: 'red' }}>*</span></label>
+                <label>Barangay</label>
                 <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
-                {errors.barangay && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.barangay}</p>}
+              
               </div>
               <div className="form-group">
                 <label>Telephone Number</label>
@@ -814,7 +811,12 @@ const handleRemoveBusiness = (index: number) => {
                 <div className="form-group">
                   <label>Zip<span style={{ color: 'red' }}>*</span></label>
                   {errors.businesszip && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.businesszip}</p>}
-                  <input type="text" value={businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
+                  <input type="text" value={businesszip} onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value) && value.length <= 4) { // Only numbers & max 4 digits
+                        setBusinessZip(value);
+                      }
+                  }} />
                 </div>
                 <div className="form-group">
                   <label>Contact Number<span style={{ color: 'red' }}>*</span></label>
@@ -1323,7 +1325,6 @@ const handleRemoveBusiness = (index: number) => {
                 <h2>Step 3 Business Other Information</h2>
                 <div className="form-group">
                   <label>Date Established<span style={{ color: 'red' }}>*</span></label>
-                  {errors.dateestablished && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dateestablished}</p>}
                   <input type="date" value={dateestablished} onChange={(e) => setDateEstablished(e.target.value)} />
                   <label className="checkbox-label">
                     <input
@@ -1338,10 +1339,10 @@ const handleRemoveBusiness = (index: number) => {
                     />
                       Check if Same as DTI
                   </label>
+                  {errors.dateestablished && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.dateestablished}</p>}
                 </div>
                 <div className="form-group">
                   <label>Start Date<span style={{ color: 'red' }}>*</span></label>
-                  {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
                   <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
                   <label className="checkbox-label">
                 <input
@@ -1356,10 +1357,11 @@ const handleRemoveBusiness = (index: number) => {
                   />
                   Check if Same as DTI
                 </label>
+                {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
                 </div>
                 <div className="form-group">
                   <label>Occupancy <span style={{ color: 'red' }}>*</span></label>
-                  {errors.occupancy && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.occupancy}</p>}
+                  
                   <select
                     value={occupancy}
                     onChange={(e) => setOccupancy(e.target.value)}
@@ -1370,7 +1372,7 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="Owned">Owned</option>
                     <option value="Rented">Rented</option>
                   </select>
-              
+                  {errors.occupancy && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.occupancy}</p>}
                 </div>
                 <div className="form-group">
                   <label>Business Type <span style={{ color: 'red' }}>*</span></label>
@@ -1383,7 +1385,7 @@ const handleRemoveBusiness = (index: number) => {
                     <option value="COMM">COMMERCIAL</option>
                     <option value="INDUST">INDUSTRIAL</option>
                   </select>
-                  {errors.otherusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
+                  {errors.otherbusinesstype && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.otherbusinesstype}</p>}
                 </div>
                 <div className="form-group">
                   <label>Email Address <span style={{ color: 'red' }}>*</span></label>
@@ -1436,8 +1438,8 @@ const handleRemoveBusiness = (index: number) => {
                   <label>Email Address</label>
                   <input type="text" value={lessoremailaddress} onChange={(e) => setLessorEmailAddress(e.target.value)} disabled={occupancy === "Agree" || occupancy === "" || occupancy === "Owned"} required/>
                 </div>
-                <div style={{ display: 'flex', gap: '15px' }}>
                 {!isFormValid && <p style={{ color: 'red' }}>Please fill in all required fields.</p>}
+                <div style={{ display: 'flex', gap: '15px' }}>
                   <button className="btn btn-danger" type="button" onClick={goToPreviousStep}>
                     Back
                   </button>
