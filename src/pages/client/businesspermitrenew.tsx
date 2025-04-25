@@ -674,7 +674,7 @@ useEffect(() => {
         <input
           type="number"
           value={business.capitalInvestment || ""}
-          disabled={!isEditing || originalBusinesses.some(b => b._id === business._id)}
+          disabled={!isEditing}
           placeholder="---"
           onChange={(e) => {
             const updatedBusinesses = [...businesses];
