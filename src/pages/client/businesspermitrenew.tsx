@@ -446,6 +446,11 @@ useEffect(() => {
           
     const handleSaveBusinessNature = () => {
       // Commit the current state of businesses as the new original state
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Successfully saved business nature.',
+      });
       setPastBusinesses(businesses); 
       setIsEditing(false); // Exit editing mode
     };
@@ -580,7 +585,9 @@ useEffect(() => {
                     <div className="user-info">
                   
                         {/* Add your user information content here */}
-                        <button className="editbutton-client"onClick={isEditing ? handleSaveBusinessNature : () => setIsEditing(true)}>
+                        <button className="editbutton-client"onClick={isEditing ? handleSaveBusinessNature : () => setIsEditing(true) 
+                       
+                        }>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
