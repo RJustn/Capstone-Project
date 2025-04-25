@@ -181,23 +181,19 @@ const Logbook: React.FC = () => {
         <div className="logo">Logbook</div>
         <div className="user-actions">
           <a href="/superadmin/login" onClick={handleLogout} className="logout">Log Out</a>
-          <span className="notification">&#128276;</span>
         </div>
       </div>
 
       <div className="top-actions">
-          <div className="action-card">
-            <div className="icon create-account"></div>
+          <a className="action-card" href="/superadmin/accountadd">
             <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/dashboard" >
             <a href="/superadmin/dashboard">Dashboard</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/accounts">
             <a href="/superadmin/accounts">Accounts</a>
-          </div>
+          </a>
         </div>
 
       {/* Grid Panels */}

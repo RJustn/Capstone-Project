@@ -148,26 +148,23 @@ const Accounts: React.FC = () => {
         </div>
         <div className="logo">Accounts</div>
         <div className="user-actions">
-          <a href="/superadmin/dashboard" className="return-link">Return</a>
-          <a href="# " className="logout" onClick={handleLogout}>
+          <a href="/superadmin/login" className="logout" onClick={handleLogout}>
             Log Out
           </a>
         </div>
       </div>
 
       <div className="top-actions">
-          <div className="action-card">
+          <a className="action-card" href="/superadmin/accountadd">
             <div className="icon create-account"></div>
             <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/dashboard">
             <a href="/superadmin/dashboard">Dashboard</a>
-          </div>
-          <div className="action-card">
-            <div className="icon logbook"></div>
+          </a>
+          <a className="action-card" href="/superadmin/logbooks"> 
             <a href="/superadmin/logbooks">Logbook</a>
-          </div>
+          </a>
         </div>
 
       <div className="superadmin-accounts">
