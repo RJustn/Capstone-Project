@@ -239,7 +239,7 @@ if (confirmpassword !== password) {
         >
           Cancel
         </button>
-        <a onClick={navigateLogin} className="text-primary" style={{ fontSize: '12px' }}>
+        <a onClick={navigateLogin} className="text-primary" style={{ fontSize: '12px', cursor: 'pointer' }}>
           Already have an account? <br></br> Click here to Log in
         </a>
         <button type="submit" className="btn btn-success">
