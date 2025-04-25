@@ -124,6 +124,10 @@ app.use('/datacontroller', datacontrollerRoutes); //Sample Moving
 app.use('/admin', adminRoutes); //Sample Moving
 app.use('/superadmin', superadminRoutes); //Sample Moving
 
+// Set a higher limit for the request body
+app.use(bodyParser.json({ limit: '50mb' })); // Increase the limit as per your needs
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 
 
 const checkExpired = async () => {

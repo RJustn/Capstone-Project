@@ -34,7 +34,7 @@ const uploadbusinesspermitfiles = upload.fields([
     { name: 'document8', maxCount: 1 },
     { name: 'document9', maxCount: 1 },
     { name: 'document10', maxCount: 1 },
-    { name: 'document11', maxCount: 1 },
+    { name: 'document11', maxCount: 1 },  
     { name: 'document12', maxCount: 1 }
 ]);
 

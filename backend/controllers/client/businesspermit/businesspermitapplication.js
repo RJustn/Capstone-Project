@@ -3,6 +3,7 @@ const { User, BusinessPermit } = require('../../../index/models');
 const { generateBusinessPermitID, computeTax } = require('../../../index/utils'); 
 const JWT_SECRET = 'your_jwt_secret'; 
 
+
 const businesspermitapplication = async (req, res) => {
     const token = req.cookies.authToken; // Extract token from the cookie
     // console.log('Received token:', token);

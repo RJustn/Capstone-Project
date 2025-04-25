@@ -1643,7 +1643,7 @@ businesses?.length > 0 ? (
               <h2>Upload Documents</h2>
               {errors.documents && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.documents}</p>}
                 <label>
-                  Upload DTI / SEC / CDA<span style={{ color: 'red' }}>*</span>
+                  Upload DTI / SEC / CDA
                 </label>
                 <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document1')} />
                 {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
@@ -1655,7 +1655,7 @@ businesses?.length > 0 ? (
                 {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
 
                 <label>
-                  Lease Contract (if rented) / Tax Declaration (If Owned)<span style={{ color: 'red' }}>*</span>
+                  Lease Contract (if rented) / Tax Declaration (If Owned)
                 </label>
                 <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
                 {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
