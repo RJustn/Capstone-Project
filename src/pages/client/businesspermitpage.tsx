@@ -142,26 +142,56 @@ const BusinessPermit: React.FC = () => {
     document10: null,
   });
 
+    const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
+
   const logFormData = (formData: FormData) => {
     for (const [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
   };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10') => {
+ const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10'
+  ) => {
     const selectedFiles = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: selectedFiles[0],
-      }));
-    } else {
-      setFiles((prev) => ({
-        ...prev,
-        [doc]: null,
-      }));
+    if (!selectedFiles || selectedFiles.length === 0) {
+      setFiles((prev) => ({ ...prev, [doc]: null }));
+      setFileErrors((prev) => ({ ...prev, [doc]: 'This file is required.' }));
+      return;
     }
+  
+    const file = selectedFiles[0];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 2MB
+    const imageTypes = ['image/jpeg', 'image/png'];
+    const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  
+
+      // Allow only image, pdf, or word files for doc2-4
+      const allowedTypes = [...imageTypes, ...docTypes];
+      if (!allowedTypes.includes(file.type)) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'Only image, PDF, or Word documents are allowed.',
+        }));
+        return;
+      }
+  
+      if (file.size > maxSizeInBytes) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'File size must be less than 5MB.',
+        }));
+        return;
+      }
+  
+      // File is valid
+      setFiles((prev) => ({ ...prev, [doc]: file }));
+      setFileErrors((prev) => ({ ...prev, [doc]: '' }));
+    
   };
+  
+
+
 
   const handleLocationChange = (latitude: number, longitude: number) => {
     setLat(latitude);
@@ -251,6 +281,40 @@ const BusinessPermit: React.FC = () => {
     Object.entries(files).forEach(([key, file]) => {
       if (file) formData.append(key, file);
     });
+
+         // Required file check for documents 1 to 4
+      const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10')[] = ['document1', 'document2', 'document3','document4','document5','document6','document7','document8','document9','document10'];
+    
+  
+      // Collect missing documents
+      const missingDocs = requiredDocs.filter((doc) => !files[doc]);
+    
+      if (missingDocs.length > 0) {
+        const updatedErrors = { ...fileErrors };
+        missingDocs.forEach((doc) => {
+          updatedErrors[doc] = 'This file is required.';
+        });
+        setFileErrors(updatedErrors);
+    
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing Required File(s)',
+          text: `Please upload the following documents`,
+        });
+        return;
+      }
+    
+        // Check for any file upload errors
+    const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
+    
+    if (hasFileErrors) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Upload',
+        text: 'Please fix the file errors before submitting.',
+      });
+      return; // Stop submission
+    }
   
     logFormData(formData);
   
@@ -434,7 +498,7 @@ const BusinessPermit: React.FC = () => {
       if (!businessemail.trim()) {
         newErrors.businessemail = 'Business Email is required.';
       }else if (!isValidEmail(businessemail)) {
-        newErrors.email = 'Please enter a valid email address';
+        newErrors.businessemail = 'Please enter a valid email address';
       }
     }
   
@@ -1516,6 +1580,7 @@ const handleRemoveBusiness = (index: number) => {
         type="number"
         name="capitalInvestment"
         placeholder="Capital Investment"
+        min={0}
         value={newBusiness.capitalInvestment}
         onChange={handleInputChange}
       />
@@ -1580,43 +1645,67 @@ businesses?.length > 0 ? (
                 <label>
                   Upload DTI / SEC / CDA<span style={{ color: 'red' }}>*</span>
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document1')} />
+                {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
+
                 <label>
                   Occupancy Permit (Optional)
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document2')} />
+                {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
+
                 <label>
                   Lease Contract (if rented) / Tax Declaration (If Owned)<span style={{ color: 'red' }}>*</span>
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
+                {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
+
                 <label>
                   Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document4')} />
+                {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
+
                 <label>
                  Owner's ID
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document5')} />
+                {fileErrors.document5 && <p style={{ color: 'red' }}>{fileErrors.document5}</p>}
+
                 <label>
                   Picture of Establishment (Perspective View)
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document6')} />
+                {fileErrors.document6 && <p style={{ color: 'red' }}>{fileErrors.document6}</p>}
+
+
                 <label>
                 Zoning
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document7')} />
+                {fileErrors.document7 && <p style={{ color: 'red' }}>{fileErrors.document7}</p>}
+
+
                 <label>
                 Office of the Building Official
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document8')} />
+                {fileErrors.document8 && <p style={{ color: 'red' }}>{fileErrors.document8}</p>}
+
+
                 <label>
                 City Health Office
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document9')} />
+                {fileErrors.document9 && <p style={{ color: 'red' }}>{fileErrors.document9}</p>}
+
+
                 <label>
                 Bureau of Fire Protection
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document10')} />
+                {fileErrors.document10 && <p style={{ color: 'red' }}>{fileErrors.document10}</p>}
+
                 
               <div>
               <div className='mt-3' style={{ display: 'flex', gap: '15px' }}>
