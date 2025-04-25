@@ -986,6 +986,7 @@ const handleRemoveBusiness = (index: number) => {
                     onChange={(e) => setIndustrySector(e.target.value)}
                     className="form-control"
                   >
+                    <option value="">Select Industry Sector</option>
                     <option value="EL">Electronic</option>
                     <option value="CN">Construction</option>
                     <option value="GM">Garments</option>

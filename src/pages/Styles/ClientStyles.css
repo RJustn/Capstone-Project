@@ -996,3 +996,31 @@ margin-top: 20px;
   overflow-x: auto; /* Horizontal scrolling for smaller screens */
   width: 100%; /* Ensure the container takes full width */
 }
+
+
+.tab-button-client {
+  padding: 10px 20px;
+  margin: 0 5px;
+
+  background-color: #00712D; /* Example background color */
+  color: #ffffff; /* White text color for contrast */
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button-client.active {
+  background-color: #07943f;
+  color: white;
+}
+
+.editbutton-client {
+  background-color: #07943f;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 5px;
+  transition: background-color 0.3s;
+}

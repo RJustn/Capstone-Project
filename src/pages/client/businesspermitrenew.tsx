@@ -9,6 +9,19 @@ import MapLocation from '../components/MapContents/MapLocation';
 import Select from 'react-select'; 
 
 
+const barangays = [
+  "Burol I", "Burol II", "Burol III", "Datu Esmael", "Datu Esmael II", "Fatima I", "Fatima II", "Fatima III",
+  "Fatima IV", "Fatima V", "Fatima VI", "Langkaan I", "Langkaan II", "Paliparan I", "Paliparan II", "Paliparan III",
+  "Salawag", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "Sampaloc V", "San Agustin I", "San Agustin II",
+  "San Agustin III", "San Agustin IV", "San Andres I", "San Andres II", "San Andres III", "San Andres IV",
+  "San Antonio de Padua I", "San Antonio de Padua II", "San Esteban", "San Francisco", "San Isidro Labrador I",
+  "San Isidro Labrador II", "San Juan Bautista I", "San Juan Bautista II", "San Lorenzo Ruiz I", "San Lorenzo Ruiz II",
+  "Rural Barangays", "Sabang", "Salitran I", "Salitran II", "Salitran III", "Salitran IV", "Salitran V", "Salitran VI",
+  "San Jose", "San Miguel", "San Nicolas I", "San Nicolas II", "San Roque", "Santa Cruz I", "Santa Cruz II",
+  "Santa Cruz III", "Santa Cruz IV", "Santa Fe", "Santiago", "Santo Cristo", "Santo Domingo", "Santo Niño I",
+  "Santo Niño II", "Santo Niño III", "Zone I", "Zone II", "Zone III", "Zone IV", "Zone V", "Zone VI", "Zone VII",
+  "Zone VIII", "Zone IX", "Zone X", "Zone XI", "Zone XII"
+];
   
   
   
@@ -439,13 +452,14 @@ useEffect(() => {
                      {/* Tabs */}
                      <div className="tabs">
                 <button 
-                    className={`tab-button ${activeTab === 'user' ? 'active' : ''}`}
+                    className={`tab-button-client ${activeTab === 'user' ? 'active' : ''}`}
+         
                     onClick={() => handleTabClick('user')}
                 >
                      Renew Business Permit
                 </button>
                 <button 
-                    className={`tab-button ${activeTab === 'owner' ? 'active' : ''}`}
+                    className={`tab-button-client ${activeTab === 'owner' ? 'active' : ''}`}
                     onClick={() => handleTabClick('owner')}
                 >
                     Owner's Information
@@ -464,7 +478,7 @@ useEffect(() => {
                     <div className="user-info">
                   
                         {/* Add your user information content here */}
-                        <button className="editbutton"onClick={isEditing ? handleSaveBusinessNature : () => setIsEditing(true)}>
+                        <button className="editbutton-client"onClick={isEditing ? handleSaveBusinessNature : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
@@ -528,7 +542,8 @@ useEffect(() => {
           </div>
         ) : null}
       </div>
-      <button onClick={handleAddBusiness}>Add Business</button>
+      <div className='mt-3'>      <button className="addbusiness " onClick={handleAddBusiness}>Add Business</button></div>
+
     </div>
   </>
 )}
@@ -722,7 +737,12 @@ useEffect(() => {
 <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
 
   <label>TIN NUMBER:</label>
-  <input type="number" value={tinnumber} onChange={(e) => setTinNumber(e.target.value)} />
+  <input type="number" value={tinnumber} onChange={(e) => {
+     const value = e.target.value;
+     if (/^\d*$/.test(value) && value.length <= 12) { // Only numbers & max 11 digits
+       setTinNumber(value);
+     }
+  }} />
 
 <label className="checkbox-label">
   <input type="checkbox" checked={representative} onChange={() => setRepresentative(!representative)} />
@@ -762,11 +782,21 @@ useEffect(() => {
 <input type="text" value={barangay} onChange={(e) => setBarangay(e.target.value)} />
 
 <label>Telephone Number</label>
-<input type="text" value={telephonenumber} onChange={(e) => setTelephoneNumber(e.target.value)} />
+<input type="text" value={telephonenumber} onChange={(e) => {
+   const value = e.target.value;
+   if (/^\d*$/.test(value) && value.length <= 12) { // Only numbers & max 11 digits
+     setTelephoneNumber(value);
+   }
+}} />
 
 
 <label>Mobile Number</label>
-<input type="text" value={mobilenumber} onChange={(e) => setMobileNumber(e.target.value)} />
+<input type="text" value={mobilenumber} onChange={(e) => {
+   const value = e.target.value;
+   if (/^\d*$/.test(value) && value.length <= 12) { // Only numbers & max 11 digits
+     setMobileNumber(value);
+   }
+}} />
 
 
 <label>Email Address</label>
@@ -843,15 +873,34 @@ useEffect(() => {
                   <input type="text" value={businessmunicipality} onChange={(e) => setBusinessMunicipality(e.target.value)} disabled />
 
                   <label>Barangay:</label>
-                  <input type="text" value={businessbarangay} onChange={(e) => setbusinessBarangay(e.target.value)} />
+                  <select
+                  value={businessbarangay}
+                  onChange={(e) => setbusinessBarangay(e.target.value)}
+                  className="form-control"
+                >
+                  <option value="" disabled>Select Barangay</option>
+                  {barangays.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
          
 
     
                   <label>Zip:</label>
-                  <input type="text" value={businesszip} onChange={(e) => setBusinessZip(e.target.value)} />
+                  <input type="text" value={businesszip} onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value) && value.length <= 4) { // Only numbers & max 4 digits
+                        setBusinessZip(value);
+                      }
+                  }} />
 
                   <label>Contact Number:</label>
-                  <input type="text" value={businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
+                  <input type="text" value={businesscontactnumber} onChange={(e) => {
+                     const value = e.target.value;
+                     if (/^\d*$/.test(value) && value.length <= 11) { // Only numbers & max 11 digits
+                       setBusinessContactNumber(value);
+                     }
+                  }} />
 
 
                
@@ -1342,10 +1391,10 @@ useEffect(() => {
                   <label>Email Address:</label>
                   <input type="text" value={businessemail} onChange={(e) => setBusinessEmail(e.target.value)} />
 
-                  <label>Business Area:</label>
+                  <label>Business Area (sq. m):</label>
                   <input type="number" value={businessarea} onChange={(e) => setBusinessArea(e.target.value)} />
 
-                  <label>Lot Area:</label>
+                  <label>Lot Area (sq. m):</label>
                   <input type="number" value={businesslotarea} onChange={(e) => setBusinessLotArea(e.target.value)} />
 
                   <label>No of Workers:</label>
