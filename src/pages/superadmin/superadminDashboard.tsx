@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
@@ -139,9 +138,9 @@ const SuperAdminDashboard: React.FC = () => {
           credentials: 'include',
         });
 
-        if (response.status === 403) {
-          console.error('Access denied: No token');
-          navigate('/superadmin/login');
+        if (response.status === 403 || response.status === 401) {
+          console.error('Access denied: Unauthorized');
+          navigate('/superadmin/login'); // Redirect to login page
           return;
         }
 
@@ -149,8 +148,13 @@ const SuperAdminDashboard: React.FC = () => {
           console.log('Access Success');
           return;
         }
+
+        // Handle unexpected responses
+        console.error('Unexpected response:', response.status);
+        navigate('/superadmin/login');
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error('Error checking authentication:', error);
+        navigate('/superadmin/login'); // Redirect on error
       }
     };
 
