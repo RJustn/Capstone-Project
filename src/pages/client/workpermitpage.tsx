@@ -252,7 +252,6 @@ const WorkPermit: React.FC = () => {
     }
   
     const file = selectedFiles[0];
-  
     const maxSizeInBytes = 5 * 1024 * 1024; // 2MB
     const imageTypes = ['image/jpeg', 'image/png'];
     const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
