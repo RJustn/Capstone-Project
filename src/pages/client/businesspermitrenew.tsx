@@ -505,8 +505,17 @@ useEffect(() => {
             lastYearGross: 0,
             tax:'',
           });
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Successfully added business nature.',
+          });
         } else {
-          alert('Please provide valid inputs.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing ID',
+            text: 'Please provide valid inputs.',
+          });
         }
       };
              useEffect(() => {
