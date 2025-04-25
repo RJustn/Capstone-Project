@@ -1010,7 +1010,12 @@ margin-top: 20px;
 }
 
 .tab-button-client.active {
-  background-color: #07943f;
+  background-color: #045e28;
+  color: white;
+}
+
+.tab-button-client:hover {
+  background-color: #0da148;
   color: white;
 }
 
@@ -1023,4 +1028,8 @@ margin-top: 20px;
   cursor: pointer;
   margin: 10px 5px;
   transition: background-color 0.3s;
+}
+
+.editbutton-client:hover {
+  background-color: #07943f;
 }
