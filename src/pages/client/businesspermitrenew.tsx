@@ -534,7 +534,9 @@ useEffect(() => {
 
         {!id ? (
     <div className="error-message">
-      <p style={{ color: "red" }}>Error: No ID provided.</p>
+      <p style={{ color: "green", textAlign: "center", fontSize: "16px" }}>
+        No Business Application found.
+      </p>
     </div>
   ) : (
         <div>
@@ -753,7 +755,7 @@ useEffect(() => {
                 Bureau of Fire Protection:
                 </label>
                 <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document7')} />
-                {fileErrors.document71 && <p style={{ color: 'red' }}>{fileErrors.document7}</p>}
+                {fileErrors.document7 && <p style={{ color: 'red' }}>{fileErrors.document7}</p>}
                 </div>
                 <button className="nextbutton" type="submit" onClick={handleRenewSubmit} >Submit</button>
                         <p>{/* User Info content */}</p>
