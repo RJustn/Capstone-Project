@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
@@ -141,6 +140,12 @@ const SuperAdminDashboard: React.FC = () => {
 
         if (response.status === 403) {
           console.error('Access denied: No token');
+          navigate('/superadmin/login');
+          return;
+        }
+
+        if (response.status === 401) {
+          console.error('Unauthorized: Invalid or expired token');
           navigate('/superadmin/login');
           return;
         }
