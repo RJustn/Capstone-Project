@@ -126,12 +126,13 @@ const Logbook: React.FC = () => {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
-  
+
       if (response.ok) {
-        // Clear any local storage data (if applicable)
+        // Clear cookies and local storage
+        document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem('profile');
         localStorage.removeItem('userId');
-  
+
         // Redirect to the login page
         navigate('/');
       } else {
@@ -144,7 +145,6 @@ const Logbook: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -155,6 +155,12 @@ const Logbook: React.FC = () => {
 
         if (response.status === 403) {
           console.error('Access denied: No token');
+          navigate('/superadmin/login');
+          return;
+        }
+
+        if (response.status === 401) {
+          console.error('Unauthorized: Invalid or expired token');
           navigate('/superadmin/login');
           return;
         }
@@ -181,23 +187,19 @@ const Logbook: React.FC = () => {
         <div className="logo">Logbook</div>
         <div className="user-actions">
           <a href="/superadmin/login" onClick={handleLogout} className="logout">Log Out</a>
-          <span className="notification">&#128276;</span>
         </div>
       </div>
 
       <div className="top-actions">
-          <div className="action-card">
-            <div className="icon create-account"></div>
+          <a className="action-card" href="/superadmin/accountadd">
             <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/dashboard" >
             <a href="/superadmin/dashboard">Dashboard</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/accounts">
             <a href="/superadmin/accounts">Accounts</a>
-          </div>
+          </a>
         </div>
 
       {/* Grid Panels */}

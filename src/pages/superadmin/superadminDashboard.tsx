@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
@@ -113,7 +112,8 @@ const SuperAdminDashboard: React.FC = () => {
       });
   
       if (response.ok) {
-        // Clear any local storage data (if applicable)
+        // Clear cookies and local storage
+        document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem('profile');
         localStorage.removeItem('userId');
   
@@ -140,6 +140,12 @@ const SuperAdminDashboard: React.FC = () => {
 
         if (response.status === 403) {
           console.error('Access denied: No token');
+          navigate('/superadmin/login');
+          return;
+        }
+
+        if (response.status === 401) {
+          console.error('Unauthorized: Invalid or expired token');
           navigate('/superadmin/login');
           return;
         }
@@ -171,18 +177,15 @@ const SuperAdminDashboard: React.FC = () => {
       <div className="SAdashboard">
         {/* Top Action Buttons */}
         <div className="top-actions">
-          <div className="action-card">
-            <div className="icon create-account"></div>
+          <a className="action-card" href="/superadmin/accountadd">
             <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/accounts">
             <a href="/superadmin/accounts">Accounts</a>
-          </div>
-          <div className="action-card">
-            <div className="icon logbook"></div>
+          </a>
+          <a className="action-card" href="/superadmin/logbooks">
             <a href="/superadmin/logbooks">Logbook</a>
-          </div>
+          </a>
         </div>
 
         {/* Grid Panels */}

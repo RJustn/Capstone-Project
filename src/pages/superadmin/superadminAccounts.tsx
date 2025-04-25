@@ -56,13 +56,19 @@ const Accounts: React.FC = () => {
           method: 'GET',
           credentials: 'include',
         });
-  
+
         if (response.status === 403) {
           console.error('Access denied: No token');
           navigate('/superadmin/login');
           return;
         }
-  
+
+        if (response.status === 401) {
+          console.error('Unauthorized: Invalid or expired token');
+          navigate('/superadmin/login');
+          return;
+        }
+
         if (response.status === 204) {
           console.log('Access Success');
           return;
@@ -71,11 +77,9 @@ const Accounts: React.FC = () => {
         console.error('Error fetching dashboard data:', error);
       }
     };
-  
+
     checkAuth();
   }, [navigate]);
-
-
 
   const handleLogout = async () => {
     try {
@@ -83,12 +87,13 @@ const Accounts: React.FC = () => {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
-  
+
       if (response.ok) {
-        // Clear any local storage data (if applicable)
+        // Clear cookies and local storage
+        document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem('profile');
         localStorage.removeItem('userId');
-  
+
         // Redirect to the login page
         navigate('/');
       } else {
@@ -100,7 +105,6 @@ const Accounts: React.FC = () => {
       console.error('Error logging out:', error);
     }
   };
-
 
   if (error) {
     return <div>Error: {error}</div>; // Error message
@@ -150,26 +154,23 @@ const Accounts: React.FC = () => {
         </div>
         <div className="logo">Accounts</div>
         <div className="user-actions">
-          <a href="/superadmin/dashboard" className="return-link">Return</a>
-          <a href="# " className="logout" onClick={handleLogout}>
+          <a href="/superadmin/login" className="logout" onClick={handleLogout}>
             Log Out
           </a>
         </div>
       </div>
 
       <div className="top-actions">
-          <div className="action-card">
+          <a className="action-card" href="/superadmin/accountadd">
             <div className="icon create-account"></div>
             <a href="/superadmin/accountadd">Create Account</a>
-          </div>
-          <div className="action-card">
-            <div className="icon accounts"></div>
+          </a>
+          <a className="action-card" href="/superadmin/dashboard">
             <a href="/superadmin/dashboard">Dashboard</a>
-          </div>
-          <div className="action-card">
-            <div className="icon logbook"></div>
+          </a>
+          <a className="action-card" href="/superadmin/logbooks"> 
             <a href="/superadmin/logbooks">Logbook</a>
-          </div>
+          </a>
         </div>
 
       <div className="superadmin-accounts">
