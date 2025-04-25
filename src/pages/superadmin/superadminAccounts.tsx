@@ -56,13 +56,13 @@ const Accounts: React.FC = () => {
           method: 'GET',
           credentials: 'include',
         });
-  
+
         if (response.status === 403) {
           console.error('Access denied: No token');
           navigate('/superadmin/login');
           return;
         }
-  
+
         if (response.status === 204) {
           console.log('Access Success');
           return;
@@ -71,11 +71,9 @@ const Accounts: React.FC = () => {
         console.error('Error fetching dashboard data:', error);
       }
     };
-  
+
     checkAuth();
   }, [navigate]);
-
-
 
   const handleLogout = async () => {
     try {
@@ -83,12 +81,13 @@ const Accounts: React.FC = () => {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
-  
+
       if (response.ok) {
-        // Clear any local storage data (if applicable)
+        // Clear cookies and local storage
+        document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem('profile');
         localStorage.removeItem('userId');
-  
+
         // Redirect to the login page
         navigate('/');
       } else {
@@ -100,7 +99,6 @@ const Accounts: React.FC = () => {
       console.error('Error logging out:', error);
     }
   };
-
 
   if (error) {
     return <div>Error: {error}</div>; // Error message
