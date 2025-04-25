@@ -7,6 +7,7 @@ import { BusinessPermit, Businesses, BusinessNatureOption } from "../components/
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
 import MapLocation from '../components/MapContents/MapLocation';
 import Select from 'react-select'; 
+import Swal from 'sweetalert2';
 
 
 const barangays = [
@@ -180,22 +181,49 @@ useEffect(() => {
       document6: null,
       document7: null,
     });
+    const [fileErrors, setFileErrors] = useState<{ [key: string]: string }>({});
 
-      const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7') => {
-        const selectedFiles = event.target.files;
-        if (selectedFiles && selectedFiles.length > 0) {
-          setFiles((prev) => ({
-            ...prev,
-            [doc]: selectedFiles[0],
-          }));
-        } else {
-          setFiles((prev) => ({
-            ...prev,
-            [doc]: null,
-          }));
-        }
-      };
+    
+ const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    doc: 'document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10'
+  ) => {
+    const selectedFiles = event.target.files;
+    if (!selectedFiles || selectedFiles.length === 0) {
+      setFiles((prev) => ({ ...prev, [doc]: null }));
+      setFileErrors((prev) => ({ ...prev, [doc]: 'This file is required.' }));
+      return;
+    }
+  
+    const file = selectedFiles[0];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 2MB
+    const imageTypes = ['image/jpeg', 'image/png'];
+    const docTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  
 
+      // Allow only image, pdf, or word files for doc2-4
+      const allowedTypes = [...imageTypes, ...docTypes];
+      if (!allowedTypes.includes(file.type)) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'Only image, PDF, or Word documents are allowed.',
+        }));
+        return;
+      }
+  
+      if (file.size > maxSizeInBytes) {
+        setFileErrors((prev) => ({
+          ...prev,
+          [doc]: 'File size must be less than 5MB.',
+        }));
+        return;
+      }
+  
+      // File is valid
+      setFiles((prev) => ({ ...prev, [doc]: file }));
+      setFileErrors((prev) => ({ ...prev, [doc]: '' }));
+    
+  };
     const handleMaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const male = parseInt(e.target.value) || 0; // Convert to number or default to 0
         setNumofWorkerMale(e.target.value); // Update male workers
@@ -314,6 +342,46 @@ useEffect(() => {
       if (files.document5) formData.append('document5', files.document5);
       if (files.document6) formData.append('document6', files.document6);
       if (files.document7) formData.append('document7', files.document7);
+          // Attach documents if they exist
+          Object.entries(files).forEach(([key, file]) => {
+            if (file) formData.append(key, file);
+          });
+      
+               // Required file check for documents 1 to 4
+            const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7')[] = ['document1', 'document2', 'document3','document4','document5','document6','document7'];
+          
+        
+            // Collect missing documents
+            const missingDocs = requiredDocs.filter((doc) => !files[doc]);
+          
+            if (missingDocs.length > 0) {
+              const updatedErrors = { ...fileErrors };
+              missingDocs.forEach((doc) => {
+                updatedErrors[doc] = 'This file is required.';
+              });
+              setFileErrors(updatedErrors);
+          
+              Swal.fire({
+                icon: 'error',
+                title: 'Missing Required File(s)',
+                text: `Please upload the following documents`,
+              });
+              return;
+            }
+          
+              // Check for any file upload errors
+          const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
+          
+          if (hasFileErrors) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Invalid File Upload',
+              text: 'Please fix the file errors before submitting.',
+            });
+            return; // Stop submission
+          }
+
+
       logFormData(formData);
   
   
@@ -326,14 +394,31 @@ useEffect(() => {
         });
         console.log(response.data);
         if (response.status === 200) {
-          alert('Business Permit Application submitted successfully!');
-          navigate('/dashboard');
-        } else {
+                // Show success message
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Renewal Application Submitted!',
+                  text: 'Your business permit renewal application has been submitted successfully!',
+                  timer: 2000,
+                  showConfirmButton: false,
+                }).then(() => {
+                  navigate('/dashboard');
+                });
+              } else {
           const errorMessage = (response.data as { message: string }).message;
-          console.error('Error submitting application:', errorMessage);
+                 Swal.fire({
+                   icon: 'error',
+                   title: 'Submission Failed',
+                   text: errorMessage || 'Something went wrong. Please try again.',
+                 });
         }
       } catch (error) {
         console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Something went wrong. Please try again later.',
+              });
       }
     };
 
@@ -446,6 +531,12 @@ useEffect(() => {
         <header>
           <h1>Business Renewal</h1>
         </header>
+
+        {!id ? (
+    <div className="error-message">
+      <p style={{ color: "red" }}>Error: No ID provided.</p>
+    </div>
+  ) : (
         <div>
         
 
@@ -465,7 +556,7 @@ useEffect(() => {
                     Owner's Information
                 </button>
                 <button 
-                    className={`tab-button ${activeTab === 'business' ? 'active' : ''}`}
+                    className={`tab-button-client ${activeTab === 'business' ? 'active' : ''}`}
                     onClick={() => handleTabClick('business')}
                 >
                     Business Information
@@ -631,31 +722,38 @@ useEffect(() => {
                 <label>
                   Upload BIR:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document1')} />
+                {fileErrors.document1 && <p style={{ color: 'red' }}>{fileErrors.document1}</p>}
                 <label>
                   Past Business Permit Copy:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document2')} />
+                {fileErrors.document2 && <p style={{ color: 'red' }}>{fileErrors.document2}</p>}
                 <label>
                  Certification of Gross Sales:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
+                {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
                 <label>
                 Zoning:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document4')} />
+                {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
                 <label>
                 Office of the Building Official:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document5')} />
+                {fileErrors.document5 && <p style={{ color: 'red' }}>{fileErrors.document5}</p>}
                 <label>
                 Ctiy Health Office:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document6')} />
+                {fileErrors.document6 && <p style={{ color: 'red' }}>{fileErrors.document6}</p>}
                 <label>
                 Bureau of Fire Protection:
                 </label>
-                <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
+                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document7')} />
+                {fileErrors.document71 && <p style={{ color: 'red' }}>{fileErrors.document7}</p>}
                 </div>
                 <button className="nextbutton" type="submit" onClick={handleRenewSubmit} >Submit</button>
                         <p>{/* User Info content */}</p>
@@ -1451,7 +1549,9 @@ useEffect(() => {
                 ) : null}
             </div>
       </div>
+  )}
       </div>
+      
     </section>
   );
 };
