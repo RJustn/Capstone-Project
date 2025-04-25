@@ -513,7 +513,7 @@ useEffect(() => {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Missing ID',
+            title: 'Invalid Inputs',
             text: 'Please provide valid inputs.',
           });
         }
