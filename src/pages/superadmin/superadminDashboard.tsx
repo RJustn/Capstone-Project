@@ -174,7 +174,7 @@ const SuperAdminDashboard: React.FC = () => {
         <div className="top-actions">
           <a className="action-card" href="/superadmin/accountadd">
             <div className="icon create-account"></div>
-            <span>Create Account</span>
+            <a>Create Account</a>
           </a>
           <a className="action-card" href="/superadmin/accounts">
             <div className="icon accounts"></div>
@@ -182,7 +182,7 @@ const SuperAdminDashboard: React.FC = () => {
           </a>
           <a className="action-card" href="/superadmin/logbooks">
             <div className="icon logbook"></div>
-            <span>Logbook</span>
+            <a>Logbook</a>
           </a>
         </div>
 
