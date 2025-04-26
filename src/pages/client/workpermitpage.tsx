@@ -372,9 +372,12 @@ const WorkPermit: React.FC = () => {
 
     const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4')[] = ['document1', 'document2', 'document3'];
 
-    // Only require document4 if no workPermits exist and classification is not 'Renew'
-    if (workPermits.length === 0 && workpermitclassification !== 'Renew') {
+    if (workpermitclassification !== 'Renew') {
       requiredDocs.push('document4');
+    }
+    
+    if (!currentlyResiding) {
+      requiredDocs.push('document3');
     }
     
     // Collect missing documents
