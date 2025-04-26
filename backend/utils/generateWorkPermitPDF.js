@@ -124,6 +124,33 @@ const generateWorkPermitPDF = async (id) => {
 
       // Page 2 Content
       currentY = doc.page.margins.top + 20;
+      doc.text(`Permit ID: ${workPermit.id || 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Permit Type: ${workPermit.permittype || 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Status: ${workPermit.workpermitstatus || 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Classification: ${workPermit.classification || 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Transaction: ${workPermit.transaction || 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Amount to Pay: ${workPermit.amountToPay !== undefined ? workPermit.amountToPay : 'N/A'}`, leftColumnX, currentY);
+      currentY += 20;
+      
+      currentY = doc.page.margins.top + 20;
+      doc.text(`Name: ${workPermit.formData.personalInformation.lastName || 'N/A'}, ${workPermit.formData.personalInformation.firstName || 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Nationality: ${workPermit.formData.personalInformation.citizenship || 'N/A'} Age: ${workPermit.formData.personalInformation.age || 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Civil Status: ${workPermit.formData.personalInformation.civilStatus || 'N/A'} Sex: ${workPermit.formData.personalInformation.gender || 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Date of Birth: ${workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress || 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
+      doc.moveDown(2);
+      
       doc.fontSize(12).text(
         'This is to certify that the person whose name and identification appear herein is duly permitted by this OFFICE to work as',
         leftColumnX, currentY, { width: 280 }
@@ -139,37 +166,6 @@ const generateWorkPermitPDF = async (id) => {
       doc.text('City Mayor', leftColumnX, currentY + 20);
       currentY += 60;
       doc.text('REMARKS:', leftColumnX, currentY);
-
-      doc.text(`Permit ID: ${workPermit.id}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Permit Type: ${workPermit.permittype}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Status: ${workPermit.workpermitstatus}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Classification: ${workPermit.classification}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Transaction: ${workPermit.transaction}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Amount to Pay: ${workPermit.amountToPay}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Date Issued: ${new Date(workPermit.permitDateIssued).toLocaleDateString()}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Expiry Date: ${new Date(workPermit.permitExpiryDate).toLocaleDateString()}`, leftColumnX, currentY);
-      currentY += 40;
-
-      currentY = doc.page.margins.top + 20;
-      doc.text(`Name: ${workPermit.formData.personalInformation.lastName}, ${workPermit.formData.personalInformation.firstName}`, rightColumnX, currentY);
-      currentY += 20;
-      doc.text(`Nationality: ${workPermit.formData.personalInformation.citizenship} Age: ${workPermit.formData.personalInformation.age}`, rightColumnX, currentY);
-      currentY += 20;
-      doc.text(`Civil Status: ${workPermit.formData.personalInformation.civilStatus} Sex: ${workPermit.formData.personalInformation.gender}`, rightColumnX, currentY);
-      currentY += 20;
-      doc.text(`Date of Birth: ${new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString()}`, rightColumnX, currentY);
-      currentY += 20;
-      doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress}`, rightColumnX, currentY);
-      currentY += 20;
-      doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
-
       // Finalize the PDF
       doc.end();
     } catch (error) {
