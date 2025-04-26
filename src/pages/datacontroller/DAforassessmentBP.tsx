@@ -171,7 +171,13 @@ const DataControllerForAssessmentBP: React.FC = () => {
       const ownerFirstName = permit?.owner.firstname?.toLowerCase() || "";
       const companyName = permit?.owner.companyname?.toLowerCase() || "";
       const permitid = permit?.id?.toString().toLowerCase() || "";
-      return businessName.includes(searchValue) || permitid.includes(searchValue) || permitid.includes(ownerLastName) || permitid.includes(ownerFirstName) || permitid.includes(companyName);
+      return (
+        businessName.includes(searchValue) ||
+        permitid.includes(searchValue) ||
+        ownerLastName.includes(searchValue) ||
+        ownerFirstName.includes(searchValue) ||
+        companyName.includes(searchValue)
+      );
     });
   
     setFilteredItems(filteredBySearch);
