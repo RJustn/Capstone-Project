@@ -117,7 +117,7 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Classification: ${workPermit.classification || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text(`Amount to Pay: ${workPermit.classification === 'new' ? 0 : (workPermit.receipt?.amountPaid !== undefined ? workPermit.receipt?.amountPaid : 'N/A')}`, leftColumnX, currentY);
+      doc.text(`Amount to Pay: ${workPermit.classification === 'new' ? 0 : (workPermit.classification === 'renew' ? 200 : (workPermit.receipt?.amountPaid !== undefined ? workPermit.receipt?.amountPaid : 'N/A'))}`, leftColumnX, currentY);
       currentY += 20;
       doc.moveDown(4);
 
