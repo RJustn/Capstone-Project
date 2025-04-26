@@ -310,6 +310,15 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedPermit) {
+        // Show loading SweetAlert
+        Swal.fire({
+          title: 'Updating Work Permit Details...',
+          text: 'Please wait while we update the application.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
       try {
         const response = await fetch(`https://capstone-project-backend-nu.vercel.app/datacontroller/updateworkpermit/${selectedPermit._id}`, {
           method: 'PUT',
@@ -318,15 +327,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
           },
           body: JSON.stringify({ formData: selectedPermit.formData }),
         });
-  // Show loading SweetAlert
-      Swal.fire({
-        title: 'Updating Work Permit Details...',
-        text: 'Please wait while we update the application.',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+
         if (response.ok) {
           const updatedPermit = await response.json();
           setWorkPermits((prevPermits) =>
@@ -771,6 +772,7 @@ if (type === 'new') {
         style={customModalStyles} // Apply custom styles
       >
         <h2>Edit Work Permit</h2>
+        <p>Application ID: <strong>{selectedPermit?.id}</strong></p>
         {selectedPermit && (
           <form onSubmit={handleFormSubmit}>
             <label>
@@ -1163,7 +1165,7 @@ if (type === 'new') {
                 }
               />
             </label>
-            <div className='mt-1'>
+            <div className='mt-2'>
             <button
   className="btn btn-primary"
   type={isEditing ? "submit" : "button"} // 👉 change the type based on mode
@@ -1198,10 +1200,9 @@ if (type === 'new') {
 >
   <form onSubmit={updateAttachments}>
     <h2>View Attachments</h2>
+    <p>Permit ID: {selectedPermit?.id}</p>
     {selectedPermit && (
       <div>
-        <label>Attachments:</label>
-        <p>Permit ID: {selectedPermit?._id}</p>
         {/* Document 1 */}
         <p>
           1x1 Picture: 
@@ -1296,24 +1297,22 @@ if (type === 'new') {
           />
         </p>
         {renderFile(selectedFiles.document4)}
-        {isEditingAttach ? (
-          <>
-            <button type="button" className="btn btn-danger" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
-              Cancel
-            </button>
-            <button type="button" className="btn btn-success" onClick={updateAttachments} style={{ marginLeft: '10px' }}>
-              Save
-            </button>
-          </>
-        ) : (
-          <button type="button" className="btn btn-success" onClick={() => setIsEditingAttach(true)} style={{ marginLeft: '10px' }}>
-            Edit Attachments
-          </button>
 
-        )}
-        <button type="button" className="btn btn-danger" onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
-            Close
-          </button>
+        <div className='mt-2'>
+        <div>
+  <button className="btn btn-primary" onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
+    {isEditingAttach ? 'Save' : 'Edit'}
+  </button>
+  {isEditingAttach && (
+    <button className="btn btn-primary-cancel" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+      Cancel
+    </button>
+  )}
+  {!isEditingAttach && (
+    <button className="btn btn-primary-cancel" onClick={closeAttachmentsModal} style={{ marginLeft: '10px' }}>Close</button>
+  )}
+</div>
+        </div>
       </div>
 
     )}

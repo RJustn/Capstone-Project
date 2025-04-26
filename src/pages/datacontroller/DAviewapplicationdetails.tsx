@@ -571,8 +571,8 @@ return (
 {workPermit.workpermitstatus === 'Pending' && (
               <p>
                 <div className='pagination' style={{ justifyContent: 'center', alignItems: 'center'}}>
-        <button className="btn btn-success" onClick={handleUpdate}>Accept Application</button>
-        <button className="btn btn-danger" onClick={openRejectModal}>Reject Application</button>
+        <button className="btn btn-primary" onClick={handleUpdate}>Accept Application</button>
+        <button className="btn btn-primary-cancel" onClick={openRejectModal}>Reject Application</button>
         </div>
         </p>
       )}
@@ -606,8 +606,8 @@ return (
       
 
 {showRejectModal && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="modal-overlay" onClick={closeRejectModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Reject Application</h2>
             {!isCommentVisible ? (
               <>

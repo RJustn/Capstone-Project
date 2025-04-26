@@ -273,7 +273,7 @@ const WorkPermit: React.FC = () => {
       const objectUrl = URL.createObjectURL(file);
       img.onload = () => {
         if (img.width !== img.height) {
-          setFileErrors((prev) => ({ ...prev, [doc]: 'Image must be a 1x1 (square) picture.' }));
+          setFileErrors((prev) => ({ ...prev, [doc]: 'Image must be a 2x2 (square) picture.' }));
           URL.revokeObjectURL(objectUrl);
           return;
         }
