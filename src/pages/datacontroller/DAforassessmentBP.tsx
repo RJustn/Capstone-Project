@@ -1206,27 +1206,27 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     ))}
   </tbody>
           </table>
-            {totalPages > 1 && (
-    <div className="d-flex justify-content-right align-items-center mt-3 pagination">
-      <button
-        onClick={handlePreviousPage}
-        disabled={currentPage === 0}
-        className="btn btn-danger me-2"
-      >
-        Previous
-      </button>
-      <span className="me-2" style={{ marginTop: "5px" }}>
-        Page {currentPage + 1} of {totalPages}
-      </span>
-      <button
-        onClick={handleNextPage}
-        disabled={currentPage === totalPages - 1}
-        className="btn"
-      >
-        Next
-      </button>
-    </div>
-  )}
+          {totalPages > 1 && (
+  <div className="d-flex justify-content-end align-items-center mt-3 pagination">
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      className="pagination-button"
+    >
+      Previous
+    </button>
+    <span className="page-info me-2" style={{ marginTop: "5px" }}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      className="pagination-button"
+    >
+      Next
+    </button>
+  </div>
+)}
 </div>
   ) }
         </div>
