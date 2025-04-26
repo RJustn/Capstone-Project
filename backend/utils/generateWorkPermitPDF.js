@@ -124,14 +124,18 @@ const generateWorkPermitPDF = async (id) => {
         currentY
       );
       currentY += 20;
-      doc.moveDown(8);
+      doc.moveDown(10);
 
       currentY = doc.page.margins.top + 20;
       doc.text(`Name: ${workPermit.formData.personalInformation.lastName || 'N/A'}, ${workPermit.formData.personalInformation.firstName || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
-      doc.text(`Nationality: ${workPermit.formData.personalInformation.citizenship || 'N/A'} Age: ${workPermit.formData.personalInformation.age || 'N/A'}`, rightColumnX, currentY);
+      doc.text(`Nationality: ${workPermit.formData.personalInformation.citizenship || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
-      doc.text(`Civil Status: ${workPermit.formData.personalInformation.civilStatus || 'N/A'} Sex: ${workPermit.formData.personalInformation.gender || 'N/A'}`, rightColumnX, currentY);
+      doc.text(`Age: ${workPermit.formData.personalInformation.age || 'N/A'}`, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Civil Status: ${workPermit.formData.personalInformation.civilStatus || 'N/A'} `, rightColumnX, currentY);
+      currentY += 20;
+      doc.text(`Sex: ${workPermit.formData.personalInformation.gender || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
       doc.text(`Date of Birth: ${workPermit.formData.personalInformation.dateOfBirth ? new Date(workPermit.formData.personalInformation.dateOfBirth).toLocaleDateString() : 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
