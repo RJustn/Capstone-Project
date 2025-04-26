@@ -155,7 +155,7 @@ const DataControllerForAssessmentBP: React.FC = () => {
   //Table Code
 
 // Date Search
-  const [, setSearchQuery] = useState<string>(''); // Track the search query
+
   const [inputValue, setInputValue] = useState<string>('');
 
   // Get current items
@@ -163,9 +163,17 @@ const DataControllerForAssessmentBP: React.FC = () => {
 
   // Handle the search when the button is clicked
   const handleSearch = () => {
-    const searchValue = inputValue; // Use input value for search
-    setSearchQuery(searchValue); // Update search query state
+    const searchValue = inputValue.toLowerCase(); // normalize input
+    const filteredBySearch = businessPermits.filter((permit) => {
+      const businessName = permit?.business.businessname?.toLowerCase() || "";
+      const permitid = permit?.id?.toString().toLowerCase() || "";
+      return businessName.includes(searchValue) || permitid.includes(searchValue);
+    });
+  
+    setFilteredItems(filteredBySearch);
+    setCurrentPage(0); // Reset to the first page of results
   };
+  
 
 const [startDate, setStartDate] = useState<string>('');
 const [endDate, setEndDate] = useState<string>('');
