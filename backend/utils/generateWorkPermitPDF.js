@@ -105,8 +105,9 @@ const generateWorkPermitPDF = async (id) => {
 
       // Add a new page
       doc.addPage({ size: 'A4', layout: 'landscape' });
-
-      // Page 2 Content
+      doc.fontSize(15).text('Account Details', centerX, currentY, { align: 'center' });
+      currentY += 20;
+      
       currentY = doc.page.margins.top + 20;
       doc.text(`Permit ID: ${workPermit.id || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
@@ -114,8 +115,9 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Classification: ${workPermit.classification || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text(`Amount to Pay: ${workPermit.amountToPay !== undefined ? workPermit.amountToPay : 'N/A'}`, leftColumnX, currentY);
+      doc.text(`Amount to Pay: ${workPermit.classification === 'new' ? 0 : (workPermit.receipt?.amountPaid !== undefined ? workPermit.receipt?.amountPaid : 'N/A')}`, leftColumnX, currentY);
       currentY += 20;
+      doc.moveDown(4);
 
       currentY = doc.page.margins.top + 20;
       doc.text(`Name: ${workPermit.formData.personalInformation.lastName || 'N/A'}, ${workPermit.formData.personalInformation.firstName || 'N/A'}`, rightColumnX, currentY);
@@ -128,8 +130,6 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
-      doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
-      doc.moveDown(8);
       
       doc.fontSize(12).text(
         'This is to certify that the person whose name and identification appear herein is duly permitted by this OFFICE to work as',
