@@ -1085,43 +1085,61 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
         <div className='workpermittable'>
         <p>{displayTextTitle}</p>
 
-        <div className="search-filter mt-1">
+        <div className="mt-4 space-y-6">
   {/* Search Bar */}
-  <label>Search:</label>
-  <div className="search-bar-container">
-    <input
-      type="text"
-      placeholder="Search by ID, Status, or Classification"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      className="search-input"
-    />
-    <button onClick={handleSearch} className="search-button">Search</button>
+  <div className="flex flex-col space-y-2">
+    <label className="text-sm font-semibold text-gray-700">Search:</label>
+    <div className="flex items-center gap-2">
+      <input
+        type="text"
+        placeholder="Search by ID, Name, or Address"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      />
+      <button
+        onClick={handleSearch}
+        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Search
+      </button>
+    </div>
   </div>
 
   {/* Date Filter */}
-  <div className="date-filter mt-3">
-    <label>Start Date:</label>
-    <div className="date-picker-container">
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        max={maxDate}
-      />
-      <label>End Date:</label>
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        max={maxDate}
-      />
-      <button onClick={handleDateSearch} className="search-button">
+  <div className="flex flex-col space-y-2">
+    <label className="text-sm font-semibold text-gray-700">Filter by Date:</label>
+    <div className="flex flex-col md:flex-row items-center gap-4">
+      <div className="flex flex-col">
+        <label className="text-xs text-gray-500">Start Date</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          max={maxDate}
+          className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label className="text-xs text-gray-500">End Date</label>
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          max={maxDate}
+          className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        />
+      </div>
+      <button
+        onClick={handleDateSearch}
+        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mt-2 md:mt-5"
+      >
         Search by Date
       </button>
     </div>
   </div>
 </div>
+
 
        {businessPermits.length === 0 ? (
     <div className="error-message mt-3">
