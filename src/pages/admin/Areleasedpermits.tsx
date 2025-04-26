@@ -50,31 +50,36 @@ return (
             <h1>Online Business and Work Permit Licensing System</h1>
         </header>
         <div className="button-container">
-            <a href='AreleasedpermitsWP/new' className='DAworkpermitbutton'>
-              Released New Working Permit
-            </a>
 
-            <a href='AreleasedpermitsWP/renew' className='DAworkpermitbutton'>
-              Released Renew Working Permit
-            </a>
-
-            <a href='AreleasedpermitsWP/' className='DAworkpermitbutton'>
-              View All Released  Working Permit
-            </a>
-        </div>
-
-        <div className="button-container">
-        <a href='AreleasedpermitsBP/new' className='DAbusinesspermitbutton'>
+            <a href="/AreleasedpermitsBP/new" className='DAbusinesspermitbutton'>
               Released New Business Permit
             </a>
 
-            <a href='AreleasedpermitsBP/renew' className='DAbusinesspermitbutton'>
+            <a href="/AreleasedpermitsBP/renew" className='DAbusinesspermitbutton'>
               Released Renew Business Permit
             </a>
 
-            <a href='AreleasedpermitsBP/' className='DAbusinesspermitbutton'>
+            <a href="/AreleasedpermitsBP/" className='DAbusinesspermitbutton'>
               View All Released  Business Permit
             </a>   
+
+
+        </div>
+
+        <div className="button-container">
+
+
+            <a href="/AreleasedpermitsWP/new" className='DAworkpermitbutton'>
+              Released New Working Permit
+            </a>
+
+            <a href="/AreleasedpermitsWP/renew" className='DAworkpermitbutton'>
+              Released Renew Working Permit
+            </a>
+
+            <a href="/AreleasedpermitsWP/" className='DAworkpermitbutton'>
+              View All Released  Working Permit
+            </a>
         </div>
     </div>
     </section>

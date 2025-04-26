@@ -163,7 +163,7 @@ const DataControllerAccount: React.FC = () => {
               </div>
 
               <div>
-                <button className='viewpermitbutton' onClick={handleButtonClick}>
+                <button className='back-button' onClick={handleButtonClick}>
                   {isFormVisible ? 'Close' : 'Change Password?'}
                 </button>
 
@@ -177,6 +177,7 @@ const DataControllerAccount: React.FC = () => {
                         <div className="form-group">
                           <label htmlFor="email">Email:</label>
                           <input
+                          disabled
                             type="email"
                             id="email"
                             value={email}
@@ -216,7 +217,7 @@ const DataControllerAccount: React.FC = () => {
                         <button type="button" className="cancelForgotPassword" onClick={handleButtonClick}>
                           Cancel
                         </button>
-                        <button type="button" className="verifyemail" onClick={handleChangePassword}>
+                        <button type="button" className="back-button" onClick={handleChangePassword}>
                           Change Password
                         </button>
                       </div>
