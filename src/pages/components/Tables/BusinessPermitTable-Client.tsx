@@ -11,6 +11,7 @@ interface BusinessPermitTableProps {
 
 }
 
+
 const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermits}) => {
     const navigate = useNavigate();
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
@@ -27,7 +28,9 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
       return newSet;
     });
     };
-  
+
+
+    
     //Functions
    //Delete Function
   const [deleteconfirm, setDeleteConfirm] = useState(false);
@@ -61,9 +64,22 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
     setActivePermitId(null);
   
   };
+  // Removed unused file errors state
+
+  // Removed unused validateFiles function
   
   const handleRetireBusiness = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!files.document1 || !files.document2) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Documents',
+        text: 'Please upload all required documents.',
+      });
+      return;
+    }
+
   
     if (!activePermitId?._id) {
       Swal.fire({
@@ -325,20 +341,50 @@ const [files, setFiles] = useState<{
 
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, doc: 'document1' | 'document2' | 'document3' ) => {
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    doc: 'document1' | 'document2' | 'document3'
+  ) => {
     const selectedFiles = event.target.files;
-  if (selectedFiles && selectedFiles.length > 0) {
-    setFiles((prev) => ({
-      ...prev,
-      [doc]: selectedFiles[0],
-    }));
-  } else {
-    setFiles((prev) => ({
-      ...prev,
-      [doc]: null, 
-    }));
-  }
-};
+  
+    if (selectedFiles && selectedFiles.length > 0) {
+      const file = selectedFiles[0];
+  
+      // Validate file type
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid File Type',
+          text: 'Please upload a valid file type (PNG, JPG, JPEG, PDF, DOC, DOCX).',
+        });
+        return;
+      }
+  
+      // Validate file size (e.g., max 5MB)
+      const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSizeInBytes) {
+        Swal.fire({
+          icon: 'error',
+          title: 'File Too Large',
+          text: 'The file size exceeds the 5MB limit. Please upload a smaller file.',
+        });
+        return;
+      }
+  
+      // If validation passes, set the file
+      setFiles((prev) => ({
+        ...prev,
+        [doc]: file,
+      }));
+    } else {
+      // If no file is selected, reset the state for the document
+      setFiles((prev) => ({
+        ...prev,
+        [doc]: null,
+      }));
+    }
+  };
 
 
   //Modals
@@ -847,6 +893,7 @@ const [files, setFiles] = useState<{
 )}
 
 {retireBusinessModal && activePermitId && (
+  
   <div
     className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
     style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
@@ -871,22 +918,25 @@ const [files, setFiles] = useState<{
       <p className="mb-3 text-muted">Please upload the required documents:</p>
 
       <div className="mb-3">
-        <label className="form-label">Business Retire Document</label>
-        <input
-          type="file"
-          className="form-control"
-          onChange={(e) => handleFileChange(e, "document1")}
-        />
-      </div>
+  <label className="form-label">Business Retire Document</label>
+  <input
+    type="file"
+    className="form-control"
+    accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
+    onChange={(e) => handleFileChange(e, "document1")}
+  />
+</div>
 
-      <div className="mb-4">
-        <label className="form-label">Past Business Permit</label>
-        <input
-          type="file"
-          className="form-control"
-          onChange={(e) => handleFileChange(e, "document2")}
-        />
-      </div>
+<div className="mb-4">
+  <label className="form-label">Past Business Permit</label>
+  <input
+    type="file"
+    className="form-control"
+    accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
+    onChange={(e) => handleFileChange(e, "document2")}
+  />
+  
+</div>
 
       <div className="d-flex justify-content-end gap-2">
         <button className="btn btn-success" onClick={handleRetireBusiness}>
