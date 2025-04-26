@@ -64,48 +64,18 @@ const generateBusinessPermitPDF = async (id) => {
         doc.moveDown(2);
     
         // Business Details
-        doc.text(`Business Name: ${businessPermit.business?.name || 'N/A'}`);
-        doc.text(`Location: ${businessPermit.business?.location || 'N/A'}`);
+        doc.text(`Business Name: ${businessPermit.businessname || 'N/A'}`);
+        doc.text(`Location: ${businessPermit.businessbarangay || 'N/A'}`);
         doc.text(`Payment Status: ${businessPermit.paymentStatus || 'N/A'}`);
-        doc.text(`Taxpayer Name: ${businessPermit.owner?.fullname || 'N/A'}`);
+        doc.text(`Taxpayer Name: ${businessPermit.owner?.firstname || ''} ${businessPermit.owner?.lastname || 'N/A'}`);
         doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
         doc.text(`Permit Number: ${businessPermit.permitnumber || 'N/A'}`);
+        doc.text(`Total Tax: ${businessPermit.totaltax || 'N/A'}`);
         doc.text(`Business Status: ${businessPermit.businesspermitstatus || 'N/A'}`); // Added line
         doc.text(`Date Issued: ${businessPermit.permitDateIssued || 'N/A'}`);
         doc.text(`Expiry Date: ${businessPermit.permitExpiryDate || 'N/A'}`);
         doc.moveDown(2);
-    
-        // Table Headers
-        const tableHeaders = [
-          'Description', 'Tax Base', 'Amount', 'Surcharge',
-          '1st Qtr.', '2nd Qtr.', '3rd Qtr.', '4th Qtr.'
-        ];
-    
-        const rowData = [
-          'Gross Sales', 
-          businessPermit.totalgrosssales || 'N/A', 
-          businessPermit.totaltax || 'N/A', 
-          '0', 
-          businessPermit.totaltax / 4 || 'N/A', 
-          businessPermit.totaltax / 4 || 'N/A', 
-          businessPermit.totaltax / 4 || 'N/A', 
-          businessPermit.totaltax / 4 || 'N/A'
-        ];
-        const columnWidth = 60;
-    
-        // Render Table Headers
-        tableHeaders.forEach((header, index) => {
-          doc.text(header, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
-        });
-    
-        doc.moveDown(1);
-    
-        // Render Table Data
-        rowData.forEach((data, index) => {
-          doc.text(data, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
-        });
-    
-        doc.moveDown(3);
+  
 
         // Statement of Account Section
         doc.moveDown(2);
@@ -113,6 +83,7 @@ const generateBusinessPermitPDF = async (id) => {
         doc.moveDown();
 
         const statement = businessPermit.statementofaccount || {};
+        const leftMargin = 50;
         doc.fontSize(10).text(`Date Assessed: ${statement.dateassessed || 'N/A'}`);
         doc.text(`Mayor's Permit: ${statement.mayorspermit || 'N/A'}`);
         doc.text(`Sanitary Fee: ${statement.sanitary || 'N/A'}`);
