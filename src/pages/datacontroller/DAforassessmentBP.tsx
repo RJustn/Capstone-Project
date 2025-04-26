@@ -170,13 +170,15 @@ const DataControllerForAssessmentBP: React.FC = () => {
       const ownerLastName = permit?.owner.lastname?.toLowerCase() || "";
       const ownerFirstName = permit?.owner.firstname?.toLowerCase() || "";
       const companyName = permit?.owner.companyname?.toLowerCase() || "";
+      const businessLocation = permit?.business.businessbuildingblocklot?.toLowerCase() || "";
       const permitid = permit?.id?.toString().toLowerCase() || "";
       return (
         businessName.includes(searchValue) ||
         permitid.includes(searchValue) ||
         ownerLastName.includes(searchValue) ||
         ownerFirstName.includes(searchValue) ||
-        companyName.includes(searchValue)
+        companyName.includes(searchValue) ||
+        businessLocation.includes(searchValue)
       );
     });
   
@@ -1094,29 +1096,38 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
             />
             <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
           </div>
-
-
-          {/* Date Pickers for Date Range Filter */}
-          Start Date:
-          <div className="date-picker-container">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              max={maxDate} // Set the maximum date to today
-              placeholder="Start Date"
-            />
-            End Date:
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              max={maxDate} // Set the maximum date to today
-              placeholder="End Date"
-            />
-            <button onClick={handleDateSearch} className="search-button">Search by Date</button>
+          <div className="date-filter">
+  {/* Date Pickers for Date Range Filter */}
+  <label>Start Date:</label>
+  <div className="date-picker-container">
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+      max={maxDate}
+      placeholder="Start Date"
+    />
+    <label>End Date:</label>
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      max={maxDate}
+      placeholder="End Date"
+    />
+    <button onClick={handleDateSearch} className="search-button">
+      Search by Date
+    </button>
+  </div>
           </div>
-
+       {businessPermits.length === 0 ? (
+    <div className="error-message">
+      <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+        No Business Application found.
+      </p>
+    </div>
+  ) : (
+    <div>
           <table className="permit-table">
             <thead>
               <tr>
@@ -1192,27 +1203,29 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     ))}
   </tbody>
           </table>
-          {totalPages > 1 && (
-  <div className="pagination">
-    <button
-      onClick={handlePreviousPage}
-      disabled={currentPage === 0}
-      className="btn btn-danger"
-    >
-      Previous
-    </button>
-    <span style={{ margin: "0 10px", marginTop: "8px" }}>
-      Page {currentPage + 1} of {totalPages}
-    </span>
-    <button
-      onClick={handleNextPage}
-      disabled={currentPage === totalPages - 1}
-      className="btn btn-success"
-    >
-      Next
-    </button>
-  </div>
-)}
+            {totalPages > 1 && (
+    <div className="d-flex justify-content-start align-items-center mt-3 pagination">
+      <button
+        onClick={handlePreviousPage}
+        disabled={currentPage === 0}
+        className="btn btn-danger me-2"
+      >
+        Previous
+      </button>
+      <span className="me-2" style={{ marginTop: "5px" }}>
+        Page {currentPage + 1} of {totalPages}
+      </span>
+      <button
+        onClick={handleNextPage}
+        disabled={currentPage === totalPages - 1}
+        className="btn btn-success"
+      >
+        Next
+      </button>
+    </div>
+  )}
+</div>
+  ) }
         </div>
 
 {editownermodal && activePermitId && (

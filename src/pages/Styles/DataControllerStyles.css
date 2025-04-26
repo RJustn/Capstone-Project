@@ -553,3 +553,66 @@ h2 {
 }
 
 
+.pagination {
+  padding: 10px;
+  background-color: #0f73d8; /* light grey background */
+  border: 1px solid #dee2e6; /* subtle border */
+  border-radius: 8px; /* rounded corners */
+  width: fit-content; /* only as wide as needed */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* soft shadow */
+}
+
+.pagination button {
+  min-width: 100px; /* buttons have minimum width */
+  font-weight: 600; /* slightly bolder text */
+}
+
+.pagination span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff; /* dark grey text */
+}
+
+.pagination button:disabled {
+  opacity: 0.6; /* make disabled buttons look lighter */
+  cursor: not-allowed;
+}
+
+.date-filter {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f1f3f5; /* light grey background */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  width: fit-content;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* spacing between inputs and button */
+  margin-top: 10px;
+}
+
+.date-picker-container input[type="date"] {
+  padding: 5px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.search-button {
+  padding: 6px 15px;
+  background-color: #0d6efd; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #0b5ed7; /* slightly darker blue on hover */
+  cursor: pointer;
+}
