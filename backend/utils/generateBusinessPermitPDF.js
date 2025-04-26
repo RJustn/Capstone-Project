@@ -16,6 +16,7 @@ const generateBusinessPermitPDF = async (id) => {
       const doc = new PDFDocument();
       const businessPermit = await BusinessPermit.findById(id);
       if (!businessPermit) {
+        console.error(`Business permit with ID ${id} not found`); // Log missing business permit
         return reject(new Error('Business permit not found'));
       }
 
@@ -32,12 +33,16 @@ const generateBusinessPermitPDF = async (id) => {
               public_id: permitFileName
             },
             (error, result) => {
-              if (error) return reject(error);
+              if (error) {
+                console.error('Cloudinary upload error:', error); // Log Cloudinary error
+                return reject(error);
+              }
               resolve(result.secure_url);
             }
           );
           uploadResponse.end(pdfBuffer);
         } catch (uploadError) {
+          console.error('Error during PDF upload:', uploadError); // Log upload error
           reject(uploadError);
         }
       });
@@ -124,6 +129,7 @@ const generateBusinessPermitPDF = async (id) => {
         doc.text('City Mayor', { align: 'left' });
       doc.end();
     } catch (error) {
+      console.error('Error generating business permit PDF:', error); // Log general error
       reject(error);
     }
   });
