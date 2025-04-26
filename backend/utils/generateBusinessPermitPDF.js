@@ -16,7 +16,6 @@ const generateBusinessPermitPDF = async (id) => {
       const doc = new PDFDocument();
       const businessPermit = await BusinessPermit.findById(id);
       if (!businessPermit) {
-        console.error(`Business permit with ID ${id} not found`); // Log missing business permit
         return reject(new Error('Business permit not found'));
       }
 
@@ -33,16 +32,12 @@ const generateBusinessPermitPDF = async (id) => {
               public_id: permitFileName
             },
             (error, result) => {
-              if (error) {
-                console.error('Cloudinary upload error:', error); // Log Cloudinary error
-                return reject(error);
-              }
+              if (error) return reject(error);
               resolve(result.secure_url);
             }
           );
           uploadResponse.end(pdfBuffer);
         } catch (uploadError) {
-          console.error('Error during PDF upload:', uploadError); // Log upload error
           reject(uploadError);
         }
       });
@@ -69,19 +64,20 @@ const generateBusinessPermitPDF = async (id) => {
         doc.moveDown(2);
     
         // Business Details
-        // doc.text(`Business Name: ${businessPermit.business?.businessname || 'N/A'}`);
-        // doc.text(`Location: ${businessPermit.business?.businessbarangay || 'N/A'}`);
-        // doc.text(`Taxpayer Name: ${businessPermit.owner?.firstname || ''} ${businessPermit.owner?.lastname || 'N/A'}`);
-        // doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
-        // doc.text(`Business Nature: ${businessPermit.businesses?.[0]?.businessNature || 'N/A'}`);
-        // doc.text(`Permit Number: ${businessPermit.permitnumber || 'N/A'}`);
-        // doc.text(`Total Tax: ${businessPermit.totaltax || 'N/A'}`);
-        // doc.text(`Date Issued: ${businessPermit.permitDateIssued || 'N/A'}`);
-        // doc.text(`Expiry Date: ${businessPermit.permitExpiryDate || 'N/A'}`);
-        // doc.moveDown(2);
+        doc.text(`Business Name: ${businessPermit.name || 'N/A'}`);
+        doc.text(`Location: ${businessPermit.location || 'N/A'}`);
+        doc.text(`Taxpayer Name: ${businessPermit.owner?.fullname || 'N/A'}`);
+        doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
+        doc.moveDown(2);
     
         // Table Headers
-     
+        const tableHeaders = [
+          'Description', 'Tax Base', 'Amount', 'Surcharge',
+          '1st Qtr.', '2nd Qtr.', '3rd Qtr.', '4th Qtr.'
+        ];
+    
+        const rowData = ['Sample Desc', '1000', '500', '50', '125', '125', '125', '125'];
+        const columnWidth = 60;
     
         // Render Table Headers
         tableHeaders.forEach((header, index) => {
@@ -96,32 +92,6 @@ const generateBusinessPermitPDF = async (id) => {
         });
     
         doc.moveDown(3);
-
-        // Statement of Account Section
-        // doc.moveDown(2);
-        // doc.fontSize(12).text('Statement of Account', { align: 'center', underline: true });
-        // doc.moveDown();
-
-        // const statement = businessPermit.statementofaccount || {};
-        // const leftMargin = 50;
-        // doc.fontSize(10).text(`Date Assessed: ${statement.dateassessed || 'N/A'}`);
-        // doc.text(`Mayor's Permit: ${statement.mayorspermit || 'N/A'}`);
-        // doc.text(`Sanitary Fee: ${statement.sanitary || 'N/A'}`);
-        // doc.text(`Health Fee: ${statement.health || 'N/A'}`);
-        // doc.text(`Business Plate Fee: ${statement.businessplate || 'N/A'}`);
-        // doc.text(`Zoning Clearance Fee: ${statement.zoningclearance || 'N/A'}`);
-        // doc.text(`Annual Inspection Fee: ${statement.annualInspection || 'N/A'}`);
-        // doc.text(`Environmental Fee: ${statement.environmental || 'N/A'}`);
-        // doc.text(`Miscellaneous Fee: ${statement.miscfee || 'N/A'}`);
-        // doc.text(`Liquor/Tobacco Fee: ${statement.liquortobaco || 'N/A'}`);
-        // doc.text(`Liquor Plate Fee: ${statement.liquorplate || 'N/A'}`);
-        // doc.moveDown();
-
-        if (statement.statementofaccountfile) {
-          doc.text(`Statement of Account File: ${statement.statementofaccountfile}`, { link: statement.statementofaccountfile, underline: true });
-        }
-
-        doc.moveDown(2);
     
         // Footer (City Mayor Signature)
         doc.text('___________________________________', { align: 'left' });
@@ -129,12 +99,12 @@ const generateBusinessPermitPDF = async (id) => {
         doc.text('City Mayor', { align: 'left' });
       doc.end();
     } catch (error) {
-      console.error('Error generating business permit PDF:', error); // Log general error
       reject(error);
     }
   });
 };
 
 module.exports = { generateBusinessPermitPDF };
+
 
 
