@@ -64,18 +64,33 @@ const generateBusinessPermitPDF = async (id) => {
         doc.moveDown(2);
     
         // Business Details
-        doc.text(`Business Name: ${businessPermit.businessname || 'N/A'}`);
-        doc.text(`Location: ${businessPermit.businessbarangay || 'N/A'}`);
-        doc.text(`Payment Status: ${businessPermit.paymentStatus || 'N/A'}`);
+        doc.text(`Business Name: ${businessPermit.business?.businessname || 'N/A'}`);
+        doc.text(`Location: ${businessPermit.business?.businessbarangay || 'N/A'}`);
         doc.text(`Taxpayer Name: ${businessPermit.owner?.firstname || ''} ${businessPermit.owner?.lastname || 'N/A'}`);
         doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
+        doc.text(`Business Nature: ${businessPermit.businesses?.[0]?.businessNature || 'N/A'}`);
         doc.text(`Permit Number: ${businessPermit.permitnumber || 'N/A'}`);
         doc.text(`Total Tax: ${businessPermit.totaltax || 'N/A'}`);
-        doc.text(`Business Status: ${businessPermit.businesspermitstatus || 'N/A'}`); // Added line
         doc.text(`Date Issued: ${businessPermit.permitDateIssued || 'N/A'}`);
         doc.text(`Expiry Date: ${businessPermit.permitExpiryDate || 'N/A'}`);
         doc.moveDown(2);
-  
+    
+        // Table Headers
+     
+    
+        // Render Table Headers
+        tableHeaders.forEach((header, index) => {
+          doc.text(header, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
+        });
+    
+        doc.moveDown(1);
+    
+        // Render Table Data
+        rowData.forEach((data, index) => {
+          doc.text(data, 50 + index * columnWidth, doc.y, { width: columnWidth, align: 'center' });
+        });
+    
+        doc.moveDown(3);
 
         // Statement of Account Section
         doc.moveDown(2);

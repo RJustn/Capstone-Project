@@ -57,6 +57,18 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
       doc.text(`Mode of Payment: ${BusinessPermitContent.business.paymentmethod}`);
       doc.moveDown();
       doc.text(`Total Amount: ₱${ContentData.total}`, { bold: true });
+      doc.moveDown();
+      doc.fontSize(10).text(`Date Assessed: ${ContentData.statement?.dateassessed || 'N/A'}`);
+      doc.text(`Mayor's Permit: ${ContentData.statement?.mayorspermit || 'N/A'}`);
+      doc.text(`Sanitary Fee: ${ContentData.statement?.sanitary || 'N/A'}`);
+      doc.text(`Health Fee: ${ContentData.statement?.health || 'N/A'}`);
+      doc.text(`Business Plate Fee: ${ContentData.statement?.businessplate || 'N/A'}`);
+      doc.text(`Zoning Clearance Fee: ${ContentData.statement?.zoningclearance || 'N/A'}`);
+      doc.text(`Annual Inspection Fee: ${ContentData.statement?.annualInspection || 'N/A'}`);
+      doc.text(`Environmental Fee: ${ContentData.statement?.environmental || 'N/A'}`);
+      doc.text(`Miscellaneous Fee: ${ContentData.statement?.miscfee || 'N/A'}`);
+      doc.text(`Liquor/Tobacco Fee: ${ContentData.statement?.liquortobaco || 'N/A'}`);
+      doc.text(`Liquor Plate Fee: ${ContentData.statement?.liquorplate || 'N/A'}`);
       doc.end();
     } catch (error) {
       console.error('Error generating statement of account PDF:', error);
