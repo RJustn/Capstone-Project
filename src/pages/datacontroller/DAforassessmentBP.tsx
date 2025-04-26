@@ -2536,8 +2536,13 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
             <h2>Reject Permit {activePermitId.id}?</h2>
             <p>Are you sure you want to reject this permit? Please confirm your decision.</p>
 
-            <div className="" style={{justifyContent:"center", width:"100%"}}>
-              <button className="btn btn-primary" onClick={() => {
+            <div className="" style={{
+              display: "flex",        // Add flex display
+              justifyContent: "center", 
+              width: "100%",
+              marginTop: "20px"        // (Optional) add some spacing if needed
+            }}>
+              <button style={{ marginLeft: '10px' }} className="btn btn-primary" onClick={() => {
                 closeRejectpermit(); // Show remarks input when rejecting
               }}>No</button>
               <button className="btn btn-primary-cancel" onClick={() => {
@@ -2549,19 +2554,55 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
             {/* Show remarks input if rejecting */}
             {isRejecting && (
-              <div>
-                <label>Remarks:</label>
-                <textarea
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Enter remarks for rejection"
-                />
-              <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
-              </div>
-            )}
-            <button className="btn btn-primary-cancel" onClick={closeRejectpermit}>
-              Close
-            </button>
+  <div 
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%",
+      marginTop: "20px",
+    }}
+  >
+    <label 
+      style={{
+        fontWeight: "bold",
+        marginBottom: "8px",
+        fontSize: "16px",
+      }}
+    >
+      Remarks:
+    </label>
+
+    <textarea
+      value={remarks}
+      onChange={(e) => setRemarks(e.target.value)}
+      placeholder="Enter remarks for rejection"
+      style={{
+        width: "300px",
+        height: "100px",
+        padding: "10px",
+        borderRadius: "5px",
+        border: "1px solid #ccc",
+        resize: "none",
+        fontSize: "14px",
+        marginBottom: "15px",
+      }}
+    />
+
+    <button 
+      className="btn btn-primary" 
+      onClick={() => updatebusinesspermitstatus('rejected', remarks)}
+      style={{
+        padding: "10px 20px",
+        fontSize: "16px",
+        cursor: "pointer",
+      }}
+    >
+      Save
+    </button>
+  </div>
+)}
+
           </div>
         </div>
       )}

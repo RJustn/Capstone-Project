@@ -585,7 +585,7 @@ h2 {
 
 
 .btn-primary {
-  background-color: #0074f1; /* Custom blue */
+  background-color: #0056b3; /* Custom blue */
   color: white;
   border: none;
   border-radius: 5px;
@@ -598,7 +598,7 @@ h2 {
 }
 
 .btn-primary:hover {
-  background-color: #0056b3; /* Darker on hover */
+  background-color: #014084; /* Darker on hover */
 }
 
 .btn-primary-cancel:hover {
