@@ -1027,8 +1027,11 @@ return (
                           <div>
                         {/* Document 1 */}
 <p>
-  Document 1: {businessPermit?.files?.document1 ? 'Uploaded' : 'Not uploaded'}
-
+{businessPermit.classification === 'RenewBusiness' ? (
+    <span>BIR: </span>
+  ) : (
+    <span>DTI / SEC / CDA: </span>
+  )}
   {businessPermit?.files.document1 && (
     <button
       onClick={() => {
@@ -1052,7 +1055,11 @@ return (
 
 {/* Document 2 */}
 <p>
-  Document 2: {businessPermit?.files?.document2 ? 'Uploaded' : 'Not uploaded'}
+{businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Past Business Permit Copy: </span>
+  ) : (
+    <span>Occupancy Permit:</span>
+  )}
 
   {businessPermit?.files.document2 && (
     <button
@@ -1076,7 +1083,11 @@ return (
 
 {/* Document 3 */}
 <p>
-  Document 3: {businessPermit?.files?.document3 ? 'Uploaded' : 'Not uploaded'}
+{businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Certification of Gross Sales: </span>
+  ) : (
+    <span>Lease Contract (if rented) / Tax Declaration (If Owned): </span>
+  )}
 
   {businessPermit?.files.document3 && (
     <button
@@ -1101,7 +1112,11 @@ return (
 
 {/* Document 4 */}
 <p>
-  Document 4: {businessPermit?.files?.document4 ? 'Uploaded' : 'Not uploaded'}
+{businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Zoning: </span>
+  ) : (
+    <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
+  )}
 
   {businessPermit?.files.document4 && (
     <button
@@ -1125,8 +1140,11 @@ return (
 
 {/* Document 5 */}
 <p>
-  Document 5: {businessPermit?.files?.document5 ? 'Uploaded' : 'Not uploaded'}
-
+{businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Office of the Building Official: </span>
+  ) : (
+    <span>Owner's ID: </span>
+  )}
   {businessPermit?.files.document5 && (
     <button
       onClick={() => {
@@ -1149,7 +1167,11 @@ return (
 
 {/* Document 6 */}
 <p>
-  Document 6: {businessPermit?.files?.document6 ? 'Uploaded' : 'Not uploaded'}
+{businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Ctiy Health Office: </span>
+  ) : (
+    <span>Picture of Establishment (Perspective View): </span>
+  )}
 
   {businessPermit?.files.document6 && (
     <button
@@ -1170,6 +1192,101 @@ return (
 </p>
 
 {renderFile(selectedFiles.document6)}
+
+{/* Document 7 */}
+<p>
+{businessPermit.classification === 'RenewBusiness' ? (
+    <span>Bureau of Fire Protection: </span>
+  ) : (
+    <span>Zoning: </span>
+  )}
+
+{businessPermit?.files.document7 && (
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document7, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document7 === newFileUrl;
+          return {
+            ...prev,
+            document7: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document7 ? 'Close' : 'View'}
+    </button>
+  )}
+
+</p>
+{renderFile(selectedFiles.document7)}
+
+{businessPermit?.classification !== 'RenewBusiness' && (
+  <div>
+    {/* Document 8 */}
+    <p>
+    Office of the Building Official:
+
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document8, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document8 === newFileUrl;
+          return {
+            ...prev,
+            document8: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document8 ? 'Close' : 'View'}
+    </button>
+    </p>
+    {renderFile(selectedFiles.document8)}
+
+{/* Document 9 */}
+<p>
+City Health Office:
+
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document9, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document9 === newFileUrl;
+          return {
+            ...prev,
+            document9: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document9 ? 'Close' : 'View'}
+    </button>
+    </p>
+    {renderFile(selectedFiles.document9)}
+
+    {/* Document 10 */}
+    <p>
+    Bureau of Fire Protection:
+
+    <button
+      onClick={() => {
+        const newFileUrl = fetchDocumentUrl(businessPermit?.files.document10, 'uploads');
+        setSelectedFiles((prev) => {
+          const isFileSelected = prev.document10 === newFileUrl;
+          return {
+            ...prev,
+            document10: isFileSelected ? null : newFileUrl, // Toggle visibility based on the URL
+          };
+        });
+      }}
+    >
+      {selectedFiles.document10 ? 'Close' : 'View'}
+    </button>
+    </p>
+    {renderFile(selectedFiles.document10)}
+    </div>
+)}
                         <p>{/* Attachments content */}</p>
                     </div>
                 ) : null}

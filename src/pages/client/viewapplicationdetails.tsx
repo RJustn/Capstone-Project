@@ -57,7 +57,15 @@ const ViewApplicationDetails: React.FC = () => {
 
   
 
-  const DocumentViewer = ({ fileUrl, onClose }: { fileUrl: string; onClose: () => void }) => {
+  const DocumentViewer = ({
+    fileUrl,
+    documentName,
+    onClose,
+  }: {
+    fileUrl: string;
+    documentName: string;
+    onClose: () => void;
+  }) => {
     const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
     const isDocx = fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".doc");
   
@@ -70,27 +78,26 @@ const ViewApplicationDetails: React.FC = () => {
           className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
+          <div className=" mb-2">
+           <h2>{documentName}</h2>
+          </div>
+  
           {/* File Viewer */}
-          {isPdf ? (
+          {isPdf || isDocx ? (
             <>
               <iframe
                 src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
                 className="w-full h-[80vh] rounded-md border mb-4"
-                title="PDF Viewer"
-              />
-              <DownloadButton fileUrl={fileUrl} />
-            </>
-          ) : isDocx ? (
-            <>
-              <iframe
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-                className="w-full h-[80vh] rounded-md border mb-4"
-                title="Word Document Viewer"
+                title="Document Viewer"
               />
               <DownloadButton fileUrl={fileUrl} />
             </>
           ) : (
-            <img src={fileUrl} alt="Uploaded Document" className="w-full max-h-[80vh] rounded-md mb-4" />
+            <img
+              src={fileUrl}
+              alt={documentName}
+              className="w-full max-h-[80vh] rounded-md mb-4"
+            />
           )}
   
           {/* Close Button */}
@@ -126,7 +133,13 @@ const ViewApplicationDetails: React.FC = () => {
   };
   
   // File Renderer Component
-  const FileRenderer = ({ fileName }: { fileName: string | null }) => {
+  const FileRenderer = ({
+    fileName,
+    documentName,
+  }: { 
+    fileName: string | null;
+    documentName: string; 
+  }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const fileUrl = fileName || "";
   
@@ -137,7 +150,13 @@ const ViewApplicationDetails: React.FC = () => {
         <span style={{ cursor: "pointer", color: "blue" }} onClick={() => setModalOpen(true)}>
           {fileUrl.endsWith(".pdf") ? "View PDF" : "View Document"}
         </span>
-        {modalOpen && <DocumentViewer fileUrl={fileUrl} onClose={() => setModalOpen(false)} />}
+        {modalOpen && (
+          <DocumentViewer
+            fileUrl={fileUrl}
+            documentName={documentName}  // Pass it down
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </>
     );
   };
@@ -245,7 +264,7 @@ useEffect(() => {
     <p><strong>1x1 Picture:</strong></p>
     <span>
       {workPermit.formData.files?.document1 ? (
-        <FileRenderer fileName={workPermit.formData.files.document1} />
+        <FileRenderer documentName="1x1 Picture" fileName={workPermit.formData.files.document1} />
       ) : (
         "No file uploaded"
       )}
@@ -255,7 +274,7 @@ useEffect(() => {
     <p><strong>Cedula:</strong></p>
     <span>
       {workPermit.formData.files?.document2 ? (
-        <FileRenderer fileName={workPermit.formData.files.document2} />
+        <FileRenderer documentName="Cedula" fileName={workPermit.formData.files.document2} />
       ) : (
         "No file uploaded"
       )}
@@ -267,7 +286,7 @@ useEffect(() => {
         <p><strong>Referral Letter:</strong></p>
         <span>
           {workPermit.formData.files?.document3 ? (
-            <FileRenderer fileName={workPermit.formData.files.document3} />
+            <FileRenderer documentName="Referral Letter" fileName={workPermit.formData.files.document3} />
           ) : (
             "No file uploaded"
           )}
@@ -281,7 +300,7 @@ useEffect(() => {
         <p><strong>FTJS Certificate:</strong></p>
         <span>
           {workPermit.formData.files?.document4 ? (
-            <FileRenderer fileName={workPermit.formData.files.document4} />
+            <FileRenderer documentName="FTJS Certificate" fileName={workPermit.formData.files.document4} />
           ) : (
             "No file uploaded"
           )}
@@ -294,7 +313,7 @@ useEffect(() => {
       <>
         <p><strong>Receipt:</strong></p>
         <span>
-          <FileRenderer fileName={workPermit.receipt.receiptFile} />
+          <FileRenderer documentName="Receipt" fileName={workPermit.receipt.receiptFile} />
         </span>
       </>
     )}
@@ -304,7 +323,7 @@ useEffect(() => {
       <>
         <p><strong>Work Permit:</strong></p>
         <span>
-          <FileRenderer fileName={workPermit.permitFile} />
+          <FileRenderer documentName="Work Permit" fileName={workPermit.permitFile} />
         </span>
       </>
     )}
@@ -330,7 +349,11 @@ useEffect(() => {
             
           </>
         ) : (
-          <p>No work permit details available.</p>
+          <div className="error-message mt-3">
+                  <p style={{ color: "green", textAlign: "center", fontSize: "16px" }}>
+                  No work permit application details to display
+                  </p>
+                </div>
         )}
 
 {isModalOpen && (

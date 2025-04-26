@@ -263,8 +263,8 @@ const DataControllerViewApplicationDetails: React.FC = () => {
               className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-lg font-semibold mb-4">
-                {documentName}
+              <div className=" mb-2">
+               <h2>{documentName}</h2>
               </div>
       
               {/* File Viewer */}

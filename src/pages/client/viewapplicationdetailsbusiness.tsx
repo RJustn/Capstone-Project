@@ -7,6 +7,7 @@ import { businessNatureMap } from "../components/Interface(Front-end)/BusinessNa
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
 import MapLocationView from '../components/MapContents/MapLocationView';
 
+
 const ViewApplicationDetailsBusiness: React.FC = () => {
   const { id } = useParams<{ id: string }>(); 
   const [businessPermit, setBusinessPermit] = useState<BusinessPermit | null>(null);
@@ -61,7 +62,15 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
 
 
 
-  const DocumentViewer = ({ fileUrl, onClose }: { fileUrl: string; onClose: () => void }) => {
+  const DocumentViewer = ({
+    fileUrl,
+    documentName,
+    onClose,
+  }: {
+    fileUrl: string;
+    documentName: string;
+    onClose: () => void;
+  }) => {
     const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
     const isDocx = fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".doc");
   
@@ -74,27 +83,26 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
           className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
+          <div className=" mb-2">
+           <h2>{documentName}</h2>
+          </div>
+  
           {/* File Viewer */}
-          {isPdf ? (
+          {isPdf || isDocx ? (
             <>
               <iframe
                 src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
                 className="w-full h-[80vh] rounded-md border mb-4"
-                title="PDF Viewer"
-              />
-              <DownloadButton fileUrl={fileUrl} />
-            </>
-          ) : isDocx ? (
-            <>
-              <iframe
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-                className="w-full h-[80vh] rounded-md border mb-4"
-                title="Word Document Viewer"
+                title="Document Viewer"
               />
               <DownloadButton fileUrl={fileUrl} />
             </>
           ) : (
-            <img src={fileUrl} alt="Uploaded Document" className="w-full max-h-[80vh] rounded-md mb-4" />
+            <img
+              src={fileUrl}
+              alt={documentName}
+              className="w-full max-h-[80vh] rounded-md mb-4"
+            />
           )}
   
           {/* Close Button */}
@@ -130,7 +138,13 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
   };
   
   // File Renderer Component
-  const FileRenderer = ({ fileName }: { fileName: string | null }) => {
+ const FileRenderer = ({
+    fileName,
+    documentName,
+  }: { 
+    fileName: string | null;
+    documentName: string; 
+  }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const fileUrl = fileName || "";
   
@@ -141,11 +155,17 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
         <span style={{ cursor: "pointer", color: "blue" }} onClick={() => setModalOpen(true)}>
           {fileUrl.endsWith(".pdf") ? "View PDF" : "View Document"}
         </span>
-        {modalOpen && <DocumentViewer fileUrl={fileUrl} onClose={() => setModalOpen(false)} />}
+        {modalOpen && (
+          <DocumentViewer
+            fileUrl={fileUrl}
+            documentName={documentName}  // Pass it down
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </>
     );
   };
-
+  
 useEffect(() => {
   const checkAuth = async () => {
     try {
@@ -370,10 +390,20 @@ useEffect(() => {
       margin: "0 auto", // Center align
     }}
   >
-    <p> Upload DTI / SEC / CDA: </p>
+    {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>BIR: </span>
+  ) : (
+    <span>DTI / SEC / CDA: </span>
+  )}
     <span>
       {businessPermit.files?.document1 ? (
-        <FileRenderer fileName={businessPermit.files?.document1} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "BIR"
+            : "DTI / SEC / CDA"
+        }
+        fileName={businessPermit.files?.document1} />
       ) : (
         "No file uploaded"
       )}
@@ -381,10 +411,20 @@ useEffect(() => {
     {businessPermit.files.remarksdoc1 && (
     <p>Remarks: {businessPermit.files.remarksdoc1}</p>
   )}
-    <p> Occupancy Permit (Optional): </p>
+        {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Past Business Permit Copy: </span>
+  ) : (
+    <span>Occupancy Permit:</span>
+  )}
     <span>
       {businessPermit.files?.document2 ? (
-        <FileRenderer fileName={businessPermit.files?.document2} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Past Business Permit Copy"
+            : "Occupancy Permit"
+        }
+        fileName={businessPermit.files?.document2} />
       ) : (
         "No file uploaded"
       )}
@@ -392,10 +432,20 @@ useEffect(() => {
     {businessPermit.files.remarksdoc2 && (
     <p>Remarks: {businessPermit.files.remarksdoc2}</p>
   )}
-    <p>Lease Contract (if rented) / Tax Declaration (If Owned): </p>
+        {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Certification of Gross Sales: </span>
+  ) : (
+    <span>Lease Contract (if rented) / Tax Declaration (If Owned): </span>
+  )}
     <span>
       {businessPermit.files?.document3 ? (
-        <FileRenderer fileName={businessPermit.files?.document3} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Certification of Gross Sales"
+            : "Lease Contract (if rented) / Tax Declaration (If Owned)"
+        }
+        fileName={businessPermit.files?.document3} />
       ) : (
         "No file uploaded"
       )}
@@ -403,10 +453,20 @@ useEffect(() => {
     {businessPermit.files.remarksdoc3 && (
     <p>Remarks: {businessPermit.files.remarksdoc3}</p>
   )}
-    <p>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </p>
+        {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Zoning: </span>
+  ) : (
+    <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
+  )}
     <span>
       {businessPermit.files?.document4 ? (
-        <FileRenderer fileName={businessPermit.files?.document4} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Zoning"
+            : "Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate"
+        }
+        fileName={businessPermit.files?.document4} />
       ) : (
         "No file uploaded"
       )}
@@ -414,10 +474,20 @@ useEffect(() => {
     {businessPermit.files.remarksdoc4 && (
     <p>Remarks: {businessPermit.files.remarksdoc4}</p>
   )}
-    <p>Owner's ID: </p>
+           {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Office of the Building Official: </span>
+  ) : (
+    <span>Owner's ID: </span>
+  )}
     <span>
       {businessPermit.files?.document5 ? (
-        <FileRenderer fileName={businessPermit.files?.document5} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Office of the Building Official"
+            : "Owner's ID"
+        }
+        fileName={businessPermit.files?.document5} />
       ) : (
         "No file uploaded"
       )}
@@ -425,10 +495,20 @@ useEffect(() => {
     {businessPermit.files.remarksdoc5 && (
     <p>Remarks: {businessPermit.files.remarksdoc5}</p>
   )}
-    <p>Picture of Establishment (Perspective View): </p>
+             {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Ctiy Health Office: </span>
+  ) : (
+    <span>Picture of Establishment (Perspective View): </span>
+  )}
     <span>
       {businessPermit.files?.document6 ? (
-        <FileRenderer fileName={businessPermit.files?.document6} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Ctiy Health Office"
+            : "Picture of Establishment (Perspective View)"
+        }
+        fileName={businessPermit.files?.document6} />
       ) : (
         "No file uploaded"
       )}
@@ -436,10 +516,19 @@ useEffect(() => {
     {businessPermit.files.remarksdoc6 && (
     <p>Remarks: {businessPermit.files.remarksdoc6}</p>
   )}
-    <p> Zoning: </p>    
+  {businessPermit?.classification === 'RenewBusiness' ? (
+    <span>Bureau of Fire Protection: </span>
+  ) : (
+    <span>Zoning: </span>
+  )} 
     <span>
       {businessPermit.files?.document7 ? (
-        <FileRenderer fileName={businessPermit.files?.document7} />
+        <FileRenderer 
+        documentName={
+          businessPermit.classification === "RenewBusiness"
+            ? "Bureau of Fire Protection"
+            : "Zoning"
+        } fileName={businessPermit.files?.document7} />
       ) : (
         "No file uploaded"
       )}
@@ -447,10 +536,12 @@ useEffect(() => {
     {businessPermit.files.remarksdoc7 && (
     <p>Remarks: {businessPermit.files.remarksdoc7}</p>
   )}
+  {businessPermit?.classification !== 'RenewBusiness' && (
+    <div>
     <p>Office of the Building Official: </p>
     <span>
       {businessPermit.files?.document8 ? (
-        <FileRenderer fileName={businessPermit.files?.document8} />
+        <FileRenderer  documentName="Office of the Building Official" fileName={businessPermit.files?.document8} />
       ) : (
         "No file uploaded"
       )}
@@ -461,7 +552,7 @@ useEffect(() => {
     <p>City Health Office: </p>
     <span>
       {businessPermit.files?.document9 ? (
-        <FileRenderer fileName={businessPermit.files?.document9} />
+        <FileRenderer documentName="City Health Office" fileName={businessPermit.files?.document9} />
       ) : (
         "No file uploaded"
       )}
@@ -472,7 +563,7 @@ useEffect(() => {
     <p>Bureau of Fire Protection: </p>
     <span>
       {businessPermit.files?.document10 ? (
-        <FileRenderer fileName={businessPermit.files?.document10} />
+        <FileRenderer documentName="Bureau of Fire Protection" fileName={businessPermit.files?.document10} />
       ) : (
         "No file uploaded"
       )}
@@ -480,13 +571,15 @@ useEffect(() => {
     {businessPermit.files.remarksdoc10 && (
     <p>Remarks: {businessPermit.files.remarksdoc10}</p>
   )}
+  </div>
+)}
 
 {businessPermit.receipt?.receiptFile && (
       <div>
     <p>Receipt: </p>
     <span>
     {businessPermit.receipt?.receiptFile ? (
-      <FileRenderer fileName={businessPermit.receipt?.receiptFile} />
+      <FileRenderer documentName="Receipt" fileName={businessPermit.receipt?.receiptFile} />
     ) : (
       "No file uploaded"
     )}
@@ -499,7 +592,7 @@ useEffect(() => {
     Statement of Account (Assessment): </p>
   <span>
     {businessPermit.statementofaccount?.statementofaccountfile ? (
-      <FileRenderer fileName={businessPermit.statementofaccount?.statementofaccountfile} />
+      <FileRenderer documentName="Statement of Account" fileName={businessPermit.statementofaccount?.statementofaccountfile} />
     ) : (
       "No file uploaded"
     )}
@@ -511,7 +604,7 @@ useEffect(() => {
     <p>Business Permit: </p>
     <span>
     {businessPermit.permitFile ? (
-      <FileRenderer fileName={businessPermit.permitFile} />
+      <FileRenderer documentName="Business Permit" fileName={businessPermit.permitFile} />
     ) : (
       "No file uploaded"
     )}
@@ -526,7 +619,11 @@ useEffect(() => {
             
           </>
         ) : (
-          <p>No business permit details available.</p>
+          <div className="error-message mt-3">
+          <p style={{ color: "green", textAlign: "center", fontSize: "16px" }}>
+          No business permit application to display.
+          </p>
+        </div>
         )}
         </div>
       </div>

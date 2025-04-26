@@ -1564,7 +1564,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     {activePermitId.classification === 'RenewBusiness' ? (
     <span>Past Business Permit Copy: </span>
   ) : (
-    <span>Occupancy Permit (Optional):</span>
+    <span>Occupancy Permit:</span>
   )}
 
 
