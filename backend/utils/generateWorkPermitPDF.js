@@ -106,9 +106,6 @@ const generateWorkPermitPDF = async (id) => {
       // Add a new page
       doc.addPage({ size: 'A4', layout: 'landscape' });
       currentY = doc.page.margins.top + 20;
-      const centerX = doc.page.width / 2;
-      doc.fontSize(15).text('Account Details', centerX, currentY, { align: 'center' });
-      doc.moveDown(2);
       doc.text(`Permit ID: ${workPermit.id || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
       doc.text(`Permit Type: ${workPermit.permittype || 'N/A'}`, leftColumnX, currentY);
@@ -127,7 +124,7 @@ const generateWorkPermitPDF = async (id) => {
         currentY
       );
       currentY += 20;
-      doc.moveDown(4);
+      doc.moveDown(8);
 
       currentY = doc.page.margins.top + 20;
       doc.text(`Name: ${workPermit.formData.personalInformation.lastName || 'N/A'}, ${workPermit.formData.personalInformation.firstName || 'N/A'}`, rightColumnX, currentY);
