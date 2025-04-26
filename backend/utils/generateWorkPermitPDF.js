@@ -33,7 +33,7 @@ const generateWorkPermitPDF = async (id) => {
           const pdfBuffer = Buffer.concat(buffers);
 
           // Upload to Cloudinary
-          const uploadResponse = await cloudinary.uploader.upload_stream(
+          cloudinary.uploader.upload_stream(
             {
               resource_type: 'raw',
               folder: 'work_permits',
@@ -46,9 +46,7 @@ const generateWorkPermitPDF = async (id) => {
               }
               resolve(result.secure_url); // Return the Cloudinary URL
             }
-          );
-
-          uploadResponse.end(pdfBuffer);
+          ).end(pdfBuffer);
         } catch (uploadError) {
           console.error('Error uploading PDF to Cloudinary:', uploadError);
           reject(uploadError);
@@ -59,11 +57,28 @@ const generateWorkPermitPDF = async (id) => {
       const leftColumnX = doc.page.margins.left + 20;
       let currentY = doc.page.margins.top + 20;
 
-      doc.fontSize(15).text('EXPIRATION OF PERMIT', leftColumnX, currentY);
-      currentY += 30;
-      doc.fontSize(12).text(`Issuance date: ${new Date(workPermit.issueDate).toLocaleDateString()}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Expiration date: ${new Date(workPermit.expirationDate).toLocaleDateString()}`, leftColumnX, currentY);
+      const isRenewal = workPermit.transaction === 'Renew';
+
+      if (isRenewal) {
+        doc.fontSize(15).text('RENEWAL OF WORK PERMIT', leftColumnX, currentY);
+        currentY += 30;
+        doc.fontSize(12).text(`Previous Expiration Date: ${new Date(workPermit.permitExpiryDate).toLocaleDateString()}`, leftColumnX, currentY);
+        currentY += 20;
+        doc.text(`New Issuance Date: ${new Date(workPermit.permitDateIssued).toLocaleDateString()}`, leftColumnX, currentY);
+        currentY += 20;
+        doc.text(`New Expiration Date: ${new Date(workPermit.expiryDate).toLocaleDateString()}`, leftColumnX, currentY);
+        currentY += 40;
+        doc.text('Renewal Fee: ___________________', leftColumnX, currentY);
+        currentY += 20;
+        doc.text('Remarks: Renewal processed successfully.', leftColumnX, currentY);
+      } else {
+        doc.fontSize(15).text('EXPIRATION OF PERMIT', leftColumnX, currentY);
+        currentY += 30;
+        doc.fontSize(12).text(`Issuance date: ${new Date(workPermit.issueDate).toLocaleDateString()}`, leftColumnX, currentY);
+        currentY += 20;
+        doc.text(`Expiration date: ${new Date(workPermit.expirationDate).toLocaleDateString()}`, leftColumnX, currentY);
+      }
+
       currentY += 20;
       doc.text(`Place of employment: ${placeOfEmployment}`, leftColumnX, currentY);
       currentY += 40;
@@ -125,7 +140,6 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 60;
       doc.text('REMARKS:', leftColumnX, currentY);
 
-      
       doc.text(`Permit ID: ${workPermit.id}`, leftColumnX, currentY);
       currentY += 20;
       doc.text(`Permit Type: ${workPermit.permittype}`, leftColumnX, currentY);
@@ -154,9 +168,8 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress}`, rightColumnX, currentY);
       currentY += 20;
-      // doc.text(`SSS No.: ${workPermit.formData.personalInformation.sssNumber || 'N/A'}`, rightColumnX, currentY);
-      // currentY += 20;
       doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
+
       // Finalize the PDF
       doc.end();
     } catch (error) {
