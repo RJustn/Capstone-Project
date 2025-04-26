@@ -589,25 +589,26 @@ h2 {
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  margin: auto;
-}
-
-.search-filter label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #333;
+  max-width: 100%;
+  margin-bottom: 1.5rem;
 }
 
 .search-bar-container {
   display: flex;
+  justify-content: flex-end; /* move search bar to the right */
+  align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-bar-container label {
+  margin-right: 0.5rem;
+  font-weight: 600;
+  color: #333;
 }
 
 .search-input {
-  flex: 1;
+  width: 250px; /* fixed width to look cleaner */
   padding: 0.5rem 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -629,6 +630,7 @@ h2 {
   background-color: #4338ca;
 }
 
+/* keep date filter styles */
 .date-filter {
   margin-top: 1.5rem;
 }
