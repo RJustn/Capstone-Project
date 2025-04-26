@@ -581,7 +581,14 @@ return (
             
           </>
         ) : (
-          <p>No work permit details available.</p>
+     
+          <div className="error-message mt-3">
+      <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+      No work permit details available.
+      </p>
+    </div>
+          
+       
         )}
 
 {isModalOpen && (

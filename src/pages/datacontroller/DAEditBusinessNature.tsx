@@ -312,13 +312,19 @@ return (
             <div className="tab-content">
                 {activeTab === 'user' ? (
                     <div className="user-info">
-                        <h2>View Business Nature</h2>
+                        <h2>Edit Business Nature</h2>
+                        <p>For Application ID: <strong>{businessPermit?.id}</strong></p>
                         {/* Add your user information content here */}
+          {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (
 
+            
+            <div>
+              <div>
                         <h1>List of Businesses</h1>
                          <button className="editbutton"onClick={isEditing ? handleSaveBusinessNature : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
+  
   {isEditing && (
     <button className="cancel-button" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
       Cancel
@@ -326,7 +332,7 @@ return (
   )}
 
   <button className='editbutton' onClick={() => { window.location.href = `/DABusinessAssessment/${businessPermit?._id}`;}}>For Assessment</button>
-                      
+                    
                         {isEditing && (
   <>
     <h2>Add a New Business</h2>
@@ -383,12 +389,15 @@ return (
           </div>
         ) : null}
       </div>
-      <button onClick={handleAddBusiness}>Add Business</button>
+      <div className='mt-2'>
+      <button className='mbtn btn-primary' onClick={handleAddBusiness}>Add Business</button>
+      </div>
     </div>
   </>
 )}
 
-          {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (
+</div>
+<div className='mt-2'>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
@@ -465,16 +474,24 @@ return (
   ))}
 </tbody>
         </table>
+        </div>
+        </div>
       ) : (
-        <div>No businesses to display.</div>
+        <div className="error-message mt-3">
+        <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+        No business to display
+        </p>
+      </div>
       )}  
                         <p>{/* User Info content */}</p>
                     </div>
                 ) : activeTab === 'business' ? (
                     <div className="business-info">
                         <h2>Business Information</h2>
-                        <p>{businessPermit?._id}</p>     
                         {/* Add your business information content here */}
+                        {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (   
+                          <div>
+                    
 
                         <div className="form-group">
                   <label>Business Name:</label>
@@ -992,13 +1009,22 @@ return (
                     <option value="Branch">BRANCH</option>
                   </select>
                 </div>
+                </div>
+                 ) : (
+                  <div className="error-message mt-3">
+                  <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+                  No business to display
+                  </p>
+                </div>
+                )}  
                         <p>{/* Business Info content */}</p>
                     </div>
                 ) : activeTab === 'attachments' ? (
                     <div className="attachments-info">
                         <h2>Attachments</h2>
                         {/* Add your attachments content here */}
-
+                        {businessPermit?.businesses && businessPermit.businesses.length > 0 ? (   
+                          <div>
                         {/* Document 1 */}
 <p>
   Document 1: {businessPermit?.files?.document1 ? 'Uploaded' : 'Not uploaded'}
@@ -1147,7 +1173,16 @@ return (
                         <p>{/* Attachments content */}</p>
                     </div>
                 ) : null}
+                                </div>
+                 ) : (
+                  <div className="error-message mt-3">
+                  <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+                  No business to display
+                  </p>
+                </div>
+                )}  
             </div>
+            
         </div>
     </section>
 );
