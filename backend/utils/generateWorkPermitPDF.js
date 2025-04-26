@@ -57,27 +57,11 @@ const generateWorkPermitPDF = async (id) => {
       const leftColumnX = doc.page.margins.left + 20;
       let currentY = doc.page.margins.top + 20;
 
-      const isRenewal = workPermit.transaction === 'Renew';
-
-      if (isRenewal) {
-        doc.fontSize(15).text('RENEWAL OF WORK PERMIT', leftColumnX, currentY);
-        currentY += 30;
-        doc.fontSize(12).text(`Previous Expiration Date: ${new Date(workPermit.permitExpiryDate).toLocaleDateString()}`, leftColumnX, currentY);
-        currentY += 20;
-        doc.text(`New Issuance Date: ${new Date(workPermit.permitDateIssued).toLocaleDateString()}`, leftColumnX, currentY);
-        currentY += 20;
-        doc.text(`New Expiration Date: ${new Date(workPermit.expiryDate).toLocaleDateString()}`, leftColumnX, currentY);
-        currentY += 40;
-        doc.text('Renewal Fee: ___________________', leftColumnX, currentY);
-        currentY += 20;
-        doc.text('Remarks: Renewal processed successfully.', leftColumnX, currentY);
-      } else {
-        doc.fontSize(15).text('EXPIRATION OF PERMIT', leftColumnX, currentY);
-        currentY += 30;
-        doc.fontSize(12).text(`Issuance date: ${new Date(workPermit.issueDate).toLocaleDateString()}`, leftColumnX, currentY);
-        currentY += 20;
-        doc.text(`Expiration date: ${new Date(workPermit.expirationDate).toLocaleDateString()}`, leftColumnX, currentY);
-      }
+      doc.fontSize(15).text('EXPIRATION OF PERMIT', leftColumnX, currentY);
+      currentY += 30;
+      doc.fontSize(12).text(`Issuance date: ${workPermit.issueDate ? new Date(workPermit.issueDate).toLocaleDateString() : new Date().toLocaleDateString()}`, leftColumnX, currentY);
+      currentY += 20;
+      doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, leftColumnX, currentY);
 
       currentY += 20;
       doc.text(`Place of employment: ${placeOfEmployment}`, leftColumnX, currentY);
@@ -128,15 +112,11 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Permit Type: ${workPermit.permittype || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text(`Status: ${workPermit.workpermitstatus || 'N/A'}`, leftColumnX, currentY);
-      currentY += 20;
       doc.text(`Classification: ${workPermit.classification || 'N/A'}`, leftColumnX, currentY);
-      currentY += 20;
-      doc.text(`Transaction: ${workPermit.transaction || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
       doc.text(`Amount to Pay: ${workPermit.amountToPay !== undefined ? workPermit.amountToPay : 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
-      
+
       currentY = doc.page.margins.top + 20;
       doc.text(`Name: ${workPermit.formData.personalInformation.lastName || 'N/A'}, ${workPermit.formData.personalInformation.firstName || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
@@ -149,7 +129,7 @@ const generateWorkPermitPDF = async (id) => {
       doc.text(`Residence: ${workPermit.formData.personalInformation.permanentAddress || 'N/A'}`, rightColumnX, currentY);
       currentY += 20;
       doc.text(`Tax Identification: ${workPermit.formData.personalInformation.tin || 'N/A'}`, rightColumnX, currentY);
-      doc.moveDown(2);
+      doc.moveDown(8);
       
       doc.fontSize(12).text(
         'This is to certify that the person whose name and identification appear herein is duly permitted by this OFFICE to work as',
