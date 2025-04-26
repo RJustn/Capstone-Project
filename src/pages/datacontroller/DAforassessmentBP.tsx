@@ -1121,10 +1121,10 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
           </div>
           </div>
 
-       {businessPermits.length === 0 ? (
+       {filteredItems.length === 0 ? (
     <div className="error-message mt-3">
       <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
-        No Business Application found.
+        No Business Permit Applications found.
       </p>
     </div>
   ) : (
