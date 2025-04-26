@@ -22,7 +22,7 @@ const generateWorkPermitPDF = async (id) => {
         return reject(new Error('Work permit not found'));
       }
 
-      const placeOfEmployment = workPermit?.formData?.employmentInformation?.place || 'N/A';
+      const companyName = workPermit?.formData?.personalInformation?.companyName || 'N/A';
       const workPermitFileName = `workpermit_${id}.pdf`;
 
       // Create a buffer to store the PDF in memory
@@ -64,7 +64,7 @@ const generateWorkPermitPDF = async (id) => {
       doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, leftColumnX, currentY);
 
       currentY += 20;
-      doc.text(`Place of employment: ${placeOfEmployment}`, leftColumnX, currentY);
+      doc.text(`Company Name: ${companyName}`, leftColumnX, currentY);
       currentY += 40;
 
       doc.text(
