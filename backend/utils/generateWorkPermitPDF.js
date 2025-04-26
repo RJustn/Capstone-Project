@@ -105,6 +105,8 @@ const generateWorkPermitPDF = async (id) => {
 
       // Add a new page
       doc.addPage({ size: 'A4', layout: 'landscape' });
+      const centerX = doc.page.width / 2;
+      currentY = doc.page.margins.top + 20;
       doc.fontSize(15).text('Account Details', centerX, currentY, { align: 'center' });
       currentY += 20;
       
