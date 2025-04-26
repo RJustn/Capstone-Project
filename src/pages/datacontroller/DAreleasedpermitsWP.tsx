@@ -72,11 +72,7 @@ const DAreleasedpermitsWP: React.FC = () => {
   const [selectedPermit, setSelectedPermit] = useState<WorkPermit | null>(null);
   const [isAttachmentsModalOpen, setIsAttachmentsModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | null }>({});
-  const [remarksdoc1, setRemarksdoc1] = useState('');
-  const [remarksdoc2, setRemarksdoc2] = useState('');
-  const [remarksdoc3, setRemarksdoc3] = useState('');
-  const [remarksdoc4, setRemarksdoc4] = useState('');
-
+ 
 
   const customModalStyles = {
     content: {
@@ -120,7 +116,7 @@ const DAreleasedpermitsWP: React.FC = () => {
   // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(workPermits.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -140,7 +136,6 @@ const DAreleasedpermitsWP: React.FC = () => {
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   // Search QUERY @@@@@@@@@@@@@@@@@@@@@
-  const [, setSearchQuery] = useState<string>(''); // Track the search query
   const [inputValue, setInputValue] = useState<string>('');
   
   // New state to track sorting
@@ -177,28 +172,26 @@ const DAreleasedpermitsWP: React.FC = () => {
   // Get current items
   const currentItems = filteredItems.slice(startIndex, endIndex); 
 
-  // Handle the search and classification filter together
-  const applyFilters = (searchValue: string) => {
-    const results = workPermits.filter((permit) => {
-      const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.classification.toLowerCase().includes(searchValue.toLowerCase());
 
-    
-
-      return matchesSearchQuery;
-    });
-
-    setFilteredItems(results); // Update filtered items
-    setCurrentPage(0); // Reset to the first page of results
-    console.log('Filtered Results:', results); // Log the filtered results
-  };
 
   // Handle the search when the button is clicked
   const handleSearch = () => {
-    const searchValue = inputValue; // Use input value for search
-    setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue); // Apply both search and classification filters
+    const searchValue = inputValue.toLowerCase(); // normalize input
+    const filteredBySearch = workPermits.filter((permit) => {
+     
+      const firstname = permit?.formData.personalInformation.firstName?.toLowerCase() || "";
+      const lastname = permit?.formData.personalInformation.lastName?.toLowerCase() || "";
+
+      const permitid = permit?.id?.toString().toLowerCase() || "";
+      return (
+        firstname.includes(searchValue) ||
+        permitid.includes(searchValue) ||
+        lastname.includes(searchValue) 
+      );
+    });
+  
+    setFilteredItems(filteredBySearch);
+    setCurrentPage(0); // Reset to the first page of results
   };
 
 
@@ -418,15 +411,18 @@ if (type === 'new') {
         <div className='workpermittable'>
           <p>{displayTextTitle}</p>
           {/* Search Bar */}
+          <div>
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by ID, Status, or Classification"
+              placeholder="Search by ID and Name"
               value={inputValue} // Use inputValue for the input field
               onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
               className="search-input" // Add a class for styling
             />
-            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+
+            <button onClick={handleSearch} className="search-button mt-1">Search</button> {/* Button to trigger search */}
+            
           </div>
 
 
@@ -449,8 +445,17 @@ if (type === 'new') {
             />
             <button onClick={handleDateSearch} className="search-button">Search by Date</button>
           </div>
+          </div>
 
-          <table className="permit-table">
+          {filteredItems.length === 0 ? (
+          <div className="error-message mt-3">
+      <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+        No Work Permit Applications found.
+      </p>
+    </div>
+  ) : (
+<div>
+          <table className="permit-table mt-3">
             <thead>
               <tr>
                 <th onClick={() => handleSort('id')}>
@@ -503,28 +508,32 @@ if (type === 'new') {
           </table>
 
           {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 0}
-                className="btn btn-danger"
-              >
-                Previous
-              </button>
-              <span style={{ margin: "0 10px", marginTop: "8px" }}>
-                Page {currentPage + 1} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages - 1}
-                className="btn btn-success"
-              >
-                Next
-              </button>
-            </div>
-          )}
+  <div className="d-flex justify-content-end align-items-center mt-3 pagination">
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      className="pagination-button"
+    >
+      Previous
+    </button>
+    <span className="page-info me-2" style={{ marginTop: "5px" }}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      className="pagination-button"
+    >
+      Next
+    </button>
+  </div>
+)}
+</div>
+  )}
+  
         </div>
       </div>
+
       <Modal
         isOpen={isAttachmentsModalOpen}
         onRequestClose={closeAttachmentsModal}
@@ -532,14 +541,13 @@ if (type === 'new') {
         style={customModalStyles} // Apply custom styles
       >
         <form>
-          <h2>View Attachments</h2>
+        <h2>View Attachments</h2>
+        <p>Permit ID: {selectedPermit?.id}</p>
           {selectedPermit && (
             <div>
-              <label>Attachments:</label>
-              <p>Permit ID: {selectedPermit?._id}</p>
               {/* Document 1 */}
               <p>
-                Document 1:
+              1x1 Picture: 
                 {selectedPermit.formData.files.document1 && (
                   <button
                     type="button"
@@ -548,19 +556,17 @@ if (type === 'new') {
                     {selectedFiles.document1 ? 'Back' : 'View'}
                   </button>
                 )}
-
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={remarksdoc1 !== undefined && remarksdoc1 !== null ? remarksdoc1 : (selectedPermit.formData.files.remarksdoc1 || '')}
-                  onChange={(e) => setRemarksdoc1(e.target.value)} 
+                  value={(selectedPermit.formData.files.remarksdoc1 || '')} 
                   disabled
                 />
               </p>
               {renderFile(selectedFiles.document1)}
               {/* Document 2 */}
               <p>
-                Document 2: 
+              Cedula: 
                 {selectedPermit.formData.files.document2 && (
                   <button
                     type="button"
@@ -573,15 +579,15 @@ if (type === 'new') {
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={remarksdoc2 !== undefined && remarksdoc2 !== null ? remarksdoc2 : (selectedPermit.formData.files.remarksdoc2 || '')}
-                  onChange={(e) => setRemarksdoc2(e.target.value)} 
+                  value={(selectedPermit.formData.files.remarksdoc2 || '')} 
+   
                   disabled
                 />
               </p>
               {renderFile(selectedFiles.document2)}
               {/* Document 3 */}
               <p>
-                Document 3: 
+              Referral Letter: 
                 {selectedPermit.formData.files.document3 && (
                   <button
                     type="button"
@@ -590,19 +596,18 @@ if (type === 'new') {
                     {selectedFiles.document3 ? 'Back' : 'View'}
                   </button>
                 )}
-
+                
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={remarksdoc3 !== undefined && remarksdoc3 !== null ? remarksdoc3 : (selectedPermit.formData.files.remarksdoc3 || '')}
-                  onChange={(e) => setRemarksdoc3(e.target.value)} 
-                  disabled 
+                  value={(selectedPermit.formData.files.remarksdoc3 || '')} 
+                  disabled
                 />
               </p>
               {renderFile(selectedFiles.document3)}
               {/* Document 4 */}
               <p>
-                Document 4: 
+              FTJS Certificate:
                 {selectedPermit.formData.files.document4 && (
                   <button
                     type="button"
@@ -615,23 +620,26 @@ if (type === 'new') {
                 <label>Remarks:</label>
                 <input 
                   type="text" 
-                  value={remarksdoc4 !== undefined && remarksdoc4 !== null ? remarksdoc4 : (selectedPermit.formData.files.remarksdoc4 || '')}
-                  onChange={(e) => setRemarksdoc4(e.target.value)} 
+                  value={(selectedPermit.formData.files.remarksdoc4 || '')} 
                   disabled
                 />
               </p>
               {renderFile(selectedFiles.document4)}
 
+              <button className='btn btn-primary-cancel' onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+            Close
+          </button>
             </div>
           )}
         </form>
       </Modal>
+
       {isModalOpenFile && activePermitId && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{justifyContent:'center'}}>
             {modalFile && (
               <div>
-                Viewing Work Permit of {activePermitId.id}
+                <p>Viewing Work Permit of <strong>{activePermitId.id}</strong></p>
                 <div>
                 {modalFile.endsWith('.pdf') ? (
                   <iframe src={modalFile} style={{ width: '700px', height: '600px', marginTop: '20px', marginLeft:'110px'}} title="PDF Viewer" />

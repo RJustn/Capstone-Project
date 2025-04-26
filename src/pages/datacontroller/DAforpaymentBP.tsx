@@ -3299,7 +3299,7 @@ if (type === 'new') {
             <p>Viewing Receipt for {activePermitId.id}</p>
           )}
           {viewingType === 'permits' && (
-            <p>Viewing Business Permit for {activePermitId.id}</p>
+            <p>Viewing Business Permit for <strong>{activePermitId.id}</strong></p>
           )}
 
           {modalFile.endsWith('.pdf') ? (
@@ -3322,7 +3322,7 @@ if (type === 'new') {
           <a
   href={modalFile}
   download
-  className="back-button"
+  className="back-button py-2 px-4 rounded-lg shadow-md transition-all text-center block"
 >
   Download File
 </a>

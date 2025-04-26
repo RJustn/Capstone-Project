@@ -64,17 +64,11 @@ return (
           </div>
 
           <div className="button-container">
-          <a href="/DAforpaymentWP/new" className='DAworkpermitbutton'>
-              For Payment New Working Permit
-            </a>
 
             <a href="/DAforpaymentWP/renew" className='DAworkpermitbutton'>
               For Payment Renew Working Permit
             </a>
 
-            <a href="/DAforpaymentWP/" className='DAworkpermitbutton'>
-              View all For Payment New Working Permit
-            </a>
           </div>
 
           

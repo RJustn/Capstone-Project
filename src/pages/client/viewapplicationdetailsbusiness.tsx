@@ -121,7 +121,7 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
   const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
     return (
       <button
-        className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
+        className="bg-green-600 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
         onClick={(e) => {
           e.preventDefault(); // Prevent default behavior
           const link = document.createElement("a");
@@ -152,7 +152,7 @@ const ViewApplicationDetailsBusiness: React.FC = () => {
   
     return (
       <>
-        <span style={{ cursor: "pointer", color: "blue" }} onClick={() => setModalOpen(true)}>
+        <span style={{ cursor: "pointer", color: "green" }} onClick={() => setModalOpen(true)}>
           {fileUrl.endsWith(".pdf") ? "View PDF" : "View Document"}
         </span>
         {modalOpen && (
@@ -611,6 +611,31 @@ useEffect(() => {
   </span>
     </div>
   )}
+
+{businessPermit?.businessstatus === 'RetiredBusiness' && (
+    <div>
+    <p>Business Retire Document: </p>
+    <span>
+      {businessPermit.files?.document11 ? (
+        <FileRenderer  documentName="Business Retire Document" fileName={businessPermit.files?.document11} />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
+
+    <p>Client Submission of Past Permit: </p>
+    <span>
+      {businessPermit.files?.document12 ? (
+        <FileRenderer documentName="Client Submission of Past Permit" fileName={businessPermit.files?.document12} />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
+
+  </div>
+)}
+
+  
   {businessPermit.applicationComments && (
     <p>Comments: {businessPermit.applicationComments}</p>
   )}

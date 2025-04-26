@@ -183,6 +183,8 @@ export interface Businesses {
         document8: string | null; // Optional
         document9: string | null; // Optional
         document10: string | null; // Optional
+        document11: string | null; // Optional
+        document12: string | null; // Optional
         remarksdoc1: string | null;
         remarksdoc2: string | null;
         remarksdoc3: string | null;

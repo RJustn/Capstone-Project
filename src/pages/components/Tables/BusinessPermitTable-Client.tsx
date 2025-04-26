@@ -591,7 +591,7 @@ const [files, setFiles] = useState<{
             <option value="viewAssessment">View Assessment</option>
             <option value="viewReceipt">View Receipt</option>
             <option value="viewPermit">View Permit</option>
-            {sortedPermits[0].classification !== 'RetiredBusiness' && (
+            {sortedPermits[0].businessstatus !== 'RetiredBusiness' && (
                     <>
                   <option value="renewbusiness">Renew Business</option>
                   </>

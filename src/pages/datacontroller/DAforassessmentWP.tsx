@@ -649,7 +649,7 @@ if (type === 'new') {
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by ID, Name, or Address"
+              placeholder="Search by ID and Name"
               value={inputValue} // Use inputValue for the input field
               onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
               className="search-input" // Add a class for styling

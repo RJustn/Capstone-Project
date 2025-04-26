@@ -350,7 +350,26 @@ const logFormData = (formData: FormData) => {
     }
   };
   
+ const [inputValue, setInputValue] = useState<string>('');
+ 
+  const handleSearch = () => {
+    const searchValue = inputValue.toLowerCase(); // normalize input
+    const filteredBySearch = workPermits.filter((permit) => {
+     
+      const firstname = permit?.formData.personalInformation.firstName?.toLowerCase() || "";
+      const lastname = permit?.formData.personalInformation.lastName?.toLowerCase() || "";
 
+      const permitid = permit?.id?.toString().toLowerCase() || "";
+      return (
+        firstname.includes(searchValue) ||
+        permitid.includes(searchValue) ||
+        lastname.includes(searchValue) 
+      );
+    });
+  
+    setFilteredItems(filteredBySearch);
+    setCurrentPage(0); // Reset to the first page of results
+  };
 
 
   const closeAttachmentsModal = () => {
@@ -469,9 +488,24 @@ if (type === 'new') {
 
 
 
+        <div>
+          <div className="search-bar-container">
+            <input
+              type="text"
+              placeholder="Search by ID and Name"
+              value={inputValue} // Use inputValue for the input field
+              onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
+              className="search-input" // Add a class for styling
+            />
+
+            <button onClick={handleSearch} className="search-button mt-1">Search</button> {/* Button to trigger search */}
+            
+          </div>
+
+
+
           {/* Date Pickers for Date Range Filter */}
           <div className="date-picker-container">
-            Start Date:
             <input
               type="date"
               value={startDate}
@@ -479,7 +513,6 @@ if (type === 'new') {
               max={maxDate} // Set the maximum date to today
               placeholder="Start Date"
             />
-            End Date:
             <input
               type="date"
               value={endDate}
@@ -489,8 +522,18 @@ if (type === 'new') {
             />
             <button onClick={handleDateSearch} className="search-button">Search by Date</button>
           </div>
+          </div>
 
-          <table className="permit-table">
+
+          {filteredItems.length === 0 ? (
+          <div className="error-message mt-3">
+      <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+        No Work Permit Applications found.
+      </p>
+    </div>
+  ) : (
+<div>
+          <table className="permit-table mt-3">
             <thead>
               <tr>
                 <th onClick={() => handleSort('id')}>
@@ -536,43 +579,57 @@ if (type === 'new') {
           </table>
 
           {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 0}
-                className="btn btn-danger"
-              >
-                Previous
-              </button>
-              <span style={{ margin: "0 10px", marginTop: "8px" }}>
-                Page {currentPage + 1} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages - 1}
-                className="btn btn-success"
-              >
-                Next
-              </button>
-            </div>
-          )}
+  <div className="d-flex justify-content-end align-items-center mt-3 pagination">
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      className="pagination-button"
+    >
+      Previous
+    </button>
+    <span className="page-info me-2" style={{ marginTop: "5px" }}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      className="pagination-button"
+    >
+      Next
+    </button>
+  </div>
+)}
+</div>
+  )}
         </div>
         {/* Modal Dumps */}
         {showPaymentMethod && (
-  <div className="modal-overlay-pay" onClick={handleOverlayClick}>
-    <div className="modal-content-pay" onClick={(e) => e.stopPropagation()}>
-      <button className="close-button-pay" onClick={closePaymentMethod}>✖</button>
-      <h3>Choose an Action for Permit ID: {activePermitId}</h3>
+  <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      
+      <h2>Handle Payment</h2>
+      <p>For Work Permit Application ID: <strong>{activePermitId}</strong></p>
+      
       {modalStep === 0 && (
-        <div>
-          <h2>Upload Receipt</h2>
-          <input type="file" onChange={handleFileChangeReceipt} />
-          <button onClick={handleSubmit} disabled={!receiptFile}>Upload</button>
+        <div className="upload-section">
+          <h4>Upload Receipt</h4>
+          <input type="file" onChange={handleFileChangeReceipt} className="file-input" />
+          <button 
+            onClick={handleSubmit} 
+            disabled={!receiptFile} 
+            className="back-button"
+          >
+            Upload
+          </button>
         </div>
       )}
+       <button className='back-button' onClick={() => closePaymentMethod()}>
+            Close
+          </button>
     </div>
   </div>
 )}
+
 
       </div>
       <Modal
@@ -582,14 +639,13 @@ if (type === 'new') {
         style={customModalStyles} // Apply custom styles
       >
         <form>
-          <h2>View Attachments</h2>
+        <h2>View Attachments</h2>
+        <p>Permit ID: {selectedPermit?.id}</p>
           {selectedPermit && (
             <div>
-              <label>Attachments:</label>
-              <p>Permit ID: {selectedPermit?._id}</p>
               {/* Document 1 */}
               <p>
-                Document 1: 
+              1x1 Picture: 
                 {selectedPermit.formData.files.document1 && (
                   <button
                     type="button"
@@ -608,7 +664,7 @@ if (type === 'new') {
               {renderFile(selectedFiles.document1)}
               {/* Document 2 */}
               <p>
-                Document 2: 
+              Cedula: 
                 {selectedPermit.formData.files.document2 && (
                   <button
                     type="button"
@@ -629,7 +685,7 @@ if (type === 'new') {
               {renderFile(selectedFiles.document2)}
               {/* Document 3 */}
               <p>
-                Document 3: 
+              Referral Letter: 
                 {selectedPermit.formData.files.document3 && (
                   <button
                     type="button"
@@ -649,7 +705,7 @@ if (type === 'new') {
               {renderFile(selectedFiles.document3)}
               {/* Document 4 */}
               <p>
-                Document 4: 
+              FTJS Certificate:
                 {selectedPermit.formData.files.document4 && (
                   <button
                     type="button"
@@ -668,7 +724,7 @@ if (type === 'new') {
               </p>
               {renderFile(selectedFiles.document4)}
 
-              <button className='btn btn-danger' onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
+              <button className='btn btn-primary-cancel' onClick={() => closeAttachmentsModal()} style={{ marginLeft: '10px' }}>
             Close
           </button>
             </div>
