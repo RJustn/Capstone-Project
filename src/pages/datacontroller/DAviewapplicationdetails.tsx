@@ -607,7 +607,7 @@ return (
 
 {showRejectModal && (
         <div className="modal-overlay" onClick={closeRejectModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Reject Application</h2>
             {!isCommentVisible ? (
               <>
