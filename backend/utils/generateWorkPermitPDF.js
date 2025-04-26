@@ -64,7 +64,7 @@ const generateWorkPermitPDF = async (id) => {
       doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, leftColumnX, currentY);
 
       currentY += 20;
-      doc.text(`Company Name: ${companyName}`, leftColumnX, currentY);
+      doc.text(`Place of employment: ${companyName}`, leftColumnX, currentY);
       currentY += 40;
 
       doc.text(

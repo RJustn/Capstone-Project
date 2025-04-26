@@ -112,10 +112,6 @@ const generateBusinessPermitPDF = async (id) => {
         doc.text(`Liquor Plate Fee: ${statement.liquorplate || 'N/A'}`);
         doc.moveDown();
 
-        if (statement.statementofaccountfile) {
-          doc.text(`Statement of Account File: ${statement.statementofaccountfile}`, { link: statement.statementofaccountfile, underline: true });
-        }
-
         doc.moveDown(2);
     
         // Footer (City Mayor Signature)
