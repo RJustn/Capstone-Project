@@ -1510,7 +1510,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>View Attatchments</h2>
-        <p>Application ID: <strong>{activePermitId._id}</strong></p>
+        <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
 
 {/* Document 1 */}

@@ -242,53 +242,61 @@ const DataControllerViewApplicationDetails: React.FC = () => {
       };
     
 
-  const DocumentViewer = ({ fileUrl, onClose }: { fileUrl: string; onClose: () => void }) => {
-    const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
-    const isDocx = fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".doc");
-  
-    return (
-      <div
-        className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        onClick={onClose}
-      >
-        <div
-          className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* File Viewer */}
-          {isPdf ? (
-            <>
-              <iframe
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-                className="w-full h-[80vh] rounded-md border mb-4"
-                title="PDF Viewer"
-              />
-              <DownloadButton fileUrl={fileUrl} />
-            </>
-          ) : isDocx ? (
-            <>
-              <iframe
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-                className="w-full h-[80vh] rounded-md border mb-4"
-                title="Word Document Viewer"
-              />
-              <DownloadButton fileUrl={fileUrl} />
-            </>
-          ) : (
-            <img src={fileUrl} alt="Uploaded Document" className="w-full max-h-[80vh] rounded-md mb-4" />
-          )}
-  
-          {/* Close Button */}
-          <button
-            className="btn btn-danger self-end bg-[#0056b3] hover:bg-[#003c80] text-white font-semibold py-2 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+      const DocumentViewer = ({
+        fileUrl,
+        documentName,
+        onClose,
+      }: {
+        fileUrl: string;
+        documentName: string;
+        onClose: () => void;
+      }) => {
+        const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
+        const isDocx = fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".doc");
+      
+        return (
+          <div
+            className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
             onClick={onClose}
           >
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  };
+            <div
+              className="modal-content bg-white rounded-2xl p-4 shadow-xl relative w-[90vw] max-w-[700px] max-h-[90vh] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-lg font-semibold mb-4">
+                {documentName}
+              </div>
+      
+              {/* File Viewer */}
+              {isPdf || isDocx ? (
+                <>
+                  <iframe
+                    src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+                    className="w-full h-[80vh] rounded-md border mb-4"
+                    title="Document Viewer"
+                  />
+                  <DownloadButton fileUrl={fileUrl} />
+                </>
+              ) : (
+                <img
+                  src={fileUrl}
+                  alt={documentName}
+                  className="w-full max-h-[80vh] rounded-md mb-4"
+                />
+              )}
+      
+              {/* Close Button */}
+              <button
+                className="btn btn-danger self-end bg-[#0056b3] hover:bg-[#003c80] text-white font-semibold py-2 px-6 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        );
+      };
+      
   
   // Reusable Download Button Component
   const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
@@ -311,7 +319,13 @@ const DataControllerViewApplicationDetails: React.FC = () => {
   };
   
   // File Renderer Component
-  const FileRenderer = ({ fileName }: { fileName: string | null }) => {
+  const FileRenderer = ({
+    fileName,
+    documentName,
+  }: { 
+    fileName: string | null;
+    documentName: string; 
+  }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const fileUrl = fileName || "";
   
@@ -322,10 +336,17 @@ const DataControllerViewApplicationDetails: React.FC = () => {
         <span style={{ cursor: "pointer", color: "blue" }} onClick={() => setModalOpen(true)}>
           {fileUrl.endsWith(".pdf") ? "View PDF" : "View Document"}
         </span>
-        {modalOpen && <DocumentViewer fileUrl={fileUrl} onClose={() => setModalOpen(false)} />}
+        {modalOpen && (
+          <DocumentViewer
+            fileUrl={fileUrl}
+            documentName={documentName}  // Pass it down
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </>
     );
   };
+  
 
   const handleUpdate = async () => {
     if (!workPermit?._id) {
@@ -488,7 +509,7 @@ return (
     <p><strong>1x1 Picture:</strong></p>
     <span>
       {workPermit.formData.files?.document1 ? (
-        <FileRenderer fileName={workPermit.formData.files.document1} />
+        <FileRenderer documentName="1x1 Picture" fileName={workPermit.formData.files.document1} />
       ) : (
         "No file uploaded"
       )}
@@ -498,7 +519,7 @@ return (
     <p><strong>Cedula:</strong></p>
     <span>
       {workPermit.formData.files?.document2 ? (
-        <FileRenderer fileName={workPermit.formData.files.document2} />
+        <FileRenderer documentName="Cedula" fileName={workPermit.formData.files.document2} />
       ) : (
         "No file uploaded"
       )}
@@ -510,7 +531,7 @@ return (
         <p><strong>Referral Letter:</strong></p>
         <span>
           {workPermit.formData.files?.document3 ? (
-            <FileRenderer fileName={workPermit.formData.files.document3} />
+            <FileRenderer documentName="Referral Letter" fileName={workPermit.formData.files.document3} />
           ) : (
             "No file uploaded"
           )}
@@ -524,7 +545,7 @@ return (
         <p><strong>FTJS Certificate:</strong></p>
         <span>
           {workPermit.formData.files?.document4 ? (
-            <FileRenderer fileName={workPermit.formData.files.document4} />
+            <FileRenderer  documentName="FTJS Certificate" fileName={workPermit.formData.files.document4} />
           ) : (
             "No file uploaded"
           )}
@@ -537,7 +558,7 @@ return (
       <>
         <p><strong>Receipt: </strong></p>
         <span>
-          <FileRenderer fileName={workPermit.receipt.receiptFile} />
+          <FileRenderer  documentName="Receipt" fileName={workPermit.receipt.receiptFile} />
         </span>
       </>
     )}
@@ -547,7 +568,11 @@ return (
       <>
         <p><strong>Work Permit:</strong></p>
         <span>
-          <FileRenderer fileName={workPermit.permitFile} />
+        <FileRenderer 
+  fileName={workPermit.permitFile}
+  documentName="Work Permit"  // <-- Add this
+/>
+
         </span>
       </>
     )}
