@@ -1089,7 +1089,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by ID, Status, or Classification"
+              placeholder="Search by ID, Name, or Address"
               value={inputValue} // Use inputValue for the input field
               onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
               className="search-input" // Add a class for styling
@@ -1232,7 +1232,8 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {editownermodal && activePermitId && (
       <div className="modal-overlay" onClick={editcloseModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <p>Edit Owner Details ID: <strong>{activePermitId.id}</strong></p>
+          <h2>Edit Owner Details</h2>
+          <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
           <div className="form-group">
             <label className="checkbox-label">
@@ -1508,7 +1509,9 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {viewAttachmentsModal && activePermitId && (
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <p>Permit ID: {activePermitId._id}</p>
+        <h2>View Attatchments</h2>
+        <p>Application ID: <strong>{activePermitId._id}</strong></p>
+
 
 {/* Document 1 */}
 <p>
@@ -1963,7 +1966,8 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {viewbusinessdetails && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessDetails}>
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-  <p>Edit Business Details Application ID: <strong>{activePermitId.id}</strong></p>
+  <h2>Edit Business Details</h2>
+  <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
 
 <div className="form-group">
@@ -2540,9 +2544,10 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
               display: "flex",        // Add flex display
               justifyContent: "center", 
               width: "100%",
+              gap: "10px", 
               marginTop: "20px"        // (Optional) add some spacing if needed
             }}>
-              <button style={{ marginLeft: '10px' }} className="btn btn-primary" onClick={() => {
+              <button className="btn btn-primary" onClick={() => {
                 closeRejectpermit(); // Show remarks input when rejecting
               }}>No</button>
               <button className="btn btn-primary-cancel" onClick={() => {

@@ -72,6 +72,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPermit, setSelectedPermit] = useState<WorkPermit | null>(null);
   const [isAttachmentsModalOpen, setIsAttachmentsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // Track if fields are editable
 
   const customModalStyles = {
     content: {
@@ -115,7 +116,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
   // CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(workPermits.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -134,7 +135,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
   // END CODE FOR TABLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   // Search QUERY @@@@@@@@@@@@@@@@@@@@@
-  const [, setSearchQuery] = useState<string>(''); // Track the search query
+
   const [inputValue, setInputValue] = useState<string>('');
  
 
@@ -175,35 +176,41 @@ const DataControllerForAssessmentWP: React.FC = () => {
   // Get current items
   const currentItems = filteredItems.slice(startIndex, endIndex); 
 
-  // Handle the search and classification filter together
-  const applyFilters = (searchValue: string,) => {
-    const results = workPermits.filter((permit) => {
-      const matchesSearchQuery = permit.id.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.workpermitstatus.toLowerCase().includes(searchValue.toLowerCase()) ||
-        permit.classification.toLowerCase().includes(searchValue.toLowerCase());
 
-     
-
-      return matchesSearchQuery;
-    });
-
-    setFilteredItems(results); // Update filtered items
-    setCurrentPage(0); // Reset to the first page of results
-    console.log('Filtered Results:', results); // Log the filtered results
-  };
 
   // Handle the search when the button is clicked
   const handleSearch = () => {
-    const searchValue = inputValue; // Use input value for search
-    setSearchQuery(searchValue); // Update search query state
-    applyFilters(searchValue); // Apply both search and classification filters
+    const searchValue = inputValue.toLowerCase(); // normalize input
+    const filteredBySearch = workPermits.filter((permit) => {
+     
+      const firstname = permit?.formData.personalInformation.firstName?.toLowerCase() || "";
+      const lastname = permit?.formData.personalInformation.lastName?.toLowerCase() || "";
+
+      const permitid = permit?.id?.toString().toLowerCase() || "";
+      return (
+        firstname.includes(searchValue) ||
+        permitid.includes(searchValue) ||
+        lastname.includes(searchValue) 
+      );
+    });
+  
+    setFilteredItems(filteredBySearch);
+    setCurrentPage(0); // Reset to the first page of results
   };
 
 
      const { type } = useParams<{ type: string }>();
  
+     const [originalPermit, setOriginalPermit] = useState<WorkPermit | null>(null);
+     const handleEditClick = () => {
+      setOriginalPermit(selectedPermit); // Save original
+      setIsEditing(true);
+    };
 
-
+    const handleCancelEdit = () => {
+      setSelectedPermit(originalPermit); // Revert changes
+      setIsEditing(false);
+    };
   useEffect(() => {
     const handleTokenCheck = () => {
       if (!token) {
@@ -618,22 +625,24 @@ if (type === 'new') {
         </header>
         <div className='workpermittable'>
         <p>{displayTextTitle}</p>
-          {/* Search Bar */}
-          Search:
+
+        <div>
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by ID, Status, or Classification"
+              placeholder="Search by ID, Name, or Address"
               value={inputValue} // Use inputValue for the input field
               onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
               className="search-input" // Add a class for styling
             />
-            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+
+            <button onClick={handleSearch} className="search-button mt-1">Search</button> {/* Button to trigger search */}
+            
           </div>
 
 
+
           {/* Date Pickers for Date Range Filter */}
-          Start Date:
           <div className="date-picker-container">
             <input
               type="date"
@@ -642,7 +651,6 @@ if (type === 'new') {
               max={maxDate} // Set the maximum date to today
               placeholder="Start Date"
             />
-            End Date:
             <input
               type="date"
               value={endDate}
@@ -652,8 +660,9 @@ if (type === 'new') {
             />
             <button onClick={handleDateSearch} className="search-button">Search by Date</button>
           </div>
+          </div>
 
-          <table className="permit-table">
+          <table className="permit-table mt-3">
             <thead>
               <tr>
                 <th onClick={() => handleSort('id')}>
@@ -706,26 +715,26 @@ if (type === 'new') {
           </table>
 
           {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 0}
-                className="btn btn-danger"
-              >
-                Previous
-              </button>
-              <span style={{ margin: "0 10px", marginTop: "8px" }}>
-                Page {currentPage + 1} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages - 1}
-                className="btn btn-success"
-              >
-                Next
-              </button>
-            </div>
-          )}
+  <div className="d-flex justify-content-end align-items-center mt-3 pagination">
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      className="pagination-button"
+    >
+      Previous
+    </button>
+    <span className="page-info me-2" style={{ marginTop: "5px" }}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      className="pagination-button"
+    >
+      Next
+    </button>
+  </div>
+)}
         </div>
       </div>
       <Modal
@@ -921,6 +930,7 @@ if (type === 'new') {
               Civil Status:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.civilStatus || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1107,6 +1117,30 @@ if (type === 'new') {
                 }
               />
             </label>
+            <div>
+            <button 
+  className="btn btn-primary" 
+  onClick={(e) => {
+    e.preventDefault();
+    if (isEditing) {
+      // Save logic handled by form submit
+    } else {
+      handleEditClick(); // 👈 call this when starting edit
+    }
+  }}
+>
+  {isEditing ? 'Save' : 'Edit'}
+</button>
+  {isEditing && (
+    <button className="btn btn-primary-cancel" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
+      Cancel
+    </button>
+  )}
+  {!isEditing && (
+    <button className="btn btn-primary-cancel" onClick={closeModal} style={{ marginLeft: '10px' }}>Close</button>
+  )}
+</div>
+
             <div style={{marginTop: '10px'}}>
             <button type="submit" className="btn btn-success" >Save</button>
             <button type="button" className="btn btn-danger" onClick={closeModal} style={{marginLeft: '10px'}}>
