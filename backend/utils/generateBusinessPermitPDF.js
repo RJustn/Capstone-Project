@@ -66,10 +66,11 @@ const generateBusinessPermitPDF = async (id) => {
         // Business Details
         doc.text(`Business Name: ${businessPermit.business?.name || 'N/A'}`);
         doc.text(`Location: ${businessPermit.business?.location || 'N/A'}`);
+        doc.text(`Payment Status: ${businessPermit.paymentStatus || 'N/A'}`);
         doc.text(`Taxpayer Name: ${businessPermit.owner?.fullname || 'N/A'}`);
         doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
         doc.text(`Permit Number: ${businessPermit.permitnumber || 'N/A'}`);
-        doc.text(`Business Permit Status: ${businessPermit.businesspermitstatus || 'N/A'}`); // Added line
+        doc.text(`Business Status: ${businessPermit.businesspermitstatus || 'N/A'}`); // Added line
         doc.text(`Date Issued: ${businessPermit.permitDateIssued || 'N/A'}`);
         doc.text(`Expiry Date: ${businessPermit.permitExpiryDate || 'N/A'}`);
         doc.moveDown(2);
