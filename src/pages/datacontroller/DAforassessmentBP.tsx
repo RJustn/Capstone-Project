@@ -1540,7 +1540,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document1')} />
   )}
 
   <label>Remarks:</label>
@@ -1586,7 +1586,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document2')} />
   )}
 
   <label>Remarks:</label>
@@ -1631,7 +1631,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+    <input type="file"  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document3')} />
   )}
 
   <label>Remarks:</label>
@@ -1675,7 +1675,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document4')} />
   )}
 
   <label>Remarks:</label>
@@ -1719,7 +1719,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document5')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document5')} />
   )}
 
   <label>Remarks:</label>
@@ -1763,7 +1763,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document6')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document6')} />
   )}
 
   <label>Remarks:</label>
@@ -1806,7 +1806,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   )}
 
   {isEditingAttach && (
-    <input type="file" onChange={(e) => handleFileChange(e, 'document7')} />
+    <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document7')} />
   )}
 
   <label>Remarks:</label>
@@ -1846,7 +1846,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     )}
 
     {isEditingAttach && (
-      <input type="file" onChange={(e) => handleFileChange(e, 'document8')} />
+      <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document8')} />
     )}
 
     <label>Remarks:</label>
@@ -1888,7 +1888,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     )}
 
     {isEditingAttach && (
-      <input type="file" onChange={(e) => handleFileChange(e, 'document9')} />
+      <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document9')} />
     )}
 
     <label>Remarks:</label>
@@ -1929,7 +1929,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     )}
 
     {isEditingAttach && (
-      <input type="file" onChange={(e) => handleFileChange(e, 'document10')} />
+      <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document10')} />
     )}
 
     <label>Remarks:</label>

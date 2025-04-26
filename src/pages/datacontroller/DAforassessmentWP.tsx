@@ -296,6 +296,8 @@ const DataControllerForAssessmentWP: React.FC = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPermit(null);
+    setIsEditing(false);
+  
   };
 
   const closeAttachmentsModal = () => {
@@ -316,7 +318,15 @@ const DataControllerForAssessmentWP: React.FC = () => {
           },
           body: JSON.stringify({ formData: selectedPermit.formData }),
         });
-  
+  // Show loading SweetAlert
+      Swal.fire({
+        title: 'Updating Work Permit Details...',
+        text: 'Please wait while we update the application.',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
         if (response.ok) {
           const updatedPermit = await response.json();
           setWorkPermits((prevPermits) =>
@@ -514,7 +524,15 @@ const updateAttachments = async (e: React.FormEvent) => {
   if (files.document4) formData.append('document4', files.document4);
 
   logFormData(formData);
-
+// Show loading SweetAlert
+    Swal.fire({
+      title: 'Updating Attachments...',
+      text: 'Please wait while we upload your documents.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
   try {
     if (!selectedPermit) {
       console.error('No permit selected');
@@ -750,6 +768,7 @@ if (type === 'new') {
               First Name:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.firstName}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -769,6 +788,7 @@ if (type === 'new') {
               Last Name:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.lastName}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -788,6 +808,7 @@ if (type === 'new') {
               Middle Initial:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.middleInitial || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -807,6 +828,7 @@ if (type === 'new') {
               Permanent Address:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.permanentAddress || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -826,6 +848,7 @@ if (type === 'new') {
               Currently Residing:
               <input
                 type="checkbox"
+                disabled={!isEditing}
                 checked={selectedPermit.formData.personalInformation.currentlyResiding}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -845,6 +868,7 @@ if (type === 'new') {
               Temporary Address:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.temporaryAddress || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -864,6 +888,7 @@ if (type === 'new') {
   Date of Birth:
   <input
     type="date"
+    disabled={!isEditing}
     value={selectedPermit.formData.personalInformation.dateOfBirth ? new Date(selectedPermit.formData.personalInformation.dateOfBirth).toISOString().split('T')[0] : ''}
     onChange={(e) => handleDateChange(e, 'dateOfBirth')}
     max={maxDate} // Set the maximum date to today
@@ -873,6 +898,7 @@ if (type === 'new') {
               Age:
               <input
                 type="number"
+                disabled={!isEditing}
               value={selectedPermit.formData.personalInformation.age?.toString() || ''}
               onChange={(e) =>
                 setSelectedPermit({
@@ -892,6 +918,7 @@ if (type === 'new') {
               Place of Birth:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.placeOfBirth || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -911,6 +938,7 @@ if (type === 'new') {
               Citizenship:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.citizenship || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -950,6 +978,7 @@ if (type === 'new') {
               Gender:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.gender || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -969,6 +998,7 @@ if (type === 'new') {
               Height:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.height || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -988,6 +1018,7 @@ if (type === 'new') {
               Weight:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.weight || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1007,6 +1038,7 @@ if (type === 'new') {
               Mobile Tel:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.mobileTel || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1026,6 +1058,7 @@ if (type === 'new') {
               Email:
               <input
                 type="email"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.email || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1045,6 +1078,7 @@ if (type === 'new') {
               Educational Attainment:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.educationalAttainment || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1064,6 +1098,7 @@ if (type === 'new') {
               Nature of Work:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.natureOfWork || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1083,6 +1118,7 @@ if (type === 'new') {
               Place of Work:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.placeOfWork || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1102,6 +1138,7 @@ if (type === 'new') {
               Company Name:
               <input
                 type="text"
+                disabled={!isEditing}
                 value={selectedPermit.formData.personalInformation.companyName || ''}
                 onChange={(e) =>
                   setSelectedPermit({
@@ -1117,7 +1154,7 @@ if (type === 'new') {
                 }
               />
             </label>
-            <div>
+            <div className='mt-1'>
             <button
   className="btn btn-primary"
   type={isEditing ? "submit" : "button"} // 👉 change the type based on mode
@@ -1141,12 +1178,6 @@ if (type === 'new') {
   )}
 </div>
 
-            <div style={{marginTop: '10px'}}>
-            <button type="submit" className="btn btn-success" >Save</button>
-            <button type="button" className="btn btn-danger" onClick={closeModal} style={{marginLeft: '10px'}}>
-              Cancel
-            </button>
-            </div>
           </form>
         )}
       </Modal>
@@ -1174,7 +1205,7 @@ if (type === 'new') {
                   </button>
                 )}
           {isEditingAttach && (
-            <input type="file" onChange={(e) => handleFileChange(e, 'document1')} />
+            <input type="file"  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document1')} />
           )}
           <label>Remarks:</label>
           <input 
@@ -1199,7 +1230,7 @@ if (type === 'new') {
             </button>
           )}
           {isEditingAttach && (
-            <input type="file" onChange={(e) => handleFileChange(e, 'document2')} />
+            <input type="file"  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document2')} />
           )}
           <label>Remarks:</label>
           <input 
@@ -1222,7 +1253,7 @@ if (type === 'new') {
             </button>
           )}
           {isEditingAttach && (
-            <input type="file" onChange={(e) => handleFileChange(e, 'document3')} />
+            <input type="file"  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
           )}
           <label>Remarks:</label>
           <input 
@@ -1245,7 +1276,7 @@ if (type === 'new') {
             </button>
           )}
           {isEditingAttach && (
-            <input type="file" onChange={(e) => handleFileChange(e, 'document4')} />
+            <input type="file"  accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"  onChange={(e) => handleFileChange(e, 'document4')} />
           )}
           <label>Remarks:</label>
           <input 
