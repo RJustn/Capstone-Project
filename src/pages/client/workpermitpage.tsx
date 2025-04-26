@@ -370,33 +370,36 @@ const WorkPermit: React.FC = () => {
 
     logFormData(formData);
 
-    const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4')[] = ['document1', 'document2', 'document3'];
+    const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4')[] = ['document1', 'document2'];
 
-    if (workpermitclassification !== 'Renew') {
-      requiredDocs.push('document4');
-    }
-    
-    if (!currentlyResiding) {
-      requiredDocs.push('document3');
-    }
-    
-    // Collect missing documents
-    const missingDocs = requiredDocs.filter((doc) => !files[doc]);
-    
-    if (missingDocs.length > 0) {
-      const updatedErrors = { ...fileErrors };
-      missingDocs.forEach((doc) => {
-        updatedErrors[doc] = 'This file is required.';
-      });
-      setFileErrors(updatedErrors);
-    
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing Required File(s)',
-        text: `Please upload the following documents`,
-      });
-      return;
-    }
+// Only add document4 if classification is not 'Renew'
+if (workpermitclassification !== 'Renew') {
+  requiredDocs.push('document4');
+}
+
+// Only add document3 if currentlyResiding is false (not checked)
+if (!currentlyResiding) {
+  requiredDocs.push('document3');
+}
+
+// Collect missing documents
+const missingDocs = requiredDocs.filter((doc) => !files[doc]);
+
+if (missingDocs.length > 0) {
+  const updatedErrors = { ...fileErrors };
+  missingDocs.forEach((doc) => {
+    updatedErrors[doc] = 'This file is required.';
+  });
+  setFileErrors(updatedErrors);
+
+  Swal.fire({
+    icon: 'error',
+    title: 'Missing Required File(s)',
+    text: `Please upload the following documents`,
+  });
+  return;
+}
+
     
     // Check for any file upload errors
     const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
