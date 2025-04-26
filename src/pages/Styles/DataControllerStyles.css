@@ -558,7 +558,7 @@ h2 {
 }
 
 .pagination-button {
-  background-color: #4f46e5;
+  background-color: #0056b3;
   color: #fff;
   padding: 0.4rem 0.8rem;
   border: none;
@@ -569,11 +569,11 @@ h2 {
 }
 
 .pagination-button:hover {
-  background-color: #4338ca;
+  background-color: #014084;
 }
 
 .pagination-button:disabled {
-  background-color: #a5b4fc;
+  background-color: #344466;
   cursor: not-allowed;
 }
 
@@ -584,4 +584,37 @@ h2 {
 }
 
 
+.btn-primary {
+  background-color: #0074f1; /* Custom blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 20px; /* Bigger padding for better size */
+  font-size: 16px; /* Adjust text size */
+  min-width: 100px; /* Minimum width so small text buttons don't look tiny */
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker on hover */
+}
+
+.btn-primary-cancel:hover {
+  background-color: #af211c; /* Darker on hover */
+  color: white; 
+}
+.btn-primary-cancel {
+  background-color: #ff2921; /* Custom blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 20px; /* Bigger padding for better size */
+  font-size: 16px; /* Adjust text size */
+  min-width: 100px; /* Minimum width so small text buttons don't look tiny */
+  transition: background-color 0.3s;
+  text-align: center;
+} 
 

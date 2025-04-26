@@ -1084,62 +1084,42 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
         </header>
         <div className='workpermittable'>
         <p>{displayTextTitle}</p>
+ {/*Search */}
+        <div>
+          <div className="search-bar-container">
+            <input
+              type="text"
+              placeholder="Search by ID, Status, or Classification"
+              value={inputValue} // Use inputValue for the input field
+              onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
+              className="search-input" // Add a class for styling
+            />
 
-        <div className="mt-4 space-y-6">
-  {/* Search Bar */}
-  <div className="flex flex-col space-y-2">
-    <label className="text-sm font-semibold text-gray-700">Search:</label>
-    <div className="flex items-center gap-2">
-      <input
-        type="text"
-        placeholder="Search by ID, Name, or Address"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-      />
-      <button
-        onClick={handleSearch}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-      >
-        Search
-      </button>
-    </div>
-  </div>
+            <button onClick={handleSearch} className="search-button mt-1">Search</button> {/* Button to trigger search */}
+            
+          </div>
 
-  {/* Date Filter */}
-  <div className="flex flex-col space-y-2">
-    <label className="text-sm font-semibold text-gray-700">Filter by Date:</label>
-    <div className="flex flex-col md:flex-row items-center gap-4">
-      <div className="flex flex-col">
-        <label className="text-xs text-gray-500">Start Date</label>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          max={maxDate}
-          className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-        />
-      </div>
-      <div className="flex flex-col">
-        <label className="text-xs text-gray-500">End Date</label>
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          max={maxDate}
-          className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-        />
-      </div>
-      <button
-        onClick={handleDateSearch}
-        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mt-2 md:mt-5"
-      >
-        Search by Date
-      </button>
-    </div>
-  </div>
-</div>
 
+
+          {/* Date Pickers for Date Range Filter */}
+          <div className="date-picker-container">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              max={maxDate} // Set the maximum date to today
+              placeholder="Start Date"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              max={maxDate} // Set the maximum date to today
+              placeholder="End Date"
+            />
+            <button onClick={handleDateSearch} className="search-button">Search by Date</button>
+          </div>
+          </div>
 
        {businessPermits.length === 0 ? (
     <div className="error-message mt-3">
@@ -1149,7 +1129,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     </div>
   ) : (
     <div>
-          <table className="permit-table">
+          <table className="permit-table mt-3">
             <thead>
               <tr>
                 <th>
@@ -1252,7 +1232,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {editownermodal && activePermitId && (
       <div className="modal-overlay" onClick={editcloseModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <p>Edit Owner Details {activePermitId._id}</p>
+          <p>Edit Owner Details ID: <strong>{activePermitId.id}</strong></p>
 
           <div className="form-group">
             <label className="checkbox-label">
@@ -1270,7 +1250,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
         
           <div className="form-group">
-  <label>LAST NAME:</label>
+  <label>Last Name:</label>
   <input
     type="text"
     value={isEditing ? lastname : activePermitId.owner.lastname} // Use `lastname` when editing
@@ -1280,7 +1260,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   />
 </div>
 <div className="form-group">
-  <label>FIRST NAME:</label>
+  <label>First Name:</label>
   <input
     type="text"
     value={isEditing ? firstname : activePermitId.owner.firstname} // Use `lastname` when editing
@@ -1290,7 +1270,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   />
 
 <div className="form-group">
-  <label>MIDDLE INITIAL:</label>
+  <label>Middle Initial:</label>
   <input
     type="text"
     value={isEditing ? middleinitial : activePermitId.owner.middleinitial} // Use `lastname` when editing
@@ -1302,7 +1282,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 </div>
 <div className="form-group">
-  <label>COMPANY NAME:</label>
+  <label>Company Name:</label>
   <input
     type="text"
     value={isEditing ? companyname : activePermitId.owner.companyname} // Use `lastname` when editing
@@ -1356,7 +1336,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 <div className="form-group">
   <label>Tin Number:</label>
   <input
-    type="text"
+    type="number"
     value={isEditing ? tinnumber : activePermitId.owner.tinnumber} // Use `lastname` when editing
     onChange={(e) => setTinNumber(e.target.value)}
     required
@@ -1399,7 +1379,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 <div className="form-group">
   <label>Representative Mobile Number:</label>
   <input
-    type="text"
+    type="number"
     value={isEditing ? repmobilenumber : activePermitId.owner.representativedetails?.repmobilenumber} // Use `lastname` when editing
     onChange={(e) => setRepMobileNumber(e.target.value)}
     required
@@ -1509,16 +1489,16 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 </div>
           {/* Additional fields */}
           <div>
-  <button className="btn btn-success" onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
+  <button className="btn btn-primary" onClick={isEditing ? handleeditsave : () => setIsEditing(true)}>
     {isEditing ? 'Save' : 'Edit'}
   </button>
   {isEditing && (
-    <button className="btn btn-danger" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-primary-cancel" onClick={handleCancelEdit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
   {!isEditing && (
-    <button className="btn btn-danger" onClick={editcloseModal} style={{ marginLeft: '10px' }}>Close</button>
+    <button className="btn btn-primary-cancel" onClick={editcloseModal} style={{ marginLeft: '10px' }}>Close</button>
   )}
 </div>
         </div>
@@ -1963,18 +1943,19 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   </p>
 )}
 
-        <button className="modal-button"onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
+        <div>
+  <button className="btn btn-primary" onClick={isEditingAttach ? updateAttachments : () => setIsEditingAttach(true)}>
     {isEditingAttach ? 'Save' : 'Edit'}
   </button>
   {isEditingAttach && (
-    <button className="btn btn-secondary" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-primary-cancel" onClick={handleCancelEditAttach} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
-        {/* Close Modal Button */}
-        <button className="btn btn-danger" onClick={closeViewAttachmentsModal}>
-          Close
-        </button>
+  {!isEditingAttach && (
+    <button className="btn btn-primary-cancel" onClick={closeViewAttachmentsModal} style={{ marginLeft: '10px' }}>Close</button>
+  )}
+</div>
       </div>
     </div>
       )}
@@ -1982,7 +1963,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {viewbusinessdetails && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessDetails}>
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-  <p>Edit Owner Details {activePermitId._id}</p>
+  <p>Edit Business Details Application ID: <strong>{activePermitId.id}</strong></p>
 
 
 <div className="form-group">
@@ -2058,7 +2039,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 </div>
                 <div className="form-group">
                   <label>Contact Number:</label>
-                  <input type="text" disabled={!editbusiness} value={editbusiness ? businesscontactnumber : activePermitId.business.businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
+                  <input type="number" disabled={!editbusiness} value={editbusiness ? businesscontactnumber : activePermitId.business.businesscontactnumber} onChange={(e) => setBusinessContactNumber(e.target.value)} />
 
 
                 </div>
@@ -2521,22 +2502,19 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                     <option value="Branch">BRANCH</option>
                   </select>
                 </div>
-
-
-  <div>
-  <button onClick={editbusiness ? handlesavebusinessedit : () => setEditBusiness(true)}>
+    <div>
+  <button className="btn btn-primary" onClick={editbusiness ? handlesavebusinessedit : () => setEditBusiness(true)}>
     {editbusiness ? 'Save' : 'Edit'}
   </button>
   {editbusiness && (
-    <button className="btn btn-secondary"onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
+    <button className="btn btn-primary-cancel" onClick={handlecancelbusinessedit} style={{ marginLeft: '10px' }}>
       Cancel
     </button>
   )}
-          {/* Close Modal Button */}
-          <button className="btn btn-danger"onClick={closeViewBusinessDetails}>
-          Close
-        </button>
-    </div>
+  {!editbusiness && (
+    <button className="btn btn-primary-cancel" onClick={closeViewBusinessDetails} style={{ marginLeft: '10px' }}>Close</button>
+  )}
+</div>
 </div>
 </div>
       )}
@@ -2556,13 +2534,13 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
         <div className="modal-overlay" onClick={closeRejectpermit}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Reject Permit {activePermitId.id}?</h2>
-            <p>Are you sure you want to approve or reject this permit? Please confirm your decision.</p>
+            <p>Are you sure you want to reject this permit? Please confirm your decision.</p>
 
-            <div className="button-group">
-              <button className="btn btn-success" onClick={() => {
+            <div className="" style={{justifyContent:"center", width:"100%"}}>
+              <button className="btn btn-primary" onClick={() => {
                 closeRejectpermit(); // Show remarks input when rejecting
               }}>No</button>
-              <button className="btn btn-danger" onClick={() => {
+              <button className="btn btn-primary-cancel" onClick={() => {
                 setIsRejecting(true); // Show remarks input when rejecting
               }}>
                 Yes
@@ -2581,7 +2559,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
               <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
               </div>
             )}
-            <button className="btn btn-danger" onClick={closeRejectpermit}>
+            <button className="btn btn-primary-cancel" onClick={closeRejectpermit}>
               Close
             </button>
           </div>
