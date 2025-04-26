@@ -1118,15 +1118,15 @@ if (type === 'new') {
               />
             </label>
             <div>
-            <button 
-  className="btn btn-primary" 
+            <button
+  className="btn btn-primary"
+  type={isEditing ? "submit" : "button"} // 👉 change the type based on mode
   onClick={(e) => {
-    e.preventDefault();
-    if (isEditing) {
-      // Save logic handled by form submit
-    } else {
-      handleEditClick(); // 👈 call this when starting edit
+    if (!isEditing) {
+      e.preventDefault(); // prevent if it's Edit mode
+      handleEditClick();
     }
+    // If isEditing = true, type="submit" will automatically submit the form!
   }}
 >
   {isEditing ? 'Save' : 'Edit'}

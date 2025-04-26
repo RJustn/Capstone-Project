@@ -370,44 +370,43 @@ const WorkPermit: React.FC = () => {
 
     logFormData(formData);
 
-      // Required file check for documents 1 to 4
-  const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4')[] = ['document1', 'document2', 'document3'];
+    const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4')[] = ['document1', 'document2', 'document3'];
 
-  // Only require document4 if no workPermits exist
-  if (workPermits.length === 0) {
-    requiredDocs.push('document4');
-  }
-
-  // Collect missing documents
-  const missingDocs = requiredDocs.filter((doc) => !files[doc]);
-
-  if (missingDocs.length > 0) {
-    const updatedErrors = { ...fileErrors };
-    missingDocs.forEach((doc) => {
-      updatedErrors[doc] = 'This file is required.';
-    });
-    setFileErrors(updatedErrors);
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Missing Required File(s)',
-      text: `Please upload the following documents`,
-    });
-    return;
-  }
-
+    // Only require document4 if no workPermits exist and classification is not 'Renew'
+    if (workPermits.length === 0 && workpermitclassification !== 'Renew') {
+      requiredDocs.push('document4');
+    }
+    
+    // Collect missing documents
+    const missingDocs = requiredDocs.filter((doc) => !files[doc]);
+    
+    if (missingDocs.length > 0) {
+      const updatedErrors = { ...fileErrors };
+      missingDocs.forEach((doc) => {
+        updatedErrors[doc] = 'This file is required.';
+      });
+      setFileErrors(updatedErrors);
+    
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required File(s)',
+        text: `Please upload the following documents`,
+      });
+      return;
+    }
+    
     // Check for any file upload errors
-const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
-
-if (hasFileErrors) {
-  Swal.fire({
-    icon: 'error',
-    title: 'Invalid File Upload',
-    text: 'Please fix the file errors before submitting.',
-  });
-  return; // Stop submission
-}
-
+    const hasFileErrors = Object.values(fileErrors).some((err) => err !== '');
+    
+    if (hasFileErrors) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Upload',
+        text: 'Please fix the file errors before submitting.',
+      });
+      return;
+    }
+    
 
     try {
       Swal.fire({
