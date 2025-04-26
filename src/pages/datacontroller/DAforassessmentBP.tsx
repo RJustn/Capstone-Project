@@ -1084,44 +1084,47 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
         </header>
         <div className='workpermittable'>
         <p>{displayTextTitle}</p>
-          {/* Search Bar */}
-          Search:
-          <div className="search-bar-container">
-            <input
-              type="text"
-              placeholder="Search by ID, Status, or Classification"
-              value={inputValue} // Use inputValue for the input field
-              onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
-              className="search-input" // Add a class for styling
-            />
-            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
-          </div>
-          <div className="date-filter">
-  {/* Date Pickers for Date Range Filter */}
-  <label>Start Date:</label>
-  <div className="date-picker-container">
+
+        <div className="search-filter mt-1">
+  {/* Search Bar */}
+  <label>Search:</label>
+  <div className="search-bar-container">
     <input
-      type="date"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-      max={maxDate}
-      placeholder="Start Date"
+      type="text"
+      placeholder="Search by ID, Status, or Classification"
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      className="search-input"
     />
-    <label>End Date:</label>
-    <input
-      type="date"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-      max={maxDate}
-      placeholder="End Date"
-    />
-    <button onClick={handleDateSearch} className="search-button">
-      Search by Date
-    </button>
+    <button onClick={handleSearch} className="search-button">Search</button>
   </div>
-          </div>
+
+  {/* Date Filter */}
+  <div className="date-filter mt-3">
+    <label>Start Date:</label>
+    <div className="date-picker-container">
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+        max={maxDate}
+      />
+      <label>End Date:</label>
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+        max={maxDate}
+      />
+      <button onClick={handleDateSearch} className="search-button">
+        Search by Date
+      </button>
+    </div>
+  </div>
+</div>
+
        {businessPermits.length === 0 ? (
-    <div className="error-message">
+    <div className="error-message mt-3">
       <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
         No Business Application found.
       </p>
@@ -1204,7 +1207,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
   </tbody>
           </table>
             {totalPages > 1 && (
-    <div className="d-flex justify-content-start align-items-center mt-3 pagination">
+    <div className="d-flex justify-content-right align-items-center mt-3 pagination">
       <button
         onClick={handlePreviousPage}
         disabled={currentPage === 0}
@@ -1218,7 +1221,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
       <button
         onClick={handleNextPage}
         disabled={currentPage === totalPages - 1}
-        className="btn btn-success"
+        className="btn"
       >
         Next
       </button>
