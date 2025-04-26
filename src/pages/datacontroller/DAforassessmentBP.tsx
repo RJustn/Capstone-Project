@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 
 const DataControllerForAssessmentBP: React.FC = () => {
   const [businessPermits, setBusinessPermits] = useState<BusinessPermit[]>([]);
-  const [filteredItems, setFilteredItems] = useState<BusinessPermit[]>([]);
+  const [filteredItems, setFilteredItems] = useState(businessPermits);
   
   const navigate = useNavigate();
 
@@ -137,8 +137,9 @@ const DataControllerForAssessmentBP: React.FC = () => {
 
   //Table Code
   const [currentPage, setCurrentPage] = useState(0);
+  
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(businessPermits.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -166,8 +167,11 @@ const DataControllerForAssessmentBP: React.FC = () => {
     const searchValue = inputValue.toLowerCase(); // normalize input
     const filteredBySearch = businessPermits.filter((permit) => {
       const businessName = permit?.business.businessname?.toLowerCase() || "";
+      const ownerLastName = permit?.owner.lastname?.toLowerCase() || "";
+      const ownerFirstName = permit?.owner.firstname?.toLowerCase() || "";
+      const companyName = permit?.owner.companyname?.toLowerCase() || "";
       const permitid = permit?.id?.toString().toLowerCase() || "";
-      return businessName.includes(searchValue) || permitid.includes(searchValue);
+      return businessName.includes(searchValue) || permitid.includes(searchValue) || permitid.includes(ownerLastName) || permitid.includes(ownerFirstName) || permitid.includes(companyName);
     });
   
     setFilteredItems(filteredBySearch);
@@ -1136,9 +1140,15 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
     {currentItems.map((permit) => (
       <React.Fragment key={permit._id}>
       <tr key={permit._id}>
-        <td>Business Name:{permit.business.businessname}<br />
-            Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
-            Address:</td>
+      <td>
+  <strong>Business Name:</strong> {permit.business.businessname}<br />
+  <strong>Owner:</strong> {
+    permit.owner.firstname && permit.owner.lastname
+      ? `${permit.owner.lastname}, ${permit.owner.firstname} ${permit.owner.middleinitial || ''}`
+      : permit.owner.companyname
+  }<br />
+  <strong>Address:</strong> {permit.business.businessbuildingblocklot}
+</td>
         <td>{permit.id}</td>
         <td>{permit.classification}</td>
         <td>{permit.businesspermitstatus}</td>
