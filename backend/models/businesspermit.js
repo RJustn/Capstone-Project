@@ -16,8 +16,8 @@ const businessPermitSchema = new mongoose.Schema({
   paymentStatus: {type: String},
   permitnumber: {type: String},
   permitFile: {type: String},
-  permitDateIssued: {type: String},
-  permitExpiryDate: {type:String},
+  permitDateIssued: { type: Date }, // Changed from String to Date
+  permitExpiryDate: { type: Date }, // Changed from String to Date
   expiryDate: {type: String},
   applicationdateIssued: { type: Date, default: Date.now },
   applicationComments: {type: String},

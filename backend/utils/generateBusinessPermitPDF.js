@@ -69,8 +69,14 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
       doc.text(`Total Gross Sales: ${businessPermit.totalgrosssales || 'N/A'}`);
       doc.text(`Total Tax: ${businessPermit.totaltax || 'N/A'}`);
       doc.text(`Permit Number: ${businessPermit.permitnumber || 'Not Assigned'}`);
-      doc.text(`Permit Date Issued: ${businessPermit.permitDateIssued ? new Date(businessPermit.permitDateIssued).toLocaleDateString() : 'Not Issued'}`);
-      doc.text(`Expiration Date: ${businessPermit.permitExpiryDate ? new Date(businessPermit.permitExpiryDate).toLocaleDateString() : 'Not Set'}`);
+      doc.text(
+        `Permit Date Issued: ${
+          businessPermit.permitDateIssued
+            ? new Date(businessPermit.permitDateIssued).toLocaleDateString()
+            : 'Not Issued'
+        }`
+      );
+      doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, leftColumnX, currentY);
       doc.moveDown(2);
 
       // Additional Details
