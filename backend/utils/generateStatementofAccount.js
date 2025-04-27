@@ -66,7 +66,6 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
       doc.text(`Zoning Clearance Fee: ₱${ContentData.zoningclearance}`);
       doc.text(`Annual Inspection Fee: ₱${ContentData.annualInspection}`);
       doc.text(`Environmental Fee: ₱${ContentData.environmental}`);
-      doc.text(`Miscellaneous Fee: ₱${ContentData.miscfee}`);
       doc.text(`Liquor/Tobacco Fee: ₱${ContentData.liquortobaco}`);
       doc.text(`Liquor Plate Fee: ₱${ContentData.liquorplate}`);
       doc.moveDown();
