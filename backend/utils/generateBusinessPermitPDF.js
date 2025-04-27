@@ -76,7 +76,18 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
             : 'Not Issued'
         }`
       );
-      doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, leftColumnX, currentY);
+      doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`);
+      doc.moveDown(2);
+
+      // Business Natures
+      doc.text('Business Natures:', { underline: true });
+      if (businessPermit.businesses && businessPermit.businesses.length > 0) {
+        businessPermit.businesses.forEach((business, index) => {
+          doc.text(`${index + 1}. ${business.businessNature || 'N/A'}`);
+        });
+      } else {
+        doc.text('No business natures available.');
+      }
       doc.moveDown(2);
 
       // Additional Details
