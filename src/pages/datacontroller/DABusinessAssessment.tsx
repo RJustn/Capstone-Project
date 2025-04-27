@@ -1608,18 +1608,22 @@ useEffect(() => {
   
 }, []);
 
-// 1st useEffect: Set payment method
 useEffect(() => {
+  // Set the date to today in YYYY-MM-DD format
+ 
   if (businessPermit?.business?.paymentmethod) {
     setPaymentMethod(businessPermit.business.paymentmethod);
   } else {
-    setPaymentMethod(undefined);
+    setPaymentMethod(undefined); // Default payment method
   }
 }, [businessPermit?.business?.paymentmethod]);
 
-// 2nd useEffect: Compute total based on payment method
-useEffect(() => {
+
+const [isComputed, setIsComputed] = useState(false);
+
+const computeAssessment = () => {
   if (!paymentmethod) {
+    Swal.fire('Error', 'Please select a payment method first.', 'error');
     return;
   }
 
@@ -1655,20 +1659,12 @@ useEffect(() => {
 
   setTotal(computedTotal);
   setPaymentMethodTotal(paymentDue);
-}, [
-  mayorspermit,
-  sanitary,
-  businessplate,
-  zoningclearance,
-  annualInspection,
-  environmental,
-  miscfee,
-  totaltax,
-  health,
-  liquortobaco,
-  liquorplate,
-  paymentmethod 
-]);
+  
+  Swal.fire('Success', 'Computation complete!', 'success').then(() => {
+    setIsComputed(true); // Show the Assess button only after successful compute
+  });
+};
+
 
 
 //Auth Checker
@@ -2088,7 +2084,21 @@ return (
       </tbody>
     </table>
     <div className='pagination mt-2'>
-    <button className='btn btn-primary-cancel' onClick={() => handlesaveassessment()}>Assess</button>
+    {!isComputed ? (
+    <button className="btn btn-primary" onClick={computeAssessment}>
+      Compute
+    </button>
+  ) : (
+    <div className='pagination mt-2'>
+    <button className="btn btn-primary" onClick={computeAssessment}>
+      Compute
+    </button>
+
+    <button className="btn btn-primary-cancel" onClick={handlesaveassessment}>
+      Assess
+    </button>
+    </div>
+  )}
   <button className='btn btn-primary-cancel' onClick={() => { window.location.href = `/DAEditBusinessNature/${businessPermit?._id}`;}}>Edit Business Nature</button>
   </div>
   {businessPermit && businessPermit.statementofaccount && businessPermit.businesspermitstatus === 'Assessed' ? (
