@@ -69,9 +69,9 @@ const ForgotPassword: React.FC = () => {
     const handleVerifyOtp = async () => {
         if (!email || !otp) return;
 
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
         if (!passwordRegex.test(password)) {
-            setError('Password must be at least 8 characters long and contain at least one uppercase letter and one number.');
+            setError('Password must be at least 8 or more characters long, contain at least one number, and one uppercase letter.');
             return;
         }
 
