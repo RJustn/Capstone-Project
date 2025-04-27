@@ -241,7 +241,6 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
   
       if (response.status === 200) {
         console.log('Payment status updated successfully');
-        setConfirmPayment(true);
   
         // Show success alert
         Swal.fire({
@@ -403,19 +402,9 @@ const [files, setFiles] = useState<{
       //Payment Modal
       const [viewpayment, setViewPayment] = useState(false);
 
-      const [confirmpayment, setConfirmPayment] = useState(false);
-
-      const confirmpaymentclose = () => {
-        setConfirmPayment(false);
-        setActivePermitId(null);
-        window.location.reload();
-      };
-    
-      const closeviewpayment = () => {
-        setViewPayment(false);
-        setActivePermitId(null);
-    
-      };
+const viewpaymentclose = () => {
+setViewPayment(false);
+}
 
    // Pagination logic
   const [currentPage, setCurrentPage] = useState(1);
@@ -564,7 +553,7 @@ const [files, setFiles] = useState<{
                     <option value="viewAssessment">View Assessment</option>
                   </>
                 )}
-                {sortedPermits[0].businesspermitstatus === 'Waiting for Payment' && (
+                {sortedPermits[0].businesspermitstatus === 'Waiting for Payment' && sortedPermits[0].businessstatus === 'Active' &&(
                   <>
                     <option value="viewApplication">View Application</option>
                     <option value="viewAssessment">View Assessment</option>
@@ -720,7 +709,7 @@ const [files, setFiles] = useState<{
   <div
     className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
     style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
-    onClick={closeviewpayment}
+    onClick={viewpaymentclose}
   >
     <div
       className="modal-content p-4"
@@ -805,40 +794,7 @@ const [files, setFiles] = useState<{
   </div>
 )}
 
-{confirmpayment && activePermitId && (
-  <div
-    className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-    style={{ backgroundColor: "rgba(0, 0, 0, 0.45)", zIndex: 1050 }}
-    onClick={confirmpaymentclose}
-  >
-    <div
-      className="modal-content p-4"
-      style={{
-        maxWidth: "400px",
-        width: "100%",
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
-        borderRadius: "10px",
-        backdropFilter: "blur(5px)",
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h5 className="text-center mb-4">
-        Payment Completed for Business Permit Application{" "}
-        <span className="text-primary">{activePermitId.id}</span>
-      </h5>
 
-      <div className="d-flex justify-content-end">
-        <button
-          type="button"
-          className="btn btn-success"
-          onClick={confirmpaymentclose}
-        >
-          Okay
-        </button>
-      </div>
-    </div>
-  </div>
-)}
 
 {isModalOpenFile && activePermitId && (
   <div

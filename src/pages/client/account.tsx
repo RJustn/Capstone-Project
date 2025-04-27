@@ -223,7 +223,7 @@ const handleVerifyOtp = async () => {
       {isFormVisible && (
         <div className="account_modal-overlay" onClick={handleButtonClick}>
           <div className="account_modal">
-        <h1>Forgot Password</h1>
+        <h1>Change Password</h1>
         {error && <p className="account_error">{error}</p>}
         {success && <p className="account_success">{success}</p>}
         <div className="account_input-row">
