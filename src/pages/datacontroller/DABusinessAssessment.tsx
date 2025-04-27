@@ -1642,7 +1642,7 @@ useEffect(() => {
   // Determine payment distribution based on payment method
   let paymentDue = 0;
 
-  switch (paymentmethod) {
+  switch (businessPermit?.business?.paymentmethod || paymentmethod) {
     case 'Annual':
       paymentDue = computedTotal; // Full amount for annual payment
       break;
@@ -1653,7 +1653,7 @@ useEffect(() => {
       paymentDue = computedTotal / 4; // Divide the total into 4 payments
       break;
     default:
-      console.warn('Unknown payment method:', paymentmethod);
+      console.warn('Unknown payment method:', businessPermit?.business?.paymentmethod);
       paymentDue = computedTotal; // Fallback to full amount
   }
 
@@ -1672,6 +1672,7 @@ useEffect(() => {
   liquortobaco,
   liquorplate,
   paymentmethod, // Include payment method in dependencies
+  businessPermit?.business?.paymentmethod
 ]);
 
 //Auth Checker
