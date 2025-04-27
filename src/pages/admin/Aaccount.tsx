@@ -157,7 +157,7 @@ const AdminAccount: React.FC = () => {
               </div>
 
               <div>
-                <button className='viewpermitbutton' onClick={handleButtonClick}>
+                <button className='back-button' onClick={handleButtonClick}>
                   {isFormVisible ? 'Close' : 'Change Password?'}
                 </button>
 
@@ -173,6 +173,7 @@ const AdminAccount: React.FC = () => {
                           <input
                             type="email"
                             id="email"
+                            disabled
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -210,7 +211,7 @@ const AdminAccount: React.FC = () => {
                         <button type="button" className="cancelForgotPassword" onClick={handleButtonClick}>
                           Cancel
                         </button>
-                        <button type="button" className="verifyemail" onClick={handleChangePassword}>
+                        <button type="button" className="back-button" onClick={handleChangePassword}>
                           Change Password
                         </button>
                       </div>

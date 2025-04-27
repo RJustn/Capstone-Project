@@ -232,6 +232,7 @@ const handleVerifyOtp = async () => {
                 <input
                     type="email"
                     id="email"
+                    disabled
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
