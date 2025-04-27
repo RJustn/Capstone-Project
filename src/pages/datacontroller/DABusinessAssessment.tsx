@@ -1606,17 +1606,8 @@ useEffect(() => {
   const formattedDate = today.toISOString().split('T')[0]; // Formats to 'YYYY-MM-DD'
   setDateAssessed(formattedDate); // Set the state with today's date
   
-}, [businessPermit?.business?.paymentmethod]);
+}, []);
 
-useEffect(() => {
-  // Set the date to today in YYYY-MM-DD format
- 
-  if (businessPermit?.business?.paymentmethod) {
-    setPaymentMethod(businessPermit.business.paymentmethod);
-  } else {
-    setPaymentMethod(undefined); // Default payment method
-  }
-}, [businessPermit?.business?.paymentmethod]);
 
 
 
@@ -1624,7 +1615,11 @@ useEffect(() => {
   if (!paymentmethod) {
     return; // Exit if payment method is not available
   }
-
+  if (businessPermit?.business?.paymentmethod) {
+    setPaymentMethod(businessPermit.business.paymentmethod);
+  } else {
+    setPaymentMethod(undefined); // Default payment method
+  }
   // Compute the total amount
   const computedTotal =
     mayorspermit +
@@ -1642,7 +1637,7 @@ useEffect(() => {
   // Determine payment distribution based on payment method
   let paymentDue = 0;
 
-  switch (businessPermit?.business?.paymentmethod || paymentmethod) {
+  switch (paymentmethod) {
     case 'Annual':
       paymentDue = computedTotal; // Full amount for annual payment
       break;
@@ -1653,7 +1648,7 @@ useEffect(() => {
       paymentDue = computedTotal / 4; // Divide the total into 4 payments
       break;
     default:
-      console.warn('Unknown payment method:', businessPermit?.business?.paymentmethod);
+      console.warn('Unknown payment method:', paymentmethod);
       paymentDue = computedTotal; // Fallback to full amount
   }
 
