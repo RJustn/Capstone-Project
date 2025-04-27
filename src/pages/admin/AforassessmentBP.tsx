@@ -3401,39 +3401,48 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
 
 {checkpermit && activePermitId && (
-        <div className="modal-overlay" onClick={closePermitChecker}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Approve Permit {activePermitId.id}?</h2>
-            <p>Aapprove or Reject this permit? Please confirm your decision.</p>
-
-            <div className="button-group">
-              
-              <button  className="btn btn-danger" onClick={() => {
-                setIsRejecting(true); // Show remarks input when rejecting
-              }}>
-                Reject
-              </button>
-              <button className="btn btn-success"onClick={() => updatebusinesspermitstatus('approved', 'N/A')}>Approve</button>
-            </div>
-
-            {/* Show remarks input if rejecting */}
-            {isRejecting && (
-              <div>
-                <label>Remarks:</label>
-                <textarea
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Enter remarks for rejection"
-                />
-              <button onClick={() => updatebusinesspermitstatus('rejected', remarks)}>Save</button>
-              </div>
-            )}
-            <button className="btn btn-danger" onClick={closePermitChecker}>
-              Close
+  <div className="modal-overlay" onClick={closePermitChecker}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h2>Approve Business Permit Application: {activePermitId.id}?</h2>
+      {!isRejecting ? (
+        <>
+          <p>Approve or Reject this permit? Please confirm your decision.</p>
+          <button className="DAactionbutton" onClick={() => setIsRejecting(true)}>
+            Reject
+          </button>
+          <button className="back-button" onClick={() => updatebusinesspermitstatus('approved', 'N/A')}>
+            Approve
+          </button>
+          <button className="btn btn-primary-cancel" onClick={closePermitChecker}>
+            Cancel
+          </button>
+        </>
+      ) : (
+        <>
+          <h3>Remarks</h3>
+          <label htmlFor="remarks">Enter your remarks:</label>
+          <textarea
+            id="remarks"
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            rows={4}
+            style={{ width: '100%' }}
+            placeholder="Enter remarks for rejection"
+          />
+          <div className="pagination">
+            <button className="back-button" onClick={() => updatebusinesspermitstatus('rejected', remarks)}>
+              Save
+            </button>
+            <button className="btn btn-primary-cancel" onClick={() => setIsRejecting(false)}>
+              Back
             </button>
           </div>
-        </div>
+        </>
       )}
+    </div>
+  </div>
+)}
+
       </div>
     </section>
   );

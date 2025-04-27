@@ -542,7 +542,7 @@ if (type === 'new') {
       >
         <form>
         <h2>View Attachments</h2>
-        <p>Permit ID: {selectedPermit?.id}</p>
+        <p>Work Permit Application ID: <strong>{selectedPermit?.id}</strong></p>
           {selectedPermit && (
             <div>
               {/* Document 1 */}

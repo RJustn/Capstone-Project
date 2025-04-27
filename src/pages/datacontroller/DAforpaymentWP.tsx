@@ -398,68 +398,68 @@ const logFormData = (formData: FormData) => {
   };
 
 
-const renderFile = (fileUrl: string | null) => {
+  const renderFile = (fileUrl: string | null) => {
 
   
-  if (!fileUrl) return null;
-
-  if (fileUrl.endsWith('.pdf')) {
-    return (
-      <>
-      <iframe
-      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-      width="100%"
-      height="500px"
-      style={{ border: '1px solid #ccc' }}
-    />
-        <DownloadButton fileUrl={fileUrl || ''} /> 
-    </>
-    );
-  } 
-  else if (fileUrl.endsWith('.docx')) {
-    return (
-      <>
-      <iframe
-      src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-      width="100%"
-      height="500px"
-      style={{ border: '1px solid #ccc' }}
-    />
-    
-    <DownloadButton fileUrl={fileUrl || ''} />
-    </>
-    );
-
-  }
-  else {
-    return (
-      <img
-        src={fileUrl}
-        alt="Document"
-        style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+    if (!fileUrl) return null;
+  
+    if (fileUrl.endsWith('.pdf')) {
+      return (
+        <>
+        <iframe
+        src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+        width="100%"
+        height="500px"
+        style={{ border: '1px solid #ccc' }}
       />
+          <DownloadButton fileUrl={fileUrl || ''} /> 
+      </>
+      );
+    } 
+    else if (fileUrl.endsWith('.docx')) {
+      return (
+        <>
+        <iframe
+        src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+        width="100%"
+        height="500px"
+        style={{ border: '1px solid #ccc' }}
+      />
+      
+      <DownloadButton fileUrl={fileUrl || ''} />
+      </>
+      );
+  
+    }
+    else {
+      return (
+        <img
+          src={fileUrl}
+          alt="Document"
+          style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }}
+        />
+      );
+    }
+  };
+  
+  const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
+    return (
+      <button
+        className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
+        onClick={(e) => {
+          e.preventDefault(); // Prevent default behavior
+          const link = document.createElement("a");
+          link.href = fileUrl;
+          link.download = fileUrl.split("/").pop() || "download"; // Extract filename
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }}
+      >
+       Download File
+      </button>
     );
-  }
-};
-
-const DownloadButton = ({ fileUrl }: { fileUrl: string }) => {
-  return (
-    <button
-      className="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all text-center block"
-      onClick={(e) => {
-        e.preventDefault(); // Prevent default behavior
-        const link = document.createElement("a");
-        link.href = fileUrl;
-        link.download = fileUrl.split("/").pop() || "download"; // Extract filename
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }}
-    >
-     Download File
-    </button>
-  );
-};
+  };
 
   let displayTextTitle = 'All Work Permit Applications (For Payments)';
 
@@ -640,7 +640,7 @@ if (type === 'new') {
       >
         <form>
         <h2>View Attachments</h2>
-        <p>Permit ID: {selectedPermit?.id}</p>
+        <p>Work Permit Application ID: <strong>{selectedPermit?.id}</strong></p>
           {selectedPermit && (
             <div>
               {/* Document 1 */}

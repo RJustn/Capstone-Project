@@ -338,7 +338,7 @@ const closeModal = () => {
   //Table Code
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(businessPermits.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -355,7 +355,7 @@ const closeModal = () => {
   //Table Code
 
 // Date Search
-  const [, setSearchQuery] = useState<string>(''); // Track the search query
+
   const [inputValue, setInputValue] = useState<string>('');
 
   // Get current items
@@ -363,8 +363,26 @@ const closeModal = () => {
 
   // Handle the search when the button is clicked
   const handleSearch = () => {
-    const searchValue = inputValue; // Use input value for search
-    setSearchQuery(searchValue); // Update search query state
+    const searchValue = inputValue.toLowerCase(); // normalize input
+    const filteredBySearch = businessPermits.filter((permit) => {
+      const businessName = permit?.business.businessname?.toLowerCase() || "";
+      const ownerLastName = permit?.owner.lastname?.toLowerCase() || "";
+      const ownerFirstName = permit?.owner.firstname?.toLowerCase() || "";
+      const companyName = permit?.owner.companyname?.toLowerCase() || "";
+      const businessLocation = permit?.business.businessbuildingblocklot?.toLowerCase() || "";
+      const permitid = permit?.id?.toString().toLowerCase() || "";
+      return (
+        businessName.includes(searchValue) ||
+        permitid.includes(searchValue) ||
+        ownerLastName.includes(searchValue) ||
+        ownerFirstName.includes(searchValue) ||
+        companyName.includes(searchValue) ||
+        businessLocation.includes(searchValue)
+      );
+    });
+  
+    setFilteredItems(filteredBySearch);
+    setCurrentPage(0); // Reset to the first page of results
   };
 
 const [startDate, setStartDate] = useState<string>('');
@@ -1794,21 +1812,23 @@ if (type === 'new') {
   <div className='workpermittable'>
   <p>{displayTextTitle}</p>
           {/* Search Bar */}
-          Search:
+          <div>
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by ID, Status, or Classification"
+              placeholder="Search by ID, Name, or Address"
               value={inputValue} // Use inputValue for the input field
               onChange={(e) => setInputValue(e.target.value)} // Update inputValue state
               className="search-input" // Add a class for styling
             />
-            <button onClick={handleSearch} className="search-button">Search</button> {/* Button to trigger search */}
+
+            <button onClick={handleSearch} className="search-button mt-1">Search</button> {/* Button to trigger search */}
+            
           </div>
 
 
+
           {/* Date Pickers for Date Range Filter */}
-          Start Date:
           <div className="date-picker-container">
             <input
               type="date"
@@ -1817,7 +1837,6 @@ if (type === 'new') {
               max={maxDate} // Set the maximum date to today
               placeholder="Start Date"
             />
-            End Date:
             <input
               type="date"
               value={endDate}
@@ -1827,8 +1846,18 @@ if (type === 'new') {
             />
             <button onClick={handleDateSearch} className="search-button">Search by Date</button>
           </div>
+          </div>
 
-          <table className="permit-table">
+          {filteredItems.length === 0 ? (
+          <div className="error-message mt-3">
+      <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+      No Business Permit Applications found.
+      </p>
+    </div>
+  ) : (
+<div>
+
+          <table className="permit-table mt-3">
             <thead>
               <tr>
                 <th>
@@ -1857,9 +1886,13 @@ if (type === 'new') {
     {currentItems.map((permit) => (
       <React.Fragment key={permit._id}>
       <tr key={permit._id}>
-        <td>Business Name:{permit.business.businessname}<br />
-            Owner:{permit.owner.lastname}, {permit.owner.firstname} {permit.owner.middleinitial}<br />
-            Address:</td>
+      <td><strong>Business Name:</strong> {permit.business.businessname}<br />
+            <strong>Owner:</strong> {
+    permit.owner.firstname && permit.owner.lastname
+      ? `${permit.owner.lastname}, ${permit.owner.firstname} ${permit.owner.middleinitial || ''}`
+      : permit.owner.companyname
+  }<br />
+            <strong>Address:</strong> {permit.business.businessbuildingblocklot}</td>
         <td>{permit.id}</td>
         <td>{permit.classification}</td>
         <td>{permit.businesspermitstatus}</td>
@@ -1896,33 +1929,36 @@ if (type === 'new') {
   </tbody>
           </table>
           {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 0}
-                className="btn btn-danger"
-              >
-                Previous
-              </button>
-              <span style={{ margin: "0 10px", marginTop: "8px" }}>
-                Page {currentPage + 1} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages - 1}
-                className="btn btn-success"
-              >
-                Next
-              </button>
-            </div>
-          )}
+  <div className="d-flex justify-content-end align-items-center mt-3 pagination">
+    <button
+      onClick={handlePreviousPage}
+      disabled={currentPage === 0}
+      className="pagination-button"
+    >
+      Previous
+    </button>
+    <span className="page-info me-2" style={{ marginTop: "5px" }}>
+      Page {currentPage + 1} of {totalPages}
+    </span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages - 1}
+      className="pagination-button"
+    >
+      Next
+    </button>
+  </div>
+)}
+</div>
+  )}
         </div>
         
 
-{editownermodal && activePermitId && (
+        {editownermodal && activePermitId && (
   <div className="modal-overlay" onClick={CloseOwnerModal}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <p>Viewing Owner Details of {activePermitId.id}</p>
+    <h2>Viewing Owner Details</h2>
+    <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
       <div className="form-group">
         <label className="checkbox-label">
@@ -1936,7 +1972,7 @@ if (type === 'new') {
       </div>
 
       <div className="form-group">
-        <label>LAST NAME:</label>
+        <label>Last Name:</label>
         <input
           type="text"
           value={activePermitId.owner.lastname}
@@ -1944,7 +1980,7 @@ if (type === 'new') {
         />
       </div>
       <div className="form-group">
-        <label>FIRST NAME:</label>
+        <label>First Name:</label>
         <input
           type="text"
           value={activePermitId.owner.firstname}
@@ -1952,7 +1988,7 @@ if (type === 'new') {
         />
       </div>
       <div className="form-group">
-        <label>MIDDLE INITIAL:</label>
+        <label>Middle Initial:</label>
         <input
           type="text"
           value={activePermitId.owner.middleinitial}
@@ -1960,7 +1996,7 @@ if (type === 'new') {
         />
       </div>
       <div className="form-group">
-        <label>COMPANY NAME:</label>
+        <label>Company Name:</label>
         <input
           type="text"
           value={activePermitId.owner.companyname}
@@ -2127,7 +2163,7 @@ if (type === 'new') {
       </div>
 
       <div>
-        <button className="cancel-button" onClick={CloseOwnerModal}>Close</button>
+        <button className="btn btn-primary-cancel" onClick={CloseOwnerModal}>Close</button>
       </div>
     </div>
   </div>
@@ -2136,7 +2172,8 @@ if (type === 'new') {
 {viewAttachmentsModal && activePermitId && (
   <div className="modal-overlay" onClick={closeViewAttachmentsModal}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <p>Permit ID: {activePermitId._id}</p>
+      <h2>View Attatchments</h2>
+      <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
 {/* Document 1 */}
 <p>
@@ -2533,18 +2570,18 @@ if (type === 'new') {
   </p>
 )}
         {/* Close Modal Button */}
-        <button className="close-modal" onClick={closeViewAttachmentsModal}>
+        <button className="btn btn-primary-cancel" style={{marginTop: '10px'}} onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>
     </div>
 )}
 
-
 {viewbusinessdetails && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessDetails}>
   <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-  <p>View Business Details {activePermitId._id}</p>
+  <h2>Viewing Business Details</h2>
+  <p>Application ID: <strong>{activePermitId.id}</strong></p>
 
 
 <div className="form-group">
@@ -3059,7 +3096,7 @@ if (type === 'new') {
   <div>
 
           {/* Close Modal Button */}
-          <button className="close-modal" onClick={closeViewBusinessDetails}>
+          <button className="btn btn-primary-cancel" onClick={closeViewBusinessDetails}>
           Close
         </button>
     </div>
@@ -3070,12 +3107,11 @@ if (type === 'new') {
 {viewBusinessNature && activePermitId && (
   <div className="modal-overlay" onClick={closeViewBusinessNature} aria-label="View Business Nature Modal">
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <p>Permit ID: {activePermitId.id}</p>
+      <p>Application ID: {activePermitId.id}</p>
       <p>Owner's Name: {activePermitId.owner.lastname}, {activePermitId.owner.firstname}</p>
       <p>Business Name: {activePermitId.business.businessname}</p>
       <p>Business Address: {activePermitId.business.businessbuildingblocklot}</p>
-
-      <h1>List of Businesses</h1>
+      <h2>List of Businesses</h2>
       {activePermitId.businesses?.length > 0 ? (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -3106,27 +3142,32 @@ if (type === 'new') {
           </tbody>
         </table>
       ) : (
-        <div>No businesses to display.</div>
+        <div className="error-message mt-3">
+        <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+        No businesses to display
+        </p>
+      </div>
       )}
 
-<button className="cancel-button" onClick={closeViewBusinessNature}>Close</button>
+<button className="btn btn-primary-cancel" onClick={closeViewBusinessNature}>Close</button>
     </div>
   </div>
 )}
 
-
-
 {isModalOpenFile && activePermitId && (
   <div className="modal-overlay" onClick={closeModal}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h2>Viewing File Documents</h2>
+
       {modalFile && (
         <div>
           {viewingType === 'receipts' && (
-            <label>Viewing Receipt for {activePermitId.id}</label>
+            <p>Viewing Receipt for {activePermitId.id}</p>
           )}
           {viewingType === 'permits' && (
-            <label>Viewing Business Permit for {activePermitId.id}</label>
+            <p>Viewing Business Permit for <strong>{activePermitId.id}</strong></p>
           )}
+
           {modalFile.endsWith('.pdf') ? (
             <iframe
               src={modalFile}
@@ -3140,9 +3181,24 @@ if (type === 'new') {
               style={{ maxWidth: '100%', height: 'auto' }}
             />
           )}
+
+          {/* Download Button */}
+
+          
+          <a
+  href={modalFile}
+  download
+  className="back-button py-2 px-4 rounded-lg shadow-md transition-all text-center block"
+>
+  Download File
+</a>
+    
         </div>
       )}
-      <button className="back-button" onClick={closeModal}>Close</button>
+
+      <button className="back-button" onClick={closeModal}>
+        Close
+      </button>
     </div>
   </div>
 )}

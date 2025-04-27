@@ -1574,7 +1574,7 @@ const [businessplate, ] = useState(500); //Fixed
 const [zoningclearance, ] = useState(500); //Fixed
 const [annualInspection, ] = useState(0); //Fixed
 const [environmental, setEnvironmental] = useState(0);
-const [miscfee, ] = useState(500); //Fixed
+const [miscfee, ] = useState(0); //Fixed
 const [liquortobaco, setLiquorTobaco ] = useState(0);
 const [liquorplate, setLiquorPlate ] = useState(0);
 const [dateassessed, setDateAssessed ] = useState('');
@@ -2038,11 +2038,6 @@ return (
           <td style={{ padding: '8px' }}>₱{environmental}</td>
         </tr>
 
-        <tr>
-          <td style={{ padding: '8px' }}>Misc Fees</td>
-          <td style={{ padding: '8px' }}>Fixed</td>
-          <td style={{ padding: '8px' }}>₱500</td>
-        </tr>
 
 
         <tr>
