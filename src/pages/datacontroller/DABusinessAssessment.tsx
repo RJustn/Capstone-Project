@@ -2034,6 +2034,8 @@ return (
           <input
           type="number"
           placeholder='---'
+          min={0}
+          max="999"
           onChange={(e) => {
             const value = e.target.value ? parseFloat(e.target.value) : 0;
             setLiquorTobaco(value * 500); // Multiply by 500
@@ -2050,6 +2052,8 @@ return (
           <input
           type="number"
           placeholder='---'
+          min={0}
+          max="999"
           onChange={(e) => {
             const value = e.target.value ? parseFloat(e.target.value) : 0;
             setLiquorPlate(value * 500); // Multiply by 500
