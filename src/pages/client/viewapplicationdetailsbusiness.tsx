@@ -453,19 +453,16 @@ useEffect(() => {
     {businessPermit.files.remarksdoc3 && (
     <p>Remarks: {businessPermit.files.remarksdoc3}</p>
   )}
-        {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Zoning: </span>
-  ) : (
+       
+       {businessPermit?.classification !== 'RenewBusiness' && (
+    <div>
     <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
-  )}
+
     <span>
       {businessPermit.files?.document4 ? (
         <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Zoning"
-            : "Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate"
-        }
+        documentName=
+        "Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate"
         fileName={businessPermit.files?.document4} />
       ) : (
         "No file uploaded"
@@ -474,19 +471,14 @@ useEffect(() => {
     {businessPermit.files.remarksdoc4 && (
     <p>Remarks: {businessPermit.files.remarksdoc4}</p>
   )}
-           {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Office of the Building Official: </span>
-  ) : (
+
     <span>Owner's ID: </span>
-  )}
+ 
     <span>
       {businessPermit.files?.document5 ? (
         <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Office of the Building Official"
-            : "Owner's ID"
-        }
+        documentName="Owner's ID"
+        
         fileName={businessPermit.files?.document5} />
       ) : (
         "No file uploaded"
@@ -495,19 +487,14 @@ useEffect(() => {
     {businessPermit.files.remarksdoc5 && (
     <p>Remarks: {businessPermit.files.remarksdoc5}</p>
   )}
-             {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Ctiy Health Office: </span>
-  ) : (
+            
     <span>Picture of Establishment (Perspective View): </span>
-  )}
+
     <span>
       {businessPermit.files?.document6 ? (
         <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Ctiy Health Office"
-            : "Picture of Establishment (Perspective View)"
-        }
+        documentName="Picture of Establishment (Perspective View)"
+      
         fileName={businessPermit.files?.document6} />
       ) : (
         "No file uploaded"
@@ -516,19 +503,13 @@ useEffect(() => {
     {businessPermit.files.remarksdoc6 && (
     <p>Remarks: {businessPermit.files.remarksdoc6}</p>
   )}
-  {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Bureau of Fire Protection: </span>
-  ) : (
+
     <span>Zoning: </span>
-  )} 
     <span>
       {businessPermit.files?.document7 ? (
         <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Bureau of Fire Protection"
-            : "Zoning"
-        } fileName={businessPermit.files?.document7} />
+        documentName="Zoning"
+ fileName={businessPermit.files?.document7} />
       ) : (
         "No file uploaded"
       )}
@@ -536,8 +517,7 @@ useEffect(() => {
     {businessPermit.files.remarksdoc7 && (
     <p>Remarks: {businessPermit.files.remarksdoc7}</p>
   )}
-  {businessPermit?.classification !== 'RenewBusiness' && (
-    <div>
+
     <p>Office of the Building Official: </p>
     <span>
       {businessPermit.files?.document8 ? (

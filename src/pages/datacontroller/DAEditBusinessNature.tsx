@@ -1109,14 +1109,13 @@ return (
 
 {renderFile(selectedFiles.document3)}
 
-
+{businessPermit?.classification !== 'RenewBusiness' && (
+    <div>
 {/* Document 4 */}
 <p>
-{businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Zoning: </span>
-  ) : (
+
     <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
-  )}
+
 
   {businessPermit?.files.document4 && (
     <button
@@ -1140,11 +1139,9 @@ return (
 
 {/* Document 5 */}
 <p>
-{businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Office of the Building Official: </span>
-  ) : (
+
     <span>Owner's ID: </span>
-  )}
+ 
   {businessPermit?.files.document5 && (
     <button
       onClick={() => {
@@ -1167,11 +1164,8 @@ return (
 
 {/* Document 6 */}
 <p>
-{businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Ctiy Health Office: </span>
-  ) : (
+
     <span>Picture of Establishment (Perspective View): </span>
-  )}
 
   {businessPermit?.files.document6 && (
     <button
@@ -1195,11 +1189,9 @@ return (
 
 {/* Document 7 */}
 <p>
-{businessPermit.classification === 'RenewBusiness' ? (
-    <span>Bureau of Fire Protection: </span>
-  ) : (
+
     <span>Zoning: </span>
-  )}
+  
 
 {businessPermit?.files.document7 && (
     <button
@@ -1285,6 +1277,8 @@ City Health Office:
     </button>
     </p>
     {renderFile(selectedFiles.document10)}
+    </div>
+  )}
     </div>
 )}
                         <p>{/* Attachments content */}</p>

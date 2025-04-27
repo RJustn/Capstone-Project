@@ -348,7 +348,7 @@ useEffect(() => {
           });
       
                // Required file check for documents 1 to 4
-            const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7')[] = ['document1', 'document2', 'document3','document4','document5','document6','document7'];
+            const requiredDocs: ('document1' | 'document2' | 'document3' )[] = ['document1', 'document2', 'document3'];
           
         
             // Collect missing documents
@@ -752,26 +752,6 @@ useEffect(() => {
                 </label>
                 <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
                 {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
-                <label>
-                Zoning:
-                </label>
-                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document4')} />
-                {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
-                <label>
-                Office of the Building Official:
-                </label>
-                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document5')} />
-                {fileErrors.document5 && <p style={{ color: 'red' }}>{fileErrors.document5}</p>}
-                <label>
-                Ctiy Health Office:
-                </label>
-                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document6')} />
-                {fileErrors.document6 && <p style={{ color: 'red' }}>{fileErrors.document6}</p>}
-                <label>
-                Bureau of Fire Protection:
-                </label>
-                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document7')} />
-                {fileErrors.document7 && <p style={{ color: 'red' }}>{fileErrors.document7}</p>}
                 </div>
                 <button className="nextbutton" type="submit" onClick={handleRenewSubmit} >Submit</button>
                         <p>{/* User Info content */}</p>

@@ -2261,11 +2261,9 @@ if (type === 'new') {
 {/* Document 3 */}
 <p>
     {/* Conditional text based on classification */}
-    {activePermitId.classification === 'RenewBusiness' ? (
-    <span>Certification of Gross Sales: </span>
-  ) : (
+
     <span>Lease Contract (if rented) / Tax Declaration (If Owned): </span>
-  )}
+
 
 
 {activePermitId.files.document3 && (
@@ -2299,16 +2297,15 @@ if (type === 'new') {
 </p>
 
 
-
-
-{/* Document 4 */}
+{/* Conditionally render Document 8 and file rendering based on classification */}
+{activePermitId.classification !== 'RenewBusiness' && (
+  <div>
+    {/* Document 4 */}
 <p>
       {/* Conditional text based on classification */}
-      {activePermitId.classification === 'RenewBusiness' ? (
-    <span>Zoning: </span>
-  ) : (
+
     <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
-  )}
+
 
 {activePermitId.files.document4 && (
     <button
@@ -2343,11 +2340,10 @@ if (type === 'new') {
 {/* Document 5 */}
 <p>
         {/* Conditional text based on classification */}
-        {activePermitId.classification === 'RenewBusiness' ? (
-    <span>Office of the Building Official: </span>
-  ) : (
+    
+
     <span>Owner's ID: </span>
-  )}
+
 
 
 {activePermitId.files.document5 && (
@@ -2383,11 +2379,9 @@ if (type === 'new') {
 {/* Document 6 */}
 <p>
           {/* Conditional text based on classification */}
-          {activePermitId.classification === 'RenewBusiness' ? (
-    <span>Ctiy Health Office: </span>
-  ) : (
+
     <span>Picture of Establishment (Perspective View): </span>
-  )}
+
 
 
 {activePermitId.files.document6 && (
@@ -2422,11 +2416,8 @@ if (type === 'new') {
 {/* Document 7 */}
 <p>
             {/* Conditional text based on classification */}
-            {activePermitId.classification === 'RenewBusiness' ? (
-    <span>Bureau of Fire Protection: </span>
-  ) : (
+
     <span>Zoning: </span>
-  )}
 
 {activePermitId.files.document7 && (
     <button
@@ -2456,11 +2447,6 @@ if (type === 'new') {
 />
 </p>
 
-
-
-
-{/* Conditionally render Document 8 and file rendering based on classification */}
-{activePermitId.classification !== 'RenewBusiness' && (
   <p>
     Office of the Building Official: 
 
@@ -2492,12 +2478,11 @@ if (type === 'new') {
       disabled
     />
   </p>
-)}
 
 
 
-{/* Conditionally render Document 9 and file rendering based on classification */}
-{activePermitId.classification !== 'RenewBusiness' && (
+
+
   <p>
     City Health Office: 
 
@@ -2530,11 +2515,9 @@ if (type === 'new') {
     
 
   </p>
-)}
 
 
-{/* Conditionally render Document 10 and file rendering based on classification */}
-{activePermitId.classification !== 'RenewBusiness' && (
+
   <p>
    Bureau of Fire Protection: 
 
@@ -2568,9 +2551,10 @@ if (type === 'new') {
 
 
   </p>
+  </div>
 )}
         {/* Close Modal Button */}
-        <button className="btn btn-primary-cancel" style={{marginTop: '10px'}} onClick={closeViewAttachmentsModal}>
+        <button className="btn btn-primary-cancel" onClick={closeViewAttachmentsModal}>
           Close
         </button>
       </div>

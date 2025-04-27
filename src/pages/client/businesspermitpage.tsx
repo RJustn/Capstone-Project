@@ -283,9 +283,12 @@ const BusinessPermit: React.FC = () => {
     });
 
          // Required file check for documents 1 to 4
-      const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10')[] = ['document1', 'document2', 'document3','document4','document5','document6','document7','document8','document9','document10'];
+      const requiredDocs: ('document1' | 'document2' | 'document3' | 'document4' | 'document5' | 'document6' | 'document7'| 'document8' | 'document9' | 'document10')[] = ['document1', 'document2', 'document3','document5','document6','document7','document8','document9','document10'];
     
-  
+
+      if (representative) {
+        requiredDocs.push('document4');
+      }
       // Collect missing documents
       const missingDocs = requiredDocs.filter((doc) => !files[doc]);
     
@@ -1660,12 +1663,21 @@ businesses?.length > 0 ? (
                 </label>
                 <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document3')} />
                 {fileErrors.document3 && <p style={{ color: 'red' }}>{fileErrors.document3}</p>}
-
-                <label>
-                  Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)
-                </label>
-                <input type="file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'document4')} />
-                {fileErrors.document4 && <p style={{ color: 'red' }}>{fileErrors.document4}</p>}
+                {representative && (
+  <>
+    <label>
+      Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative)
+    </label>
+    <input 
+      type="file" 
+      accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" 
+      onChange={(e) => handleFileChange(e, 'document4')} 
+    />
+    {fileErrors.document4 && (
+      <p style={{ color: 'red' }}>{fileErrors.document4}</p>
+    )}
+  </>
+)}
 
                 <label>
                  Owner's ID
