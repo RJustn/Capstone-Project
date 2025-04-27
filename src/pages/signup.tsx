@@ -40,11 +40,11 @@ if (confirmpassword !== password) {
   return;
 }
     
-const passwordRegex = /^(?=.[A-Za-z])(?=.[A-Z])(?=.*\d)[A-Za-z\d\S]{8,}$/;
-    if (!passwordRegex.test(password)) {
-        setError('Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.');
-        return;
-    }
+const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+if (!passwordRegex.test(password)) {
+    setError('Password must be at least 8 or more characters long, contain at least one number, and one uppercase letter.');
+    return;
+}
 
     try {
       // Sending request using axios

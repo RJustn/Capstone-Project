@@ -56,6 +56,20 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
       doc.text(`Business Permit ID: ${BusinessPermitContent.id}`);
       doc.text(`Mode of Payment: ${BusinessPermitContent.business.paymentmethod}`);
       doc.moveDown();
+
+      // Add detailed statement information
+      doc.text('Statement Details:', { underline: true });
+      doc.text(`Mayor's Permit Fee: ₱${ContentData.mayorspermit}`);
+      doc.text(`Sanitary Fee: ₱${ContentData.sanitary}`);
+      doc.text(`Health Fee: ₱${ContentData.health}`);
+      doc.text(`Business Plate Fee: ₱${ContentData.businessplate}`);
+      doc.text(`Zoning Clearance Fee: ₱${ContentData.zoningclearance}`);
+      doc.text(`Annual Inspection Fee: ₱${ContentData.annualInspection}`);
+      doc.text(`Environmental Fee: ₱${ContentData.environmental}`);
+      doc.text(`Liquor/Tobacco Fee: ₱${ContentData.liquortobaco}`);
+      doc.text(`Liquor Plate Fee: ₱${ContentData.liquorplate}`);
+      doc.moveDown();
+
       doc.text(`Total Amount: ₱${ContentData.total}`, { bold: true });
       doc.moveDown();
       doc.end();
