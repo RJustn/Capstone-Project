@@ -1623,7 +1623,7 @@ const [isComputed, setIsComputed] = useState(false);
 
 const computeAssessment = () => {
   const paymentMethod = businessPermit?.business?.paymentmethod;
-
+console.log(paymentMethod);
   if (!paymentMethod) {
     Swal.fire('Error', 'Please select a payment method first.', 'error');
     return;
