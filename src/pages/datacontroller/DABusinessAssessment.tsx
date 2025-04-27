@@ -1608,19 +1608,21 @@ useEffect(() => {
   
 }, []);
 
-
-
-
+// 1st useEffect: Set payment method
 useEffect(() => {
-  if (!paymentmethod) {
-    return; // Exit if payment method is not available
-  }
   if (businessPermit?.business?.paymentmethod) {
     setPaymentMethod(businessPermit.business.paymentmethod);
   } else {
-    setPaymentMethod(undefined); // Default payment method
+    setPaymentMethod(undefined);
   }
-  // Compute the total amount
+}, [businessPermit?.business?.paymentmethod]);
+
+// 2nd useEffect: Compute total based on payment method
+useEffect(() => {
+  if (!paymentmethod) {
+    return;
+  }
+
   const computedTotal =
     mayorspermit +
     sanitary +
@@ -1634,25 +1636,24 @@ useEffect(() => {
     liquortobaco +
     liquorplate;
 
-  // Determine payment distribution based on payment method
   let paymentDue = 0;
 
   switch (paymentmethod) {
     case 'Annual':
-      paymentDue = computedTotal; // Full amount for annual payment
+      paymentDue = computedTotal;
       break;
     case 'Semi-Annual':
-      paymentDue = computedTotal / 2; // Divide the total into 2 payments
+      paymentDue = computedTotal / 2;
       break;
     case 'Quarterly':
-      paymentDue = computedTotal / 4; // Divide the total into 4 payments
+      paymentDue = computedTotal / 4;
       break;
     default:
       console.warn('Unknown payment method:', paymentmethod);
-      paymentDue = computedTotal; // Fallback to full amount
+      paymentDue = computedTotal;
   }
 
-  setTotal(computedTotal); // Update the total state based on the payment method
+  setTotal(computedTotal);
   setPaymentMethodTotal(paymentDue);
 }, [
   mayorspermit,
@@ -1666,9 +1667,9 @@ useEffect(() => {
   health,
   liquortobaco,
   liquorplate,
-  paymentmethod, // Include payment method in dependencies
-  businessPermit?.business?.paymentmethod
+  paymentmethod 
 ]);
+
 
 //Auth Checker
   useEffect(() => {
