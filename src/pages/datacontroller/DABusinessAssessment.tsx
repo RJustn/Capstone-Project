@@ -1613,9 +1613,7 @@ useEffect(() => {
  
   if (businessPermit?.business?.paymentmethod) {
     setPaymentMethod(businessPermit.business.paymentmethod);
-  } else {
-    setPaymentMethod(undefined); // Default payment method
-  }
+  } 
 }, [businessPermit?.business?.paymentmethod]);
 
 
