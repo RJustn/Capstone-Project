@@ -1622,7 +1622,9 @@ useEffect(() => {
 const [isComputed, setIsComputed] = useState(false);
 
 const computeAssessment = () => {
-  if (!paymentmethod) {
+  const paymentMethod = businessPermit?.business?.paymentmethod;
+
+  if (!paymentMethod) {
     Swal.fire('Error', 'Please select a payment method first.', 'error');
     return;
   }
@@ -1642,7 +1644,7 @@ const computeAssessment = () => {
 
   let paymentDue = 0;
 
-  switch (paymentmethod) {
+  switch (paymentMethod) {
     case 'Annual':
       paymentDue = computedTotal;
       break;
@@ -1653,17 +1655,18 @@ const computeAssessment = () => {
       paymentDue = computedTotal / 4;
       break;
     default:
-      console.warn('Unknown payment method:', paymentmethod);
+      console.warn('Unknown payment method:', paymentMethod);
       paymentDue = computedTotal;
   }
 
   setTotal(computedTotal);
   setPaymentMethodTotal(paymentDue);
-  
+
   Swal.fire('Success', 'Computation complete!', 'success').then(() => {
-    setIsComputed(true); // Show the Assess button only after successful compute
+    setIsComputed(true);
   });
 };
+
 
 
 
