@@ -17,7 +17,7 @@ const generateWorkPermitPDF = async (id) => {
       const doc = new PDFDocument({ size: 'A4', layout: 'landscape' });
 
       // Fetch the work permit data by ID
-      const workPermit = await WorkPermit.findById(id).populate('assessedBy', 'firstName lastName');
+      const workPermit = await WorkPermit.findById(id);
       if (!workPermit) {
         return reject(new Error('Work permit not found'));
       }

@@ -99,6 +99,10 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
       doc.text(`Email: ${businessPermit.owner.email || 'N/A'}`);
       doc.moveDown(2);
 
+      // Assessed By
+      doc.text(`Assessed By: ${businessPermit.userNameDisplay || 'ForAssessment'}`);
+      doc.moveDown(2);
+
       // Footer (City Mayor Signature)
       doc.text('___________________________________', { align: 'left' });
       doc.text('Jennifer Austria - Barzaga', { align: 'left' });
