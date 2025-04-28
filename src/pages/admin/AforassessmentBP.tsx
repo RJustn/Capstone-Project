@@ -1,4 +1,3 @@
-
 import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
@@ -402,7 +401,8 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         break;
 
         case 'editnature':
-          navigate(`/AEditBusinessNature/${permit._id}`);
+          setViewbusinessNature(true);
+          setActivePermitId(permit);
           break;
 
           case 'assessment':
