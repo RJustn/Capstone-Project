@@ -378,7 +378,7 @@ useEffect(() => {
     
 
     <h1>Documents</h1>
-    <div className= "panelviewapplicationdetails">
+    <div className= "businessdocs">
   {/* Main Documents Container */}
   <div
     style={{

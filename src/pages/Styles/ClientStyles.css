@@ -1035,3 +1035,26 @@ margin-top: 20px;
 .editbutton-client:hover {
   background-color: #07943f;
 }
+
+.businessdocs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+
+.businessdocs p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.businessdocs strong {
+  font-weight: bold;
+  color: #000;
+}
