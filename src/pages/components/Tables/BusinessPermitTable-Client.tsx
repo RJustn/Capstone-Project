@@ -553,7 +553,7 @@ setViewPayment(false);
                     <option value="viewAssessment">View Assessment</option>
                   </>
                 )}
-                {sortedPermits[0].businesspermitstatus === 'Waiting for Payment' && sortedPermits[0].businessstatus === 'Active' &&(
+                {sortedPermits[0].businesspermitstatus === 'Waiting for Payment' &&  (sortedPermits[0].businessstatus === 'On Process' || sortedPermits[0].businessstatus === 'Active') &&(
                   <>
                     <option value="viewApplication">View Application</option>
                     <option value="viewAssessment">View Assessment</option>
