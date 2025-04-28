@@ -560,34 +560,43 @@ useEffect(() => {
       )}
     </span>
 
-{businessPermit?.businessstatus === 'RetiredBusiness' && (
-    <div>
-    <p>Business Retire Document: </p>
-    <span>
-      {businessPermit.files?.document11 ? (
-        <FileRenderer  documentName="Business Retire Document" fileName={businessPermit.files?.document11} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
+    {businessPermit?.businessstatus === 'RetiredBusiness' && (
+  <div className="document-section">
+    <div className="document-item">
+      <p className="document-label">Business Retire Document:</p>
+      <span className="document-link">
+        {businessPermit.files?.document11 ? (
+          <FileRenderer
+            documentName="Business Retire Document"
+            fileName={businessPermit.files?.document11}
+          />
+        ) : (
+          "No file uploaded"
+        )}
+      </span>
+    </div>
 
-    <p>Client Submission of Past Permit: </p>
-    <span>
-      {businessPermit.files?.document12 ? (
-        <FileRenderer documentName="Client Submission of Past Permit" fileName={businessPermit.files?.document12} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
-
-
+    <div className="document-item">
+      <p className="document-label">Client Submission of Past Permit:</p>
+      <span className="document-link">
+        {businessPermit.files?.document12 ? (
+          <FileRenderer
+            documentName="Client Submission of Past Permit"
+            fileName={businessPermit.files?.document12}
+          />
+        ) : (
+          "No file uploaded"
+        )}
+      </span>
+    </div>
   </div>
 )}
 
-  
-  {businessPermit.applicationComments && (
-    <p>Comments: {businessPermit.applicationComments}</p>
-  )}
+{businessPermit.applicationComments && (
+  <div className="comments-section">
+    <p><strong>Comments:</strong> {businessPermit.applicationComments}</p>
+  </div>
+)}
   </div>            
   </div>
             
