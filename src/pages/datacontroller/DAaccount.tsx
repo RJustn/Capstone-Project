@@ -104,6 +104,15 @@ const DataControllerAccount: React.FC = () => {
     }
   
     try {
+      Swal.fire({
+        title: 'Please wait...',
+        text: 'Changing your password...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      
       const response = await fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/changepassword', {
         method: 'POST',
         headers: {
@@ -120,7 +129,6 @@ const DataControllerAccount: React.FC = () => {
           title: 'Success',
           text: 'Password changed successfully!',
         });
-        navigate('/login');
       } else {
         Swal.fire({
           icon: 'error',

@@ -148,6 +148,14 @@ const handleSendOtp = async () => {
 const handleVerifyOtp = async () => {
   if (!userDetails?.email || !otp) return;
 
+  if (!otp) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Missing OTP',
+    });
+    return;
+  }
   if (confirmpassword !== password) {
     Swal.fire({
       icon: 'error',
