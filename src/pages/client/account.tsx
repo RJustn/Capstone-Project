@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css'; // Import CSS file
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
 import { User } from "../components/Interface(Front-end)/Types";
+import Swal from 'sweetalert2';
 
 const Account: React.FC = () => {
   const [userDetails, setUserDetails] = useState<User | null>(null);
@@ -142,39 +143,55 @@ const handleSendOtp = async () => {
 };
 
 
+
+
 const handleVerifyOtp = async () => {
   if (!userDetails?.email || !otp) return;
 
   if (confirmpassword !== password) {
-      setError('Password Not Match.');
-      setTimeout(() => {
-          setError(null);
-      }, 3000);
-      return;
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Passwords do not match!',
+    });
+    return;
   }
-  
 
   try {
-      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: userDetails?.email, otp, password: userDetails?.password }),
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: userDetails?.email, otp, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Password changed successfully!',
       });
-      const data = await response.json();
-      if (response.ok) {
-          setSuccess('Password Changed');
-          navigate('/login');
-          setError(null);
-      } else {
-          setError(data.error);
-      }
+      navigate('/login');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: data.error || 'Failed to verify OTP.',
+      });
+    }
   } catch (error) {
-      console.error('Error verifying OTP, please try again.', error);
-      setError('Error verifying OTP, please try again.');
+    console.error('Error verifying OTP, please try again.', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error verifying OTP, please try again.',
+    });
   }
 };
+
 
 // End Forget Password @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/DataControllerStyles.css';
 import AdminSidebar from '../components/NavigationBars/AdminSideBar';
-
+import Swal from 'sweetalert2';
 interface User {
   _id: string;
   userId: string;
@@ -21,7 +21,7 @@ const AdminAccount: React.FC = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const [success, setSuccess] = useState<string | null>(null);
+
   const [confirmpassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState(userDetails?.email || '');
   const [password, setPassword] = useState(userDetails?.password || '');
@@ -95,12 +95,16 @@ const AdminAccount: React.FC = () => {
 
   const handleChangePassword = async () => {
     if (!userDetails?.email) return;
-
+  
     if (confirmpassword !== password) {
-      setError('Passwords do not match.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Passwords do not match.',
+      });
       return;
     }
-
+  
     try {
       const response = await fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/changepassword', {
         method: 'POST',
@@ -109,17 +113,30 @@ const AdminAccount: React.FC = () => {
         },
         body: JSON.stringify({ email: userDetails.email, password }),
       });
+  
       const data = await response.json();
+  
       if (response.ok) {
-        setSuccess('Password changed successfully.');
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Password changed successfully!',
+        });
         navigate('/login');
-        setError(null);
       } else {
-        setError(data.error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.error || 'Failed to change password.',
+        });
       }
     } catch (error) {
       console.error('Error changing password:', error);
-      setError('Error changing password, please try again.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error changing password, please try again.',
+      });
     }
   };
 
@@ -166,7 +183,6 @@ const AdminAccount: React.FC = () => {
                     <div className="modal centered-modal" style={{ display: 'block', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', maxHeight: '45%' }}>
                       <h1>Change Password</h1>
                       {error && <p className="error">{error}</p>}
-                      {success && <p className="success">{success}</p>}
                       <div className="input-row">
                         <div className="form-group">
                           <label htmlFor="email">Email:</label>
