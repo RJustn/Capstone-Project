@@ -1,3 +1,4 @@
+
 import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
@@ -219,7 +220,7 @@ const closeModal = () => {
 
 
   //Modal for View Business Nature
-  const [viewBusinessNature, setViewBusinessNature] = useState(false);
+  const [viewBusinessNature, setViewbusinessNature] = useState(false);
 
   //Step2
 
@@ -379,11 +380,6 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
  
   //Edit Business
 
-  const closeViewBusinessNature = () => {
-    setViewBusinessNature(false);
-    setActivePermitId(null);
-  };
-
   const handleActionBP = (action: string, permit: BusinessPermit) => {
     setSelectedUserId(null);
     setActivePermitId(null);
@@ -405,11 +401,10 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
     console.log(`Edit permit ID: ${permit._id}`);
         break;
 
-        case 'viewBusinessNature':
-        setViewBusinessNature(true);
-        setActivePermitId(permit);
-        break;
-        
+        case 'editnature':
+          navigate(`/AEditBusinessNature/${permit._id}`);
+          break;
+
           case 'assessment':
             renderDocument(permit.statementofaccount.statementofaccountfile); // Automatically open modal
             setViewingType('receipts');
@@ -442,6 +437,10 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
 //File
 const [modalFile, setModalFile] = useState<string | null>(null);
 const [isModalOpenFile, setIsModalOpenFile] = useState(false);
+const closeViewBusinessNature = () => {
+  setViewbusinessNature(false);
+  setActivePermitId(null);
+};
 
 
 const renderFile = (fileUrl: string | null) => {
@@ -3119,7 +3118,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                     <option value="LR">Lechon Retailer</option>
                     <option value="IRT">Ice Retailer</option>
                     <option value="SPOS">Sports Officiating Services</option>
-                    <option value="CFMT">Cooked Food</option>
+                    <option value="CF">Cooked Food</option>
                     <option value="TCN">Tiles Center</option>
                     <option value="DGW">Dry Goods and Glassware</option>
                     <option value="RPH">Retailer of Pharmaceutical, Medical, Cosmetics, and Toilet Articles</option>
@@ -3392,27 +3391,26 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
       {!isRejecting ? (
         <>
           <p className="modal-text">Approve or Reject this permit? Please confirm your decision.</p>
-          <div className="modal-actions" style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-              <button
-                className="action-reject-button"
-                onClick={() => setIsRejecting(true)}
-              >
-                Reject
-              </button>
-              <button
-                className="action-approve-button"
-                onClick={() => updatebusinesspermitstatus('approved', 'N/A')}
-              >
-                Approve
-              </button>
-              <button
-                className="action-cancel-button"
-                onClick={closePermitChecker}
-                style={{ marginLeft: 'auto' }} // Push "Cancel" to the far right
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="modal-actions">
+            <button
+              className="action-reject-button"
+              onClick={() => setIsRejecting(true)}
+            >
+              Reject
+            </button>
+            <button
+              className="action-approve-button"
+              onClick={() => updatebusinesspermitstatus('approved', 'N/A')}
+            >
+              Approve
+            </button>
+            <button
+              className="action-cancel-button"
+              onClick={closePermitChecker}
+            >
+              Cancel
+            </button>
+          </div>
         </>
       ) : (
         <>
