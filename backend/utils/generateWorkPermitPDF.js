@@ -22,9 +22,6 @@ const generateWorkPermitPDF = async (id) => {
         return reject(new Error('Work permit not found'));
       }
 
-const assessor = workPermit.assessedBy;
-const assessorName = assessor ? `${assessor.firstName} ${assessor.lastName}` : 'N/A';
-
       
 
       const companyName = workPermit?.formData?.personalInformation?.companyName || 'N/A';
@@ -80,7 +77,7 @@ const assessorName = assessor ? `${assessor.firstName} ${assessor.lastName}` : '
       currentY += 80;
 
       doc.text('Received by:', leftColumnX, currentY);
-      doc.text(`BPLO Clerk: ${assessorName}`, leftColumnX, currentY + 20);
+      doc.text(`BPLO Clerk: _____________________`, leftColumnX, currentY + 20);
       currentY += 60;
       doc.text('Recommending Approval:', leftColumnX, currentY);
       doc.text('Edith T. Herrera BPLO, CGDH1: _______________________', leftColumnX, currentY + 20);
