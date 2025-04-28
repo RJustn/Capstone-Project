@@ -401,9 +401,10 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
     console.log(`Edit permit ID: ${permit._id}`);
         break;
 
-        case 'editnature':
-          navigate(`/AEditBusinessNature/${permit._id}`);
-          break;
+        case 'viewBusinessNature':
+        setViewbusinessNature(true);
+        setActivePermitId(permit);
+        break;
 
           case 'assessment':
             renderDocument(permit.statementofaccount.statementofaccountfile); // Automatically open modal
@@ -2078,7 +2079,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 <option value="editowner">View Owner Details</option>
                 <option value="editbusiness">View Business Details</option>
                 <option value="viewApplication">View Application</option>
-                <option value="editnature">View Business Nature</option>
+                <option value="viewBusinessNature">View Business Nature</option>
                 <option value="viewattatchments">View Attatchments</option>
   {/* Conditionally show the 'Approve/Reject Application' option */}
   {permit?.businesspermitstatus === 'Assessed' && (
@@ -3391,26 +3392,27 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
       {!isRejecting ? (
         <>
           <p className="modal-text">Approve or Reject this permit? Please confirm your decision.</p>
-          <div className="modal-actions">
-            <button
-              className="action-reject-button"
-              onClick={() => setIsRejecting(true)}
-            >
-              Reject
-            </button>
-            <button
-              className="action-approve-button"
-              onClick={() => updatebusinesspermitstatus('approved', 'N/A')}
-            >
-              Approve
-            </button>
-            <button
-              className="action-cancel-button"
-              onClick={closePermitChecker}
-            >
-              Cancel
-            </button>
-          </div>
+          <div className="modal-actions" style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+              <button
+                className="action-reject-button"
+                onClick={() => setIsRejecting(true)}
+              >
+                Reject
+              </button>
+              <button
+                className="action-approve-button"
+                onClick={() => updatebusinesspermitstatus('approved', 'N/A')}
+              >
+                Approve
+              </button>
+              <button
+                className="action-cancel-button"
+                onClick={closePermitChecker}
+                style={{ marginLeft: 'auto' }} // Push "Cancel" to the far right
+              >
+                Cancel
+              </button>
+            </div>
         </>
       ) : (
         <>

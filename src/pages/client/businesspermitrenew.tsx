@@ -208,6 +208,7 @@ useEffect(() => {
           ...prev,
           [doc]: 'Only image, PDF, or Word documents are allowed.',
         }));
+        setFiles((prev) => ({ ...prev, [doc]: null })); // Clear the file if invalid
         return;
       }
   
@@ -216,13 +217,13 @@ useEffect(() => {
           ...prev,
           [doc]: 'File size must be less than 5MB.',
         }));
+        setFiles((prev) => ({ ...prev, [doc]: null })); // Clear the file if invalid
         return;
       }
   
       // File is valid
       setFiles((prev) => ({ ...prev, [doc]: file }));
-      setFileErrors((prev) => ({ ...prev, [doc]: '' }));
-    
+      setFileErrors((prev) => ({ ...prev, [doc]: '' })); // Clear the error for this file
   };
     const handleMaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const male = parseInt(e.target.value) || 0; // Convert to number or default to 0
@@ -352,7 +353,7 @@ useEffect(() => {
           
         
             // Collect missing documents
-            const missingDocs = requiredDocs.filter((doc) => !files[doc]);
+            const missingDocs = requiredDocs.filter((doc) => !files[doc] || fileErrors[doc]);
           
             if (missingDocs.length > 0) {
               const updatedErrors = { ...fileErrors };
@@ -364,7 +365,7 @@ useEffect(() => {
               Swal.fire({
                 icon: 'error',
                 title: 'Missing Required File(s)',
-                text: `Please upload the following documents`,
+                text: `Please upload the following documents: ${missingDocs.join(', ')}`,
               });
               return;
             }
