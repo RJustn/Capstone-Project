@@ -17,17 +17,18 @@ const generateWorkPermitPDF = async (id) => {
       const doc = new PDFDocument({ size: 'A4', layout: 'landscape' });
 
       // Fetch the work permit data by ID
-      const workPermit = await WorkPermit.findById(id).populate('statementofaccount.permitassessed', 'firstName lastName');
+      const workPermit = await WorkPermit.findById(id).populate('assessedBy', 'firstName lastName');
       if (!workPermit) {
         return reject(new Error('Work permit not found'));
       }
 
+const assessor = workPermit.assessedBy;
+const assessorName = assessor ? `${assessor.firstName} ${assessor.lastName}` : 'N/A';
+
+      
+
       const companyName = workPermit?.formData?.personalInformation?.companyName || 'N/A';
       const workPermitFileName = `workpermit_${id}.pdf`;
-
-      // Fetch the assessor's name
-      const assessor = workPermit.statementofaccount?.permitassessed;
-      const assessorName = assessor ? `${assessor.firstName} ${assessor.lastName}` : 'N/A';
 
       // Create a buffer to store the PDF in memory
       let buffers = [];
@@ -57,6 +58,7 @@ const generateWorkPermitPDF = async (id) => {
         }
       });
 
+
       // Generate PDF content
       const leftColumnX = doc.page.margins.left + 20;
       let currentY = doc.page.margins.top + 20;
@@ -78,15 +80,10 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 80;
 
       doc.text('Received by:', leftColumnX, currentY);
-      doc.text('BPLO Clerk: ________________________', leftColumnX, currentY + 20);
+      doc.text(`BPLO Clerk: ${assessorName}`, leftColumnX, currentY + 20);
       currentY += 60;
       doc.text('Recommending Approval:', leftColumnX, currentY);
       doc.text('Edith T. Herrera BPLO, CGDH1: _______________________', leftColumnX, currentY + 20);
-      currentY += 60;
-
-      // Add assessor's name
-      doc.text('Assessed by:', leftColumnX, currentY);
-      doc.text(`Data Controller: ${assessorName}`, leftColumnX, currentY + 20);
       currentY += 60;
 
       doc.text(

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const workPermitSchema = new mongoose.Schema({
   id: { type: String, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  assessedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   permittype: { type: String, required: true, default: 'WP' },
   workpermitstatus: { type: String, required: true },
   classification: { type: String, required: true },
