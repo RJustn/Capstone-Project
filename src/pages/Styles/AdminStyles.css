@@ -66,16 +66,6 @@
     display: block;
   }
 
-  @media (max-width: 768px) {
-    .Achartreport {
-        grid-template-columns: 1fr; /* Stack items vertically on smaller screens */
-        grid-template-areas: 
-            "graph1"
-            "graph2"
-            "location"; /* Each item takes full width */
-    }
-}
-
   Achartgraph:nth-child(1) {
     grid-area: graph1; 
   }
