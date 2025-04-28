@@ -145,8 +145,11 @@ const handleSendOtp = async () => {
 const handleVerifyOtp = async () => {
   if (!userDetails?.email || !otp) return;
 
-  if (confirmpassword !== userDetails?.password) {
+  if (confirmpassword !== password) {
       setError('Password Not Match.');
+      setTimeout(() => {
+          setError(null);
+      }, 3000);
       return;
   }
   

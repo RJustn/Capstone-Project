@@ -72,12 +72,20 @@ const ForgotPassword: React.FC = () => {
         const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
         if (!passwordRegex.test(password)) {
             setError('Password must be at least 8 or more characters long, contain at least one number, and one uppercase letter.');
+            setTimeout(() => {
+                setError(null);
+            }, 3000);
             return;
+           
         }
 
         if (confirmpassword !== password) {
             setError('Password Not Match.');
+            setTimeout(() => {
+                setError(null);
+            }, 3000);
             return;
+           
         }
 
         try {
