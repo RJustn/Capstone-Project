@@ -146,7 +146,7 @@ const handleSendOtp = async () => {
 
 
 const handleVerifyOtp = async () => {
-  if (!userDetails?.email || !otp) return;
+
 
   if (!otp) {
     Swal.fire({
