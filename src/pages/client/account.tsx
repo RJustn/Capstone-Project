@@ -222,7 +222,7 @@ const handleVerifyOtp = async () => {
       {/* Conditionally render the form based on isFormVisible */}
       {isFormVisible && (
         <div className="account_modal-overlay" onClick={handleButtonClick}>
-          <div className="account_modal">
+          <div className="account_modal" onClick={(e) => e.stopPropagation()}>
         <h1>Change Password</h1>
         {error && <p className="account_error">{error}</p>}
         {success && <p className="account_success">{success}</p>}
