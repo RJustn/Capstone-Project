@@ -93,7 +93,15 @@ const DataControllerAccount: React.FC = () => {
 
   const handleChangePassword = async () => {
     if (!userDetails?.email) return;
-  
+    
+    if (password.length < 8) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Weak Password',
+        text: 'Password must be at least 8 characters long.',
+      });
+      return;
+    }
     if (confirmpassword !== password) {
       Swal.fire({
         icon: 'error',
@@ -112,7 +120,7 @@ const DataControllerAccount: React.FC = () => {
           Swal.showLoading();
         },
       });
-      
+
       const response = await fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/changepassword', {
         method: 'POST',
         headers: {
@@ -129,6 +137,7 @@ const DataControllerAccount: React.FC = () => {
           title: 'Success',
           text: 'Password changed successfully!',
         });
+        handleButtonClick();
       } else {
         Swal.fire({
           icon: 'error',
@@ -148,6 +157,9 @@ const DataControllerAccount: React.FC = () => {
   
   const handleButtonClick = () => {
     setIsFormVisible(!isFormVisible);
+    setConfirmPassword('');
+    setPassword('');
+  
   };
 
   return (

@@ -15,7 +15,7 @@ const Account: React.FC = () => {
 const [otp, setOtp] = useState('');
 const [otpSent, setOtpSent] = useState(false);
 const [otpCountdown, setOtpCountdown] = useState<number | null>(null); // Timer countdown state
-const [success, setSuccess] = useState<string | null>(null);
+
 const [confirmpassword, setConfirmPassword] = useState('');
 const [email, setEmail] = useState(userDetails?.email || '');
 const [password, setPassword] = useState(userDetails?.password || '');  // Set initial state from location
@@ -111,34 +111,52 @@ useEffect(() => {
 const handleSendOtp = async () => {
   if (!userDetails?.email) return;
 
-
-
   try {
-      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: userDetails?.email }),
+    // Show loading while sending OTP
+    Swal.fire({
+      title: 'Sending OTP...',
+      text: 'Please wait...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: userDetails?.email }),
+    });
+
+    const data = await response.json();
+
+    Swal.close(); // Close the loading after response
+
+    if (response.ok) {
+      await Swal.fire({
+        icon: 'success',
+        title: 'OTP Sent!',
+        text: 'An OTP has been sent to your email.',
       });
-      const data = await response.json();
-      if (response.ok) {
-          setSuccess('OTP sent to your email.');
-          setOtpSent(true); // Disable the button
-          setOtpCountdown(30); // Set the timer to 10 seconds
-          setTimeout(() => {
-              setSuccess(null);
-          }, 3000);
-          setError(null);
-      } else {
-          setError(data.error);
-          setTimeout(() => {
-              setError(null);
-          }, 3000);
-      }
+      setOtpSent(true); // Disable the button
+      setOtpCountdown(30); // Set countdown to 30 seconds
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Send OTP',
+        text: data.error || 'Something went wrong.',
+      });
+    }
   } catch (error) {
-      console.error('Error sending OTP:', error);
-      setError('Error sending OTP, please try again.');
+    console.error('Error sending OTP:', error);
+    Swal.close(); // Close loading if error happens
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error sending OTP, please try again.',
+    });
   }
 };
 
@@ -156,6 +174,16 @@ const handleVerifyOtp = async () => {
     });
     return;
   }
+  
+  if (password.length < 8) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Weak Password',
+      text: 'Password must be at least 8 characters long.',
+    });
+    return;
+  }
+
   if (confirmpassword !== password) {
     Swal.fire({
       icon: 'error',
@@ -164,6 +192,8 @@ const handleVerifyOtp = async () => {
     });
     return;
   }
+
+
 
   try {
     const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
@@ -182,7 +212,7 @@ const handleVerifyOtp = async () => {
         title: 'Success',
         text: 'Password changed successfully!',
       });
-      navigate('/login');
+  
     } else {
       Swal.fire({
         icon: 'error',
@@ -208,6 +238,9 @@ const handleVerifyOtp = async () => {
 
   const handleButtonClick = () => {
     setIsFormVisible(!isFormVisible);
+    setOtp('');
+    setConfirmPassword('');
+    setPassword('');
   };
 
   return (
@@ -249,7 +282,6 @@ const handleVerifyOtp = async () => {
           <div className="account_modal" onClick={(e) => e.stopPropagation()}>
         <h1>Change Password</h1>
         {error && <p className="account_error">{error}</p>}
-        {success && <p className="account_success">{success}</p>}
         <div className="account_input-row">
             <div className="account_form-group">
                 <label htmlFor="email">Email:</label>
