@@ -21,60 +21,56 @@ const [password, setPassword] = useState(userDetails?.password || '');  // Set i
 
 
 //End Forget Password @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+useEffect(() => {
+  if (!token) {
+    navigate('/');
+    return;
+  }
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setUserDetails(data.user);
+        setEmail(data.user.email);
+        setError(null);
+      } else {
+        setError(data.error || 'Error fetching user details.');
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      setError('Failed to fetch user details, please try again.');
+    }
+  };
+
+  fetchUserDetails();
+}, [token, navigate]);
+
+
   useEffect(() => {
-    
-    if (!token) {
-      navigate('/'); // Redirect to login if no token
-      return;
-    } else{
-      if (userDetails?.email) {
-        setEmail(userDetails.email);  // Update email if userDetails changes
-      }
-    const fetchUserDetails = async () => {
-
-
-      try {
-        const response = await fetch('https://capstone-project-backend-nu.vercel.app/client/profile', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          setUserDetails(data.user);
-          setError(null);
-        } else {
-          setError(data.error || 'Error fetching user details.');
-        }
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-        setError('Failed to fetch user details, please try again.');
-      }
-    };
-    fetchUserDetails();}
-
-
     let timer: NodeJS.Timeout;
-        if (otpCountdown !== null) {
-            // Start countdown
-            timer = setInterval(() => {
-                setOtpCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : null));
-            }, 1000);
-        }
-
-        if (otpCountdown === 0) {
-            // Re-enable button after countdown
-            setOtpSent(false);
-            setOtpCountdown(null);
-        }
-
-        return () => clearInterval(timer); // Clear interval on component unmount or when countdown reaches 0
-
-
-  }, [token, navigate, otpCountdown, userDetails]);
+  
+    if (otpSent && otpCountdown !== null && otpCountdown > 0) {
+      timer = setInterval(() => {
+        setOtpCountdown(prev => (prev !== null ? prev - 1 : null));
+      }, 1000);
+    } else if (otpCountdown === 0) {
+      setOtpSent(false);
+      setOtpCountdown(null);
+    }
+  
+    return () => {
+      clearInterval(timer);
+    };
+  }, [otpSent, otpCountdown]);
 
   useEffect(() => {
     const checkAuth = async () => {
