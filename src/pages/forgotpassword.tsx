@@ -67,28 +67,48 @@ const ForgotPassword: React.FC = () => {
     }, [otpCountdown]);
 
     const handleVerifyOtp = async () => {
-        if (!email || !otp) return;
+        if (!email) return;
+        
+          if (!otp) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Missing OTP',
+            });
+            return;
+          }
 
         const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
         if (!passwordRegex.test(password)) {
-            setError('Password must be at least 8 or more characters long, contain at least one number, and one uppercase letter.');
-            setTimeout(() => {
-                setError(null);
-            }, 3000);
-            return;
+            Swal.fire({
+                  icon: 'error',
+                  title: 'Weak Password',
+                  text: 'Password must be at least 8 or more characters long, contain at least one number, and one uppercase letter.',
+                });
+                return;
            
         }
 
-        if (confirmpassword !== password) {
-            setError('Password Not Match.');
-            setTimeout(() => {
-                setError(null);
-            }, 3000);
-            return;
-           
-        }
+  if (confirmpassword !== password) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Passwords do not match!',
+    });
+    return;
+  }
+
 
         try {
+             Swal.fire({
+                        title: 'Please wait...',
+                        text: 'Changing your password...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+                        },
+                      });
+                      
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
                 method: 'POST',
                 headers: {

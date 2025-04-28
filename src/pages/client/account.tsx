@@ -174,7 +174,7 @@ const handleVerifyOtp = async () => {
     });
     return;
   }
-  
+
   if (password.length < 8) {
     Swal.fire({
       icon: 'error',
@@ -196,6 +196,15 @@ const handleVerifyOtp = async () => {
 
 
   try {
+         Swal.fire({
+            title: 'Please wait...',
+            text: 'Changing your password...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+          
     const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
       method: 'POST',
       headers: {
