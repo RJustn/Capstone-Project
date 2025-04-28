@@ -790,16 +790,38 @@ useEffect(() => {
 
 
 <label>LAST NAME:</label>
-  <input type="text" value={corporation ? lastname: businessPermit.owner.lastname} onChange={(e) => setLastName(e.target.value)} required disabled={corporation} />
+<input
+  type="text"
+  value={lastname}
+  onChange={(e) => setLastName(e.target.value)}
+  required
+  disabled={corporation} // Enable only if not a corporation
+/>
 
-  <label>FIRST NAME:</label>
-  <input type="text" value={corporation ? firstname: businessPermit.owner.firstname} onChange={(e) => setFirstName(e.target.value)}  required disabled={corporation} />
+<label>FIRST NAME:</label>
+<input
+  type="text"
+  value={firstname}
+  onChange={(e) => setFirstName(e.target.value)}
+  required
+  disabled={corporation} // Enable only if not a corporation
+/>
 
-  <label>MIDDLE INITIAL:</label>
-  <input type="text" value={corporation ? middleinitial: businessPermit.owner.middleinitial } onChange={(e) => setMiddleInitial(e.target.value)}  disabled={corporation} />
+<label>MIDDLE INITIAL:</label>
+<input
+  type="text"
+  value={middleinitial}
+  onChange={(e) => setMiddleInitial(e.target.value)}
+  disabled={corporation} // Enable only if not a corporation
+/>
 
-  <label>Company Name:</label>
-  <input type="text" value={corporation ? companyname: businessPermit.owner.companyname} onChange={(e) => setCompanyName(e.target.value)}  disabled={!corporation} />
+<label>Company Name:</label>
+<input
+  type="text"
+  value={companyname}
+  onChange={(e) => setCompanyName(e.target.value)}
+  disabled={!corporation} // Enable only if it is a corporation
+/>
 
 <label>CIVIL STATUS:</label>
 <select

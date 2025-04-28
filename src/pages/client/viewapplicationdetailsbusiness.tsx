@@ -548,19 +548,20 @@ useEffect(() => {
   </div>
 
   <div className="document-item">
-    <span className="document-label">Business Permit:</span>
-    <span className="document-link">
-      {businessPermit.permitFile ? (
-        <FileRenderer
-          documentName="Business Permit"
-          fileName={businessPermit.permitFile}
-        />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
+  <span className="document-label">Business Permit:</span>
+  <span className="document-link">
+    {businessPermit.permitFile ? (
+      <FileRenderer
+        documentName="Business Permit"
+        fileName={businessPermit.permitFile}
+      />
+    ) : (
+      "No file uploaded"
+    )}
+  </span>
+</div>
 
-    {businessPermit?.businessstatus === 'RetiredBusiness' && (
+{businessPermit?.businessstatus === 'RetiredBusiness' && (
   <div className="document-section">
     <div className="document-item">
       <p className="document-label">Business Retire Document:</p>
@@ -598,7 +599,6 @@ useEffect(() => {
   </div>
 )}
   </div>            
-  </div>
             
           </>
         ) : (
