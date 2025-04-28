@@ -580,13 +580,12 @@ useEffect(() => {
       )}
     </span>
 
+    {businessPermit.applicationComments && (
+    <p>Comments: {businessPermit.applicationComments}</p>
+  )}
   </div>
 )}
 
-  
-  {businessPermit.applicationComments && (
-    <p>Comments: {businessPermit.applicationComments}</p>
-  )}
   </div>            
   </div>
             
