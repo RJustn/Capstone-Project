@@ -462,6 +462,7 @@
 }
 
 .action-approve-button {
+  margin-left: 15px;
   background-color: #5cb85c;
   color: white;
   padding: 10px 20px;
@@ -483,6 +484,9 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  display: flex;
+  justify-content: flex-end; 
+  margin-top: 10px; 
 }
 
 .action-cancel-button:hover {
