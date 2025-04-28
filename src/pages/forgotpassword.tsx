@@ -17,7 +17,14 @@ const ForgotPassword: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSendOtp = async () => {
-        if (!email) return;
+        if (!email){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please input an email',
+              });
+              return;
+        } 
 
         try {
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/sendOTP', {
@@ -67,7 +74,14 @@ const ForgotPassword: React.FC = () => {
     }, [otpCountdown]);
 
     const handleVerifyOtp = async () => {
-        if (!email) return;
+        if (!email){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please input an email',
+              });
+              return;
+        } 
         
           if (!otp) {
             Swal.fire({
@@ -108,7 +122,7 @@ const ForgotPassword: React.FC = () => {
                           Swal.showLoading();
                         },
                       });
-                      
+
             const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/updatepassword', {
                 method: 'POST',
                 headers: {
