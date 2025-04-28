@@ -1,4 +1,3 @@
-
 import '../Styles/AdminStyles.css'; 
 import AdminSideBar from '../components/NavigationBars/AdminSideBar';
 import React, { useEffect, useState } from 'react';
@@ -220,7 +219,7 @@ const closeModal = () => {
 
 
   //Modal for View Business Nature
-  const [viewBusinessNature, setViewbusinessNature] = useState(false);
+  const [viewBusinessNature, setViewBusinessNature] = useState(false);
 
   //Step2
 
@@ -380,6 +379,11 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
  
   //Edit Business
 
+  const closeViewBusinessNature = () => {
+    setViewBusinessNature(false);
+    setActivePermitId(null);
+  };
+
   const handleActionBP = (action: string, permit: BusinessPermit) => {
     setSelectedUserId(null);
     setActivePermitId(null);
@@ -402,10 +406,10 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
         break;
 
         case 'viewBusinessNature':
-        setViewbusinessNature(true);
+        setViewBusinessNature(true);
         setActivePermitId(permit);
         break;
-
+        
           case 'assessment':
             renderDocument(permit.statementofaccount.statementofaccountfile); // Automatically open modal
             setViewingType('receipts');
@@ -438,10 +442,6 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
 //File
 const [modalFile, setModalFile] = useState<string | null>(null);
 const [isModalOpenFile, setIsModalOpenFile] = useState(false);
-const closeViewBusinessNature = () => {
-  setViewbusinessNature(false);
-  setActivePermitId(null);
-};
 
 
 const renderFile = (fileUrl: string | null) => {
@@ -2079,7 +2079,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                 <option value="editowner">View Owner Details</option>
                 <option value="editbusiness">View Business Details</option>
                 <option value="viewApplication">View Application</option>
-                <option value="viewBusinessNature">View Business Nature</option>
+                <option value="editnature">View Business Nature</option>
                 <option value="viewattatchments">View Attatchments</option>
   {/* Conditionally show the 'Approve/Reject Application' option */}
   {permit?.businesspermitstatus === 'Assessed' && (
@@ -3119,7 +3119,7 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
                     <option value="LR">Lechon Retailer</option>
                     <option value="IRT">Ice Retailer</option>
                     <option value="SPOS">Sports Officiating Services</option>
-                    <option value="CF">Cooked Food</option>
+                    <option value="CFMT">Cooked Food</option>
                     <option value="TCN">Tiles Center</option>
                     <option value="DGW">Dry Goods and Glassware</option>
                     <option value="RPH">Retailer of Pharmaceutical, Medical, Cosmetics, and Toilet Articles</option>
