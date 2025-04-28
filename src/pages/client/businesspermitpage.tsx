@@ -320,6 +320,8 @@ const BusinessPermit: React.FC = () => {
     }
   
     logFormData(formData);
+
+    
   
     // Show loading SweetAlert
     Swal.fire({
@@ -392,6 +394,20 @@ const BusinessPermit: React.FC = () => {
     setNumofWorkerTotal((parseInt(numofworkermale) || 0) + female); // Update total
   };
 
+  const getStartOfWeek = () => {
+    const today = new Date();
+    const firstDayOfWeek = today.getDate() - today.getDay(); // Sunday as the first day
+    const startOfWeek = new Date(today.setDate(firstDayOfWeek));
+    return startOfWeek.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  };
+  
+  const getEndOfWeek = () => {
+    const today = new Date();
+    const lastDayOfWeek = today.getDate() - today.getDay() + 6; // Saturday as the last day
+    const endOfWeek = new Date(today.setDate(lastDayOfWeek));
+    return endOfWeek.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  };
+  
   //Business Nature
   // Define type for newBusiness and businesses state
   const [newBusiness, setNewBusiness] = useState<{
@@ -691,12 +707,11 @@ const handleRemoveBusiness = (index: number) => {
                 </div>  
                 <div className="form-group">
                   <label>TIN NUMBER</label>
-                  <input type="number" value={tinnumber} onChange={(e) => {
-                     const value = e.target.value;
-                     if (/^\d*$/.test(value) && value.length <= 12) { // Only numbers & max 11 digits
-                       setTinNumber(value);
-                     }
-                  }} />
+                  <input
+                      type="text" // Changed from "number" to "text"
+                      value={tinnumber}
+                      onChange={(e) => setTinNumber(e.target.value)} // Removed number validation
+                    />
                  </div>
                 </div>
                 <div className="form-group">
@@ -1411,21 +1426,27 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                   <label>Start Date<span style={{ color: 'red' }}>*</span></label>
-                  <input type="date" value={startdate} onChange={(e) => setStartDate(e.target.value)} />
-                  <label className="checkbox-label">
-                <input
-                    type="checkbox"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setStartDate(dtiregistrationdate); // Set the value when checked
-                      } else {
-                        setStartDate(''); // Clear the value when unchecked
-                      }
-                    }}
+                  <input
+                    type="date"
+                    value={startdate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    min={getStartOfWeek()}
+                    max={getEndOfWeek()}
                   />
-                  Check if Same as DTI
-                </label>
-                {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setStartDate(dtiregistrationdate); // Set the value when checked
+                        } else {
+                          setStartDate(''); // Clear the value when unchecked
+                        }
+                      }}
+                    />
+                    Check if Same as DTI
+                  </label>
+                  {errors.startdate && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.startdate}</p>}
                 </div>
                 <div className="form-group">
                   <label>Occupancy <span style={{ color: 'red' }}>*</span></label>

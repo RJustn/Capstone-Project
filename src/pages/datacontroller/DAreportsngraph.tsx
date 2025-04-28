@@ -115,7 +115,7 @@ const DataControllerReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
       .then(response => response.json())
       .then(data => {
-        const approved = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Approved').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Released').map((item: { count: number }) => item.count);
         const pending = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Pending').map((item: { count: number }) => item.count);
         const rejected = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Rejected').map((item: { count: number }) => item.count);
 
@@ -129,7 +129,7 @@ const DataControllerReportsAndGraph: React.FC = () => {
     fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphworkpermitstatus')
       .then(response => response.json())
       .then(data => {
-        const approved = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Approved').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Released').map((item: { count: number }) => item.count);
         const pending = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Pending').map((item: { count: number }) => item.count);
         const rejected = data.filter((item: { workpermitstatus: string }) => item.workpermitstatus === 'Rejected').map((item: { count: number }) => item.count);
 

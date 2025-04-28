@@ -538,16 +538,35 @@ if (missingDocs.length > 0) {
               <div className="form-row">
                 <div className="form-group">
                   <label>DATE OF BIRTH</label>
-                  <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                  <input type="date" value={dateOfBirth} onChange={(e) =>{
+                    const selectedDate = new Date(e.target.value);
+                    const today = new Date();
+                    const age = today.getFullYear() - selectedDate.getFullYear();
+                    const monthDiff = today.getMonth() - selectedDate.getMonth();
+                    const dayDiff = today.getDate() - selectedDate.getDate();
+                    const calculateAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+                    if (calculateAge >= 18) {
+                      setDateOfBirth(e.target.value);
+                      setAge(calculateAge);
+                    } else {
+                      alert('You must be at least 18 years old to apply for a work permit.');
+                      setDateOfBirth('');
+                    }
+                  }}
+                   />
                 </div>
                 <div className="form-group">
                   <label>AGE</label>
-                  <input type="number" value={age} onChange={(e) =>{
-                    const value = e.target.value;
-                    if (/^\d*$/.test(value) && value.length <= 3) { // Only numbers & max 3 digits
-                      setAge(Number(value));
-                    }
-                  }} />
+                  <input
+                      type="number"
+                      value={age}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) { // Only allow numeric input
+                          setAge(value === '' ? '' : Number(value)); // Allow empty string for backspacing
+                        }
+                      }}
+                    />
                 </div>
                 <div className="form-group">
                   <label>PLACE OF BIRTH</label>

@@ -32,7 +32,7 @@ const AdminReportsAndGraph: React.FC = () => {
 
   const navigate = useNavigate();
   const [locationData, setLocationData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
-  const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[], businessPaid: number[], businessUnpaid: number[], workPaid: number[], workUnpaid: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [], businessPaid: [], businessUnpaid: [], workPaid: [], workUnpaid: [] });
+  const [monthlyData, setMonthlyData] = useState<{ labels: string[], approved: number[], waitingForPayment: number[], rejected: number[], businessPaid: number[] }>({ labels: [], approved: [], waitingForPayment: [], rejected: [], businessPaid: [] });
   const [businessPermitStatusData, setBusinessPermitStatusData] = useState<{ labels: string[], data: number[] }>({ labels: [], data: [] });
   
   useEffect(() => {
@@ -99,18 +99,15 @@ const AdminReportsAndGraph: React.FC = () => {
       })
       .then(data => {
         console.log('Monthly Payment Data:', data); // Add this line
-        if (data && data.businessPermits && data.workPermits) {
+        if (data && data.businessPermits) {
           console.log('Monthly Payment Data is an array:', data); // Add this line
           const labels = data.businessPermits.map((item: MonthlyData) => item.month);
           const approved = data.businessPermits.flatMap((item: MonthlyData) => item.paid);
           const waitingForPayment = data.businessPermits.flatMap((item: MonthlyData) => item.unpaid);
           const rejected = data.workPermits.flatMap((item: MonthlyData) => item.unpaid); // Assuming rejected is equivalent to unpaid for work permits
           const businessPaid = data.businessPermits.flatMap((item: MonthlyData) => item.paid);
-          const businessUnpaid = data.businessPermits.flatMap((item: MonthlyData) => item.unpaid);
-          const workPaid = data.workPermits.flatMap((item: MonthlyData) => item.paid);
-          const workUnpaid = data.workPermits.flatMap((item: MonthlyData) => item.unpaid);
-          console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected, businessPaid, businessUnpaid, workPaid, workUnpaid }); // Add this line
-          setMonthlyData({ labels, approved, waitingForPayment, rejected, businessPaid, businessUnpaid, workPaid, workUnpaid });
+          console.log('Processed Monthly Payment Data:', { labels, approved, waitingForPayment, rejected, businessPaid }); // Add this line
+          setMonthlyData({ labels, approved, waitingForPayment, rejected, businessPaid });
         } else {
           console.error('Expected array but got:', data);
         }
@@ -120,14 +117,14 @@ const AdminReportsAndGraph: React.FC = () => {
       fetch('https://capstone-project-backend-nu.vercel.app/datacontroller/graphbusinesspermitstatus')
       .then(response => response.json())
       .then(data => {
-          const approved = data.filter((item: { status: string }) => item.status === 'Approved').map((item: { count: number }) => item.count);
-          const pending = data.filter((item: { status: string }) => item.status === 'Pending').map((item: { count: number }) => item.count);
-          const rejected = data.filter((item: { status: string }) => item.status === 'Rejected').map((item: { count: number }) => item.count);
+        const approved = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Released').map((item: { count: number }) => item.count);
+        const pending = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Pending').map((item: { count: number }) => item.count);
+        const rejected = data.filter((item: { businesspermitstatus: string }) => item.businesspermitstatus === 'Rejected').map((item: { count: number }) => item.count);
 
-          setBusinessPermitStatusData({
-              labels: ['Approved', 'Pending', 'Rejected'],
-              data: [approved[0] || 0, pending[0] || 0, rejected[0] || 0],
-          });
+        setBusinessPermitStatusData({
+          labels: ['Approved', 'Pending', 'Rejected'],
+          data: [approved[0] || 0, pending[0] || 0, rejected[0] || 0],
+        });
       })
       .catch(error => console.error('Error fetching business permit status data:', error));
       
@@ -159,19 +156,9 @@ const AdminReportsAndGraph: React.FC = () => {
   const handlePaidClick = () => {
     const data = monthlyData.labels.map((label, index) => ({
       Month: label,
-      BusinessPaid: monthlyData.businessPaid[index],
-      WorkPaid: monthlyData.workPaid[index]
+      BusinessPaid: monthlyData.businessPaid[index]
     }));
     downloadExcel(data, 'PaidStatus');
-  };
-
-  const handleUnpaidClick = () => {
-    const data = monthlyData.labels.map((label, index) => ({
-      Month: label,
-      BusinessUnpaid: monthlyData.businessUnpaid[index],
-      WorkUnpaid: monthlyData.workUnpaid[index]
-    }));
-    downloadExcel(data, 'UnpaidStatus');
   };
 
   const pieData = {
@@ -211,27 +198,6 @@ const AdminReportsAndGraph: React.FC = () => {
         label: 'Business Paid',
         data: monthlyData.businessPaid,
         backgroundColor: '#4BC0C0'
-      },
-      {
-        label: 'Work Paid',
-        data: monthlyData.workPaid,
-        backgroundColor: '#36A2EB'
-      }
-    ]
-  };
-
-  const unpaidData = {
-    labels: monthlyData.labels,
-    datasets: [
-      {
-        label: 'Business Unpaid',
-        data: monthlyData.businessUnpaid,
-        backgroundColor: '#FF9F40'
-      },
-      {
-        label: 'Work Unpaid',
-        data: monthlyData.workUnpaid,
-        backgroundColor: '#FF6384'
       }
     ]
   };
@@ -261,15 +227,6 @@ const AdminReportsAndGraph: React.FC = () => {
             <h2>Paid Status</h2>
             {paidData.labels.length > 0 ? (
               <Bar data={paidData} />
-            ) : (
-              <p>There is no data</p>
-            )}
-          </div>
-          
-          <div className="Achartgraph" onClick={handleUnpaidClick}>
-            <h2>Unpaid Status</h2>
-            {unpaidData.labels.length > 0 ? (
-              <Bar data={unpaidData} />
             ) : (
               <p>There is no data</p>
             )}

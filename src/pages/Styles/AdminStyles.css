@@ -52,8 +52,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow-x: auto;
     grid-template-areas: 
-        "graph1 graph2 graph3 graph4"
-        "location location location graph4" ; /* Define the layout areas */
+        "graph1 graph2"
+        "location location location " ; /* Define the layout areas */
   }
   
   .Achartgraph {
