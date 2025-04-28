@@ -75,6 +75,15 @@
   Achartgraph:nth-child(2) {
     grid-area: graph2; 
   }
+  @media (max-width: 768px) {
+    .Achartreport {
+        grid-template-columns: 1fr; /* Stack items vertically on smaller screens */
+        grid-template-areas: 
+            "graph1"
+            "graph2"
+            "location"; /* Each item takes full width */
+    }
+}
 
 
   .Achart:hover {
@@ -436,3 +445,74 @@
     transition: background-color 0.3s;
     text-align: center;
   } 
+
+/* Action Buttons */
+.action-reject-button {
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-reject-button:hover {
+  background-color: #c9302c;
+}
+
+.action-approve-button {
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-approve-button:hover {
+  background-color: #4cae4c;
+}
+
+.action-cancel-button {
+  background-color: #f0ad4e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-cancel-button:hover {
+  background-color: #ec971f;
+}
+
+.action-save-button {
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-save-button:hover {
+  background-color: #4cae4c;
+}
+
+.action-back-button {
+  background-color: #337ab7;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-back-button:hover {
+  background-color: #286090;
+}

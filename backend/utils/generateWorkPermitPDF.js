@@ -17,13 +17,17 @@ const generateWorkPermitPDF = async (id) => {
       const doc = new PDFDocument({ size: 'A4', layout: 'landscape' });
 
       // Fetch the work permit data by ID
-      const workPermit = await WorkPermit.findById(id);
+      const workPermit = await WorkPermit.findById(id).populate('statementofaccount.permitassessed', 'firstName lastName');
       if (!workPermit) {
         return reject(new Error('Work permit not found'));
       }
 
       const companyName = workPermit?.formData?.personalInformation?.companyName || 'N/A';
       const workPermitFileName = `workpermit_${id}.pdf`;
+
+      // Fetch the assessor's name
+      const assessor = workPermit.statementofaccount?.permitassessed;
+      const assessorName = assessor ? `${assessor.firstName} ${assessor.lastName}` : 'N/A';
 
       // Create a buffer to store the PDF in memory
       let buffers = [];
@@ -80,7 +84,22 @@ const generateWorkPermitPDF = async (id) => {
       doc.text('Edith T. Herrera BPLO, CGDH1: _______________________', leftColumnX, currentY + 20);
       currentY += 60;
 
-      doc.text('Amount: _________________', leftColumnX, currentY);
+      // Add assessor's name
+      doc.text('Assessed by:', leftColumnX, currentY);
+      doc.text(`Data Controller: ${assessorName}`, leftColumnX, currentY + 20);
+      currentY += 60;
+
+      doc.text(
+        `Amount: ${
+          workPermit.classification?.toLowerCase() === 'new'
+            ? 0
+            : workPermit.classification?.toLowerCase() === 'renew'
+            ? 200
+            : 'N/A'
+        }`,
+        leftColumnX,
+        currentY
+      );
       doc.text('O.R No: ___________________', leftColumnX, currentY + 20);
       doc.text('Date: _____________________', leftColumnX, currentY + 40);
 
@@ -112,18 +131,7 @@ const generateWorkPermitPDF = async (id) => {
       currentY += 20;
       doc.text(`Classification: ${workPermit.classification || 'N/A'}`, leftColumnX, currentY);
       currentY += 20;
-      doc.text(
-        `Amount to Pay: ${
-          workPermit.classification?.toLowerCase() === 'new'
-            ? 0
-            : workPermit.classification?.toLowerCase() === 'renew'
-            ? 200
-            : 'N/A'
-        }`,
-        leftColumnX,
-        currentY
-      );
-      currentY += 20;
+
       doc.moveDown(10);
 
       currentY = doc.page.margins.top + 20;

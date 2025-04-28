@@ -549,7 +549,11 @@ if (missingDocs.length > 0) {
                       setDateOfBirth(e.target.value);
                       setAge(calculateAge);
                     } else {
-                      alert('You must be at least 18 years old to apply for a work permit.');
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Age',
+                        text: 'You must be at least 18 years old to apply for a work permit.',
+                      });
                       setDateOfBirth('');
                     }
                   }}
@@ -558,15 +562,24 @@ if (missingDocs.length > 0) {
                 <div className="form-group">
                   <label>AGE</label>
                   <input
-                      type="number"
-                      value={age}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (/^\d*$/.test(value)) { // Only allow numeric input
-                          setAge(value === '' ? '' : Number(value)); // Allow empty string for backspacing
+                    type="number"
+                    value={age}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value)) { // Only allow numeric input
+                        const numericValue = Number(value);
+                        if (numericValue >= 18 || value === '') { // Allow only 18 or above, or empty for backspacing
+                          setAge(value === '' ? '' : numericValue);
+                        } else {
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid Age',
+                            text: 'Age must be 18 or above.',
+                          });
                         }
-                      }}
-                    />
+                      }
+                    }}
+                  />
                 </div>
                 <div className="form-group">
                   <label>PLACE OF BIRTH</label>

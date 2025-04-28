@@ -3387,37 +3387,54 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 {checkpermit && activePermitId && (
   <div className="modal-overlay" onClick={closePermitChecker}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <h2>Approve Business Permit Application: {activePermitId.id}?</h2>
+    <h2 className="modal-title">Approve Business Permit Application: {activePermitId.id}?</h2>
       {!isRejecting ? (
         <>
-          <p>Approve or Reject this permit? Please confirm your decision.</p>
-          <button className="DAactionbutton" onClick={() => setIsRejecting(true)}>
-            Reject
-          </button>
-          <button className="back-button" onClick={() => updatebusinesspermitstatus('approved', 'N/A')}>
-            Approve
-          </button>
-          <button className="btn btn-primary-cancel" onClick={closePermitChecker}>
-            Cancel
-          </button>
+          <p className="modal-text">Approve or Reject this permit? Please confirm your decision.</p>
+          <div className="modal-actions">
+            <button
+              className="action-reject-button"
+              onClick={() => setIsRejecting(true)}
+            >
+              Reject
+            </button>
+            <button
+              className="action-approve-button"
+              onClick={() => updatebusinesspermitstatus('approved', 'N/A')}
+            >
+              Approve
+            </button>
+            <button
+              className="action-cancel-button"
+              onClick={closePermitChecker}
+            >
+              Cancel
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <h3>Remarks</h3>
-          <label htmlFor="remarks">Enter your remarks:</label>
+          <h3 className="modal-subtitle">Remarks</h3>
+          <label htmlFor="remarks" className="modal-label">Enter your remarks:</label>
           <textarea
             id="remarks"
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
             rows={4}
-            style={{ width: '100%' }}
+            className="modal-textarea"
             placeholder="Enter remarks for rejection"
           />
-          <div className="pagination">
-            <button className="back-button" onClick={() => updatebusinesspermitstatus('rejected', remarks)}>
+          <div className="modal-actions">
+            <button
+              className="action-save-button"
+              onClick={() => updatebusinesspermitstatus('rejected', remarks)}
+            >
               Save
             </button>
-            <button className="btn btn-primary-cancel" onClick={() => setIsRejecting(false)}>
+            <button
+              className="action-back-button"
+              onClick={() => setIsRejecting(false)}
+            >
               Back
             </button>
           </div>

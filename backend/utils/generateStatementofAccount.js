@@ -59,18 +59,18 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
 
       // Add detailed statement information
       doc.text('Statement Details:', { underline: true });
-      doc.text(`Mayor's Permit Fee: ₱${ContentData.mayorspermit}`);
-      doc.text(`Sanitary Fee: ₱${ContentData.sanitary}`);
-      doc.text(`Health Fee: ₱${ContentData.health}`);
-      doc.text(`Business Plate Fee: ₱${ContentData.businessplate}`);
-      doc.text(`Zoning Clearance Fee: ₱${ContentData.zoningclearance}`);
-      doc.text(`Annual Inspection Fee: ₱${ContentData.annualInspection}`);
-      doc.text(`Environmental Fee: ₱${ContentData.environmental}`);
-      doc.text(`Liquor/Tobacco Fee: ₱${ContentData.liquortobaco}`);
-      doc.text(`Liquor Plate Fee: ₱${ContentData.liquorplate}`);
+      doc.text(`Mayor's Permit Fee: PHP ${ContentData.mayorspermit}`);
+      doc.text(`Sanitary Fee: PHP ${ContentData.sanitary}`);
+      doc.text(`Health Fee: PHP ${ContentData.health}`);
+      doc.text(`Business Plate Fee: PHP ${ContentData.businessplate}`);
+      doc.text(`Zoning Clearance Fee: PHP ${ContentData.zoningclearance}`);
+      doc.text(`Annual Inspection Fee: PHP ${ContentData.annualInspection}`);
+      doc.text(`Environmental Fee: PHP ${ContentData.environmental}`);
+      doc.text(`Liquor/Tobacco Fee: PHP ${ContentData.liquortobaco}`);
+      doc.text(`Liquor Plate Fee: PHP ${ContentData.liquorplate}`);
       doc.moveDown();
 
-      doc.text(`Total Amount: ₱${ContentData.total}`, { bold: true });
+      doc.text(`Total Amount: PHP PHP ${ContentData.total}`, { bold: true });
       doc.moveDown();
       doc.end();
     } catch (error) {

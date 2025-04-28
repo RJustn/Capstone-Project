@@ -1,5 +1,6 @@
 const PDFDocument = require('pdfkit');
 const { BusinessPermit } = require('../index/models');
+const { businessNatureMap } = require('../../src/pages/components/Interface(Front-end)/BusinessNatureMap');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
@@ -83,7 +84,9 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
       doc.text('Business Natures:', { underline: true });
       if (businessPermit.businesses && businessPermit.businesses.length > 0) {
         businessPermit.businesses.forEach((business, index) => {
-          doc.text(`${index + 1}. ${business.businessNature || 'N/A'}`);
+          const businessNatureCode = business.businessNature || 'N/A';
+          const businessNatureFullName = businessNatureMap[businessNatureCode] || 'Unknown Business Nature';
+          doc.text(`${index + 1}. ${businessNatureFullName}`);
         });
       } else {
         doc.text('No business natures available.');
