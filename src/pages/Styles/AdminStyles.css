@@ -48,6 +48,7 @@
     padding: 50px;
     margin: 20px 0; /* Space above and below the table */
     border-radius: 8px; /* Rounded corners */
+    max-width: 1200px;
     background-color: #ffffff; /* White background for contrast */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow-x: auto;
@@ -64,6 +65,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     transition: transform 0.3s ease, box-shadow 0.3s ease; 
     display: block;
+    width: 100%; /* Default width for small screens */
   }
 
   Achartgraph:nth-child(1) {
