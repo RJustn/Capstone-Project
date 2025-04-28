@@ -52,8 +52,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow-x: auto;
     grid-template-areas: 
-        "graph1 graph2"
-        "location location location " ; /* Define the layout areas */
+      "graph1 graph2"
+        "location location";  /* Define the layout areas */
   }
   
   .Achartgraph {
@@ -74,13 +74,6 @@
     grid-area: graph2; 
   }
 
-  Achartgraph:nth-child(3) {
-    grid-area: graph3; 
-  }
-
-  Achartgraph:nth-child(4) {
-    grid-area: graph4; 
-  }
 
   .Achart:hover {
     transform: translateY(-5px); /* Slight lift effect on hover */
