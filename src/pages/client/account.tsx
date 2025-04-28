@@ -124,7 +124,7 @@ const handleSendOtp = async () => {
       if (response.ok) {
           setSuccess('OTP sent to your email.');
           setOtpSent(true); // Disable the button
-          setOtpCountdown(10); // Set the timer to 10 seconds
+          setOtpCountdown(30); // Set the timer to 10 seconds
           setTimeout(() => {
               setSuccess(null);
           }, 3000);
