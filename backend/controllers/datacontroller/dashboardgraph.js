@@ -280,42 +280,36 @@ const businesspermitsChart = async (req, res) => {
   };
   
   // Endpoint to fetch dashboard data
-  const dashboardData = async (req, res) => {
+     const dashboardData = async (req, res) => {
     try {
       const totalWorkPermitApplications = await WorkPermit.countDocuments();
       const totalWorkRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renew' });
-  
       const totalWorkCollections = await WorkPermit.aggregate([
         { $match: { workpermitstatus: "Released" } },
         { $group: { _id: null, total: { $round: [{ $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] } }, 2] } } }
       ]);
-      const totalWorkCollectionsValue = totalWorkCollections[0]?.total || 0;
-  
       const totalWorkReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
   
       const totalBusinessPermitApplications = await BusinessPermit.countDocuments();
       const totalBusinessRenewalApplications = await BusinessPermit.countDocuments({ classification: 'RenewBusiness' });
-  
       const totalBusinessCollections = await BusinessPermit.aggregate([
         { $match: { businesspermitstatus: "Released" } },
         { $group: { _id: null, total: { $round: [{ $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] } }, 2] } } }
       ]);
-      const totalBusinessCollectionsValue = totalBusinessCollections[0]?.total || 0;
-  
       const totalBusinessReleased = await BusinessPermit.countDocuments({ businesspermitstatus: 'Released' });
   
       res.json({
         totalWorkPermitApplications,
         totalWorkRenewalApplications,
-        totalWorkCollections: totalWorkCollectionsValue,
+        totalWorkCollections: totalWorkCollections[0]?.total || 0,
         totalWorkReleased,
         totalBusinessPermitApplications,
         totalBusinessRenewalApplications,
-        totalBusinessCollections: totalBusinessCollectionsValue,
+        totalBusinessCollections: totalBusinessCollections[0]?.total || 0,
         totalBusinessReleased
       });
     } catch (error) {
-      console.error('Error fetching dashboard data:', error.message, error.stack);
+      console.error('Error fetching dashboard data:', error);
       res.status(500).json({ message: 'Error fetching dashboard data' });
     }
   };
