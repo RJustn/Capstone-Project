@@ -198,7 +198,6 @@ return (
         <div>
 
         <div className="panel">
-  <h1>Business Permit Details</h1>
   {businessPermit ? ( 
           <> 
           <h1>Business Permit Details</h1>
@@ -365,270 +364,244 @@ return (
   <div>No businesses to display.</div>
 )}
 
-    </div>
+</div>
     
 
     <h1>Documents</h1>
-    <div className= "panelviewapplicationdetails">
-  {/* Main Documents Container */}
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "3fr 2fr", // Align labels and files
-      alignItems: "center",
-      gap: "20px",
-      maxWidth: "600px", // Adjust for readability
-      margin: "0 auto", // Center align
-    }}
-  >
-    {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>BIR: </span>
-  ) : (
-    <span>DTI / SEC / CDA: </span>
-  )}
-    <span>
+    <div className="businessdocs">
+  <div className="document-item">
+    <span className="document-label">DTI / SEC / CDA:</span>
+    <span className="document-link">
       {businessPermit.files?.document1 ? (
-        <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "BIR"
-            : "DTI / SEC / CDA"
-        }
-        fileName={businessPermit.files?.document1} />
+        <FileRenderer
+          documentName="DTI / SEC / CDA"
+          fileName={businessPermit.files?.document1}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc1 && (
-    <p>Remarks: {businessPermit.files.remarksdoc1}</p>
-  )}
-        {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Past Business Permit Copy: </span>
-  ) : (
-    <span>Occupancy Permit:</span>
-  )}
-    <span>
+  </div>
+
+  <div className="document-item">
+    <span className="document-label">Occupancy Permit:</span>
+    <span className="document-link">
       {businessPermit.files?.document2 ? (
-        <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Past Business Permit Copy"
-            : "Occupancy Permit"
-        }
-        fileName={businessPermit.files?.document2} />
+        <FileRenderer
+          documentName="Occupancy Permit"
+          fileName={businessPermit.files?.document2}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc2 && (
-    <p>Remarks: {businessPermit.files.remarksdoc2}</p>
-  )}
-        {businessPermit?.classification === 'RenewBusiness' ? (
-    <span>Certification of Gross Sales: </span>
-  ) : (
-    <span>Lease Contract (if rented) / Tax Declaration (If Owned): </span>
-  )}
-    <span>
+  </div>
+
+  <div className="document-item">
+    <span className="document-label">Lease Contract (if rented) / Tax Declaration (If Owned):</span>
+    <span className="document-link">
       {businessPermit.files?.document3 ? (
-        <FileRenderer 
-        documentName={
-          businessPermit.classification === "RenewBusiness"
-            ? "Certification of Gross Sales"
-            : "Lease Contract (if rented) / Tax Declaration (If Owned)"
-        }
-        fileName={businessPermit.files?.document3} />
+        <FileRenderer
+          documentName="Lease Contract / Tax Declaration"
+          fileName={businessPermit.files?.document3}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc3 && (
-    <p>Remarks: {businessPermit.files.remarksdoc3}</p>
-  )}
-       
-       {businessPermit?.classification !== 'RenewBusiness' && (
-    <div>
-    <span>Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate (if thru representative): </span>
+  </div>
 
-    <span>
+  <div className="document-item">
+    <span className="document-label">Authorization Letter / S.P.A. / Board Resolution:</span>
+    <span className="document-link">
       {businessPermit.files?.document4 ? (
-        <FileRenderer 
-        documentName=
-        "Authorization Letter / S.P.A. / Board Resolution / Secretary's Certificate"
-        fileName={businessPermit.files?.document4} />
+        <FileRenderer
+          documentName="Authorization Letter"
+          fileName={businessPermit.files?.document4}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc4 && (
-    <p>Remarks: {businessPermit.files.remarksdoc4}</p>
-  )}
+  </div>
 
-    <span>Owner's ID: </span>
- 
-    <span>
+  <div className="document-item">
+    <span className="document-label">Owner's ID:</span>
+    <span className="document-link">
       {businessPermit.files?.document5 ? (
-        <FileRenderer 
-        documentName="Owner's ID"
-        
-        fileName={businessPermit.files?.document5} />
+        <FileRenderer
+          documentName="Owner's ID"
+          fileName={businessPermit.files?.document5}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc5 && (
-    <p>Remarks: {businessPermit.files.remarksdoc5}</p>
-  )}
-            
-    <span>Picture of Establishment (Perspective View): </span>
+  </div>
 
-    <span>
+  <div className="document-item">
+    <span className="document-label">Picture of Establishment (Perspective View):</span>
+    <span className="document-link">
       {businessPermit.files?.document6 ? (
-        <FileRenderer 
-        documentName="Picture of Establishment (Perspective View)"
-      
-        fileName={businessPermit.files?.document6} />
+        <FileRenderer
+          documentName="Picture of Establishment"
+          fileName={businessPermit.files?.document6}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc6 && (
-    <p>Remarks: {businessPermit.files.remarksdoc6}</p>
-  )}
+  </div>
 
-    <span>Zoning: </span>
-    <span>
+  <div className="document-item">
+    <span className="document-label">Zoning:</span>
+    <span className="document-link">
       {businessPermit.files?.document7 ? (
-        <FileRenderer 
-        documentName="Zoning"
- fileName={businessPermit.files?.document7} />
+        <FileRenderer
+          documentName="Zoning"
+          fileName={businessPermit.files?.document7}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc7 && (
-    <p>Remarks: {businessPermit.files.remarksdoc7}</p>
-  )}
+  </div>
 
-    <p>Office of the Building Official: </p>
-    <span>
+  <div className="document-item">
+    <span className="document-label">Office of the Building Official:</span>
+    <span className="document-link">
       {businessPermit.files?.document8 ? (
-        <FileRenderer  documentName="Office of the Building Official" fileName={businessPermit.files?.document8} />
+        <FileRenderer
+          documentName="Office of the Building Official"
+          fileName={businessPermit.files?.document8}
+        />
       ) : (
         "No file uploaded"
       )}
     </span>
-    {businessPermit.files.remarksdoc8 && (
-    <p>Remarks: {businessPermit.files.remarksdoc8}</p>
-  )}
-    <p>City Health Office: </p>
-    <span>
-      {businessPermit.files?.document9 ? (
-        <FileRenderer documentName="City Health Office" fileName={businessPermit.files?.document9} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
-    {businessPermit.files.remarksdoc9 && (
-    <p>Remarks: {businessPermit.files.remarksdoc9}</p>
-  )}
-    <p>Bureau of Fire Protection: </p>
-    <span>
-      {businessPermit.files?.document10 ? (
-        <FileRenderer documentName="Bureau of Fire Protection" fileName={businessPermit.files?.document10} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
-    {businessPermit.files.remarksdoc10 && (
-    <p>Remarks: {businessPermit.files.remarksdoc10}</p>
-  )}
   </div>
-)}
 
-{businessPermit.receipt?.receiptFile && (
-      <div>
-    <p>Receipt: </p>
-    <span>
-    {businessPermit.receipt?.receiptFile ? (
-      <FileRenderer documentName="Receipt" fileName={businessPermit.receipt?.receiptFile} />
-    ) : (
-      "No file uploaded"
-    )}
-  </span>
+  <div className="document-item">
+    <span className="document-label">City Health Office:</span>
+    <span className="document-link">
+      {businessPermit.files?.document9 ? (
+        <FileRenderer
+          documentName="City Health Office"
+          fileName={businessPermit.files?.document9}
+        />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
   </div>
-  )}
-  {businessPermit.statementofaccount.statementofaccountfile && (
-  <div>
-  <p>
-    Statement of Account (Assessment): </p>
-  <span>
-    {businessPermit.statementofaccount?.statementofaccountfile ? (
-      <FileRenderer documentName="Statement of Account" fileName={businessPermit.statementofaccount?.statementofaccountfile} />
-    ) : (
-      "No file uploaded"
-    )}
-  </span>
+
+  <div className="document-item">
+    <span className="document-label">Bureau of Fire Protection:</span>
+    <span className="document-link">
+      {businessPermit.files?.document10 ? (
+        <FileRenderer
+          documentName="Bureau of Fire Protection"
+          fileName={businessPermit.files?.document10}
+        />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
   </div>
-  )}
-  {businessPermit.permitFile && (
-      <div>
-    <p>Business Permit: </p>
-    <span>
+
+  <div className="document-item">
+    <span className="document-label">Receipt:</span>
+    <span className="document-link">
+      {businessPermit.receipt?.receiptFile ? (
+        <FileRenderer
+          documentName="Receipt"
+          fileName={businessPermit.receipt?.receiptFile}
+        />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
+  </div>
+
+  <div className="document-item">
+    <span className="document-label">Statement of Account (Assessment):</span>
+    <span className="document-link">
+      {businessPermit.statementofaccount?.statementofaccountfile ? (
+        <FileRenderer
+          documentName="Statement of Account"
+          fileName={businessPermit.statementofaccount?.statementofaccountfile}
+        />
+      ) : (
+        "No file uploaded"
+      )}
+    </span>
+  </div>
+
+  <div className="document-item">
+  <span className="document-label">Business Permit:</span>
+  <span className="document-link">
     {businessPermit.permitFile ? (
-      <FileRenderer documentName="Business Permit" fileName={businessPermit.permitFile} />
+      <FileRenderer
+        documentName="Business Permit"
+        fileName={businessPermit.permitFile}
+      />
     ) : (
       "No file uploaded"
     )}
   </span>
-    </div>
-  )}
+</div>
 
 {businessPermit?.businessstatus === 'RetiredBusiness' && (
-    <div>
-    <p>Business Retire Document: </p>
-    <span>
-      {businessPermit.files?.document11 ? (
-        <FileRenderer  documentName="Business Retire Document" fileName={businessPermit.files?.document11} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
+  <div className="document-section">
+    <div className="document-item">
+      <p className="document-label">Business Retire Document:</p>
+      <span className="document-link">
+        {businessPermit.files?.document11 ? (
+          <FileRenderer
+            documentName="Business Retire Document"
+            fileName={businessPermit.files?.document11}
+          />
+        ) : (
+          "No file uploaded"
+        )}
+      </span>
+    </div>
 
-    <p>Client Submission of Past Permit: </p>
-    <span>
-      {businessPermit.files?.document12 ? (
-        <FileRenderer documentName="Client Submission of Past Permit" fileName={businessPermit.files?.document12} />
-      ) : (
-        "No file uploaded"
-      )}
-    </span>
-
+    <div className="document-item">
+      <p className="document-label">Client Submission of Past Permit:</p>
+      <span className="document-link">
+        {businessPermit.files?.document12 ? (
+          <FileRenderer
+            documentName="Client Submission of Past Permit"
+            fileName={businessPermit.files?.document12}
+          />
+        ) : (
+          "No file uploaded"
+        )}
+      </span>
+    </div>
   </div>
 )}
 
-  
-  {businessPermit.applicationComments && (
-    <p>Comments: {businessPermit.applicationComments}</p>
-  )}
-  </div>            
+{businessPermit.applicationComments && (
+  <div className="comments-section">
+    <p><strong>Comments:</strong> {businessPermit.applicationComments}</p>
   </div>
+)}
+  </div>            
             
           </>
         ) : (
           <div className="error-message mt-3">
-          <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
+          <p style={{ color: "green", textAlign: "center", fontSize: "16px" }}>
           No business permit application to display.
           </p>
         </div>
         )}
-
-
         </div>
       </div>
-    </div>
+      </div>
     </section>
-);
-
+  );
 };
-
 export default DataControllerViewApplicationDetails;
