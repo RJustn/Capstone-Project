@@ -198,7 +198,6 @@ return (
         <div>
 
         <div className="panel">
-  <h1>Business Permit Details</h1>
   {businessPermit ? ( 
           <> 
           <h1>Business Permit Details</h1>
