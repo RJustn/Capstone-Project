@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../Styles/ClientStyles.css';
 import { businessNatureMap, businessNatureOptions } from "../components/Interface(Front-end)/BusinessNatureMap"; 
 import ClientNavbar from '../components/NavigationBars/clientnavbar';
+import { citizenship as citizenshipOptions } from "../components/Interface(Front-end)/Citizenship";
 import MapLocation from '../components/MapContents/MapLocation';
 import axios from 'axios';
 import Select from 'react-select';
@@ -702,9 +703,20 @@ const handleRemoveBusiness = (index: number) => {
                 </div>
                 <div className="form-group">
                 <label>CITIZENSHIP</label>
-                <input type="text" value={citizenship} onChange={(e) => setCitizenship(e.target.value)} />
+                <select
+                  value={citizenship}
+                  onChange={(e) => setCitizenship(e.target.value)}
+                  className="form-control"
+                >
+                  <option value="">-- Select Citizenship --</option>
+                  {citizenshipOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 {errors.citizenship && <p style={{ color: 'red', fontSize: '0.9em' }}>{errors.citizenship}</p>}
-                </div>  
+              </div>
                 <div className="form-group">
                   <label>TIN NUMBER</label>
                   <input
