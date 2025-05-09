@@ -3404,12 +3404,6 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
             >
               Approve
             </button>
-            <button
-              className="action-cancel-button"
-              onClick={closePermitChecker}
-            >
-              Cancel
-            </button>
           </div>
         </>
       ) : (
