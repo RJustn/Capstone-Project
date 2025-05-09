@@ -168,13 +168,13 @@ const Login: React.FC = () => {
         <input
         type="checkbox"
         id="agreeToTerms"
-        className="form-check-input"
+        className="form-check-input mt-1 mr-2"
         checked={agreeToTerms}
         onChange={(e) => setAgreeToTerms(e.target.checked)}
         required
         />
-        <label htmlFor="agreeToTerms" className="form-check-label">
-          I agree to the creation of an account and the processing of my personal information in accordance with the data privacy notice
+        <label htmlFor="agreeToTerms" className="form-check-label text-sm">
+          I agree to the creation of an account and the processing of my personal information in accordance with the
           <a 
           href="/path-to-your-pdf/terms-and-conditions.pdf" 
           target="_blank" 
