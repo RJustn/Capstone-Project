@@ -280,31 +280,59 @@ const workpermitdatastats = async (req, res) => {
 // Endpoint to fetch dashboard data
 const dashboardData = async (req, res) => {
   try {
-    const totalWorkPermitApplications = await WorkPermit.countDocuments();
-    const totalWorkRenewalApplications = await WorkPermit.countDocuments({ classification: 'Renew' });
     const totalWorkCollections = await WorkPermit.aggregate([
       { $match: { workpermitstatus: "Released" } },
-      { $group: { _id: null, total: { $round: [{ $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] } }, 2] } } }
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] }
+          }
+        }
+      },
+      {
+        $project: {
+          total: {
+            $divide: [
+              { $round: [{ $multiply: ["$total", 100] }, 0] },
+              100
+            ]
+          }
+        }
+      }
     ]);
-    const totalWorkReleased = await WorkPermit.countDocuments({ workpermitstatus: 'Released' });
 
-    const totalBusinessPermitApplications = await BusinessPermit.countDocuments();
-    const totalBusinessRenewalApplications = await BusinessPermit.countDocuments({ classification: 'RenewBusiness' });
     const totalBusinessCollections = await BusinessPermit.aggregate([
       { $match: { businesspermitstatus: "Released" } },
-      { $group: { _id: null, total: { $round: [{ $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] } }, 2] } } }
+      {
+        $group: {
+          _id: null,
+          total: {
+            $sum: { $ifNull: [{ $toDouble: "$amountToPay" }, 0] }
+          }
+        }
+      },
+      {
+        $project: {
+          total: {
+            $divide: [
+              { $round: [{ $multiply: ["$total", 100] }, 0] },
+              100
+            ]
+          }
+        }
+      }
     ]);
-    const totalBusinessReleased = await BusinessPermit.countDocuments({ businesspermitstatus: 'Released' });
 
     res.json({
-      totalWorkPermitApplications,
-      totalWorkRenewalApplications,
+      totalWorkPermitApplications: await WorkPermit.countDocuments(),
+      totalWorkRenewalApplications: await WorkPermit.countDocuments({ classification: 'Renew' }),
       totalWorkCollections: totalWorkCollections[0]?.total || 0,
-      totalWorkReleased,
-      totalBusinessPermitApplications,
-      totalBusinessRenewalApplications,
+      totalWorkReleased: await WorkPermit.countDocuments({ workpermitstatus: 'Released' }),
+      totalBusinessPermitApplications: await BusinessPermit.countDocuments(),
+      totalBusinessRenewalApplications: await BusinessPermit.countDocuments({ classification: 'RenewBusiness' }),
       totalBusinessCollections: totalBusinessCollections[0]?.total || 0,
-      totalBusinessReleased
+      totalBusinessReleased: await BusinessPermit.countDocuments({ businesspermitstatus: 'Released' })
     });
   } catch (error) {
     console.error('Error fetching dashboard data:', {
@@ -315,7 +343,6 @@ const dashboardData = async (req, res) => {
     res.status(500).json({ message: 'Error fetching dashboard data', error: error.message });
   }
 };
-
 // Endpoint to fetch permit applications by category
 const permitApplicationsByCategory = async (req, res) => {
   try {
