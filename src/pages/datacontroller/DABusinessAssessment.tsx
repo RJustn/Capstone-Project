@@ -1575,11 +1575,6 @@ const [dateassessed, setDateAssessed ] = useState('');
 const [paymentmethodtotal, setPaymentMethodTotal] = useState(0);
 
 
-useEffect(() => {
-  if (businessPermit?.otherbusinessinfo?.numofworkertotal != null) {
-    setHealthPermit(businessPermit.otherbusinessinfo.numofworkertotal * 100);
-  }
-}, [businessPermit?.otherbusinessinfo?.numofworkertotal]);
 
 useEffect(() => {
   if (businessPermit) {
@@ -1638,7 +1633,7 @@ console.log(paymentmethod);
     liquorplate;
 
   let paymentDue = 0;
-
+console.log(mayorspermit, sanitary, businessplate, zoningclearance, annualInspection, environmental,miscfee, totaltax, health, liquortobaco, liquorplate)
   switch (paymentmethod) {
     case 'Annual':
       paymentDue = computedTotal;
