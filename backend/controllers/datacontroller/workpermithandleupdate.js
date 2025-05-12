@@ -14,11 +14,7 @@ const workpermithandleupdate = async (req, res) => {
     try {
         let updateFields = {};
 
-const generateReceiptId = () => {
-  const timestamp = Date.now();
-  const random = Math.floor(Math.random() * 1000);
-  return `WRP-${timestamp}-${random}`;
-};
+
         // Check the status and set routerropriate fields
         if (status === 'Released') {
           const workpermitFileName = await generateWorkPermitPDF(id);
@@ -32,7 +28,7 @@ const generateReceiptId = () => {
   
             };
         } else if (status === 'Waiting for Payment') {
-            const receiptId = generateReceiptId(); // Generate a receipt number
+            const receiptId = Math.floor(Math.random() * 10000);
             const generateWorkPermitStatementofAccount = await generateWorkPermitStatementofAccount(id, receiptId);
 
             updateFields = {
@@ -41,7 +37,7 @@ const generateReceiptId = () => {
                 permitExpiryDate: null, // No expiry date for this status
                 expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
                 receipt: {
-                receiptId: receiptId,
+                receiptId: `WP-${receiptId}`,
                 workpermitstatementofaccount: generateWorkPermitStatementofAccount,
                 }
             };
