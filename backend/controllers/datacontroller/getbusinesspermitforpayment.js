@@ -6,7 +6,7 @@ const getbusinesspermitforpayment = async (req, res) => {
       const { type } = req.params;  // Extract the work permit ID from the route parameters
   console.log(type);
       // Define filters for "Pending" or "Assessed" status
-      let filters = { businesspermitstatus: { $in: ['Waiting for Payment'] } };
+      let filters = { businesspermitstatus: { $in: ['Waiting for Payment', 'Processing Payment'] } };
   
       if (type === 'new') {
         filters.classification = 'NewBusiness'; // Filter for New Business classification

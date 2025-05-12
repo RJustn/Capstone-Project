@@ -2095,7 +2095,7 @@ return (
         </td>
       </tr>
       <tr>
-        <td style={{ padding: '8px' }}>15% Additional Charge</td>
+        <td style={{ padding: '8px' }}>15% Additional Charge (Febuary - December)</td>
         <td style={{ padding: '8px' }}></td>
         <td style={{ padding: '8px' }}>
           ₱{increaseAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}

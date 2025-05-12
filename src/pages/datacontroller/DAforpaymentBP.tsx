@@ -31,10 +31,15 @@ export interface BusinessPermit {
   files: Files;
   department: Department; // Change to object with key-value pairs
   statementofaccount: Statement;
+  receipt: Receipt;
 
   createdAt?: string;
 }
 
+export interface Receipt{
+  receiptId?: string;
+  receiptFile: string;
+}
 export interface Owner {
 corporation?: boolean;
 lastname?: string;
@@ -302,6 +307,15 @@ const renderDocument = (fileName: string | null) => {
 };
 
 
+//Verify
+const [showVerifyReceipt, setShowVerifyReceipt] = useState(false);
+
+const handlecloseverify = () => {
+  setShowVerifyReceipt(false);
+}
+
+  const [isCommentVisible, setIsCommentVisible] = useState(false); // State to track comment visibility
+      const [comments, setComments] = useState(''); // State for comments
 
 
 const openModal = (filePath: string) => {
@@ -582,6 +596,11 @@ const handleActionBP = (action: string, permit: BusinessPermit) => {
           setViewPayment(true);
           setViewingType('receipts');
           setActivePermitId(permit);
+          break;
+
+          case 'verify':
+          setActivePermitId(permit);
+setShowVerifyReceipt(true);
           break;
 
 
@@ -2028,8 +2047,14 @@ if (type === 'new') {
                 <option value="viewBusinessNature">View Business Nature</option>
                 <option value="viewAssessment">View Assessment</option>
                 <option value="viewAttatchment">View Attatchments</option>
+                {permit.businesspermitstatus === 'Waiting for Payment' && (
                 <option value="payment">Handle Application Payment</option>
+                )}
+                {permit.businesspermitstatus === 'Processing Payment' && (
+                <option value="verify">Verify Payment</option>
+                )}
               </>
+
           </select>
         </td>
       </tr>
@@ -3317,6 +3342,82 @@ if (type === 'new') {
       <button className="back-button" onClick={closeModal}>
         Close
       </button>
+    </div>
+  </div>
+)}
+
+{showVerifyReceipt && activePermitId && (
+  <div className="modal-overlay" onClick={() => handlecloseverify()} >
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <h4>Statement of Account</h4>
+    <div className="mb-3">
+      {activePermitId.statementofaccount?.statementofaccountfile && (
+        <div>
+          {activePermitId.statementofaccount?.statementofaccountfile.endsWith(".pdf") ? (
+            <iframe
+              src={activePermitId.statementofaccount?.statementofaccountfile}
+              style={{ width: "100%", height: "600px", border: "none" }}
+              title="Statement of Account"
+            />
+          ) : (
+            <img
+              src={activePermitId.statementofaccount?.statementofaccountfile}
+              alt="Statement of Account"
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+
+    <h4>Receipt</h4>
+    <div className="mb-3">
+      {activePermitId.receipt?.receiptFile && (
+        <div>
+          {activePermitId.receipt?.receiptFile.endsWith(".pdf") ? (
+            <iframe
+              src={activePermitId.receipt?.receiptFile}
+              style={{ width: "100%", height: "600px", border: "none" }}
+              title="Receipt Viewer"
+            />
+          ) : (
+            <img
+              src={activePermitId.receipt?.receiptFile}
+              alt="Receipt"
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+
+    <div>
+      <button className="DAactionbutton me-3" onClick={() => setIsCommentVisible(true)}>Reject</button>
+      <button className='DAactionbutton' >Release Permit</button>
+    </div>
+
+    {!isCommentVisible ? (
+      <>
+      </>
+    ) : (
+      <>
+        <h3>Comments</h3>
+        <label htmlFor="comments">Enter your comments:</label>
+        <div>
+        <textarea
+          id="comments"
+          value={comments}
+          onChange={(e) => setComments(e.target.value)}
+          rows={4}
+          style={{ width: '100%', height: "30%"}}
+        />
+        </div>
+        <div className="pagination">
+          <button className="DAactionbutton">Submit</button>
+          <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
+        </div>
+      </>
+    )}
     </div>
   </div>
 )}

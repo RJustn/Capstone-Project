@@ -234,8 +234,8 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
       const response = await axios.put(
         `https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`,
         {
-          paymentStatus: 'Paid',
-          businesspermitstatus: 'Released',
+          paymentStatus: 'Processing',
+          businesspermitstatus: 'Processing Payment',
         }
       );
   
@@ -541,12 +541,24 @@ setViewPayment(false);
                             <option value="viewApplication">View Application</option>
                             <option value="deletebusinesspermit">Delete</option>
                           </>
-                        )}
-                        {sortedPermits[0].businesspermitstatus === 'Pending' && sortedPermits[0].classification === 'RenewBusiness' && (
+                )}
+                {sortedPermits[0].businesspermitstatus === 'Rejected' && (
                           <>
                             <option value="viewApplication">View Application</option>
                           </>
-                        )}
+                )}
+                {sortedPermits[0].businesspermitstatus === 'Processing Payment' && (
+                          <>
+                            <option value="viewApplication">View Application</option>
+                            <option value="viewAssessment">View Assessment</option>
+                            <option value="viewReceipt">View Receipt</option>
+                          </>
+                )}
+                {sortedPermits[0].businesspermitstatus === 'Pending' && sortedPermits[0].classification === 'RenewBusiness' && (
+                          <>
+                            <option value="viewApplication">View Application</option>
+                          </>
+                )}
                 {sortedPermits[0].businesspermitstatus === 'Assessed' && (
                   <>
                     <option value="viewApplication">View Application</option>
@@ -569,11 +581,9 @@ setViewPayment(false);
                     <option value="expireBusiness">Expire Business (Developer Option)</option>
                   </>
                 )}
-                  <>
-    
-                  {sortedPermits[0].businessstatus === 'Active' && sortedPermits[0].forretirement !== 'ForRetire' && (
+                {sortedPermits[0].businessstatus === 'Active' && sortedPermits[0].forretirement !== 'ForRetire' && (
       <option value="retireBusiness">Retire Business</option>
-    )}
+                )}
           {sortedPermits[0].businesspermitstatus === 'Expired' && (
             <>
             <option value="viewApplication">View Application</option>
@@ -586,9 +596,9 @@ setViewPayment(false);
                   </>
               )}
           </>
-      )}
+                )}
     
-                  </>
+               
               </select>
                       </td>
                     </tr>

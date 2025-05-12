@@ -29,7 +29,7 @@ const generateBusinessPaymentReceipt = async (id) => {
         doc.fontSize(25).text('Official Receipt', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).text(`Date: ${new Date().toLocaleDateString()}`);
-        doc.text(`Receipt ID: ${uuidv4()}`);
+        doc.text(`Receipt ID: ${businessPermit.receipt.receiptId}`);
         doc.text(`Business Owner: ${businessPermit.owner.lastname} ${businessPermit.owner.firstname}`);
         doc.text(`Business Permit ID: ${businessPermit.id}`);
         doc.text(`Mode of Payment: ${businessPermit.business.paymentmethod}`);
