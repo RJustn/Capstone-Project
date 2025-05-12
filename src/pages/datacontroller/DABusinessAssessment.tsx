@@ -1567,7 +1567,7 @@ const [health, setHealthPermit] = useState(0);
 const [businessplate, ] = useState(500); //Fixed
 const [zoningclearance, ] = useState(500); //Fixed
 const [annualInspection, ] = useState(500); //Fixed
-const [environmental, setEnvironmental] = useState(500);
+const [environmental ] = useState(500);
 const [miscfee, ] = useState(0); //Fixed
 const [liquortobaco, setLiquorTobaco ] = useState(0);
 const [liquorplate, setLiquorPlate ] = useState(0);
@@ -1580,7 +1580,6 @@ useEffect(() => {
   if (businessPermit) {
     // Set initial environmental value from businessPermit
      setPaymentMethod(businessPermit.business.paymentmethod);
-    setEnvironmental(Number(businessPermit.statementofaccount.environmental));
     setLiquorTobaco(Number(businessPermit.statementofaccount.liquortobaco));
     setLiquorPlate(Number(businessPermit.statementofaccount.liquorplate));
   }
