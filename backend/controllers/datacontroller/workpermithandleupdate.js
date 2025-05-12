@@ -28,8 +28,9 @@ const workpermithandleupdate = async (req, res) => {
   
             };
         } else if (status === 'Waiting for Payment') {
+            const WorkPermitContent = await WorkPermit.findById(id);
             const receiptId = Math.floor(Math.random() * 10000);
-            const statementFile  = await generateWorkPermitStatementofAccount(id, receiptId);
+            const statementFile  = await generateWorkPermitStatementofAccount(WorkPermitContent, receiptId);
 
             updateFields = {
                 workpermitstatus: status,
