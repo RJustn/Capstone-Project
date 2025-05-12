@@ -27,8 +27,8 @@ console.log("Generated PDF File:", workpermitFileName);
         permitId,
         { $set: {
           
-          workpermitstatus: "Released",
-          transaction: "Complete",
+          workpermitstatus: "Processing Payment",
+          transaction: "Processing",
           permitFile: workpermitFileName,
           permitDateIssued: new Date().toISOString(),
           permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),

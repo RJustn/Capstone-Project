@@ -15,8 +15,20 @@ interface WorkPermit {
   classification: string;
   createdAt: string;
   permitExpiryDate: string;
+  receipt: Receipt;
   formData: FormDetails;
 }
+
+interface Receipt {
+      receiptId?: string; // Optional
+      modeOfPayment?: string; // Optional
+      receiptDate?: string; // Optional
+      amountPaid?: string; // Optional
+      receiptFile?: string;
+      workpermitstatementofaccount?: string;
+    }
+
+
 interface PersonalInformation {
   lastName: string;
   firstName: string;
@@ -81,6 +93,7 @@ const DataControllerForPaymentWP: React.FC = () => {
       margin: 'auto', // Center the modal horizontally
     },
   };
+ const [modalFile, setModalFile] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -215,6 +228,7 @@ const DataControllerForPaymentWP: React.FC = () => {
   };
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const [fileLink, setFileLink] = useState('');
 
   const handleAction = (action: string, permit: WorkPermit) => {
     switch (action) {
@@ -228,16 +242,30 @@ const DataControllerForPaymentWP: React.FC = () => {
         setIsAttachmentsModalOpen(true);
         break;
         case 'pay':
+           if (permit.receipt.workpermitstatementofaccount) {
+  setFileLink(permit.receipt.workpermitstatementofaccount);
+          setModalFile(permit.receipt.workpermitstatementofaccount);
+        } else {
+          console.log(`No receipt file found for permit: ${permit.id}`);
+        }
           setActivePermitId(permit._id);  // Save the permit ID
           setShowPaymentMethod(true);
           setModalStep(0);                 // Reset modal to the first step
            console.log(`Pay for permit: ${permit._id}`);
           console.log(`Pay for permit: ${permit.id}`);
           break;
+
+          case'verify':
+setSelectedPermit(permit);
+setShowVerifyReceipt(true);
+          break;
       default:
         console.warn('Unknown action');
     }
   };
+
+
+const [showVerifyReceipt, setShowVerifyReceipt] = useState(false);
 
 //Payment
 //Payment Method
@@ -260,12 +288,88 @@ const logFormData = (formData: FormData) => {
 };
 
 
+
+// Handle Verify Permit
+  const [isCommentVisible, setIsCommentVisible] = useState(false); // State to track comment visibility
+      const [comments, setComments] = useState(''); // State for comments
+      
+      const handleFinalConfirm = async () => {
+        if (!selectedFiles?._id) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Permit ID',
+            text: 'The work permit ID is missing. Please try again.',
+          });
+          return;
+        }
+      
+        if (!comments.trim()) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Comments Required',
+            text: 'Please provide comments before rejecting the application.',
+          });
+          return;
+        }
+      
+        try {
+          // Show confirmation alert before proceeding
+          const { isConfirmed } = await Swal.fire({
+            title: 'Reject Work Permit?',
+            text: 'Are you sure you want to reject this work permit application?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Reject',
+            cancelButtonText: 'Cancel',
+          });
+      
+          if (!isConfirmed) return; // Stop execution if user cancels
+      
+          // Show loading indicator while processing
+          Swal.fire({
+            title: 'Processing...',
+            text: 'Updating work permit status. Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+      
+          const response = await axios.put(
+            `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${selectedFiles?._id}`,
+            {
+              status: 'Rejected',
+              comments: comments,
+            }
+          );
+      
+          console.log('Updated Permit:', response.data);
+          window.location.reload();
+      
+          // Show success alert
+          Swal.fire({
+            icon: 'success',
+            title: 'Work Permit Rejected',
+            text: 'The work permit application has been rejected successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } catch (error) {
+          console.error('Error updating work permit:', error);
+      
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: 'An error occurred while rejecting the application. Please try again.',
+          });
+        }
+      };
+
+
+
+
+
 //Payment Submission
-
-
-
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
@@ -387,6 +491,8 @@ const logFormData = (formData: FormData) => {
       setReceiptFile(null);
     }
   };
+
+
 
   const handleViewDocument = (documentKey: 'document1' | 'document2' | 'document3' | 'document4') => {
     const documentUrl = selectedPermit?.formData.files[documentKey] ?? null; // Ensure it's never undefined
@@ -568,9 +674,23 @@ if (type === 'new') {
             className="dropdown-button"
           >
                       <option value="">Select Action</option>
-                      <option value="viewApplication">View Application</option>
+                                        {permit.workpermitstatus === "Waiting for Payment" && (
+                    <>
+                     <option value="viewApplication">View Application</option>
                       <option value="viewAttachments">View Attachments</option>
                       <option value="pay">Upload Application Receipt</option>
+                    </>
+                  )}
+
+
+                  {permit.workpermitstatus === "Processing Payment" && (
+                    <>
+                      <option value="viewApplication">View Application</option>
+                        <option value="viewAttachments">View Attachments</option>
+                        <option>Verify Receipt</option>
+                    </>
+                  )}
+
                     </select>
                   </td>
                 </tr>
@@ -609,7 +729,34 @@ if (type === 'new') {
       
       <h2>Handle Payment</h2>
       <p>For Work Permit Application ID: <strong>{activePermitId}</strong></p>
+
+              <div className="mb-3">
+          <label>
+            <strong>Statement of Account File:</strong>
+          </label>
+        </div>
+        <div className="mb-3">
+          {/* Render the PDF or image file */}
+                  {modalFile && (
+          <div>
+            {modalFile.endsWith(".pdf") ? (
+              <iframe
+                src={modalFile}
+                style={{ width: "100%", height: "600px", border: "none" }}
+                title="PDF Viewer"
+              />
+            ) : (
+              <img
+                src={modalFile}
+                alt="Document"
+                style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+              />
+            )}
+          </div>
+        )}
+        </div>
       
+           <div className="d-flex justify-content-end">
       {modalStep === 0 && (
         <div className="upload-section">
           <h4>Upload Receipt</h4>
@@ -623,10 +770,100 @@ if (type === 'new') {
           </button>
         </div>
       )}
+              <button type="button" className="btn btn-success"
+         onClick={() => {
+    const newWindow = window.open(fileLink, "_blank");
+    if (newWindow) {
+      newWindow.focus();
+      newWindow.print(); // Optional: triggers print dialog if browser allows
+    } else {
+      console.log("Pop-up blocked. Please allow pop-ups to print the document.");
+    }
+  }}
+>
+          Print
+        </button>
        <button className='back-button' onClick={() => closePaymentMethod()}>
             Close
           </button>
     </div>
+    </div>
+  </div>
+)}
+
+
+{showVerifyReceipt && selectedPermit && (
+  <div>
+    <h4>Statement of Account</h4>
+    <div className="mb-3">
+      {selectedPermit.receipt?.workpermitstatementofaccount && (
+        <div>
+          {selectedPermit.receipt.workpermitstatementofaccount.endsWith(".pdf") ? (
+            <iframe
+              src={selectedPermit.receipt.workpermitstatementofaccount}
+              style={{ width: "100%", height: "600px", border: "none" }}
+              title="Statement of Account"
+            />
+          ) : (
+            <img
+              src={selectedPermit.receipt.workpermitstatementofaccount}
+              alt="Statement of Account"
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+
+    <h4>Receipt</h4>
+    <div className="mb-3">
+      {selectedPermit.receipt?.receiptFile && (
+        <div>
+          {selectedPermit.receipt.receiptFile.endsWith(".pdf") ? (
+            <iframe
+              src={selectedPermit.receipt.receiptFile}
+              style={{ width: "100%", height: "600px", border: "none" }}
+              title="Receipt Viewer"
+            />
+          ) : (
+            <img
+              src={selectedPermit.receipt.receiptFile}
+              alt="Receipt"
+              style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+            />
+          )}
+        </div>
+      )}
+    </div>
+
+    <div>
+      <button onClick={() => setIsCommentVisible(true)}>Reject</button>
+      <button>Release Permit</button>
+    </div>
+
+    {!isCommentVisible ? (
+      <>
+        <p>Are you sure you want to reject this application?</p>
+        <button className="DAactionbutton" onClick={() => setIsCommentVisible(true)}>Confirm</button>
+        <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Cancel</button>
+      </>
+    ) : (
+      <>
+        <h3>Comments</h3>
+        <label htmlFor="comments">Enter your comments:</label>
+        <textarea
+          id="comments"
+          value={comments}
+          onChange={(e) => setComments(e.target.value)}
+          rows={4}
+          style={{ width: '100%' }}
+        />
+        <div className="pagination">
+          <button className="DAactionbutton" onClick={handleFinalConfirm}>Submit</button>
+          <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
+        </div>
+      </>
+    )}
   </div>
 )}
 

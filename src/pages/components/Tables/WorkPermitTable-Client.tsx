@@ -180,7 +180,6 @@ const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   
       if (response.status === 200) {
         console.log(response.data);
-        setConfirmPayment(true);
         setFiles({ document1: null }); // Clear uploaded file
   
         // Show success alert
@@ -386,6 +385,12 @@ const openModal = (filePath: string) => {
                       )}
                       <option value="viewPermit">View Permit</option>
                       <option value="expirePermit">Expire Work Permit(Developer Option)</option>
+                    </>
+                  )}
+                  {permit.workpermitstatus === "Processing Payment" && (
+                    <>
+                      <option value="viewApplication">View Application</option>
+                        <option value="viewReceipt">View Receipt</option>
                     </>
                   )}
                   {permit.workpermitstatus === "Expired" && (

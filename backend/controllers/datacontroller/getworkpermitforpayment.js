@@ -3,7 +3,7 @@ const { WorkPermit } = require('../../index/models');
 const getworkpermitforpayment = async (req, res) => {
     try {
       const { type } = req.params;  // Extract the work permit ID from the route parameters
-      let filters = { workpermitstatus: { $in: ['Waiting for Payment'] } };
+      let filters = { workpermitstatus: { $in: ['Waiting for Payment', 'Processing Payment'] } };
       // Query to find only work permits where workpermitstatus is 'pending'
         
       if (type === 'new') {
