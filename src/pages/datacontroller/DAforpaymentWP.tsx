@@ -295,7 +295,7 @@ const logFormData = (formData: FormData) => {
       const [comments, setComments] = useState(''); // State for comments
       
       const handleFinalConfirm = async () => {
-        if (!selectedFiles?._id) {
+        if (!selectedPermit?._id) {
           Swal.fire({
             icon: 'error',
             title: 'Missing Permit ID',
@@ -337,7 +337,7 @@ const logFormData = (formData: FormData) => {
           });
       
           const response = await axios.put(
-            `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${selectedFiles?._id}`,
+            `https://capstone-project-backend-nu.vercel.app/datacontroller/workpermitreject/${selectedPermit?._id}`,
             {
               status: 'Rejected',
               comments: comments,
@@ -845,9 +845,6 @@ if (type === 'new') {
 
     {!isCommentVisible ? (
       <>
-        <p>Are you sure you want to reject this application?</p>
-        <button className="DAactionbutton" onClick={() => setIsCommentVisible(true)}>Confirm</button>
-        <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Cancel</button>
       </>
     ) : (
       <>
@@ -858,7 +855,7 @@ if (type === 'new') {
           value={comments}
           onChange={(e) => setComments(e.target.value)}
           rows={4}
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: "20px"}}
         />
         <div className="pagination">
           <button className="DAactionbutton" onClick={handleFinalConfirm}>Submit</button>

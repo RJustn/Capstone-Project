@@ -22,27 +22,33 @@ const workpermithandlepayment = async (req, res) => {
 const workpermitFileName = await generateWorkPermitPDF(permitId);
 console.log("Generated PDF File:", workpermitFileName);
       
+const existingPermit = await WorkPermit.findById(permitId);
+if (!existingPermit) {
+  return res.status(404).json({ message: 'Work permit not found' });
+}
 
+// Merge existing receipt with the new fields
+const updatedReceipt = {
+  ...existingPermit.receipt, // preserves existing fields like receiptId, workpermitstatementofaccount
+  receiptDate: new Date().toISOString(),
+  amountPaid: 200,
+  receiptFile: files.document1 ? files.document1[0].path : existingPermit.receipt?.receiptFile || null,
+};
       const updatedPermit = await WorkPermit.findByIdAndUpdate(
-        permitId,
-        { $set: {
-          
-          workpermitstatus: "Processing Payment",
-          transaction: "Processing",
-          permitFile: workpermitFileName,
-          permitDateIssued: new Date().toISOString(),
-          permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
-          expiryDate: new Date(Date.now() + 31536000000).toISOString(),
-  
-  
-          receipt: {
-          receiptDate: new Date().toISOString(),
-          amountPaid: 200,
-          receiptFile: files.document1 ? files.document1[0].path : null,
-        }
-      }
-      }
-      );
+  permitId,
+  {
+    $set: {
+      workpermitstatus: "Processing Payment",
+      transaction: "Processing",
+      permitFile: workpermitFileName,
+      permitDateIssued: new Date().toISOString(),
+      permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
+      expiryDate: new Date(Date.now() + 31536000000).toISOString(),
+      receipt: updatedReceipt,
+    },
+  },
+  { new: true }
+);
   
       if (!updatedPermit) {
         return res.status(404).json({ message: 'Work permit not found' });
