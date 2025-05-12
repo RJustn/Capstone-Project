@@ -14,11 +14,11 @@ const workpermithandleupdate = async (req, res) => {
     try {
         let updateFields = {};
 
-        function generateReceiptId(){
-  const timestamp = Date.now(); // milliseconds since epoch
-  const random = Math.floor(Math.random() * 1000); // random 3-digit number
+const generateReceiptId = () => {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 1000);
   return `WRP-${timestamp}-${random}`;
-}
+};
         // Check the status and set routerropriate fields
         if (status === 'Released') {
           const workpermitFileName = await generateWorkPermitPDF(id);
