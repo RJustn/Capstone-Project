@@ -14,6 +14,7 @@ interface WorkPermitTableProps {
 const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
   const navigate = useNavigate();
   const [activePermitId, setActivePermitId] = useState<string | null>(null);
+    const [fileLink, setFileLink] = useState('');
 
 //Drop Down Button
   const handleAction = (action: string, permit: WorkPermit) => {
@@ -29,7 +30,7 @@ const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
         break;
       case "pay":
         if (permit.receipt.workpermitstatementofaccount) {
-
+setFileLink(permit.receipt.workpermitstatementofaccount);
           setModalFile(permit.receipt.workpermitstatementofaccount);
         } else {
           console.log(`No receipt file found for permit: ${permit.id}`);
@@ -269,6 +270,7 @@ const openModal = (filePath: string) => {
     setIsModalOpenFile(true);
   };
   
+
   const closeModal = () => {
     setIsModalOpenFile(false);
     setModalFile(null);
@@ -492,7 +494,17 @@ const openModal = (filePath: string) => {
       )}
 
       <div className="d-flex justify-content-end">
-        <button type="button" className="btn btn-success">
+        <button type="button" className="btn btn-success"
+         onClick={() => {
+    const newWindow = window.open(fileLink, "_blank");
+    if (newWindow) {
+      newWindow.focus();
+      newWindow.print(); // Optional: triggers print dialog if browser allows
+    } else {
+      console.log("Pop-up blocked. Please allow pop-ups to print the document.");
+    }
+  }}
+>
           Print
         </button>
 
