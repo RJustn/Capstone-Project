@@ -688,7 +688,7 @@ if (type === 'new') {
                     <>
                       <option value="viewApplication">View Application</option>
                         <option value="viewAttachments">View Attachments</option>
-                        <option>Verify Receipt</option>
+                        <option value="verify">Verify Receipt</option>
                     </>
                   )}
 
