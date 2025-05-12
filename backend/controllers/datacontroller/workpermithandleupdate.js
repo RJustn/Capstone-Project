@@ -3,14 +3,22 @@
 const { WorkPermit } = require('../../index/models');
 const { generateWorkPermitPDF } = require('../../index/utils')
 
+
+
   //Handle Update
 const workpermithandleupdate = async (req, res) => {
     console.log('Request body:', req.body); // Log incoming request body
     const { id } = req.params;
     const { status } = req.body; // Get relevant fields from request body
+    
     try {
         let updateFields = {};
-        
+
+        function generateReceiptId(){
+  const timestamp = Date.now(); // milliseconds since epoch
+  const random = Math.floor(Math.random() * 1000); // random 3-digit number
+  return `WRP-${timestamp}-${random}`;
+}
         // Check the status and set routerropriate fields
         if (status === 'Released') {
           const workpermitFileName = await generateWorkPermitPDF(id);
@@ -24,12 +32,20 @@ const workpermithandleupdate = async (req, res) => {
   
             };
         } else if (status === 'Waiting for Payment') {
+            const receiptId = generateReceiptId(); // Generate a receipt number
+            const generateWorkPermitStatementofAccount = await generateWorkPermitStatementofAccount(id, receiptId);
+
             updateFields = {
                 workpermitstatus: status,
                 transaction: 'Waiting',
                 permitExpiryDate: null, // No expiry date for this status
                 expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
+                receipt: {
+                receiptId: receiptId,
+                workpermitstatementofaccount: generateWorkPermitStatementofAccount,
+                }
             };
+             
         } else {
             return res.status(400).json({ message: 'Invalid status' });
         }

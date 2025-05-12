@@ -7,6 +7,8 @@ const { generateBusinessPermitPDF } = require('../utils/generateBusinessPermitPD
 const { generateBusinessPermitNumber } = require('../utils/generateBusinessPermitNumber');
 const { generateBusinessPaymentReceipt } = require('../utils/generateBusinessPaymentReceipt');
 const { generateStatementofAccount } = require('../utils/generateStatementofAccount');
+const { generateWorkPermitStatementofAccount } = require('../utils/generateWorkPermitStatementofAccount');
+
 
 module.exports = {generateUserId,
     generateWorkPermitID,
@@ -16,4 +18,5 @@ module.exports = {generateUserId,
     generateBusinessPermitNumber,
     generateBusinessPaymentReceipt,
     generateStatementofAccount,
-    computeTax};
+    computeTax,
+generateWorkPermitStatementofAccount};

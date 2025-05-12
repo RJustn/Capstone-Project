@@ -28,7 +28,12 @@ const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
 
         break;
       case "pay":
-  
+        if (permit.receipt.workpermitstatementofaccount) {
+
+          renderDocument(permit.receipt.workpermitstatementofaccount);
+        } else {
+          console.log(`No receipt file found for permit: ${permit.id}`);
+        }
         setActivePermitId(permit._id);
         setShowPaymentMethod(true);
         setModalStep(0);
@@ -124,6 +129,8 @@ const [showPaymentMethod, setShowPaymentMethod] = useState(false);
     window.location.reload();
 
   };
+
+
 
   const logFormData = (formData: FormData) => {
     for (const [key, value] of formData.entries()) {
@@ -445,7 +452,31 @@ const openModal = (filePath: string) => {
           onClick={closePaymentMethod}
         ></button>
       </div>
-
+        <div className="mb-3">
+          <label>
+            <strong>Statement of Account File:</strong>
+          </label>
+        </div>
+        <div className="mb-3">
+          {/* Render the PDF or image file */}
+                  {modalFile && (
+          <div>
+            {modalFile.endsWith(".pdf") ? (
+              <iframe
+                src={modalFile}
+                style={{ width: "100%", height: "600px", border: "none" }}
+                title="PDF Viewer"
+              />
+            ) : (
+              <img
+                src={modalFile}
+                alt="Document"
+                style={{ maxWidth: "100%", height: "auto", borderRadius: "5px" }}
+              />
+            )}
+          </div>
+        )}
+        </div>
       {modalStep === 0 && (
         <div>
           <h6>Upload Receipt</h6>
@@ -461,6 +492,10 @@ const openModal = (filePath: string) => {
       )}
 
       <div className="d-flex justify-content-end">
+        <button type="button" className="btn btn-success">
+          Print
+        </button>
+
         <button
           type="button"
           className="btn btn-success"
@@ -473,6 +508,8 @@ const openModal = (filePath: string) => {
     </div>
   </div>
 )}
+
+
 
 {isModalOpenFile && (
   <div

@@ -24,6 +24,7 @@ export interface WorkPermit {
       receiptDate?: string; // Optional
       amountPaid?: string; // Optional
       receiptFile?: string;
+      workpermitstatementofaccount?: string;
     }
     
   export interface GroupedBusinessPermit {

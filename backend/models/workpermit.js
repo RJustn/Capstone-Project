@@ -68,6 +68,7 @@ const workPermitSchema = new mongoose.Schema({
     receiptAddress: String,
     receiptDate: String,
     amountPaid: String,
+    workpermitstatementofaccount: String,
     receiptFile: String
   },
   lastEdited: { type: Date, default: Date.now } // Add this field
