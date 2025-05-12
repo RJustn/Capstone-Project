@@ -37,6 +37,7 @@ const { graphmonthlybusinesspermit } = require('../../controllers/datacontroller
 const {getWorkPermitStatus} = require('../../controllers/datacontroller/getworkpermitstatus');
 const {getBusinessPermitStatus} = require('../../controllers/datacontroller/getbusinesspermitstatus');
 const { releaseworkpermitrenewal } = require('../../controllers/datacontroller/releaseworkpermitrenewal');
+const { businesspermitrelease } = require('../../controllers/datacontroller/businesspermitrelease');
 
 module.exports = {
     changepassword,
@@ -57,6 +58,7 @@ module.exports = {
     updatebusinessattachment,
     updatebusinessinfopermit,
     updatebusinessownerpermit,
+    businesspermitrelease,
 
     updateworkpermit,
     updateworkpermitattachment,

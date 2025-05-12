@@ -37,6 +37,7 @@ const {
     workpermitreject,
     businesspermitmonthlyappication,
     releaseworkpermitrenewal,
+    businesspermitrelease,
     } = require('../index/datacontroller/datacontroller');
 const uploadbusinesspermitfiles = require('../middleware/uploadbusinesspermitfiles');
 const uploadworkpermitfiles = require('../middleware/uploadworkpermitfiles');
@@ -93,6 +94,8 @@ router.get('/workpermitdetails/:id', workpermitdetails);
 router.put('/workpermitreject/:id', workpermitreject);
 
 router.post('/releaseworkpermitrenewal/:id', releaseworkpermitrenewal);
+
+router.post('/businesspermitrelease/:id', businesspermitrelease);
 
 //Graphs
 

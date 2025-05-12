@@ -1,9 +1,9 @@
 
-const { BusinessPermit } = require('../../../index/models');
-const { generateBusinessPermitNumber, generateBusinessPermitPDF, generateBusinessPaymentReceipt} = require('../../../index/utils')
+const { BusinessPermit } = require('../../index/models');
+const { generateBusinessPermitNumber, generateBusinessPermitPDF, generateBusinessPaymentReceipt} = require('../../index/utils')
 
 
-const businesspermithandlepayment = async (req, res) => {
+const businesspermitrelease = async (req, res) => {
     const { id } = req.params; // Get the permit ID from the URL
     const { paymentStatus, businesspermitstatus } = req.body; // Get the payment status from the request body
   
@@ -15,7 +15,6 @@ const businesspermithandlepayment = async (req, res) => {
       // Generate the permit number
       const permitNumber = await generateBusinessPermitNumber(nextYear);
       const businessPermitFile = await generateBusinessPermitPDF(id, permitNumber);
-      const receiptfile = await generateBusinessPaymentReceipt(id);
   
       // Find the permit by ID and update it
       const permit = await BusinessPermit.findByIdAndUpdate(
@@ -23,12 +22,13 @@ const businesspermithandlepayment = async (req, res) => {
         {
           paymentStatus,
           businesspermitstatus,
+          permitnumber: permitNumber, // Assign the generated permit number
+          permitDateIssued: new Date().toISOString(), // Current date
+          permitExpiryDate: nextYearJan1.toISOString(), // Set to Jan 1st of next year
+          expiryDate: nextYearJan1.toISOString(), // Set to Jan 1st of next year
+          permitFile: businessPermitFile,
+          businessstatus: 'Active',
   
-          receipt: {
-            receiptDate: new Date().toISOString(),
-            amountPaid: 200, // To change
-            receiptFile: receiptfile,
-          }
         },
         { new: true }
       );
@@ -45,5 +45,5 @@ const businesspermithandlepayment = async (req, res) => {
     }
   };
 
-module.exports = {businesspermithandlepayment};
+module.exports = {businesspermitrelease};
   

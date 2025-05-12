@@ -550,6 +550,12 @@ setViewPayment(false);
                             <option value="viewApplication">View Application</option>
                           </>
                 )}
+                {sortedPermits[0].businesspermitstatus === 'Rejected' && sortedPermits[0].classification === 'RenewBusiness' && (
+                          <>
+                            <option value="viewApplication">View Application</option>
+                            <option value="renewbusiness">Renew Business</option>
+                          </>
+                )}
                 {sortedPermits[0].businesspermitstatus === 'Processing Payment' && (
                           <>
                             <option value="viewApplication">View Application</option>

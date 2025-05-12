@@ -307,6 +307,83 @@ const renderDocument = (fileName: string | null) => {
 };
 
 
+// Handle Release
+//Release Permit
+  const handlerelease = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+  
+    try {
+      // Show confirmation alert before uploading
+      const { isConfirmed } = await Swal.fire({
+        title: 'Release?',
+        text: 'Are you sure you want to release the permit of this application',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Submit',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (!isConfirmed) return; // Stop execution if user cancels
+  
+      // Show loading alert while submitting
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Generating Business Permit. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+const response = await axios.post(
+  `https://capstone-project-backend-nu.vercel.app/datacontroller/businesspermitrelease/${activePermitId?._id}`,
+  {
+    paymentStatus: 'Paid',
+    businesspermitstatus: 'Released',
+  },
+  {
+    withCredentials: true,
+  }
+);
+
+  
+      console.log(response.data);
+  
+if (response.status === 200) {
+  Swal.fire({
+    icon: 'success',
+    title:'Released Business Permit',
+    text: 'Business Permit has been released successfully.',
+    timer: 2000,
+    showConfirmButton: false,
+  }).then(() => {
+    window.location.reload();
+  });
+}
+else {
+        const errorMessage = (response.data as { message: string }).message;
+        console.error('Error submitting application:', errorMessage);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: errorMessage || 'Something went wrong. Please try again.',
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Submission Failed',
+        text: 'An error occurred while submitting the payment. Please try again.',
+      });
+    }
+  };
+
+
+
 //Verify
 const [showVerifyReceipt, setShowVerifyReceipt] = useState(false);
 
@@ -450,8 +527,8 @@ const handlePayment = async () => {
     const response = await axios.put(
       `https://capstone-project-backend-nu.vercel.app/client/businesspermithandlepayment/${activePermitId?._id}`,
       {
-        paymentStatus: 'Paid',
-        businesspermitstatus: 'Released',
+        paymentStatus: 'Processing',
+        businesspermitstatus: 'Processing Payment',
       }
     );
 
@@ -3454,7 +3531,7 @@ if (type === 'new') {
 
     <div>
       <button className="DAactionbutton me-3" onClick={() => setIsCommentVisible(true)}>Reject</button>
-      <button className='DAactionbutton' >Release Permit</button>
+      <button className='DAactionbutton' onClick={handlerelease} >Release Permit</button>
     </div>
 
     {!isCommentVisible ? (
