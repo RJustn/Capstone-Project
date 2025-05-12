@@ -248,6 +248,7 @@ const DataControllerForPaymentWP: React.FC = () => {
         } else {
           console.log(`No receipt file found for permit: ${permit.id}`);
         }
+        setSelectedPermit(permit);
           setActivePermitId(permit._id);  // Save the permit ID
           setShowPaymentMethod(true);
           setModalStep(0);                 // Reset modal to the first step
@@ -723,12 +724,12 @@ if (type === 'new') {
   )}
         </div>
         {/* Modal Dumps */}
-        {showPaymentMethod && (
+        {showPaymentMethod && selectedPermit && (
   <div className="modal-overlay" onClick={handleOverlayClick}>
     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
       
       <h2>Handle Payment</h2>
-      <p>For Work Permit Application ID: <strong>{activePermitId}</strong></p>
+      <p>For Work Permit Application ID: <strong>{selectedPermit.id}</strong></p>
 
               <div className="mb-3">
           <label>
@@ -770,7 +771,7 @@ if (type === 'new') {
           </button>
         </div>
       )}
-              <button type="button" className="btn btn-success"
+              <button type="button" className="back-button"
          onClick={() => {
     const newWindow = window.open(fileLink, "_blank");
     if (newWindow) {
@@ -793,7 +794,8 @@ if (type === 'new') {
 
 
 {showVerifyReceipt && selectedPermit && (
-  <div>
+  <div className="modal-overlay" >
+    <div className="modal-content">
     <h4>Statement of Account</h4>
     <div className="mb-3">
       {selectedPermit.receipt?.workpermitstatementofaccount && (
@@ -864,6 +866,7 @@ if (type === 'new') {
         </div>
       </>
     )}
+    </div>
   </div>
 )}
 
