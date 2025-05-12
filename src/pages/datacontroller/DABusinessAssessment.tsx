@@ -1590,10 +1590,12 @@ useEffect(() => {
 useEffect(() => {
   if (businessPermit) {
     // Set initial environmental value from businessPermit
-    setHealthPermit(Number(businessPermit.statementofaccount.health));
     setEnvironmental(Number(businessPermit.statementofaccount.environmental));
     setLiquorTobaco(Number(businessPermit.statementofaccount.liquortobaco));
     setLiquorPlate(Number(businessPermit.statementofaccount.liquorplate));
+  }
+  if (businessPermit?.otherbusinessinfo?.numofworkertotal != null) {
+    setHealthPermit(businessPermit.otherbusinessinfo.numofworkertotal * 100);
   }
 }, [businessPermit]);
 
