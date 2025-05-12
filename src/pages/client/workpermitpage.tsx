@@ -371,13 +371,14 @@ const WorkPermit: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (workPermits.length === 0) {
-      setWorkPermitClassification("New");
-    } else {
-      setWorkPermitClassification("Renew");
-    }
-  }, [workPermits]);
+useEffect(() => {
+  const shouldRenew = workPermits.some(
+    wp => wp.classification === "New" && wp.workpermitstatus === "Expired"
+  );
+
+  setWorkPermitClassification(shouldRenew ? "Renew" : "New");
+}, [workPermits]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -855,10 +856,13 @@ const WorkPermit: React.FC = () => {
                   id="classification"
                   name="classification"
                   value={
-                    workPermits.length === 0
-                      ? "First Time Job Seeker / New Work Permit"
-                      : "Work Permit Renewal"
-                  }
+  workPermits.some(
+    wp => wp.classification === "New" && wp.workpermitstatus === "Expired"
+  )
+    ? "Work Permit Renewal"
+    : "First Time Job Seeker / New Work Permit"
+}
+
                   disabled
                 />
               </div>

@@ -282,6 +282,7 @@ export interface WorkPermits {
   userId?: string; // Can be a string for front end
   permittype?: string; // Default value can be handled in logic
   workpermitstatus: string;
+  classification: string;
   transaction: string;
   transactionstatus: string;
   formData: FormContent;
