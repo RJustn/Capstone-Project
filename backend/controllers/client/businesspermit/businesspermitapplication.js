@@ -111,7 +111,7 @@ const businesspermitapplication = async (req, res) => {
   
      // Iterate over parsed businesses and compute tax for each
      const updatedBusinesses = parsedBusinesses.map((business) => {
-      const tax = computeTax(business.businessNature, business.capitalInvestment, business.businessType);
+      const tax = computeTax(business.businessNature, business.capitalInvestment, 'NewBusiness');
       return {
         ...business,
         tax: tax, // Add computed tax to the business object

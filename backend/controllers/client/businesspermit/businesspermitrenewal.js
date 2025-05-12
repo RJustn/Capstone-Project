@@ -107,7 +107,7 @@ const businesspermitrenewal = async (req, res) => {
   
      // Iterate over parsed businesses and compute tax for each
      const updatedBusinesses = parsedBusinesses.map((business) => {
-      const tax = computeTax(business.businessNature, business.capitalInvestment, business.businessType);
+      const tax = computeTax(business.businessNature, business.capitalInvestment, 'RenewBusiness');
     
       // Remove the _id field if it exists
       delete business._id;

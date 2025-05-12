@@ -24,7 +24,7 @@ const updatebusinessnature = async (req, res) => {
           (b) => b._id.toString() === business._id
         );
               // Add new business and compute tax
-              const tax = computeTax(business.businessNature, business.capitalInvestment, business.businessType);
+              const tax = computeTax(business.businessNature, business.capitalInvestment, permit.classification);
               business.tax = tax;
           // Add new business
           permit.businesses.push(business);
@@ -37,7 +37,7 @@ const updatebusinessnature = async (req, res) => {
           );
           if (index !== -1) {
                   // Add new business and compute tax
-        const tax = computeTax(business.businessNature, business.capitalInvestment, business.businessType);
+        const tax = computeTax(business.businessNature, business.capitalInvestment, permit.classification);
         business.tax = tax;
             // Update existing business
             permit.businesses[index] = business;

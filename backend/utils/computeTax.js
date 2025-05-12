@@ -8,12 +8,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'BNK',
           check: (businessNature) => businessNature.startsWith('BNK'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
           // Tax for new businesses
           const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
           return tax;
             }
-            if(classification === 'Renew'){
+            if(classification === 'RenewBusiness'){
             // Bank-specific tax rules for renew businesses
             if (capitalInvestment <= 1000000) {
               return capitalInvestment * 0.00605; // 60.5% of 1%
@@ -27,12 +27,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'CNT',
           check: (businessNature) => businessNature.startsWith('CNT'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               // Tax computation for new businesses in the CNT category
               if (capitalInvestment < 5000) {
                 return 33.0;
@@ -85,12 +85,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'LSS',
           check: (businessNature) => businessNature.startsWith('LSS'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               // Tax computation for new businesses in the LSS category
               if (capitalInvestment < 5000) {
                 return 302.50;
@@ -118,12 +118,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           check: (businessNature) => 
             businessNature.startsWith('MFRP') || businessNature.startsWith('MILL'),
           taxCalculation: (capitalInvestment, classification) => {    
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 10000) {
                 return 199.65;
               } else if (capitalInvestment >= 10000 && capitalInvestment < 15000) {
@@ -173,12 +173,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'MFRP',
           check: (businessNature) => businessNature.startsWith('MFRP'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 10000) {
                 return 99.83;
               } else if (capitalInvestment >= 10000 && capitalInvestment < 15000) {
@@ -228,12 +228,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'PRA',
           check: (businessNature) => businessNature.startsWith('PRA'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 10000) {
                 return capitalInvestment * 0.0121; // 1.21%
               } else {
@@ -247,12 +247,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'RTLT',
           check: (businessNature) => businessNature.startsWith('RTLT'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 5000) {
                 return 33.28;
               } else if (capitalInvestment >= 5000 && capitalInvestment < 10000) {
@@ -284,12 +284,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'RTLE',
           check: (businessNature) => businessNature.startsWith('RTLE'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 400000) {
                 return capitalInvestment * 0.0121; // 1.21%
               } else if (capitalInvestment >= 400000) {
@@ -303,12 +303,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'RTLL',
           check: (businessNature) => businessNature.startsWith('RTLL'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 5000) {
                 return 33.28;
               } else if (capitalInvestment >= 5000 && capitalInvestment < 10000) {
@@ -340,12 +340,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'RTLN',
           check: (businessNature) => businessNature.startsWith('RTLN'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment <= 400000) {
                 return capitalInvestment * 0.0242; // 2.42% of the capital investment
               } else if (capitalInvestment > 400000) {
@@ -359,12 +359,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'WHN',
           check: (businessNature) => businessNature.startsWith('WHN'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 1000) {
                 return 21.78;
               } else if (capitalInvestment >= 1000 && capitalInvestment < 2000) {
@@ -422,12 +422,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'WHE',
           check: (businessNature) => businessNature.startsWith('WHE'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 1000) {
                 return 10.89;
               } else if (capitalInvestment >= 1000 && capitalInvestment < 2000) {
@@ -485,13 +485,13 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRC',
           check: (businessNature) => businessNature.startsWith('OPRC'),
           taxCalculation: (classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
             // Automatically return tax for OPRC
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               return 9317;
             }
             return 0; // Default to no tax for other classifications or unmatched conditions
@@ -501,13 +501,13 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRCPO',
           check: (businessNature) => businessNature.startsWith('OPRCPO'),
           taxCalculation: (classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
             // Automatically return tax for OPRCPO
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               return 12.10;
             }
             return 0; // Default to no tax for other classifications or unmatched conditions
@@ -517,13 +517,13 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
               category: 'OPRCP',
               check: (businessNature) => businessNature.startsWith('OPRCPO'),
               taxCalculation: (classification) => {
-                if (classification === 'New') {
+                if (classification === 'NewBusiness') {
                   // Tax for new businesses
                   const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
                   return tax;
                     }
                 // Automatically return tax for OPRCPO
-                if (classification === 'Renew') {
+                if (classification === 'RenewBusiness') {
                   return 18.15;
                 }
                 return 0; // Default to no tax for other classifications or unmatched conditions
@@ -533,12 +533,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'ORPS',
           check: (businessNature) => businessNature.startsWith('ORPS'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 50000) {
                 return 302.50;
               } else if (capitalInvestment >= 50000 && capitalInvestment < 100000) {
@@ -563,12 +563,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRT',
           check: (businessNature) => businessNature.startsWith('OPRT'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 5000) {
                 return 60.50;
               } else if (capitalInvestment >= 5000 && capitalInvestment < 10000) {
@@ -611,12 +611,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRR',
           check: (businessNature) => businessNature.startsWith('OPRR'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 2000) {
                 return 60.50;
               } else if (capitalInvestment >= 2000 && capitalInvestment < 3000) {
@@ -687,7 +687,7 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRM',
           check: (businessNature) => businessNature.startsWith('OPRM'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               if (capitalInvestment <= 1000000) {
                 return 0.605 * 0.01 * capitalInvestment; // 60.50% of 1% for capital investment of 1,000,000 or less
               } else if (capitalInvestment > 1000000) {
@@ -701,12 +701,12 @@ const computeTax = (businessNature, capitalInvestment, classification) => {
           category: 'OPRPC',
           check: (businessNature) => businessNature.startsWith('OPRPC'),
           taxCalculation: (capitalInvestment, classification) => {
-            if (classification === 'New') {
+            if (classification === 'NewBusiness') {
               // Tax for new businesses
               const tax = Math.max(220, capitalInvestment * 0.0005); // 1/20th of 1% of capital investment
               return tax;
                 }
-            if (classification === 'Renew') {
+            if (classification === 'RenewBusiness') {
               if (capitalInvestment < 5000) {
                 return 60.50;
               } else if (capitalInvestment >= 5000 && capitalInvestment < 10000) {
