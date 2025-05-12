@@ -1,7 +1,7 @@
 
 
 const { WorkPermit } = require('../../index/models');
-const { generateWorkPermitPDF } = require('../../index/utils')
+const { generateWorkPermitPDF, generateWorkPermitStatementofAccount } = require('../../index/utils')
 
 
 
