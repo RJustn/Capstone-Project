@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 // Function to generate Statement of Account PDF and upload to Cloudinary
-const generateStatementofAccount = async (ContentData, BusinessPermitContent) => {
+const generateStatementofAccount = async (ContentData, BusinessPermitContent, receiptId) => {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument();
@@ -51,7 +51,7 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
       doc.fontSize(25).text('Statement of Account', { align: 'center' });
       doc.moveDown();
       doc.fontSize(12).text(`Date: ${new Date().toLocaleDateString()}`);
-      doc.text(`Receipt ID: ${uuidv4()}`);
+      doc.text(`Receipt ID: BP-${receiptId}`);
       doc.text(`Business Owner: ${BusinessPermitContent.owner.lastname} ${BusinessPermitContent.owner.firstname}`);
       doc.text(`Business Permit ID: ${BusinessPermitContent.id}`);
       doc.text(`Mode of Payment: ${BusinessPermitContent.business.paymentmethod}`);
@@ -70,8 +70,25 @@ const generateStatementofAccount = async (ContentData, BusinessPermitContent) =>
       doc.text(`Liquor Plate Fee: PHP ${ContentData.liquorplate}`);
       doc.moveDown();
 
-      doc.text(`Total Amount: PHP PHP ${ContentData.total}`, { bold: true });
-      doc.moveDown();
+const currentMonth = new Date().getMonth(); // 0 = Jan, 1 = Feb, ...
+
+let finalTotal = Number(ContentData.total);
+let baseAmount = finalTotal;
+let additionalCharge = 0;
+
+if (currentMonth >= 1) {
+  // Reverse 15% increase
+  baseAmount = finalTotal / 1.15;
+  additionalCharge = finalTotal - baseAmount;
+
+  doc.text(`Base Amount: PHP ${baseAmount.toFixed(2)}`);
+  doc.text(`15% Additional Charge: PHP ${additionalCharge.toFixed(2)}`, { italic: true });
+}
+
+// Final total amount (already includes 15%)
+doc.text(`Total Amount: PHP ${finalTotal.toFixed(2)}`, { bold: true });
+doc.moveDown();
+
       doc.end();
     } catch (error) {
       console.error('Error generating statement of account PDF:', error);

@@ -22,7 +22,8 @@ const savingassessment = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-      const statementofaccountfile = await generateStatementofAccount(updatedStatement, BusinessPermitContent);
+      const generateReceiptId = Math.floor(Math.random() * 10000);
+      const statementofaccountfile = await generateStatementofAccount(updatedStatement, BusinessPermitContent, generateReceiptId);
       const updatedPermit = await BusinessPermit.findByIdAndUpdate(
         id,
         {
@@ -45,7 +46,8 @@ const savingassessment = async (req, res) => {
             'statementofaccount.miscfee': updatedStatement.miscfee,
             'statementofaccount.liquortobaco': updatedStatement.liquortobaco,
             'statementofaccount.liquorplate': updatedStatement.liquorplate,
-            'statementofaccount.statementofaccountfile': statementofaccountfile
+            'statementofaccount.statementofaccountfile': statementofaccountfile,
+            'receipt.receiptId': `BP-${generateReceiptId}`
           }
         },
         { new: true } // Return the updated document

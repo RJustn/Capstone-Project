@@ -1611,14 +1611,14 @@ useEffect(() => {
 const [isComputed, setIsComputed] = useState(false);
 
 const computeAssessment = () => {
- 
-console.log(paymentmethod);
+  console.log(paymentmethod);
   if (!paymentmethod) {
     Swal.fire('Error', 'Please select a payment method first.', 'error');
     return;
   }
 
-  const computedTotal =
+  // Sum all fees
+  const computedBaseTotal =
     mayorspermit +
     sanitary +
     businessplate +
@@ -1631,8 +1631,16 @@ console.log(paymentmethod);
     liquortobaco +
     liquorplate;
 
+  // Check if current month is Feb (1) or later
+  const currentMonth = new Date().getMonth(); // 0 = January
+  const hasIncrease = currentMonth >= 1;
+
+  // Apply 15% increase if February or later
+  const computedTotal = hasIncrease
+    ? computedBaseTotal * 1.15
+    : computedBaseTotal;
+
   let paymentDue = 0;
-console.log(mayorspermit, sanitary, businessplate, zoningclearance, annualInspection, environmental,miscfee, totaltax, health, liquortobaco, liquorplate)
   switch (paymentmethod) {
     case 'Annual':
       paymentDue = computedTotal;
@@ -1655,6 +1663,7 @@ console.log(mayorspermit, sanitary, businessplate, zoningclearance, annualInspec
     setIsComputed(true);
   });
 };
+
 
 
 
@@ -2054,11 +2063,55 @@ return (
           </td>
           <td style={{ padding: '8px' }}>₱{liquorplate}</td>
         </tr>
-        <tr>
+
+
+{(() => {
+  const currentMonth = new Date().getMonth(); // 0 = January
+  const hasIncrease = currentMonth >= 1; // February and beyond
+  const baseAmount = total / 1.15;
+  const increaseAmount = total - baseAmount;
+
+  if (!hasIncrease) {
+    // January: show only the total
+    return (
+      <tr>
         <td style={{ padding: '8px' }}>Total Computation</td>
-          <td style={{ padding: '8px' }}> </td>
-          <td style={{ padding: '8px' }}>₱{total.toLocaleString()}</td>
-        </tr>
+        <td style={{ padding: '8px' }}></td>
+        <td style={{ padding: '8px' }}>
+          ₱{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </td>
+      </tr>
+    );
+  }
+
+  // February and beyond: show breakdown
+  return (
+    <>
+      <tr>
+        <td style={{ padding: '8px' }}>Base Amount</td>
+        <td style={{ padding: '8px' }}></td>
+        <td style={{ padding: '8px' }}>
+          ₱{baseAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </td>
+      </tr>
+      <tr>
+        <td style={{ padding: '8px' }}>15% Additional Charge</td>
+        <td style={{ padding: '8px' }}></td>
+        <td style={{ padding: '8px' }}>
+          ₱{increaseAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </td>
+      </tr>
+      <tr>
+        <td style={{ padding: '8px', fontWeight: 'bold' }}>Total Computation</td>
+        <td style={{ padding: '8px' }}></td>
+        <td style={{ padding: '8px', fontWeight: 'bold' }}>
+          ₱{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </td>
+      </tr>
+    </>
+  );
+})()}
+
         <tr>
           <td style={{ padding: '8px', fontWeight: 'bold'}}>Payment Method</td>
           <td style={{ padding: '8px', fontWeight: 'bold'}}><select
