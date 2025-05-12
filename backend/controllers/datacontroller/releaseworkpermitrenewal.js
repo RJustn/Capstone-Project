@@ -3,7 +3,7 @@ const { WorkPermit } = require('../../../index/models');
 const { generateWorkPermitPDF } = require('../../../index/utils')
 const JWT_SECRET = 'your_jwt_secret'; 
 
-const workpermithandlepayment = async (req, res) => {
+const releaseworkpermitrenewal = async (req, res) => {
     const token = req.cookies.authToken; // Extract token from the cookie
    // console.log('Received token:', token);
     
@@ -27,20 +27,16 @@ if (!existingPermit) {
   return res.status(404).json({ message: 'Work permit not found' });
 }
 
-// Merge existing receipt with the new fields
-const updatedReceipt = {
-  ...existingPermit.receipt, // preserves existing fields like receiptId, workpermitstatementofaccount
-  receiptDate: new Date().toISOString(),
-  amountPaid: 200,
-  receiptFile: files.document1 ? files.document1[0].path : existingPermit.receipt?.receiptFile || null,
-};
       const updatedPermit = await WorkPermit.findByIdAndUpdate(
   permitId,
   {
     $set: {
-      workpermitstatus: "Processing Payment",
-      transaction: "Processing",
-      receipt: updatedReceipt,
+      workpermitstatus: "Released",
+      transaction: "Complete",
+      permitFile: workpermitFileName,
+      permitDateIssued: new Date().toISOString(),
+      permitExpiryDate: new Date(Date.now() + 31536000000).toISOString(),
+      expiryDate: new Date(Date.now() + 31536000000).toISOString(),
     },
   },
   { new: true }
@@ -61,4 +57,4 @@ const updatedReceipt = {
     }
   };
 
-  module.exports = { workpermithandlepayment };
+  module.exports = { releaseworkpermitrenewal };

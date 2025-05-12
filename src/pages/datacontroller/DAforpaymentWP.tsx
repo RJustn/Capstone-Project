@@ -289,7 +289,9 @@ const logFormData = (formData: FormData) => {
 };
 
 
-
+const handlecloseverify = () => {
+  setShowVerifyReceipt(false);
+}
 // Handle Verify Permit
   const [isCommentVisible, setIsCommentVisible] = useState(false); // State to track comment visibility
       const [comments, setComments] = useState(''); // State for comments
@@ -368,7 +370,77 @@ const logFormData = (formData: FormData) => {
 
 
 
-
+//Release Permit
+  const handlerelease = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+  
+    try {
+      // Show confirmation alert before uploading
+      const { isConfirmed } = await Swal.fire({
+        title: 'Submit Payment?',
+        text: 'Are you sure you want to release the permit of this application',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Submit',
+        cancelButtonText: 'Cancel',
+      });
+  
+      if (!isConfirmed) return; // Stop execution if user cancels
+  
+      // Show loading alert while submitting
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Generating Work Permit. Please wait...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      const response = await axios.post(
+        `https://capstone-project-backend-nu.vercel.app/client/releaseworkpermitrenewal/${selectedPermit?._id}`,
+        
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
+      );
+  
+      console.log(response.data);
+  
+      if (response.status === 200) {
+        setReceiptFile(null); // Clear file state
+        window.location.reload();
+        Swal.fire({
+          icon: 'success',
+          title: 'Released Work Permit',
+          text: 'Work Permit has been released successfully.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } else {
+        const errorMessage = (response.data as { message: string }).message;
+        console.error('Error submitting application:', errorMessage);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: errorMessage || 'Something went wrong. Please try again.',
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Submission Failed',
+        text: 'An error occurred while submitting the payment. Please try again.',
+      });
+    }
+  };
 
 //Payment Submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -794,8 +866,8 @@ if (type === 'new') {
 
 
 {showVerifyReceipt && selectedPermit && (
-  <div className="modal-overlay" >
-    <div className="modal-content">
+  <div className="modal-overlay" onClick={() => handlecloseverify()} >
+    <div className="modal-content" onClick={() => handlecloseverify()}>
     <h4>Statement of Account</h4>
     <div className="mb-3">
       {selectedPermit.receipt?.workpermitstatementofaccount && (
@@ -839,8 +911,8 @@ if (type === 'new') {
     </div>
 
     <div>
-      <button onClick={() => setIsCommentVisible(true)}>Reject</button>
-      <button>Release Permit</button>
+      <button className="DAactionbutton me-3" onClick={() => setIsCommentVisible(true)}>Reject</button>
+      <button className='DAactionbutton' onClick={handlerelease}>Release Permit</button>
     </div>
 
     {!isCommentVisible ? (
@@ -850,13 +922,15 @@ if (type === 'new') {
       <>
         <h3>Comments</h3>
         <label htmlFor="comments">Enter your comments:</label>
+        <div>
         <textarea
           id="comments"
           value={comments}
           onChange={(e) => setComments(e.target.value)}
           rows={4}
-          style={{ width: '100%', height: "20px"}}
+          style={{ width: '100%', height: "30%"}}
         />
+        </div>
         <div className="pagination">
           <button className="DAactionbutton" onClick={handleFinalConfirm}>Submit</button>
           <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
