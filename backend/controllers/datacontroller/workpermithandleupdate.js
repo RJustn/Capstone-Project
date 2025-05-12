@@ -29,7 +29,7 @@ const workpermithandleupdate = async (req, res) => {
             };
         } else if (status === 'Waiting for Payment') {
             const receiptId = Math.floor(Math.random() * 10000);
-            const generateWorkPermitStatementofAccount = await generateWorkPermitStatementofAccount(id, receiptId);
+            const statementFile  = await generateWorkPermitStatementofAccount(id, receiptId);
 
             updateFields = {
                 workpermitstatus: status,
@@ -38,7 +38,7 @@ const workpermithandleupdate = async (req, res) => {
                 expiryDate: new Date(Date.now() + 31536000000).toISOString(), // 1 year from now
                 receipt: {
                 receiptId: `WP-${receiptId}`,
-                workpermitstatementofaccount: generateWorkPermitStatementofAccount,
+                workpermitstatementofaccount: statementFile ,
                 }
             };
              
