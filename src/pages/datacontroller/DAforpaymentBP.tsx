@@ -318,6 +318,67 @@ const handlecloseverify = () => {
       const [comments, setComments] = useState(''); // State for comments
 
 
+
+const rejectbusinesspermit = async (action: string, remarks: string) => {
+  if (!activePermitId) return;
+
+  // Validate remarks only if the action is 'rejected'
+  if (action === 'rejected' && !remarks) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Remarks Required',
+      text: 'Please provide remarks for rejection.',
+    });
+    return;
+  }
+
+  // Show loading SweetAlert
+  Swal.fire({
+    title: 'Updating Status...',
+    text: 'Please wait while we process the request.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+   try {
+    const response = await axios.put(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/rejectbusinesspermit/${activePermitId._id}`,
+      { status: action, comments: remarks } // use remarks consistently
+    );
+
+    console.log('Update successful:', response.data);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Status Updated!',
+      text: `Business permit has been ${action === 'approved' ? 'approved' : 'rejected'}.`,
+      timer: 2000,
+      showConfirmButton: false,
+    }).then(() => {
+      window.location.reload(); // optional: refresh after update
+    });
+  }
+   catch (error) {
+    console.error('Update failed:', error);
+
+    // Show error alert
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: 'Failed to update permit status. Please try again.',
+    });
+  }
+};
+
+
+
+
+
+
+
+
 const openModal = (filePath: string) => {
   setModalFile(filePath);
   setIsModalOpenFile(true);
@@ -3413,7 +3474,9 @@ if (type === 'new') {
         />
         </div>
         <div className="pagination">
-          <button className="DAactionbutton">Submit</button>
+<button className="DAactionbutton" onClick={() => rejectbusinesspermit('rejected', comments)}>
+  Submit
+</button>
           <button className="actionreject-button" onClick={() => setIsCommentVisible(false)}>Back</button>
         </div>
       </>

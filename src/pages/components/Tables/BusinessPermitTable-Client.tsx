@@ -244,12 +244,15 @@ const BusinessPermitTable: React.FC<BusinessPermitTableProps> = ({ businessPermi
   
         // Show success alert
         Swal.fire({
-          icon: 'success',
-          title: 'Payment Successful!',
-          text: 'The payment status has been updated.',
-          timer: 2000,
-          showConfirmButton: false,
-        });
+  icon: 'success',
+  title: 'Payment Successful!',
+  text: 'The payment status has been updated.',
+  timer: 2000,
+  showConfirmButton: false,
+}).then(() => {
+  window.location.reload();
+});
+
       } else {
         console.error('Failed to update payment status');
   

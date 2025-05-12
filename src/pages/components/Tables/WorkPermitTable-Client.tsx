@@ -180,8 +180,8 @@ const [showPaymentMethod, setShowPaymentMethod] = useState(false);
       if (response.status === 200) {
         Swal.fire({
           icon: 'success',
-          title: 'Released Work Permit',
-          text: 'Work Permit has been released successfully.',
+          title: 'Uploaded Receipt',
+          text: 'Receipt uploaded successfully.',
           timer: 2000,
           showConfirmButton: false,
         }).then(() => {
