@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
 
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -23,15 +23,6 @@ const Login: React.FC = () => {
         icon: 'warning',
         title: 'Missing Fields',
         text: 'All fields are required.',
-      });
-      return;
-    }
-
-    if (!agreeToTerms) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Agreement Required',
-        text: 'You must agree to the terms to proceed.',
       });
       return;
     }
@@ -164,27 +155,7 @@ const Login: React.FC = () => {
           />
         </div>
 
-          <div className="form-check mb-3">
-        <input
-        type="checkbox"
-        id="agreeToTerms"
-        className="form-check-input mt-1 mr-2"
-        checked={agreeToTerms}
-        onChange={(e) => setAgreeToTerms(e.target.checked)}
-        required
-        />
-        <label htmlFor="agreeToTerms" className="form-check-label text-sm ml-2">
-          I agree to the creation of an account and the processing of my personal information in accordance with the
-          <a 
-          href="/path-to-your-pdf/terms-and-conditions.pdf" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-decoration-none ml-1"
-        >
-          Terms and Conditions
-        </a>.
-        </label>
-      </div>
+
           
         {/* Buttons and Links */}
         <div className="d-flex justify-content-between align-items-center mb-3">

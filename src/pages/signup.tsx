@@ -4,6 +4,7 @@ import './Styles/signup.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const Signup: React.FC = () => {
@@ -16,11 +17,24 @@ const Signup: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [success] = useState<string | null>(null);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    
+        if (!agreeToTerms) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Agreement Required',
+            text: 'You must agree to the terms to proceed.',
+          });
+          return;
+        }
+    
     
     // Validate form
     if (!firstName || !middleName || !lastName || !email || !password || !contactNumber || !address) {
@@ -59,11 +73,17 @@ if (!passwordRegex.test(password)) {
         isVerified: false,  // You might want to adjust this logic later
       });
   
-      if (response.status === 201) { // Check the response status
-        setSuccess(response.data.message);
-        setError(null);
-        navigate('/emailverification', { state: { email } }); // Redirect to email verification page
-      }
+      if (response.status === 201) {
+    await Swal.fire({
+      icon: 'success',
+      title: 'Registration Successful!',
+      text: response.data.message || 'Your account has been created. Please verify your email.',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+    navigate('/emailverification', { state: { email } });
+  }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 409) {
@@ -230,6 +250,28 @@ if (!passwordRegex.test(password)) {
           </div>
         </div>
         </div>
+
+        <div className="form-check mb-3">
+        <input
+        type="checkbox"
+        id="agreeToTerms"
+        className="form-check-input mt-1 mr-2"
+        checked={agreeToTerms}
+        onChange={(e) => setAgreeToTerms(e.target.checked)}
+        required
+        />
+        <label htmlFor="agreeToTerms" className="form-check-label text-sm ml-2">
+          I agree to the creation of an account and the processing of my personal information in accordance with the
+          <a 
+          href="/path-to-your-pdf/terms-and-conditions.pdf" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-decoration-none ml-1"
+        >
+          Terms and Conditions
+        </a>.
+        </label>
+      </div>
 
       <div className="d-flex justify-content-between align-items-center">
         <button
