@@ -30,7 +30,7 @@ const WorkPermitTable: React.FC<WorkPermitTableProps> = ({ workPermits}) => {
       case "pay":
         if (permit.receipt.workpermitstatementofaccount) {
 
-          renderDocument(permit.receipt.workpermitstatementofaccount);
+          setModalFile(permit.receipt.workpermitstatementofaccount);
         } else {
           console.log(`No receipt file found for permit: ${permit.id}`);
         }

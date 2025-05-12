@@ -54,7 +54,7 @@ const generateWorkPermitStatementofAccount= async (ContentData, receiptId) => {
       doc.text(`Receipt ID: WP-${receiptId}`);
       doc.text(`Name: ${ContentData.formData.personalInformation.lastName} ${ContentData.formData.personalInformation.firstName}`);
       doc.text(`Work Permit Application ID: ${ContentData.id}`);
-      doc.text(`Transaction Type: ${ContentData.transaction}`);
+      doc.text(`Transaction Type: ${ContentData.classification}`);
       doc.moveDown();
 
       // Add detailed statement information
