@@ -378,7 +378,7 @@ const handlecloseverify = () => {
     try {
       // Show confirmation alert before uploading
       const { isConfirmed } = await Swal.fire({
-        title: 'Submit Payment?',
+        title: 'Release?',
         text: 'Are you sure you want to release the permit of this application',
         icon: 'question',
         showCancelButton: true,
@@ -399,15 +399,12 @@ const handlecloseverify = () => {
       });
   
       const response = await axios.post(
-        `https://capstone-project-backend-nu.vercel.app/client/releaseworkpermitrenewal/${selectedPermit?._id}`,
-        
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        }
-      );
+  `https://capstone-project-backend-nu.vercel.app/datacontroller/releaseworkpermitrenewal/${selectedPermit?._id}`,
+  {}, // no data
+  {
+    withCredentials: true,
+  }
+);
   
       console.log(response.data);
   
