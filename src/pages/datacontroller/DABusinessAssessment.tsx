@@ -1617,9 +1617,9 @@ useEffect(() => {
 const [isComputed, setIsComputed] = useState(false);
 
 const computeAssessment = () => {
-  const paymentMethod = businessPermit?.business?.paymentmethod;
-console.log(paymentMethod);
-  if (!paymentMethod) {
+ 
+console.log(paymentmethod);
+  if (!paymentmethod) {
     Swal.fire('Error', 'Please select a payment method first.', 'error');
     return;
   }
@@ -1639,7 +1639,7 @@ console.log(paymentMethod);
 
   let paymentDue = 0;
 
-  switch (paymentMethod) {
+  switch (paymentmethod) {
     case 'Annual':
       paymentDue = computedTotal;
       break;
@@ -1650,7 +1650,7 @@ console.log(paymentMethod);
       paymentDue = computedTotal / 4;
       break;
     default:
-      console.warn('Unknown payment method:', paymentMethod);
+      console.warn('Unknown payment method:', paymentmethod);
       paymentDue = computedTotal;
   }
 
