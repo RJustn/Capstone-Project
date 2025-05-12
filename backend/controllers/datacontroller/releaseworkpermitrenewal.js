@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { WorkPermit } = require('../../../index/models');
-const { generateWorkPermitPDF } = require('../../../index/utils')
+const { WorkPermit } = require('../../index/models');
+const { generateWorkPermitPDF } = require('../../index/utils')
 const JWT_SECRET = 'your_jwt_secret'; 
 
 const releaseworkpermitrenewal = async (req, res) => {
