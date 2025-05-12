@@ -240,15 +240,9 @@ const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: string | nul
 
   //Payment Method
   const [paymentmethod, setPaymentMethod] = useState<string | undefined>(undefined);
-   // Get current month and quarter
-   const currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
-   const quarter = Math.ceil(currentMonth / 3);
  
    // Determine applicable payment methods dynamically
    const getPaymentOptions = () => {
-     if (quarter === 2 || quarter === 4) {
-       return ["Quarterly"];
-     }
      return ["Annual", "Semi-Annual", "Quarterly"];
    };
  
@@ -1590,6 +1584,7 @@ useEffect(() => {
 useEffect(() => {
   if (businessPermit) {
     // Set initial environmental value from businessPermit
+     setPaymentMethod(businessPermit.business.paymentmethod);
     setEnvironmental(Number(businessPermit.statementofaccount.environmental));
     setLiquorTobaco(Number(businessPermit.statementofaccount.liquortobaco));
     setLiquorPlate(Number(businessPermit.statementofaccount.liquorplate));
