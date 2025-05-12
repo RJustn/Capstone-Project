@@ -865,7 +865,7 @@ if (type === 'new') {
 
 {showVerifyReceipt && selectedPermit && (
   <div className="modal-overlay" onClick={() => handlecloseverify()} >
-    <div className="modal-content">
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
     <h4>Statement of Account</h4>
     <div className="mb-3">
       {selectedPermit.receipt?.workpermitstatementofaccount && (
