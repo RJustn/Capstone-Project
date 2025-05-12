@@ -177,18 +177,16 @@ const [showPaymentMethod, setShowPaymentMethod] = useState(false);
           withCredentials: true, 
         }
       );
-  
       if (response.status === 200) {
-        console.log(response.data);
-        setFiles({ document1: null }); // Clear uploaded file
-  
-        // Show success alert
         Swal.fire({
           icon: 'success',
-          title: 'Payment Submitted!',
-          text: 'Your receipt has been successfully uploaded.',
+          title: 'Released Work Permit',
+          text: 'Work Permit has been released successfully.',
           timer: 2000,
           showConfirmButton: false,
+        }).then(() => {
+          window.location.reload();
+          setFiles({ document1: null }); // Clear uploaded file
         });
       } else {
         console.error('Error submitting application:', response.data.message);

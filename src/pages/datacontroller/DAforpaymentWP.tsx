@@ -408,17 +408,18 @@ const handlecloseverify = () => {
   
       console.log(response.data);
   
-      if (response.status === 200) {
-        setReceiptFile(null); // Clear file state
-        window.location.reload();
-        Swal.fire({
-          icon: 'success',
-          title: 'Released Work Permit',
-          text: 'Work Permit has been released successfully.',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      } else {
+if (response.status === 200) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Released Work Permit',
+    text: 'Work Permit has been released successfully.',
+    timer: 2000,
+    showConfirmButton: false,
+  }).then(() => {
+    window.location.reload();
+  });
+}
+else {
         const errorMessage = (response.data as { message: string }).message;
         console.error('Error submitting application:', errorMessage);
   
@@ -493,17 +494,17 @@ const handlecloseverify = () => {
   
       console.log(response.data);
   
-      if (response.status === 200) {
-        setReceiptFile(null); // Clear file state
-        window.location.reload();
-        Swal.fire({
-          icon: 'success',
-          title: 'Payment Submitted',
-          text: 'Receipt payment has been submitted successfully.',
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      } else {
+if (response.status === 200) {
+  Swal.fire({
+    icon: 'success',
+    title: 'Released Work Permit',
+    text: 'Work Permit has been released successfully.',
+    timer: 2000,
+    showConfirmButton: false,
+  }).then(() => {
+    window.location.reload();
+  });
+}else {
         const errorMessage = (response.data as { message: string }).message;
         console.error('Error submitting application:', errorMessage);
   
@@ -864,7 +865,7 @@ if (type === 'new') {
 
 {showVerifyReceipt && selectedPermit && (
   <div className="modal-overlay" onClick={() => handlecloseverify()} >
-    <div className="modal-content" onClick={() => handlecloseverify()}>
+    <div className="modal-content">
     <h4>Statement of Account</h4>
     <div className="mb-3">
       {selectedPermit.receipt?.workpermitstatementofaccount && (
