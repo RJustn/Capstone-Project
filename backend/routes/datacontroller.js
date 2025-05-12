@@ -36,7 +36,7 @@ const {
     workpermitdetails,
     workpermitreject,
     businesspermitmonthlyappication,
-releaseworkpermitrenewal,} = require('../index/datacontroller/datacontroller');
+    releaseworkpermitrenewal} = require('../index/datacontroller/datacontroller');
 const uploadbusinesspermitfiles = require('../middleware/uploadbusinesspermitfiles');
 const uploadworkpermitfiles = require('../middleware/uploadworkpermitfiles');
 
