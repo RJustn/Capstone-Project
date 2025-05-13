@@ -665,58 +665,65 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-       case 'assessment':
-  try {
-    const userId = localStorage.getItem('token'); // Retrieve `userId` from localStorage
-    console.log('Retrieved userId from localStorage:', userId);
+      case 'assessment':
+    try {
+        const userId = localStorage.getItem('token'); // Retrieve `userId` from localStorage
+        console.log('Retrieved userId from localStorage:', userId);
 
-    if (!userId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'User ID Missing',
-        text: 'Please log in again to continue.',
-      });
-      return;
+        if (!userId) {
+            Swal.fire({
+                icon: 'error',
+                title: 'User ID Missing',
+                text: 'Please log in again to continue.',
+            });
+            return;
+        }
+
+        const response = await fetch(
+            `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }), // Pass `userId` in the request body
+            }
+        );
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(`Permit ID ${permit._id} locked successfully.`);
+            Swal.fire({
+                icon: 'success',
+                title: 'Access Granted',
+                text: data.message,
+            });
+            navigate(`/DABusinessAssessment/${permit._id}`);
+        } else if (response.status === 403) {
+            const errorData = await response.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Cannot Assess',
+                text: errorData.message || 'This permit is already being assessed by another user.',
+            });
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorData.message || 'An unexpected error occurred.',
+            });
+        }
+    } catch (error) {
+        console.error('Error locking permit:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong while locking the permit. Please try again later.',
+        });
     }
-
-    const response = await fetch(
-      `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }), // Pass `userId` in the request body
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log(`Permit ID ${permit._id} locked successfully.`);
-      Swal.fire({
-        icon: 'success',
-        title: 'Access Granted',
-        text: data.message,
-      });
-      navigate(`/DABusinessAssessment/${permit._id}`);
-    } else {
-      const errorData = await response.json();
-      Swal.fire({
-        icon: 'error',
-        title: 'Cannot Assess',
-        text: errorData.message || 'This permit is already being assessed by another user.',
-      });
-    }
-  } catch (error) {
-    console.error('Error locking permit:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Something went wrong while locking the permit. Please try again later.',
-    });
-  }
-  break;
-
+    break;
+    
           case 'viewattatchments':
             setViewAttatchmentsModal(true);
             setActivePermitId(permit);
