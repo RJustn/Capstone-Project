@@ -119,6 +119,10 @@ const DataControllerForAssessmentBP: React.FC = () => {
 
         if (response.status === 204) {
           console.log('Access Success');
+          const token = response.headers.get('Authorization'); // Assuming token is in the Authorization header
+          if (token) {
+            localStorage.setItem('userId', token); // Store token as userId in localStorage
+          }
           return;
         }
 
@@ -665,19 +669,37 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-         case 'assessment':
+case 'assessment':
   try {
-    const userId = localStorage.getItem('userId'); // Ensure `userId` is retrieved correctly
+    const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
+      method: 'GET',
+      credentials: 'include', // Ensure cookies are sent with the request
+    });
+
+    if (!response.ok) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Authentication Failed',
+        text: 'Unable to verify user authentication. Please log in again.',
+      });
+      navigate('/login'); // Redirect to login page
+      return;
+    }
+
+    const data = await response.json(); // Parse the response as JSON
+    const userId = data.userId; // Extract the `userId` from the response
+
     if (!userId) {
       Swal.fire({
         icon: 'error',
         title: 'User ID Missing',
         text: 'Please log in again to continue.',
       });
+      navigate('/login'); // Redirect to login page
       return;
     }
 
-    const response = await fetch(
+    const lockResponse = await fetch(
       `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
       {
         method: 'PUT',
@@ -688,11 +710,11 @@ const logFormData = (formData: FormData) => {
       }
     );
 
-    if (response.ok) {
+    if (lockResponse.ok) {
       console.log(`Permit ID ${permit._id} locked successfully.`);
       navigate(`/DABusinessAssessment/${permit._id}`);
     } else {
-      const errorData = await response.json();
+      const errorData = await lockResponse.json();
       Swal.fire({
         icon: 'error',
         title: 'Cannot Assess',
