@@ -669,37 +669,19 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-case 'assessment':
+         case 'assessment':
   try {
-    const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
-      method: 'GET',
-      credentials: 'include', // Ensure cookies are sent with the request
-    });
-
-    if (!response.ok) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Authentication Failed',
-        text: 'Unable to verify user authentication. Please log in again.',
-      });
-      navigate('/login'); // Redirect to login page
-      return;
-    }
-
-    const data = await response.json(); // Parse the response as JSON
-    const userId = data.userId; // Extract the `userId` from the response
-
+    const userId = localStorage.getItem('userId'); // Ensure `userId` is retrieved correctly
     if (!userId) {
       Swal.fire({
         icon: 'error',
         title: 'User ID Missing',
         text: 'Please log in again to continue.',
       });
-      navigate('/login'); // Redirect to login page
       return;
     }
 
-    const lockResponse = await fetch(
+    const response = await fetch(
       `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
       {
         method: 'PUT',
@@ -710,11 +692,11 @@ case 'assessment':
       }
     );
 
-    if (lockResponse.ok) {
+    if (response.ok) {
       console.log(`Permit ID ${permit._id} locked successfully.`);
       navigate(`/DABusinessAssessment/${permit._id}`);
     } else {
-      const errorData = await lockResponse.json();
+      const errorData = await response.json();
       Swal.fire({
         icon: 'error',
         title: 'Cannot Assess',
