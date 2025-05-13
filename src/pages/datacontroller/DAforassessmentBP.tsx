@@ -641,6 +641,7 @@ const logFormData = (formData: FormData) => {
   };
   //Edit Business
 
+  
   const handleActionBP =  async (action: string, permit: BusinessPermit) => {
     setActivePermitId(null);
     switch (action) {
@@ -665,40 +666,40 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-            case 'assessment':
-      try {
-        // Lock the permit before navigating to the assessment page
-        const response = await fetch(
-          `https://capstone-project-backend-nu.vercel.app/controllers/datacontroller/locked/${permit._id}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
-          }
-        );
-
-        if (response.ok) {
-          console.log(`Permit ID ${permit._id} locked successfully.`);
-          navigate(`/DABusinessAssessment/${permit._id}`);
-        } else {
-          const errorData = await response.json();
-          Swal.fire({
-            icon: 'error',
-            title: 'Cannot Assess',
-            text: errorData.message || 'This permit is already being assessed by another user.',
-          });
-        }
-      } catch (error) {
-        console.error('Error locking permit:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Something went wrong while locking the permit. Please try again later.',
-        });
+           case 'assessment':
+  try {
+    // Lock the permit before navigating to the assessment page
+    const response = await fetch(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`, // Corrected URL
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
       }
-      break;
+    );
+
+    if (response.ok) {
+      console.log(`Permit ID ${permit._id} locked successfully.`);
+      navigate(`/DABusinessAssessment/${permit._id}`);
+    } else {
+      const errorData = await response.json();
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Assess',
+        text: errorData.message || 'This permit is already being assessed by another user.',
+      });
+    }
+  } catch (error) {
+    console.error('Error locking permit:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Something went wrong while locking the permit. Please try again later.',
+    });
+  }
+  break;
 
           case 'viewattatchments':
             setViewAttatchmentsModal(true);
@@ -714,6 +715,29 @@ const logFormData = (formData: FormData) => {
         console.warn('Unknown action');
     }
   };
+
+  const unlockPermit = async (permitId: string) => {
+  try {
+    const response = await fetch(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/business/${permitId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
+      }
+    );
+
+    if (response.ok) {
+      console.log(`Permit ID ${permitId} unlocked successfully.`);
+    } else {
+      console.error('Failed to unlock permit.');
+    }
+  } catch (error) {
+    console.error('Error unlocking permit:', error);
+  }
+};
 
 
 //Use Effect
@@ -988,6 +1012,7 @@ const handleRepChange = () => {
 
 const handleCancelEdit = () => {
   if (activePermitId) {
+    unlockPermit(activePermitId._id); 
     setLastName(activePermitId.owner.lastname || '');
     setFirstName(activePermitId.owner.firstname || '');
     setMiddleInitial(activePermitId.owner.middleinitial || '');
@@ -1084,12 +1109,15 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
 
  const [remarks, setRemarks] = useState(''); // For storing remarks when the permit is rejected
   const [isRejecting, setIsRejecting] = useState(false);
-  const closeRejectpermit = () => {
-    setRejectPermit(false);
-    setActivePermitId(null);
-    setIsRejecting(false); // Reset rejection state
-    setRemarks(''); // Clear remarks when modal closes
-  };
+const closeRejectpermit = () => {
+  if (activePermitId) {
+    unlockPermit(activePermitId._id); // Unlock the permit
+  }
+  setRejectPermit(false);
+  setActivePermitId(null);
+  setIsRejecting(false); // Reset rejection state
+  setRemarks(''); // Clear remarks when modal closes
+};
 
   let displayTextTitle = 'All Business Permit Applications (For Assessments)';
 
