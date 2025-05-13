@@ -691,7 +691,13 @@ const logFormData = (formData: FormData) => {
     );
 
     if (response.ok) {
+      const data = await response.json();
       console.log(`Permit ID ${permit._id} locked successfully.`);
+      Swal.fire({
+        icon: 'success',
+        title: 'Access Granted',
+        text: data.message,
+      });
       navigate(`/DABusinessAssessment/${permit._id}`);
     } else {
       const errorData = await response.json();

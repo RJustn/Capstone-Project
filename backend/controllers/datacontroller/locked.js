@@ -28,6 +28,11 @@ const lockBusinessPermit = async (req, res) => {
             return res.status(403).json({ message: 'Permit is already being assessed by another user' });
         }
 
+        // Ensure the same user can continue assessment
+        if (permit.lockedBy === userId) {
+            return res.status(200).json({ message: 'Permit already locked by you' });
+        }
+
         permit.lockedBy = userId;
         permit.lockTimestamp = new Date();
         await permit.save();
@@ -70,6 +75,11 @@ const lockWorkPermit = async (req, res) => {
         }
         if (permit.lockedBy && permit.lockedBy !== userId) {
             return res.status(403).json({ message: 'Permit is already being assessed by another user' });
+        }
+
+        // Ensure the same user can continue assessment
+        if (permit.lockedBy === userId) {
+            return res.status(200).json({ message: 'Permit already locked by you' });
         }
 
         permit.lockedBy = userId;
