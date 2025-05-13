@@ -12,6 +12,14 @@ const businessPermitSchema = new mongoose.Schema({
   classification: { type: String },
   totalgrosssales: {type: String},
   totaltax: {type: String},
+  lockedBy: {
+        type: String,
+        default: null, // Default to null when not locked
+    },
+    lockTimestamp: {
+        type: Date,
+        default: null, // Default to null when not locked
+    },
   transaction: { type: String },
   amountToPay: {type: Number },
   paymentStatus: {type: String},
