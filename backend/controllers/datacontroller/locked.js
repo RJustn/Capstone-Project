@@ -5,15 +5,12 @@ const lockBusinessPermit = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
 
-    // Log incoming request data for debugging
     console.log('Lock Business Permit Request:', { id, userId });
 
-    // Validate `userId`
     if (!userId) {
         return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // Validate `id` format
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: 'Invalid permit ID format' });
     }
@@ -24,11 +21,12 @@ const lockBusinessPermit = async (req, res) => {
             return res.status(404).json({ message: 'Permit not found' });
         }
 
+        console.log('Current lockedBy:', permit.lockedBy);
+
         if (permit.lockedBy && permit.lockedBy !== userId) {
             return res.status(403).json({ message: 'Permit is already being assessed by another user' });
         }
 
-        // Ensure the same user can continue assessment
         if (permit.lockedBy === userId) {
             return res.status(200).json({ message: 'Permit already locked by you' });
         }
@@ -37,6 +35,7 @@ const lockBusinessPermit = async (req, res) => {
         permit.lockTimestamp = new Date();
         await permit.save();
 
+        console.log('Permit locked by:', userId);
         res.status(200).json({ message: 'Permit locked successfully' });
     } catch (error) {
         console.error('Error locking permit:', error);
