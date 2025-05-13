@@ -1,4 +1,3 @@
-
 import '../Styles/DataControllerStyles.css'; 
 import DASidebar from '../components/NavigationBars/DAsidebar';
 import React, { useEffect, useState } from 'react';
@@ -668,6 +667,16 @@ const logFormData = (formData: FormData) => {
 
          case 'assessment':
   try {
+    const userId = localStorage.getItem('userId'); // Ensure `userId` is retrieved correctly
+    if (!userId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'User ID Missing',
+        text: 'Please log in again to continue.',
+      });
+      return;
+    }
+
     const response = await fetch(
       `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
       {
@@ -675,7 +684,7 @@ const logFormData = (formData: FormData) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Ensure `userId` is passed
+        body: JSON.stringify({ userId }), // Pass `userId` in the request body
       }
     );
 

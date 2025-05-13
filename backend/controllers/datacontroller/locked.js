@@ -1,8 +1,12 @@
+const mongoose = require('mongoose');
 const { WorkPermit, BusinessPermit } = require('../../index/models');
 
 const lockBusinessPermit = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
+
+    // Log incoming request data for debugging
+    console.log('Lock Business Permit Request:', { id, userId });
 
     // Validate `userId`
     if (!userId) {
@@ -11,7 +15,7 @@ const lockBusinessPermit = async (req, res) => {
 
     // Validate `id` format
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid permit ID' });
+        return res.status(400).json({ message: 'Invalid permit ID format' });
     }
 
     try {
@@ -41,7 +45,7 @@ const unlockBusinessPermit = async (req, res) => {
     try {
         const permit = await BusinessPermit.findById(id);
         if (!permit) {
-            return res.status(404).json({ message: 'Permit not found'});
+            return res.status(404).json({ message: 'Permit not found' });
         }
         if (permit.lockedBy !== userId) {
             return res.status(403).json({ message: 'You do not have permission to unlock this permit' });
@@ -54,7 +58,7 @@ const unlockBusinessPermit = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error unlocking permit', error });
     }
-}
+};
 
 const lockWorkPermit = async (req, res) => {
     const { id } = req.params;
@@ -62,7 +66,7 @@ const lockWorkPermit = async (req, res) => {
     try {
         const permit = await WorkPermit.findById(id);
         if (!permit) {
-            return res.status(404).json({ message: 'Permit not found'});
+            return res.status(404).json({ message: 'Permit not found' });
         }
         if (permit.lockedBy && permit.lockedBy !== userId) {
             return res.status(403).json({ message: 'Permit is already being assessed by another user' });
@@ -72,9 +76,8 @@ const lockWorkPermit = async (req, res) => {
         permit.lockTimestamp = new Date();
         await permit.save();
 
-        res.status(200).json({message: 'Permit locked successfully'});
-    }
-    catch (error) {
+        res.status(200).json({ message: 'Permit locked successfully' });
+    } catch (error) {
         res.status(500).json({ message: 'Error locking permit', error });
     }
 };
@@ -85,7 +88,7 @@ const unlockWorkPermit = async (req, res) => {
     try {
         const permit = await WorkPermit.findById(id);
         if (!permit) {
-            return res.status(404).json({ message: 'Permit not found'});
+            return res.status(404).json({ message: 'Permit not found' });
         }
         if (permit.lockedBy !== userId) {
             return res.status(403).json({ message: 'You do not have permission to unlock this permit' });
@@ -98,7 +101,7 @@ const unlockWorkPermit = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error unlocking permit', error });
     }
-}
+};
 
 module.exports = {
     lockBusinessPermit,
