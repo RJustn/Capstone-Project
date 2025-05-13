@@ -103,34 +103,31 @@ const DataControllerForAssessmentBP: React.FC = () => {
   const paymentOptions = getPaymentOptions();
 
   useEffect(() => {
-     const checkAuth = async () => {
-    try {
-      const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
-        method: 'GET',
-        credentials: 'include', // Ensure cookies are sent with the request
-      });
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('https://capstone-project-backend-nu.vercel.app/auth/check-auth-datacontroller', {
+          method: 'GET',
+          credentials: 'include', // This ensures cookies are sent with the request
+        });
 
-      if (response.status === 401) {
-        console.error('Access denied: No token');
-        navigate('/login'); // Redirect to login
-        return;
-      }
-
-      if (response.status === 204) {
-        console.log('Access Success');
-        const token = response.headers.get('Authorization'); // Assuming token is in the Authorization header
-        if (token) {
-          localStorage.setItem('userId', token); // Store token as userId in localStorage
-          console.log('User ID set:', token); // Debug log
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          console.error('Access denied: No token');
+          navigate('/login');
+          return;
         }
-        return;
-      }
 
-      console.error('Unexpected response status:', response.status);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    }
-  };
+        if (response.status === 204) {
+          console.log('Access Success');
+          return;
+        }
+
+        // Handle unexpected response
+        console.error('Unexpected response status:', response.status);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } 
+    };
 
     checkAuth();
   }, [navigate]); // Only depend on navigate, which is necessary for the redirection
@@ -668,15 +665,18 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-         case 'assessment':
+       case 'assessment':
   try {
-    const userId = localStorage.getItem('userId'); // Ensure `userId` is retrieved correctly
+    const userId = localStorage.getItem('userId'); // Retrieve `userId` from localStorage
+    console.log('Retrieved userId from localStorage:', userId);
+
     if (!userId) {
       Swal.fire({
         icon: 'error',
         title: 'User ID Missing',
         text: 'Please log in again to continue.',
       });
+      navigate('/login'); // Redirect to login page
       return;
     }
 
