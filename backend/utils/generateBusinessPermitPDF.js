@@ -1,6 +1,7 @@
 const PDFDocument = require('pdfkit');
 const { BusinessPermit } = require('../index/models');
 const { businessNatureMap } = require('../../src/pages/components/Interface(Front-end)/BusinessNatureMap');
+const { User } = require('../models/user');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
@@ -15,10 +16,11 @@ const generateBusinessPermitPDF = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const doc = new PDFDocument();
-      const businessPermit = await BusinessPermit.findById(id);
+      const businessPermit = await BusinessPermit.findById(id).populate('permitassessed');
       if (!businessPermit) {
         return reject(new Error('Business permit not found'));
       }
+
 
       const permitFileName = `businessPermit_${id}.pdf`;
       let buffers = [];
@@ -43,6 +45,22 @@ const generateBusinessPermitPDF = async (id) => {
         }
       });
 
+        const generateRandomORNumber = () => {
+        const prefix = 'OR-';
+        const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // 8-digit random number
+        return `${prefix}${randomNumber}`;
+      };
+
+      const expirationDate = new Date();
+      expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+      const orNumber = generateRandomORNumber();
+
+      let dataControllerName = 'For Assessment';
+       if (businessPermit.permitassessed) {
+        const dataController = await businessPermit.permitassessed.populate('userId');
+        dataControllerName = `${dataController.userId.firstname} ${dataController.userId.lastname}`;
+      }
+
       // Header Content
       doc.fontSize(14).text('Republic of the Philippines', { align: 'center' });
       doc.text('Province of Cavite', { align: 'center' });
@@ -61,8 +79,11 @@ to the name listed below, in the City of Dasmariñas, Cavite, subject to the Rul
 Regulation prescribed in said Ordinance and in all existing laws applicable thereto.`
       );
       doc.moveDown(2);
-
-      // Business Details
+ 
+    
+      doc.text(`Business Permit No.: ${businessPermit.id || 'N/A'}`);
+      doc.text(`O.R. Number: ${orNumber}`);
+      doc.text(`Status: ${businessPermit.status || 'N/A'}`);
       doc.text(`Business Name: ${businessPermit.business.businessname || 'N/A'}`);
       doc.text(`Location: ${businessPermit.business.businessbuildingblocklot || 'N/A'}, ${businessPermit.business.businessbarangay || 'N/A'}, ${businessPermit.business.businessmunicipality || 'N/A'}`);
       doc.text(`Taxpayer Name: ${businessPermit.owner.firstname || 'N/A'} ${businessPermit.owner.lastname || 'N/A'}`);
@@ -100,7 +121,7 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
       doc.moveDown(2);
 
       // Assessed By
-      doc.text(`Assessed By: ${businessPermit.userNameDisplay || 'ForAssessment'}`);
+      doc.text(`Assessed By: ${dataControllerName}`);
       doc.moveDown(2);
 
       // Footer (City Mayor Signature)

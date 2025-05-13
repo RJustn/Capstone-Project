@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const businessPermitSchema = new mongoose.Schema({
   id: { type: String, required: true,},
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  permitassessed: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   permittype: { type: String, required: true, default: 'BP' },
   businesspermitstatus: { type: String, required: true, },
   businessstatus: {type: String},
@@ -16,8 +17,8 @@ const businessPermitSchema = new mongoose.Schema({
   paymentStatus: {type: String},
   permitnumber: {type: String},
   permitFile: {type: String},
-  permitDateIssued: { type: Date }, // Changed from String to Date
-  permitExpiryDate: { type: Date }, // Changed from String to Date
+  permitDateIssued: { type: Date }, 
+  permitExpiryDate: { type: Date },
   expiryDate: {type: String},
   applicationdateIssued: { type: Date, default: Date.now },
   applicationComments: {type: String},
@@ -137,7 +138,6 @@ typeofbusiness: String,
     BreuFrPrt: String,
   },
   statementofaccount:{
-    permitassessed: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Store a single user ID
     dateassessed: { type: String }, // You can change this to Date if you prefer
     mayorspermit: { type: String },
     sanitary: { type: String },

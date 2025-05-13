@@ -641,7 +641,7 @@ const logFormData = (formData: FormData) => {
   };
   //Edit Business
 
-  const handleActionBP = (action: string, permit: BusinessPermit) => {
+  const handleActionBP =  async (action: string, permit: BusinessPermit) => {
     setActivePermitId(null);
     switch (action) {
 
@@ -665,9 +665,40 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-          case 'assessment':
-            navigate(`/DABusinessAssessment/${permit._id}`);
-            break;
+            case 'assessment':
+      try {
+        // Lock the permit before navigating to the assessment page
+        const response = await fetch(
+          `https://capstone-project-backend-nu.vercel.app/controllers/datacontroller/locked/${permit._id}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
+          }
+        );
+
+        if (response.ok) {
+          console.log(`Permit ID ${permit._id} locked successfully.`);
+          navigate(`/DABusinessAssessment/${permit._id}`);
+        } else {
+          const errorData = await response.json();
+          Swal.fire({
+            icon: 'error',
+            title: 'Cannot Assess',
+            text: errorData.message || 'This permit is already being assessed by another user.',
+          });
+        }
+      } catch (error) {
+        console.error('Error locking permit:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Something went wrong while locking the permit. Please try again later.',
+        });
+      }
+      break;
 
           case 'viewattatchments':
             setViewAttatchmentsModal(true);

@@ -38,6 +38,8 @@ const {getWorkPermitStatus} = require('../../controllers/datacontroller/getworkp
 const {getBusinessPermitStatus} = require('../../controllers/datacontroller/getbusinesspermitstatus');
 const { releaseworkpermitrenewal } = require('../../controllers/datacontroller/releaseworkpermitrenewal');
 const { businesspermitrelease } = require('../../controllers/datacontroller/businesspermitrelease');
+const { lockBusinessPermit, unlockBusinessPermit } = require('../../controllers/datacontroller/locked');
+const { lockWorkPermit, unlockWorkPermit } = require('../../controllers/datacontroller/locked');
 
 module.exports = {
     changepassword,
@@ -71,6 +73,10 @@ module.exports = {
     workpermitreject,
     releaseworkpermitrenewal,
     
+    lockBusinessPermit,
+     unlockBusinessPermit,
+     lockWorkPermit,
+     unlockWorkPermit,
     
 
 

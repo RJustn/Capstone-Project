@@ -1,5 +1,9 @@
 const express = require('express');
 const { 
+     lockBusinessPermit,
+     unlockBusinessPermit,
+     lockWorkPermit,
+     unlockWorkPermit,
     changepassword, 
     businesspermitdetails, 
     getassessedperson, 
@@ -126,5 +130,13 @@ router.get('/graphpermitapplicationcategory', graphpermitapplicationcategory);
 router.get('/graphworkpermitstatus', getWorkPermitStatus);
 
 router.get('/graphbusinesspermitstatus', getBusinessPermitStatus);
+
+router.put('/lock/business/:id', lockBusinessPermit);
+
+router.put('/unlock/business/:id', unlockBusinessPermit);
+
+router.put('/lock/work/:id', lockWorkPermit);
+
+router.put('/unlock/work/:id', unlockWorkPermit);
 
 module.exports = router;
