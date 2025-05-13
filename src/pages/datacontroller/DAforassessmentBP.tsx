@@ -380,6 +380,7 @@ const logFormData = (formData: FormData) => {
     setFilteredItems(sortedItems);
   };
   
+  
 
 
   const updateAttachments = async () => {
@@ -640,6 +641,13 @@ const logFormData = (formData: FormData) => {
   };
   //Edit Business
 
+  useEffect(() => {
+  const defaultUserId = 'hardcoded-user-id'; // Replace with the actual user ID
+  if (!localStorage.getItem('userId')) {
+    localStorage.setItem('userId', defaultUserId);
+    console.log('Default userId set in localStorage:', defaultUserId);
+  }
+}, []);
   
   const handleActionBP =  async (action: string, permit: BusinessPermit) => {
     setActivePermitId(null);
@@ -665,20 +673,10 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-       case 'assessment':
+      case 'assessment':
   try {
-    const userId = localStorage.getItem('userId'); // Retrieve `userId` from localStorage
-    console.log('Retrieved userId from localStorage:', userId);
-
-    if (!userId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'User ID Missing',
-        text: 'Please log in again to continue.',
-      });
-      navigate('/login'); // Redirect to login page
-      return;
-    }
+    const userId = localStorage.getItem('userId') || 'hardcoded-user-id'; // Use hardcoded userId as fallback
+    console.log('Using userId:', userId);
 
     const response = await fetch(
       `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
@@ -711,7 +709,6 @@ const logFormData = (formData: FormData) => {
     });
   }
   break;
-
           case 'viewattatchments':
             setViewAttatchmentsModal(true);
             setActivePermitId(permit);
