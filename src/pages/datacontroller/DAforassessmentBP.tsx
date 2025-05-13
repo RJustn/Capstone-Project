@@ -666,17 +666,16 @@ const logFormData = (formData: FormData) => {
           navigate(`/DAEditBusinessNature/${permit._id}`);
           break;
 
-           case 'assessment':
+         case 'assessment':
   try {
-    // Lock the permit before navigating to the assessment page
     const response = await fetch(
-      `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`, // Corrected URL
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/business/${permit._id}`,
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
+        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Ensure `userId` is passed
       }
     );
 
