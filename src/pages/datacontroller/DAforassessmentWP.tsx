@@ -270,38 +270,12 @@ const DataControllerForAssessmentWP: React.FC = () => {
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
-  const handleAction = async (action: string, permit: WorkPermit) => {
+  const handleAction = (action: string, permit: WorkPermit) => {
     switch (action) {
       case 'viewApplication':
-      try {
-        const userId = localStorage.getItem('token');
-        const response = await fetch(
-          `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/work/${permit._id}`,
-          {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId }),
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          localStorage.setItem('lockedWorkPermitId', permit._id); // Track locked permit
-          navigate(`/DAviewapplicationdetails/${permit._id}`);
-        } else {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Permit Locked',
-            text: data.message || 'This permit is being assessed by another user.',
-          });
-        }
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to lock the permit. Please try again.',
-        });
-      }
-      break;
+        console.log(`View permit ID: ${permit._id}`);
+        navigate(`/DAviewapplicationdetails/${permit._id}`);
+        break;
       case 'viewAttachments':
         console.log(`View attachments for permit ID: ${permit._id}`);
         setSelectedPermit(permit);
