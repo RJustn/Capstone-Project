@@ -251,6 +251,14 @@ const DataControllerForAssessmentWP: React.FC = () => {
     setFilteredItems(workPermits); // Display all work permits by default
   }, [workPermits]);
 
+   useEffect(() => {
+      return () => {
+        const lockedPermitId = localStorage.getItem('lockedPermitId');
+        if (lockedPermitId) {
+          unlockPermit(lockedPermitId);
+        }
+      };
+    }, []);
   // Date picker states
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
@@ -270,12 +278,93 @@ const DataControllerForAssessmentWP: React.FC = () => {
 
   const maxDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
-  const handleAction = (action: string, permit: WorkPermit) => {
+    const unlockPermit = async (permitId: string) => {
+  try {
+    const response = await fetch(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/business/${permitId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: localStorage.getItem('token') }), // Pass the current user's ID
+      }
+    );
+
+    if (response.ok) {
+      console.log(`Permit ID ${permitId} unlocked successfully.`);
+      if (localStorage.getItem('lockedPermitId') === permitId) {
+        localStorage.removeItem('lockedPermitId');
+      }
+    } else {
+      console.error('Failed to unlock permit.');
+    }
+  } catch (error) {
+    console.error('Error unlocking permit:', error);
+  }
+};
+
+  const handleAction = async (action: string, permit: WorkPermit) => {
     switch (action) {
-      case 'viewApplication':
-        console.log(`View permit ID: ${permit._id}`);
-        navigate(`/DAviewapplicationdetails/${permit._id}`);
-        break;
+        case 'viewApplication':
+        try {
+                const userId = localStorage.getItem('token'); // Retrieve `userId` from localStorage
+                console.log('Retrieved userId from localStorage:', userId);
+        
+                if (!userId) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'User ID Missing',
+                        text: 'Please log in again to continue.',
+                    });
+                    return;
+                }
+        
+                const response = await fetch(
+                    `https://capstone-project-backend-nu.vercel.app/datacontroller/lock/work/${permit._id}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }), // Pass `userId` in the request body
+                    }
+                );
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`Permit ID ${permit._id} locked successfully.`);
+                    localStorage.setItem('lockedPermitId', permit._id);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Access Granted',
+                        text: data.message,
+                    });
+                    navigate(`/DABusinessAssessment/${permit._id}`);
+                } else if (response.status === 403) {
+                    const errorData = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Assess',
+                        text: errorData.message || 'This permit is already being assessed by another user.',
+                    });
+                } else {
+                    const errorData = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorData.message || 'An unexpected error occurred.',
+                    });
+                }
+            } catch (error) {
+                console.error('Error locking permit:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while locking the permit. Please try again later.',
+                });
+            }
+            break;
       case 'viewAttachments':
         console.log(`View attachments for permit ID: ${permit._id}`);
         setSelectedPermit(permit);
