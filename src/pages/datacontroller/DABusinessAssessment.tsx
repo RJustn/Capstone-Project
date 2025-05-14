@@ -2152,7 +2152,20 @@ return (
   </div>
   {businessPermit && businessPermit.statementofaccount && businessPermit.businesspermitstatus === 'Assessed' ? (
   // If the business permit is available and its status is "Assessed", render the PDF component
-  <GenerateStatementofAccountPDF permitData={businessPermit.statementofaccount} />
+<GenerateStatementofAccountPDF
+  permitData={businessPermit.statementofaccount}
+  receiptId={businessPermit._id}
+  businessPermitContent={{
+    owner: {
+      lastname: businessPermit.owner.lastname || '',
+      firstname: businessPermit.owner.firstname || '',
+    },
+    id: businessPermit.id,
+    business: {
+      paymentmethod: businessPermit.business.paymentmethod || '',
+    },
+  }}
+/>
 ) : (
   // Otherwise, show the loading message or a different fallback message
   <p>{businessPermit ? 'Business permit not assessed yet.' : 'Loading permit data...'}</p>
