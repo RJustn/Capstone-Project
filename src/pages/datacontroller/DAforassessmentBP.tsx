@@ -740,6 +740,7 @@ const logFormData = (formData: FormData) => {
     }
   };
 
+
 //Use Effect
   useEffect(() => {
     if (activePermitId) {
@@ -892,14 +893,7 @@ const logFormData = (formData: FormData) => {
     setFilteredItems(businessPermits); // Display all work permits by default
   }, [businessPermits]);
 
-  useEffect(() => {
-    return () => {
-      const lockedPermitId = localStorage.getItem('lockedPermitId');
-      if (lockedPermitId) {
-        unlockPermit(lockedPermitId);
-      }
-    };
-  }, []);
+  
 //Use Effect
 
 
@@ -1021,7 +1015,6 @@ const handleRepChange = () => {
 
 const handleCancelEdit = () => {
   if (activePermitId) {
-    unlockPermit(activePermitId._id); 
     setLastName(activePermitId.owner.lastname || '');
     setFirstName(activePermitId.owner.firstname || '');
     setMiddleInitial(activePermitId.owner.middleinitial || '');
@@ -1119,9 +1112,6 @@ const updatebusinesspermitstatus = async (action: string, remarks: string) => {
  const [remarks, setRemarks] = useState(''); // For storing remarks when the permit is rejected
   const [isRejecting, setIsRejecting] = useState(false);
 const closeRejectpermit = () => {
-  if (activePermitId) {
-    unlockPermit(activePermitId._id); // Unlock the permit
-  }
   setRejectPermit(false);
   setActivePermitId(null);
   setIsRejecting(false); // Reset rejection state
