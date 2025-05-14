@@ -23,7 +23,7 @@ const lockBusinessPermit = async (req, res) => {
 
         console.log('Current lockedBy:', permit.lockedBy);
 
-        // Check if the permit is locked by another user
+        // Check if the permit is locked by another use't
         if (permit.lockedBy && permit.lockedBy !== userId) {
             console.log(`Permit is already locked by another user: ${permit.lockedBy}`);
             return res.status(403).json({ message: 'Permit is already being assessed by another user' });

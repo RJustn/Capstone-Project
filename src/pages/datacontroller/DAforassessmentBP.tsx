@@ -693,6 +693,7 @@ const logFormData = (formData: FormData) => {
         if (response.ok) {
             const data = await response.json();
             console.log(`Permit ID ${permit._id} locked successfully.`);
+            localStorage.setItem('lockedPermitId', permit._id);
             Swal.fire({
                 icon: 'success',
                 title: 'Access Granted',
@@ -748,12 +749,15 @@ const logFormData = (formData: FormData) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: localStorage.getItem('userId') }), // Pass the current user's ID
+        body: JSON.stringify({ userId: localStorage.getItem('token') }), // Pass the current user's ID
       }
     );
 
     if (response.ok) {
       console.log(`Permit ID ${permitId} unlocked successfully.`);
+      if (localStorage.getItem('lockedPermitId') === permitId) {
+        localStorage.removeItem('lockedPermitId');
+      }
     } else {
       console.error('Failed to unlock permit.');
     }
@@ -914,6 +918,15 @@ const logFormData = (formData: FormData) => {
   useEffect(() => {
     setFilteredItems(businessPermits); // Display all work permits by default
   }, [businessPermits]);
+
+  useEffect(() => {
+    return () => {
+      const lockedPermitId = localStorage.getItem('lockedPermitId');
+      if (lockedPermitId) {
+        unlockPermit(lockedPermitId);
+      }
+    };
+  }, []);
 //Use Effect
 
 
