@@ -918,6 +918,15 @@ const logFormData = (formData: FormData) => {
   useEffect(() => {
     setFilteredItems(businessPermits); // Display all work permits by default
   }, [businessPermits]);
+
+  useEffect(() => {
+    return () => {
+      const lockedPermitId = localStorage.getItem('lockedPermitId');
+      if (lockedPermitId) {
+        unlockPermit(lockedPermitId);
+      }
+    };
+  }, []);
 //Use Effect
 
 
