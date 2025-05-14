@@ -55,11 +55,9 @@ const generateBusinessPermitPDF = async (id) => {
       expirationDate.setFullYear(expirationDate.getFullYear() + 1);
       const orNumber = generateRandomORNumber();
 
-      let dataControllerName = 'For Assessment';
-       if (businessPermit.permitassessed) {
-        const dataController = await businessPermit.permitassessed.populate('userId');
-        dataControllerName = `${dataController.userId.firstname} ${dataController.userId.lastname}`;
-      }
+      const dataControllerName = businessPermit.permitassessed
+  ? `${businessPermit.permitassessed.firstname} ${businessPermit.permitassessed.lastname}`
+  : 'N/A';
 
       // Header Content
       doc.fontSize(14).text('Republic of the Philippines', { align: 'center' });
@@ -83,21 +81,14 @@ Regulation prescribed in said Ordinance and in all existing laws applicable ther
     
       doc.text(`Business Permit No.: ${businessPermit.id || 'N/A'}`);
       doc.text(`O.R. Number: ${orNumber}`);
-      doc.text(`Status: ${businessPermit.status || 'N/A'}`);
+      doc.text(`Status: ${businessPermit.businesspermitstatus || 'N/A'}`);
       doc.text(`Business Name: ${businessPermit.business.businessname || 'N/A'}`);
       doc.text(`Location: ${businessPermit.business.businessbuildingblocklot || 'N/A'}, ${businessPermit.business.businessbarangay || 'N/A'}, ${businessPermit.business.businessmunicipality || 'N/A'}`);
       doc.text(`Taxpayer Name: ${businessPermit.owner.firstname || 'N/A'} ${businessPermit.owner.lastname || 'N/A'}`);
       doc.text(`Business Class: ${businessPermit.classification || 'N/A'}`);
       doc.text(`Total Gross Sales: ${businessPermit.totalgrosssales || 'N/A'}`);
       doc.text(`Total Tax: ${businessPermit.totaltax || 'N/A'}`);
-      doc.text(`Permit Number: ${businessPermit.permitnumber || 'Not Assigned'}`);
-      doc.text(
-        `Permit Date Issued: ${
-          businessPermit.permitDateIssued
-            ? new Date(businessPermit.permitDateIssued).toLocaleDateString()
-            : 'Not Issued'
-        }`
-      );
+      doc.text(`Permit Date Issued: ${ businessPermit.permitDateIssued || 'N/A' }`);
       doc.text(`Expiration date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}`);
       doc.moveDown(2);
 

@@ -45,7 +45,7 @@ const GenerateStatementofAccountPDF: React.FC<GeneratePDFProps> = ({
     const doc = new jsPDF();
 
     doc.setFontSize(18);
-    doc.text('Business Permit details', 105, 20, { align: 'center' });
+    doc.text('Statement of Account', 105, 20, { align: 'center' });
 
     doc.setFontSize(12);
     let y = 35;
@@ -98,7 +98,7 @@ const GenerateStatementofAccountPDF: React.FC<GeneratePDFProps> = ({
       doc.text(`Total Amount: PHP ${permitData.total}`, 20, y);
     }
 
-    doc.save('statement-of-account.pdf');
+    doc.save('Statement-of-account.pdf');
   };
 
   return (
