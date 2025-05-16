@@ -1698,7 +1698,31 @@ const computeAssessment = () => {
   }, [navigate]);
 
 
+const unlockPermit = async (permitId: string) => {
+  try {
+    const response = await fetch(
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/business/${permitId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: localStorage.getItem('token') }), // Pass the current user's ID
+      }
+    );
 
+    if (response.ok) {
+      console.log(`Permit ID ${permitId} unlocked successfully.`);
+      if (localStorage.getItem('lockedPermitId') === permitId) {
+        localStorage.removeItem('lockedPermitId');
+      }
+    } else {
+      console.error('Failed to unlock permit.');
+    }
+  } catch (error) {
+    console.error('Error unlocking permit:', error);
+  }
+};
 
  
 
@@ -1841,7 +1865,18 @@ return (
             <header className='DAheader'>
                 <h1>Online Business and Work Permit Licensing System</h1>
             </header>
-
+  <button
+        className="btn btn-secondary"
+        style={{ marginBottom: '16px' }}
+        onClick={async () => {
+            if (businessPermit?._id) {
+                await unlockPermit(businessPermit._id);
+            }
+            navigate('/DAforassessmentBP');
+        }}
+    >
+        Back
+    </button>
             {!id ? (
     <div className="error-message">
       <p style={{ color: "blue", textAlign: "center", fontSize: "16px" }}>
