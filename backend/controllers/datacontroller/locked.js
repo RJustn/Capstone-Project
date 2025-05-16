@@ -23,22 +23,27 @@ const lockBusinessPermit = async (req, res) => {
 
         console.log('Current lockedBy:', permit.lockedBy);
 
-        // Check if the permit is locked by another use't
-        if (permit.lockedBy && permit.lockedBy !== userId) {
-            console.log(`Permit is already locked by another user: ${permit.lockedBy}`);
-            return res.status(403).json({ message: 'Permit is already being assessed by another user' });
-        }
+                if (
+                permit.lockedBy &&
+                permit.lockedBy.toString() !== userId.toString()
+            ) {
+                console.log(`Permit is already locked by another user: ${permit.lockedBy}`);
+                return res.status(403).json({ message: 'Permit is already being assessed by another user' });
+            }
 
-        // If the same user tries to lock it again
-        if (permit.lockedBy === userId) {
-            console.log('Permit already locked by you');
-            return res.status(200).json({ message: 'Permit already locked by you' });
-        }
+            // If the same user tries to lock it again
+            if (
+                permit.lockedBy &&
+                permit.lockedBy.toString() === userId.toString()
+            ) {
+                console.log('Permit already locked by you');
+                return res.status(200).json({ message: 'Permit already locked by you' });
+            }
 
-        // Lock the permit
-        permit.lockedBy = userId;
-        permit.lockTimestamp = new Date();
-        await permit.save();
+            // Lock the permit
+            permit.lockedBy = userId;
+            permit.lockTimestamp = new Date();
+            await permit.save();
 
         console.log('Permit locked by:', userId);
         res.status(200).json({ message: 'Permit locked successfully' });
