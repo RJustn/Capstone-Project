@@ -1726,6 +1726,7 @@ const unlockPermit = async (permitId: string) => {
 
  
 
+
   const handlesaveassessment = async () => {
     if (
       businessPermit?.businesspermitstatus === 'Waiting for Payment' ||
@@ -1848,7 +1849,22 @@ useEffect(() => {
 }, [id]); // Run the effect when the id changes
 
 
+ useEffect(() => {
+  const handleBeforeUnload = () => {
+    if (businessPermit?._id) {
+      navigator.sendBeacon(
+        `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/business/${businessPermit._id}`,
+        JSON.stringify({ userId: localStorage.getItem('token') })
+      );
+    }
+  };
 
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, [businessPermit?._id]);
 
 
 
