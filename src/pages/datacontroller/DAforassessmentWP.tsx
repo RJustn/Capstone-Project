@@ -281,7 +281,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
     const unlockPermit = async (permitId: string) => {
   try {
     const response = await fetch(
-      `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/business/${permitId}`,
+      `https://capstone-project-backend-nu.vercel.app/datacontroller/unlock/work/${permitId}`,
       {
         method: 'PUT',
         headers: {
@@ -340,7 +340,7 @@ const DataControllerForAssessmentWP: React.FC = () => {
                         title: 'Access Granted',
                         text: data.message,
                     });
-                    navigate(`/DABusinessAssessment/${permit._id}`);
+                    navigate(`/DAviewapplicationdetails/${permit._id}`);
                 } else if (response.status === 403) {
                     const errorData = await response.json();
                     Swal.fire({

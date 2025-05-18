@@ -80,17 +80,27 @@ const lockWorkPermit = async (req, res) => {
     const { userId } = req.body;
     try {
         const permit = await WorkPermit.findById(id);
-        if (!permit) {
-            return res.status(404).json({ message: 'Permit not found' });
-        }
-        if (permit.lockedBy && permit.lockedBy !== userId) {
-            return res.status(403).json({ message: 'Permit is already being assessed by another user' });
-        }
+        if (
+                permit.lockedBy &&
+                permit.lockedBy.toString() !== userId.toString()
+            ) {
+                console.log(`Permit is already locked by another user: ${permit.lockedBy}`);
+                return res.status(403).json({ message: 'Permit is already being assessed by another user' });
+            }
 
-        // Ensure the same user can continue assessment
-        if (permit.lockedBy === userId) {
-            return res.status(200).json({ message: 'Permit already locked by you' });
-        }
+            // If the same user tries to lock it again
+            if (
+                permit.lockedBy &&
+                permit.lockedBy.toString() === userId.toString()
+            ) {
+                console.log('Permit already locked by you');
+                return res.status(200).json({ message: 'Permit already locked by you' });
+            }
+
+            // Lock the permit
+            permit.lockedBy = userId;
+            permit.lockTimestamp = new Date();
+            await permit.save();
 
         permit.lockedBy = userId;
         permit.lockTimestamp = new Date();

@@ -263,7 +263,7 @@ if (!passwordRegex.test(password)) {
         <label htmlFor="agreeToTerms" className="form-check-label text-sm ml-2">
           I agree to the creation of an account and the processing of my personal information in accordance with the
           <a 
-          href="/path-to-your-pdf/terms-and-conditions.pdf" 
+          href="/OWBPLS-TERMS-N-CONDITION.pdf" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="text-decoration-none ml-1"
